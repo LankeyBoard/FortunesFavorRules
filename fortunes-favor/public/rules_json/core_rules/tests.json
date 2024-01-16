@@ -1,0 +1,75 @@
+{
+    "slug": "tests",
+    "title": "Tests",
+    "type": "RULE",
+    "text": "Tests are how you determine the outcome of uncertain events, can you smash open a door (Mettle), talk a guard into looking the other way (Heart), dodging a tomato hurled at your head (Agility).\nFirst the success and failure points of the test is set by the GM (Game Master) and the general outcome of success and failure are announced if it is reasonable for the player characters to know. Then players can decide if they want to attempt the test. The player then rolls 1d20 and adds their stat bonus to the result. If the result is at least equal to the success point, they pass the test and have a beneficial outcome. If the result is greater than or equal to the failure point but worse than the success, then the result is mixed. The GM can offer success with a cost or mixed success. If the results are less than the failure pint, the result is a failure. In general the failure point is five less than the success point.",
+    "rules": [
+        {
+            "slug": "success",
+            "title": "Success",
+            "type": "RULE",
+            "text": "Success on a test doesn't always mean getting exactly what you want, but it does mean a favorable outcome for you. You roll at least the  difficulty for the test.",
+            "eg": "You are talking to the innkeeper negotiating for a room. The GM calls for a heart test and tells you success needs a 15, and you'll get a good discount. Failure is a 5 and you get no discount and an undesirable room. You roll a 13 and add +2 for your heart to get a total of 15, which means you succeed. You manage to negotiate a 20% discount!"
+        },
+        {
+            "slug": "success_w_cost",
+            "title": "Success With a Cost",
+            "type": "RULE",
+            "text": "Success with a cost is when the GM offers a consequence and the player chooses if they want to accept the consequences or fail the test.",
+            "eg": "You try and scale a difficult cliff, you roll a mixed result. The GM may offer that you try and fall the first time, taking 1d6 damage but make it up on the second try or you fail and realize it would be too risky to climb and can't make it up."
+        },
+        {
+            "slug": "mixed_success",
+            "title": "Mixed Success",
+            "type": "RULE",
+            "text": "A mixed success is when you are partially successful in your endeavor. You achieve some of the outcome you want, but there are some complications or downsides.",
+            "eg": "You are trying to trick a guard into letting you go after being caught breaking curfew. You told him you forgot your pass at home and get a mixed success on the Heart test your GM called for. The guard believes you but insists on escorting you home to show him the pass."
+        },
+        {
+            "slug": "failure",
+            "title": "Failure",
+            "type": "RULE",
+            "text": "A failure occurs when you cannot achieve your desired outcome. This may mean the situation was harder than you initially believed or because you couldn't do it as well as you hoped or any other reason you and the GM think is reasonable. Sometimes the consequences of failure are direct, such as taking damage, other times they can simply be a complication for the story, this is determined by the GM.",
+            "eg": "Eg. You are scaling a castle wall, trying to get in without alerting the goblins keeping watch from the nearby tower. Your GM calls for an agility test, where success is a 15 and means you get up without being noticed and a failure is a 10 and means you get spotted. You roll your agility test, you get a 5 on the dice and add 2 from your agility, giving you a total of 7. The goblins spot you half way up, they begin to shout something you can't understand and begin to run towards the wall you are climbing!"
+        },
+        {
+            "slug": "contests",
+            "title": "",
+            "type": "RULE",
+            "text": "When two or more characters are competing, Sometimes each character will roll the same test and success is determined by the highest number, not by rolling above a target. Ties may result in a reroll or both participants doing equally well depending on the test.",
+            "eg": "You and your ally Ronin join an archery contest, you and the other contestants line up and fire at a target. You all roll an agility test. You rolled a 14+3, which is better than your GMs roll of 12+2 but worse than Ronin’s 16+2. Ronin comes out on top in that test."
+        },
+        {
+            "slug": "1s_20s",
+            "title": "1s and 20s",
+            "type": "RULE",
+            "text": "",
+            "rules": [
+                {
+                    "slug": "1s",
+                    "title": "1 - Critical Failure",
+                    "type": "RULE",
+                    "text": "Rolling a 1 is the worst a character could do. Tests always fail."
+                },
+                {
+                    "slug": "20s",
+                    "title": "20 - Critical Success",
+                    "type": "RULE",
+                    "text": "Rolling a 20 is the best a character could do. Tests always pass and when you roll a critical success on an attack, you  deal double damage on the attack."
+                }
+            ]
+        },
+        {
+            "slug": "fortunes_favor",
+            "title": "Fortune's Favor",
+            "type": "RULE",
+            "text": "When you fail a test, you gain Fortune's Favor. While you have Fortune's Favor roll a second d20 whenever you are tested. You can use this result in place of your regular roll. When you do so, you lose Fortune's Favor."
+        },
+        {
+            "slug": "misfortune",
+            "title": "Misfortune",
+            "type": "RULE",
+            "text": "Circumstances may cause misfortune as well. When the GM calls for a roll with Misfortune, you roll a second d20 and take the lower of the two rolls. If you have Fortunes Favor, before you roll you can chose to give it up to cancel out the Misfortune and roll the test normally."
+        }
+    ]
+}

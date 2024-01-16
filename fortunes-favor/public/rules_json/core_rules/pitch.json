@@ -1,0 +1,8 @@
+{
+    "rules":[{
+        "slug": "pitch",
+        "title": "Pitch",
+        "type": "RULE",
+        "text": "A simple fantasy system to start with the ability to grow and handle epic fantasy stories."
+    }]
+}

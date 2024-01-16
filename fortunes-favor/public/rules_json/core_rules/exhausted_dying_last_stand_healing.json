@@ -1,0 +1,32 @@
+{
+    "slug": "edlh",
+    "title": "Exhausted, Dying, Last Stand, & Healing",
+    "type": "RULE",
+    "text": "If damage would reduce you to below 0 stamina or 0 health, it reduces you to 0 instead.",
+    "rules": [
+        {
+            "slug": "exhausted",
+            "title": "Exhausted",
+            "type": "RULE",
+            "text": "When your Stamina is reduced to 0 you are Exhausted. See statuses for more info."
+        },
+        {
+            "slug": "dying",
+            "title": "Dying",
+            "type": "RULE",
+            "text": "When your Health is reduced to 0, you have been mortally wounded and are Dying. Taking an Action or moving more than half your speed costs 1 stamina. An ally can use the Help Action to aid you, removing the stamina cost as long as they stay within 5ft of you"
+        },
+        {
+            "slug": "last_stand",
+            "title": "Last Stand",
+            "type": "RULE",
+            "text": "When your Health is reduced to 0 you can opt to make a Last Stand, pushing yourself to the absolute limit, knowing these will be your final moments. For the next minute, you cannot regain Health in any way. You immediately and the start of each round of combat regain all of your stamina. If you are reduced to 0 Stamina or at the end of the 1 minute, you die."
+        },
+        {
+            "slug": "death",
+            "title": "Death",
+            "type": "RULE",
+            "text": "When you have 0 Health & 0 Stamina you are dead and your soul begins to leave your body, making the long journey to The Tribunal and the lands beyond. Only magical resuscitation can bring you back."
+        }
+    ]
+}

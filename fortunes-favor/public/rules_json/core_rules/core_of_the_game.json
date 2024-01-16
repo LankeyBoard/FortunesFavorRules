@@ -1,0 +1,6 @@
+{
+    "slug": "core_of_the_game",
+    "title": "The Core of the Game",
+    "type": "RULE",
+    "text": "All characters have stamina, a pool of energy they can use to use powerful abilities and take hits. Stamina comes and goes quickly, returning whenever you have a chance to sit down and catch your breath. Characters also have health, which is lost when they take damage. Health is slow to come back, only returning when you spend time relaxing back in town.\nWhen you perform an action where the outcome is uncertain, it’s time to test one of your stats. Tests can have one of three results, a pass, a fail, or a mixed result."
+}

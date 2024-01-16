@@ -1,0 +1,20 @@
+{
+    "slug": "healing",
+    "title": "Healing",
+    "type": "RULE",
+    "text": "Healing cannot affect dead creatures.",
+    "rules": [
+        {
+            "slug": "healing_a_dying_ally",
+            "title": "Healing a Dying Ally",
+            "type": "RULE",
+            "text": "If an ally is at 0 health, you can use an action to attempt to heal them. Make an Intellect test, Pass: 15, Fail: 10. On a pass they regain 1 Health, on a fail they lose 1 Stamina."
+        },
+        {
+            "slug": "healing_while_catching_your_breath",
+            "title": "Healing when Catching Your Breath",
+            "type": "RULE",
+            "text": "When you Catch Your Breath, you patch up and tend to any non life threatening injuries.\nIf you Catch Your Breath and are at 0 Health, you regain 1 Health."
+        }
+    ]
+}

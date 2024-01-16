@@ -1,0 +1,14 @@
+{
+    "slug": "building_a_PC",
+    "title": "Building a New Character",
+    "type": "RULE",
+    "text": "Your GM should tell you the level you are starting at. If you are starting higher than first level, follow the rules for leveling up after building your character at first level.\nPick a Lineage, Culture and Class.\nAssign stats - You have a set of 3,2,0,-2. Use each number once, placing them in your 4 stats.\nHigher numbers are better. Your class will have at least 1 primary stat. It's a good idea to have that be your highest number.\nPick a Novice Feature.\n(Optional) Write a backstory for your character.",
+    "rules": [
+        {
+            "slug": "leveling_up_PC",
+            "title": "Leveling Up",
+            "type": "RULE",
+            "text": "Your GM will tell you when you level up. Parties should generally be kept at the same level and should level up at the same time when Recuperating. When you level up, your Health & Stamina increase and you gain new features based on your Class."
+        }
+    ]
+}

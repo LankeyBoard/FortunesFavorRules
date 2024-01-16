@@ -1,0 +1,46 @@
+{
+    "slug": "char_resources",
+    "title": "Character Resources",
+    "type": "RULE",
+    "text": "",
+    "rules": [
+        {
+            "slug": "stamina",
+            "title": "Stamina",
+            "type": "RULE",
+            "text": "Each character has a pool of stamina. The exact amount is determined by their class or stat block if they are an NPC. Your stamina can be used for class abilities as well as to enhance certain generic tests such as jumping and marching. You can also opt to have damage cost stamina instead of health."
+        },
+        {
+            "slug": "health",
+            "title": "Health",
+            "type": "RULE",
+            "text": "Health represents the life force of your character. See Exhausted, Dying, Last Stand & Healing for what happens at 0 Health "
+        },
+        {
+            "slug": "rest",
+            "title": "Resting",
+            "type": "RULE",
+            "text": "If you spend stamina while resting, it immediately ends the rest and you gain no benefits from the rest",
+            "rules": [
+                {
+                    "slug": "catch_your_breath",
+                    "title": "Catch Your Breath",
+                    "type": "RULE",
+                    "text": "When you have a moment, you can catch your breath, tending to your wounds, wiping down your weapons, and centering yourself. To Catch Your Breath, spend 10 minutes resting and performing light activities without interruption.\nAt the end of the rest, you regain all missing stamina.\nIf you are at 0 Health, you gain 1 Health. Some classes may also have features that refresh when you Catch Your Breath."
+                },
+                {
+                    "slug": "long_rest",
+                    "title": "Long Rest",
+                    "type": "RULE",
+                    "text": "In-between adventures you have a chance to rest, relax and prepare yourself for the next call to action. To gain the benefits of a long rest you must spend 5 nights in a safe and relatively comfortable shelter while only engaging in light activity. Eg. At home or in an inn. Or spend 14 days & nights in less than ideal conditions with no more than light activity. Eg. Sleeping in a tent in the woods."
+                },
+                {
+                    "slug": "nights_sleep",
+                    "title": "A Night's Sleep",
+                    "type": "RULE",
+                    "text": "A good night's rest is still important to an adventurer. If you are awake for more than 24 hours in a row, test your mettle each hour. The difficulty of this test increases by 1 for each hour beyond 24 hours. Pass (15+): You suffer no ill effects. Mixed (10-14): Reduce your current and maximum stamina by 3. Fail (9-): Reduce your current and maximum stamina by 10. If you are reduced to 0 stamina in this way you become unconscious. Once you sleep for at least 6 hours you lose any negative effects from a lack of rest  and reset the difficulty of the test."
+                }
+            ]
+        }
+    ]
+}

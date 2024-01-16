@@ -1,0 +1,57 @@
+{
+    "slug": "what_makes_a_character",
+    "title": "What Makes Up a Character",
+    "type": "RULE",
+    "text": "Level, lineage, culture, class, stats, ties and backstory",
+    "rules": [
+        {
+            "slug": "level_desc",
+            "title": "Level",
+            "type": "RULE",
+            "text": "As your character grows more powerful and experienced you gain levels, unlocking new abilities based on your class. The current rules go from level 1-4."
+        },
+        {
+            "slug": "lineage_desc",
+            "title": "Lineage",
+            "type": "RULE",
+            "text": "Your character's physiology. Visit the lineage section for a list of options."
+        },
+        {
+            "slug": "culture_desc",
+            "title": "Culture",
+            "type": "RULE",
+            "text": "Where your character grew up. Visit the culture section for a list of options"
+        },        
+        {
+            "slug": "stats",
+            "title": "Stats",
+            "type": "LIST",
+            "list": [
+                {
+                    "slug": "mettle",
+                    "title": "Mettle",
+                    "type": "RULE",
+                    "text": "The physical force a character can generate as well as their heartiness."
+                },
+                {
+                    "slug": "agility",
+                    "title": "Agility",
+                    "type": "RULE",
+                    "text": "the physical accuracy and control of a character."
+                },
+                {
+                    "slug": "intellect",
+                    "title": "Intellect",
+                    "type": "RULE",
+                    "text": "The ability to gather and retain information."
+                },
+                {
+                    "slug": "heart",
+                    "title": "Heart",
+                    "type": "RULE",
+                    "text": "Emotional engagement, presence, and determination."
+                }                
+            ]
+        }
+    ]
+}
