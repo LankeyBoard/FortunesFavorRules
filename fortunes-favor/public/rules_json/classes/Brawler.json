@@ -1,0 +1,171 @@
+{
+    "name": "Brawler",
+    "flavor_text": "The brawler is a master of close-quarters combat, relying on unmatched agility, mettle, and strategic counterattacks to prevail in the heat of battle.",
+    "complexity": "standard",
+    "health": 20,
+    "health_on_level": 2,
+    "stamina_stat": "Mettle",
+    "stamina": 6,
+    "stamina_on_level": 2,
+    "training": {
+        "armor": [null],
+        "shields": [null],
+        "weapons": {"melee": ["unarmed", "improvised"], "ranged": ["improvised"], "special": null},
+        "magic": [null]
+    },
+    "attack_stat": "Mettle",
+    "range": {"min": 0, "max": 40},
+    "damage": {"dice": 10, "count": 1, "stat": "Mettle"},
+    "features": [{
+        "level": 1,
+        "name": "Muscle Bound Body",
+        "slug": "BrawlerMBB",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "When you are not wearing armor, you can calculate your Armor as 10+mettle+dex (max of 2)"       
+        },
+        {
+            "type": "FLAVOR",
+            "text": "Your years of training and fighting have honed your body to take blows that would have felled a lesser being."
+        }]
+    },
+    {
+        "level": 1,
+        "name": "Tag Team",
+        "slug": "BrawlerTT",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "When you succeed in a melee attack test, you can move the enemy up to 5ft into melee range of an ally or swap places with it if you can move. If that ally attacks the enemy before the start of the next round of combat, they have Fortune's Favor for that attack."
+        },
+        {
+            "type": "FLAVOR",
+            "text": "Teamwork is the greatest weapon. You know just how to set the stage for your allies to attack."
+        }]
+    },
+    {
+        "level": 2,
+        "name": "Bravado",
+        "slug": "BrawlerBravado",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "When trying to intimidate an enemy, add your mettle in addition to any other bonuses to the test."
+        },
+        {
+            "type": "FLAVOR",
+            "text": "Intimidation is as easy as breathing for you."
+        }]
+    },
+    {
+        "level": 2,
+        "name": "Counter Puncher",
+        "slug": "BrawlerCounter",
+        "stamina_cost": 1,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "When you make a counter attack, you can spend 1 stamina to remove the counter attack damage penalty, allowing you to deal your base damage on this counter attack."
+        },
+        {
+            "type": "FLAVOR",
+            "text": "If an enemy is foolish enough to open themselves up to your counter attacks, you make sure they pay the price."
+        }]
+    },
+    {
+        "level": 3,
+        "name": "Mix It Up",
+        "slug": "BrawlerMIU",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "If you are attacking an enemy you did not attack last turn you can spend Fortune's Favor before the attack to double your base damage if you hit."
+        },
+        {
+            "type": "FLAVOR",
+            "text": "Always striking a single enemy is boring and predictable. Mix it up by attacking different enemies."
+        }]
+    },
+    {
+        "level": 4,
+        "name": "Stat Up",
+        "slug": "BrawlerSU1",
+        "stamina_cost": null,
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "name": "RULE",
+            "text": "Select a new Novice Feature."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Spinning Lariat",
+        "slug": "BrawlerSL",
+        "stamina_cost": 1,
+        "fortunes_favor": true,
+        "type": "ATTACK",
+        "action": "ACTION",
+        "fields":[{
+            "type": "RULE",
+            "text": "Spend 1 Stamina plus 1 Stamina per enemy within melee range of you. Make an AOE Attack that deals your base damage against all enemies within melee range of you."
+        }]
+    },
+    {
+        "level": 6,
+        "name": "Slab of Beef",
+        "slug": "BrawlerSoB",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "Spend Fortune's Favor, halve all damage taken until the start your next turn."
+        },
+        {
+            "type": "FLAVOR",
+            "text": "Your incredibly beefy body can deflect blows just by flexing your muscles."
+        }]
+    },
+    {
+        "level": 7,
+        "name": "Running on Pure Adrenaline",
+        "slug": "BrawlerRoPA",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[{
+            "type": "RULE",
+            "text": "While making a Last Stand, double your lift, carry and drag amounts, gain Fortune's Favor on all Mettle Tests and double your jump distance."
+        }]
+    },
+    {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "BrawlerSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "name": "RULE",
+            "text": "Select a Veteran Feature"
+        }]
+    }]
+}

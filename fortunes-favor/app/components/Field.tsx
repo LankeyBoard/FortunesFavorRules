@@ -5,6 +5,8 @@ export type field_type = {
     title?: string;
     slug?: string;
     text?: string;
+    eg?: string;
+    list?: field_type[];
     rules?: field_type[];
 }
 
@@ -27,40 +29,35 @@ type fieldProps = {
 }
 const Field = ({field, depth=1}: fieldProps) => {
     let rulesTitleClass = "Rules-header"+depth;
-    console.log("creating field for ", field)
-    switch(field.type){
-        case field_options.Rule:
-            return(
-            <>
-            <div className={rulesTitleClass}>
-                {field.title}
-            </div>
-                <div>
-                    {field.text !== undefined && 
-                    TextRule(field.text)}
-                </div>
-                <div>
-                    {field.rules !== undefined &&
-                    field.rules.map((f)=> <Field field={f} depth={depth+1}></Field>)
-                    }
-                </div>
-            </>
-            )
-
-        default:
-            return(
-            <>
-                Error reading the type from field
-            </>
-            )
-    }
-
-}
-
-const TextRule = (text: string) => {
+    console.log("creating field for ", field);
     return(
-        <div>{text}</div>
+        <>
+        <div className={rulesTitleClass}>
+            {field.title}
+        </div>
+        {field.text !== undefined && 
+            <div>
+                {field.text}
+            </div>
+        }
+        {field.eg !== undefined && 
+            <div>
+                <p>e.g. <i>{field.eg}</i></p>
+            </div>
+        }
+        {field.list &&
+            <ul>
+                {field.list.map((f)=> <li key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
+            </ul>
+        }
+        {field.rules !== undefined &&
+        <div>
+            {field.rules.map((f) => <Field field={f} depth={depth+1}></Field>)}
+        </div>
+        }
+        </>
     )
+
 }
 
 export default Field;

@@ -1,0 +1,83 @@
+{
+    "name": "Knight",
+    "simple": true,
+    "flavor_text": "An honorable fighter heavily armed and armored against the evils of the world.",
+    "health_stat": "Mettle",
+    "health": 18,
+    "health_on_level": 2,
+    "stamina_stat": "Mettle",
+    "stamina": 6,
+    "stamina_on_level": 2,
+    "training": {
+        "armor": ["light, medium, heavy"],
+        "sheilds": ["light, medium, heavy"],
+        "weapons": {"melee": 2, "ranged": 2, "special": null},
+        "magic": [null]
+    },
+    "attack_stat": "Mettle",
+    "range": {"min": 0, "max": 120},
+    "damage": {"dice": 10, "count": 1, "stat": "Mettle"},
+    "features": [
+    {
+        "level": 1,
+        "name": "Driving Attack",
+        "stamina_cost": 1,
+        "fields":[{
+            "name": "flavor",
+            "text": "Your flurry of attacks drive the enemy back."       
+        },
+        {
+            "name": "desc",
+            "text": "When you make an attack action you may spend 1 stamina to attempt to also drive your enemy back 5ft. On a mix, you chose whether to damage or move the creature back. On a pass, you can do both.\nIf you chose to move a creature, they can opt to instead take an extra base attacks worth of damage to avoid being moved."
+        }]
+    },
+    {
+        "level": 1,
+        "name": "Sweeping Attack",
+        "stamina_cost": 1,
+        "fields":[{
+            "name": "flavor",
+            "text": "You sweep your attacks, aiming to harm all who stand in your way."       
+        },
+        {
+            "name": "desc",
+            "text": "When you take an attack action with a melee weapon, you may spend 1 stamina to attempt to also attack enemies adjacent to your target and within your weapons reach."
+        }]
+    },
+    {
+        "level": 2,
+        "name": "Vow",
+        "stamina_cost": null,
+        "fields":[{
+            "name": "flavor",
+            "text": "Your word is your bond, those who recognize your station believe you when you speak truth."       
+        },
+        {
+            "name": "desc",
+            "text": "When you take a Heart test to convince someone of true information, you gain a +3 on the test."
+        }]
+    },
+    {
+        "level": 3,
+        "name": "Intercept",
+        "stamina_cost": 1,
+        "fields":[{
+            "name": "flavor",
+            "text": "You swiftly step between your ally and danger."       
+        },
+        {
+            "name": "desc",
+            "text": "When an ally within 5ft of you would be hit by an attack or counter, you can spend 1 stamina to switch places with your ally, taking the hit for them."
+        }]
+    },
+    {
+        "level": 4,
+        "name": "Stat Up",
+        "stamina_cost": null,
+        "fields":[
+        {
+            "name": "desc",
+            "text": "Increase one of your stats by 1 (max 5)"
+        }]
+    }]
+}

@@ -30,7 +30,7 @@
             "title": "Failure",
             "type": "RULE",
             "text": "A failure occurs when you cannot achieve your desired outcome. This may mean the situation was harder than you initially believed or because you couldn't do it as well as you hoped or any other reason you and the GM think is reasonable. Sometimes the consequences of failure are direct, such as taking damage, other times they can simply be a complication for the story, this is determined by the GM.",
-            "eg": "Eg. You are scaling a castle wall, trying to get in without alerting the goblins keeping watch from the nearby tower. Your GM calls for an agility test, where success is a 15 and means you get up without being noticed and a failure is a 10 and means you get spotted. You roll your agility test, you get a 5 on the dice and add 2 from your agility, giving you a total of 7. The goblins spot you half way up, they begin to shout something you can't understand and begin to run towards the wall you are climbing!"
+            "eg": "You are scaling a castle wall, trying to get in without alerting the goblins keeping watch from the nearby tower. Your GM calls for an agility test, where success is a 15 and means you get up without being noticed and a failure is a 10 and means you get spotted. You roll your agility test, you get a 5 on the dice and add 2 from your agility, giving you a total of 7. The goblins spot you half way up, they begin to shout something you can't understand and begin to run towards the wall you are climbing!"
         },
         {
             "slug": "contests",

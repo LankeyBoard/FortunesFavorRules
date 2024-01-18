@@ -1,0 +1,85 @@
+{
+    "name": "",
+    "flavor_text": "",
+    "complexity": "standard",
+    "health": 0,
+    "health_on_level": 0,
+    "stamina_stat": "Mettle",
+    "stamina": 0,
+    "stamina_on_level": 0,
+    "training": {
+        "armor": [null],
+        "shields": [null],
+        "weapons": {"melee": null, "ranged": null, "special": null},
+        "magic": [null]
+    },
+    "attack_stat": "Mettle",
+    "range": {"min": 0, "max": 40},
+    "damage": {"dice": 10, "count": 1, "stat": "Mettle"},
+    "features": [{
+        "level": 0,
+        "name": "",
+        "slug": "",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": null,
+        "fields":[{
+            "type": "RULE",
+            "text": ""       
+        },
+        {
+            "type": "FLAVOR",
+            "text": ""
+        }]
+    },
+    {
+        "level": 0,
+        "name": "",
+        "slug": "",
+        "stamina_cost": 0,
+        "type": "choice",
+        "fields":[{
+            "type": "RULE",
+            "text": "describe the choices"       
+        },
+        {
+            "type": "CHOICE",
+            "fields": [
+                {"title": "choice title", "type": "rule", "text": "choice description"},
+                {"title": "", "type": "rule", "text": ""},
+                {"title": "", "type": "rule", "text": ""} 
+            ]
+        }]
+    },
+    {
+        "level": 4,
+        "name": "Stat Up",
+        "slug": "SU1",
+        "stamina_cost": null,
+        "fields":[
+        {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a new Novice Feature."
+        }]
+    },
+    {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "BrawlerSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "name": "RULE",
+            "text": "Select a Veteran Feature"
+        }]
+    }]
+}
