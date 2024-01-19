@@ -1,5 +1,6 @@
 {
     "name": "Brawler",
+    "slug": "BRAWLER",
     "flavor_text": "The brawler is a master of close-quarters combat, relying on unmatched agility, mettle, and strategic counterattacks to prevail in the heat of battle.",
     "complexity": "standard",
     "health": 20,
@@ -101,13 +102,14 @@
         "name": "Stat Up",
         "slug": "BrawlerSU1",
         "stamina_cost": null,
+        "type": "RULE",
         "fields":[
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Select a new Novice Feature."
         }]
     },
@@ -158,13 +160,14 @@
         "slug": "BrawlerSU2",
         "stamina_cost": null,
         "fortunes_favor": false,
+        "type": "RULE",
         "fields":[
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Select a Veteran Feature"
         }]
     }]

@@ -56,6 +56,7 @@
         "name": "Stat Up",
         "slug": "SU1",
         "stamina_cost": null,
+        "type": "RULE",
         "fields":[
         {
             "type": "RULE",
@@ -72,13 +73,14 @@
         "slug": "BrawlerSU2",
         "stamina_cost": null,
         "fortunes_favor": false,
+        "type": "RULE",
         "fields":[
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Select a Veteran Feature"
         }]
     }]
