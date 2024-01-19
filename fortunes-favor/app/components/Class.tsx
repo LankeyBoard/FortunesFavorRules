@@ -102,6 +102,7 @@ class Feature {
     ff?: number;
     type: field_options;
     fields: Field[];
+    choices?: Choice[];
     constructor(json_feature: any){
         this.level = json_feature.level;
         this.name = json_feature.name;
@@ -117,6 +118,9 @@ class Feature {
             console.log("Error matching feature type %s in json file", json_feature.type);
         }
         this.fields = json_feature.fields.map((json_field: any) => new Field(json_field));
+        if(this.type === field_options.Choice){
+            this.choices = json_feature.choices.map((json_choice: any) => new Choice(json_choice));
+        }
     }
 }
 
@@ -133,6 +137,15 @@ class Field {
             console.log("Error matching feature type %s in json file", json_field.type);
         }
         this.text = json_field.text;
+    }
+}
+
+class Choice {
+    name: string;
+    text: string;
+    constructor(json_choice: any){
+        this.name = json_choice.name;
+        this.text = json_choice.text;
     }
 }
 
@@ -161,6 +174,18 @@ const FeatureDisplay = ({feature}: featureProps) => {
             <div>
                 {feature.fields.map(f => <FieldDisplay field={f}/>)}
             </div>
+            {feature.choices && feature.choices.map(c => <ChoiceDisplay choice={c}/>)}
+        </div>
+    )
+}
+
+type choiceProps = {
+    choice: Choice;
+}
+const ChoiceDisplay = ({choice}: choiceProps) => {
+    return(
+        <div>
+            <p><b>{choice.name}</b> - {choice.text}</p>
         </div>
     )
 }
