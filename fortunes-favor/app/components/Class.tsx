@@ -137,14 +137,81 @@ class Field {
 }
 
 type fieldProps = {
+    field: Field;
+}
+const FieldDisplay = ({field}: fieldProps) => {
+    const cn = "field"+field.type;
+    return(
+        <div className={cn}>
+            {field.text}
+        </div>
+    )
+}
+type featureProps = {
+    feature: Feature;
+}
+const FeatureDisplay = ({feature}: featureProps) => {
+
+    return(
+        <div className={feature.slug}>
+            <div>{feature.name}</div>
+            <div>level {feature.level}</div>
+            <div>{feature.stamina && feature.stamina+" Stamina"}</div>
+            <div>{feature.ff && "Fortune's Favor"}</div>
+            <div>
+                {feature.fields.map(f => <FieldDisplay field={f}/>)}
+            </div>
+        </div>
+    )
+}
+
+type classProps = {
     class_json: any
 }
-const ClassRule = ({class_json}: any) => {
+const ClassRule = ({class_json}: classProps) => {
     const class_rules: ClassType = new ClassType(class_json)
+    const armorString = class_rules.training.armor?.toString() || "None";
+    const shieldString = class_rules.training.shield?.toString() || "None";
+    const meleeString = class_rules.training.weapon?.melee?.toString() || "None";
+    const rangedString = class_rules.training.weapon?.ranged?.toString() || "None";
+    const specialString = class_rules.training.weapon?.special?.toString() || "None";
+    const magicString = class_rules.training.magic?.toString() || "None";
+    const rangeString = (class_rules.range.min===0)? "Melee - "+class_rules.range.max+"ft" : class_rules.range.min+"ft - "+class_rules.range.max+"ft";
+    const dmgString = class_rules.dmg.count+"d"+class_rules.dmg.dice+" + "+class_rules.dmg.stat;
     return(
         <>
-            <div className={class_rules.slug}>
+            <div id={class_rules.slug}>
                 {class_rules.name}
+            </div>
+            Difficulty: {class_rules.complexity}
+            <div>
+                <p>{class_rules.flavor_text}</p>
+            </div>
+            <div>
+                <div>
+                    <p>Health: {class_rules.health} (+{class_rules.lvlHealth} on level up)</p>
+                    <p>Stamina: {class_rules.stamina}+{class_rules.staminaStat} (+{class_rules.lvlStamina}+{class_rules.staminaStat} on level up)</p>
+                </div>
+                <div id="classTraining">
+                    <ul>
+                        <li>Armor: {armorString}</li>
+                        <li>Shield: {shieldString}</li>
+                        <li>Weapons: [Melee: {meleeString} Ranged: {rangedString} Special: {specialString}]</li>
+                        <li>Magic: {magicString}</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li>Attack Stat: {class_rules.attkStat}</li>
+                        <li>Range: {rangeString}</li>
+                        <li>Damage: {dmgString}</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="features">
+                {
+                    class_rules.features.map((f) => <FeatureDisplay feature={f}/>)
+                }
             </div>
         </>
     )

@@ -28,7 +28,6 @@ export function findEnum(s: String, e: any): any|undefined{
     let match = undefined;
     keys.forEach((key) => {
         if(s === e[key]){
-            console.log("match");
             match = e[key];
         }
     })
