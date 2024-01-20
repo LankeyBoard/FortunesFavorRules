@@ -77,7 +77,7 @@
     {
         "level": 4,
         "name": "Stat Up",
-        "slug": "BrawlerSU1",
+        "slug": "ElemSU1",
         "stamina_cost": null,
         "type": "RULE",
         "fields":[
@@ -88,6 +88,72 @@
         {
             "type": "RULE",
             "text": "Select a new Novice Feature."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Twin Attack",
+        "slug": "ElemTA",
+        "stamina_cost": 2,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "Spend 2 Stamina, you can target two different creatures or the same creature twice with your attack."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Overcharge",
+        "slug": "ElemTA",
+        "stamina_cost": null,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "When you take damage of your elemental type, increase your base damage by 2 dice steps the next time you deal elemental damage."
+        }]
+    },
+    {
+        "level": 6,
+        "name": "Power Overwhelming",
+        "slug": "ElemPO",
+        "stamina_cost": null,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "During your last stand you can choose to end it early and die. If you choose to do so, make a final 30ft radius attack. The attack deals 3 times your base damage dice to those who it hits, and half damage to all who you either clash or miss. Using this ability kills you."
+        }]
+    },
+    {
+        "level": 7,
+        "name": "Bursting Shot",
+        "slug": "ElemBS",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "You can spend your Fortune's Favor when you make a magic attack. If the attack hits, all enemies within 5ft of the target take half as much damage."
+        }]
+    },
+    {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "ElemSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[
+        {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a Veteran Feature"
         }]
     }]
 }
