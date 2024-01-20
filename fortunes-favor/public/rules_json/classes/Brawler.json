@@ -118,7 +118,7 @@
         "name": "Spinning Lariat",
         "slug": "BrawlerSL",
         "stamina_cost": 1,
-        "fortunes_favor": true,
+        "fortunes_favor": false,
         "type": "ATTACK",
         "action": "ACTION",
         "fields":[{
