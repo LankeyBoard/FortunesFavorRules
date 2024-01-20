@@ -1,7 +1,8 @@
 {
     "name": "Elementalist",
+    "slug": "ELEMENTALIST",
     "flavor_text": "An elemental magic user who uses their mastery over their chosen elements to defeat their enemies.",
-    "simple": true,
+    "complexity": "simple",
     "health_stat": "Heart",
     "health": 10,
     "health_on_level": 2,
@@ -22,11 +23,11 @@
         "name": "Elemental Adept",
         "stamina_cost": null,
         "fields":[{
-            "name": "desc",
+            "name": "RULE",
             "text": "You can summon forth your chosen magic to perform minor tasks and tricks as are reasonable for your element."   
         },
         {
-            "name": "eg",
+            "name": "EG",
             "text": "You can summon flames to start a fire or shed light, or use psychic powers to pull a book from the shelves. Your base damage is also based on your element."
         }]
     },
@@ -34,13 +35,13 @@
         "level": 1,
         "name": "Elemental Burst",
         "stamina_cost": 1,
-        "type": "action",
+        "type": "ATTACK",
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "A burst of elemental energy surrounds you, warding off nearby foes."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "Attack all creatures within 5ft of you. Dealing base damage to those you hit."
         }]
     },
@@ -48,13 +49,13 @@
         "level": 2,
         "name": "Enhance",
         "stamina_cost": 1,
-        "type": "action",
+        "type": "RULE",
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "Surround yourself or an ally with your element, bolstering their natural abilities."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "Select yourself or an ally you can see within 30ft of you, add your intellect to the next Mettle or Agility test they make. If you have fortunes favor, you can spend it to double the bonus Enhance provides."
         }]
     },
@@ -62,25 +63,97 @@
         "level": 3,
         "name": "Focused Training",
         "stamina_cost": 1,
-        "type": "choice",
+        "type": "CHOICE",
         "fields":[{
-            "name": "desc",
+            "name": "RULE",
             "text": "Pick one of the following options to enhance yourself"       
         }],
         "choices": [
-            {"title": "Elemental Armor", "desc": "Add your Intellect to your armor and take half damage from your chosen element."},
-            {"title": "Bolt Thrower", "desc": "Increase your base attack range by 30ft"},
-            {"title": "Bigger Burst", "desc": "Increase the size of your burst to all creatures within 10ft of you."}            
+            {"name": "Elemental Armor", "text": "Add your Intellect to your armor and take half damage from your chosen element."},
+            {"name": "Bolt Thrower", "text": "Increase your base attack range by 30ft"},
+            {"name": "Bigger Burst", "text": "Increase the size of your burst to all creatures within 10ft of you."}            
         ]
     },
     {
         "level": 4,
         "name": "Stat Up",
+        "slug": "ElemSU1",
         "stamina_cost": null,
+        "type": "RULE",
         "fields":[
         {
-            "name": "desc",
+            "type": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a new Novice Feature."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Twin Attack",
+        "slug": "ElemTA",
+        "stamina_cost": 2,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "Spend 2 Stamina, you can target two different creatures or the same creature twice with your attack."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Overcharge",
+        "slug": "ElemTA",
+        "stamina_cost": null,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "When you take damage of your elemental type, increase your base damage by 2 dice steps the next time you deal elemental damage."
+        }]
+    },
+    {
+        "level": 6,
+        "name": "Power Overwhelming",
+        "slug": "ElemPO",
+        "stamina_cost": null,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "During your last stand you can choose to end it early and die. If you choose to do so, make a final 30ft radius attack. The attack deals 3 times your base damage dice to those who it hits, and half damage to all who you either clash or miss. Using this ability kills you."
+        }]
+    },
+    {
+        "level": 7,
+        "name": "Bursting Shot",
+        "slug": "ElemBS",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "You can spend your Fortune's Favor when you make a magic attack. If the attack hits, all enemies within 5ft of the target take half as much damage."
+        }]
+    },
+    {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "ElemSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[
+        {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a Veteran Feature"
         }]
     }]
 }
