@@ -1,8 +1,8 @@
 {
     "name": "Knight",
-    "simple": true,
+    "Slug": "KNIGHT",
+    "complexity": "simple",
     "flavor_text": "An honorable fighter heavily armed and armored against the evils of the world.",
-    "health_stat": "Mettle",
     "health": 18,
     "health_on_level": 2,
     "stamina_stat": "Mettle",
@@ -23,61 +23,132 @@
         "name": "Driving Attack",
         "stamina_cost": 1,
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "Your flurry of attacks drive the enemy back."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "When you make an attack action you may spend 1 stamina to attempt to also drive your enemy back 5ft. On a mix, you chose whether to damage or move the creature back. On a pass, you can do both.\nIf you chose to move a creature, they can opt to instead take an extra base attacks worth of damage to avoid being moved."
         }]
     },
     {
         "level": 1,
         "name": "Sweeping Attack",
+        "slug": "KnightSA",
         "stamina_cost": 1,
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "You sweep your attacks, aiming to harm all who stand in your way."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "When you take an attack action with a melee weapon, you may spend 1 stamina to attempt to also attack enemies adjacent to your target and within your weapons reach."
         }]
     },
     {
         "level": 2,
         "name": "Vow",
+        "slug": "KnightVOW",
         "stamina_cost": null,
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "Your word is your bond, those who recognize your station believe you when you speak truth."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "When you take a Heart test to convince someone of true information, you gain a +3 on the test."
         }]
     },
     {
         "level": 3,
         "name": "Intercept",
+        "slug": "KnightI",
         "stamina_cost": 1,
         "fields":[{
-            "name": "flavor",
+            "name": "FLAVOR",
             "text": "You swiftly step between your ally and danger."       
         },
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "When an ally within 5ft of you would be hit by an attack or counter, you can spend 1 stamina to switch places with your ally, taking the hit for them."
         }]
     },
     {
         "level": 4,
         "name": "Stat Up",
+        "slug": "KnightSU1",
         "stamina_cost": null,
         "fields":[
         {
-            "name": "desc",
+            "name": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a new Novice Feature."
+        }]
+    },
+    {
+        "level": 5,
+        "name": "Unstoppable",
+        "slug": "KnightU",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "fields":[{
+            "name": "RULE",
+            "text": "Spend Fortune's Favor, until the end of your next turn, your speed cannot be reduced below half your base speed."
+        }]
+    },
+    {
+        "level": 6,
+        "name": "No Retreat, No Surrender",
+        "slug": "KnightNRNS",
+        "stamina_cost": null,
+        "fields":[{
+            "name": "FLAVOR",
+            "text": "You never run from a fight and don’t stop until your enemies are dead."       
+        },
+        {
+            "name": "RULE",
+            "text": "If you attack the same creature you attacked last turn and did not willingly get further away from them, increase your Base Damage by 1 step."
+        }]
+    },
+    {
+        "level": 6,
+        "name": "Mounted Combatant",
+        "slug": "KnightMC",
+        "stamina_cost": null,
+        "fields":[{
+            "name": "RULE",
+            "text": "Gain a +3 to tests to control a trained mount."
+        }]
+    },
+    {
+        "level": 7,
+        "name": "You Won't Be The One To Kill Me",
+        "slug": "KnightYWBTOTKM",
+        "stamina_cost": null,
+        "fields":[
+        {
+            "name": "RULE",
+            "text": "When you make your Last Stand, pick a creature, you are immune to damage from that creature."
+        }]
+    },
+    {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "KnightSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields":[
+        {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+        },
+        {
+            "type": "RULE",
+            "text": "Select a Veteran Feature"
         }]
     }]
 }
