@@ -1,23 +1,39 @@
+'use client'
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const RulesNav = () => {
+const cleanPath = (path: string) => {
+    const i = path.lastIndexOf("/");
+    return(path.substring(i+1));
+}
+
+export const NavElem = ({directory}: {directory: string}) => {
+    const path = cleanPath(usePathname());
+    let isCurrent = false;
+    let name = cleanPath(directory);
+    console.log(name + " - " + path);
+    if(path === name){
+        isCurrent = true;
+    }
+    name = name.split("_").map(word => {
+        return word[0].toUpperCase() + word.substring(1);
+    }).join(" ")
+    return(
+        <Link href={"./"+directory}>
+            <div className={isCurrent?"font-medium text-xl text-slate-300" :"font-light text-lg hover:tracking-widest"}>
+                {name}
+            </div>
+        </Link>
+    )
+}
+
+const RulesNav = ({directories}: {directories: string[]}) => {
     return(
         <div className="flex-col my-5">
-            <Link href={"./brawler"}>
-                <div className="font-light text-lg hover:tracking-widest">
-                    Brawler
-                </div>
-            </Link>
-            <Link href={"./elementalist"}>
-                <div className="font-light text-lg hover:tracking-widest">
-                    Elementalist
-                </div>
-            </Link>
-            <Link href={"./knight"}>
-                <div className="font-light text-lg hover:tracking-widest">
-                    Knight
-                </div>
-            </Link>
+            {directories.map(dir => {
+                return(
+                    <NavElem directory={dir}/>);
+            })}     
         </div>
     )
 }

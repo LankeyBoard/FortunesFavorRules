@@ -1,4 +1,4 @@
-import RulesNav from "../components/blocks/RulesNav"
+import RulesNav from "../../components/blocks/RulesNav"
 import { readdirSync } from 'fs'
 
 const getDirectories = (source: string) =>
@@ -10,9 +10,9 @@ export default function Layout({ children }: {children: React.ReactNode}) {
     return(
         <div className="grid grid-cols-10">
             <div className="col-span-2">
-                <RulesNav directories={getDirectories("./app/classes")} />
+                <RulesNav directories={getDirectories("./app/pages/getting_started")} />
             </div>
-            <div className="col-span-6">
+            <div className="col-span-8">
                 {children}
             </div>
         </div>
