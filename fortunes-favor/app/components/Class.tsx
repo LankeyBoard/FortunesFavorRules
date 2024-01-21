@@ -236,7 +236,7 @@ const ClassRule = ({class_json}: classProps) => {
                         <p><span className="font-semibold clear-left">Stamina</span><span> - {class_rules.stamina}+{class_rules.staminaStat} (+{class_rules.lvlStamina}+{class_rules.staminaStat} on level up)</span></p>
                     </div>
                     <div id="classTraining" className="mt-2 p-3 border-amber-800 border-y-2">
-                        <p className="font-semibold text-lg">Trainig</p>
+                        <p className="font-semibold text-lg">Training</p>
                         <ul className="px-4">
                             <li><span className="font-normal">Armor: </span><span className="font-light">{armorString}</span></li>
                             <li><span className="font-normal">Shield: </span><span className="font-light">{shieldString}</span></li>
