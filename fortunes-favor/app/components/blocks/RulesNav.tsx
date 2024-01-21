@@ -20,7 +20,7 @@ export const NavElem = ({directory}: {directory: string}) => {
     }).join(" ")
     return(
         <Link href={"./"+directory}>
-            <div className={isCurrent?"font-medium text-xl text-slate-300" :"font-light text-lg hover:tracking-widest"}>
+            <div className={isCurrent?"font-medium text-xl text-slate-300 text-ellipsis whitespace-nowrap" :"font-light text-lg hover:tracking-widest whitespace-nowrap"}>
                 {name}
             </div>
         </Link>

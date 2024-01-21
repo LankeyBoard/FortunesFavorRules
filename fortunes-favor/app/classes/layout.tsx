@@ -8,12 +8,14 @@ const getDirectories = (source: string) =>
 
 export default function Layout({ children }: {children: React.ReactNode}) {
     return(
-        <div className="grid grid-cols-10">
-            <div className="col-span-2">
+        <div className="h-screen flex">
+            <div className="w-44 bg-gradient-to-b from-indigo-950 to-blue-900 p-4">
                 <RulesNav directories={getDirectories("./app/classes")} />
             </div>
-            <div className="col-span-6">
-                {children}
+            <div className="flex-1 flex overflow-hidden pl-10">
+                <div className="flex-1 overflow-y-scroll">
+                    {children}
+                </div>
             </div>
         </div>
     )
