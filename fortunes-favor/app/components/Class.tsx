@@ -154,8 +154,12 @@ type fieldProps = {
 }
 const FieldDisplay = ({field}: fieldProps) => {
     const cn = "field"+field.type;
+    const displayVariants = {
+        reg: '',
+        flavor: 'italic'
+    }
     return(
-        <div className={cn}>
+        <div className={field.type === field_options.Flavor ? displayVariants.flavor : displayVariants.reg}>
             {field.text}
         </div>
     )
@@ -166,15 +170,19 @@ type featureProps = {
 const FeatureDisplay = ({feature}: featureProps) => {
 
     return(
-        <div className={feature.slug}>
-            <div>{feature.name}</div>
-            <div>level {feature.level}</div>
-            <div>{feature.stamina && feature.stamina+" Stamina"}</div>
-            <div>{feature.ff && "Fortune's Favor"}</div>
-            <div>
-                {feature.fields.map(f => <FieldDisplay field={f}/>)}
+        <div id={feature.slug} className="bg-slate-800 my-5">
+            <div className="bg-teal-700 text-lg p-2 font-semibold">
+                {feature.name}
+                <div className="float-right">{feature.level}</div>
             </div>
-            {feature.choices && feature.choices.map(c => <ChoiceDisplay choice={c}/>)}
+            <div className="px-4 py-2">
+                {feature.stamina &&<div><span className="font-semibold">Costs - </span> {feature.stamina} Stamina</div>}
+                {feature.ff && <div className="font-semibold">Fortune's Favor</div>}
+                <div>
+                    {feature.fields.map(f => <FieldDisplay field={f}/>)}
+                </div>
+                {feature.choices && feature.choices.map(c => <ChoiceDisplay choice={c}/>)}
+            </div>
         </div>
     )
 }
@@ -190,55 +198,74 @@ const ChoiceDisplay = ({choice}: choiceProps) => {
     )
 }
 
+const makeTrainingString = (training_list: [string] | undefined) => {
+    console.log("training list = " + training_list)
+    if(!training_list || training_list.length < 1 || training_list[0] == null)
+        return "None"
+    if(parseInt(training_list[0])){
+        return "Choose " + training_list[0] + " of the following options : " + training_list.slice(1).join(', ');
+    }
+    return(training_list.join(', '));
+}
+
 type classProps = {
     class_json: any
 }
 const ClassRule = ({class_json}: classProps) => {
     const class_rules: ClassType = new ClassType(class_json)
-    const armorString = class_rules.training.armor?.toString() || "None";
-    const shieldString = class_rules.training.shield?.toString() || "None";
-    const meleeString = class_rules.training.weapon?.melee?.toString() || "None";
-    const rangedString = class_rules.training.weapon?.ranged?.toString() || "None";
-    const specialString = class_rules.training.weapon?.special?.toString() || "None";
-    const magicString = class_rules.training.magic?.toString() || "None";
+    const armorString = makeTrainingString(class_rules.training.armor);
+    const shieldString = makeTrainingString(class_rules.training.shield);
+    const meleeString = makeTrainingString(class_rules.training.weapon?.melee);
+    const rangedString = makeTrainingString(class_rules.training.weapon?.ranged);
+    const specialString = makeTrainingString(class_rules.training.weapon?.special);
+    const magicString = makeTrainingString(class_rules.training.magic);
     const rangeString = (class_rules.range.min===0)? "Melee - "+class_rules.range.max+"ft" : class_rules.range.min+"ft - "+class_rules.range.max+"ft";
     const dmgString = class_rules.dmg.count+"d"+class_rules.dmg.dice+" + "+class_rules.dmg.stat;
     return(
-        <>
-            <div id={class_rules.slug}>
+        <div id={class_rules.slug} className="">
+            <div className="text-3xl tracking-wide font-bold py-4 px-1">
                 {class_rules.name}
             </div>
-            Difficulty: {class_rules.complexity}
-            <div>
-                <p>{class_rules.flavor_text}</p>
-            </div>
-            <div>
-                <div>
-                    <p>Health: {class_rules.health} (+{class_rules.lvlHealth} on level up)</p>
-                    <p>Stamina: {class_rules.stamina}+{class_rules.staminaStat} (+{class_rules.lvlStamina}+{class_rules.staminaStat} on level up)</p>
+            <div className="">
+                <div className="mx-3">
+                    <p className="italic">{class_rules.flavor_text}</p>
                 </div>
-                <div id="classTraining">
-                    <ul>
-                        <li>Armor: {armorString}</li>
-                        <li>Shield: {shieldString}</li>
-                        <li>Weapons: [Melee: {meleeString} Ranged: {rangedString} Special: {specialString}]</li>
-                        <li>Magic: {magicString}</li>
-                    </ul>
-                </div>
-                <div>
-                    <ul>
-                        <li>Attack Stat: {class_rules.attkStat}</li>
-                        <li>Range: {rangeString}</li>
-                        <li>Damage: {dmgString}</li>
-                    </ul>
+                <div className="mt-2">
+                    <div className="mx-3">
+                        <p><span className="font-semibold">Health</span><span className=""> - {class_rules.health} (+{class_rules.lvlHealth} on level up)</span></p>
+                        <p><span className="font-semibold clear-left">Stamina</span><span> - {class_rules.stamina}+{class_rules.staminaStat} (+{class_rules.lvlStamina}+{class_rules.staminaStat} on level up)</span></p>
+                    </div>
+                    <div id="classTraining" className="mt-2 p-3 border-amber-800 border-y-2">
+                        <p className="font-semibold text-lg">Training</p>
+                        <ul className="px-4">
+                            <li><span className="font-normal">Armor: </span><span className="font-light">{armorString}</span></li>
+                            <li><span className="font-normal">Shield: </span><span className="font-light">{shieldString}</span></li>
+                            <li><p className="font-normal">Weapons </p>
+                                <div className="font-extralight px-4">
+                                    <p><span className="font-normal">Melee: </span>{meleeString}</p>
+                                    <p><span className="font-normal">Ranged: </span>{rangedString}</p>
+                                    <p><span className="font-normal">Special: </span>{specialString}</p>
+                                </div>
+                            </li>
+                            <li><span className="font-normal">Magic: </span><span className="font-light">{magicString}</span></li>
+                        </ul>
+                    </div>
+                    <div className="mx-3 mt-2">
+                        <p><span className="font-semibold">Attack Stat</span><span className=""> - {class_rules.attkStat}</span></p>
+                        <p><span className="font-semibold clear-left">Range</span><span> - {rangeString}</span></p>
+                        <p><span className="font-semibold clear-left">Damage</span><span> - {dmgString}</span></p>
+                    </div>
                 </div>
             </div>
             <div id="features">
+                <div className="my-4 mx-2 text-2xl tracking-wide">Features</div>
+                <div className="px-10">
                 {
                     class_rules.features.map((f) => <FeatureDisplay feature={f}/>)
                 }
+                </div>
             </div>
-        </>
+        </div>
     )
 
 }

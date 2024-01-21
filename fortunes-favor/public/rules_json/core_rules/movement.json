@@ -1,0 +1,56 @@
+{
+    "slug": "MOVEMENT",
+    "title": "Movement",
+    "type": "RULE",
+    "text": null,
+    "rules": [
+        {
+            "slug": "OVERLAND-TRAVEL",
+            "title": "Overland Travel",
+            "type": "RULE",
+            "text": "A full days march assumes 8 hours of marching.",
+            "rules": [{
+                "title": "Comfortable Marching Pace",
+                "type": "RULE",
+                "text": "15 + Mettle miles per day along an established road. The speed is halved when traveling without a road."
+        },
+        {
+            "title": "Pushing the Pace",
+            "type": "RULE",
+            "text": "You can push the pace of march. Spend 1 stamina to travel 1 additional mile that day."
+        },
+        {
+            "title": "Treacherous Terrain",
+            "type": "RULE",
+            "text": "Difficult terrain takes extra energy to traverse. For each hour navigating treacherous terrain make a Mettle test. Pass - 13, Fail - 8. On a Fail, lose 2 stamina, on a mixed, lose 1."
+        }]
+        },
+        {
+            "slug": "JUMP",
+            "title": "Jumping",
+            "type": "RULE",
+            "text": "When jumping use these formulas to calculate the minimum distances you can go. If you are trying to jump further, test your mettle. The difficulty is equal to 10+1 per foot beyond your standard jump range. If you roll below a success, you can spend stamina to increase your roll up to the point of a success if you have the stamina to spend.",
+            "rules":[{
+                "title": "Running Leap",
+                "type": "RULE",
+                "text": "If you move up to 10ft before jumping: (4 + 2*Mettle) ft horizontally (Min 2ft)"
+            },
+            {
+                "title": "Standing Leap",
+                "type": "RULE",
+                "text": "(3 + Mettle) ft horizontally (Min 1ft)"
+            },
+            {
+                "title": "High Jump",
+                "type": "RULE",
+                "text": "(1 + Mettle) ft vertically (Min 1ft)"
+            }]
+        },
+        {
+            "slug": "FALL",
+            "title": "Falling",
+            "type": "RULE",
+            "text": "When you fall from a height greater than 10 ft. Make an Agility test. Pass - 12, Fail - 7. For every 5 ft. past 10 ft. the difficulty increases by 2. On a pass you take no damage. On a fail you take 1d10 per 5 ft. On a Mixed you take half damage."
+        }
+    ]
+}
