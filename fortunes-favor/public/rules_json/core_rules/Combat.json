@@ -1,0 +1,72 @@
+{
+    "slug": "COMBAT",
+    "title": "Combat",
+    "type": "RULE",
+    "text": "Each round of combat is split into 3 parts, Environmental effects, players turn, enemies turn. During the players turn, each player makes one action and can move up to their movement speed. During the enemies turn enemies with actions can take one action and move. Enemies with only counters can only move unless they have not been attacked, in which case they can use a counter as an action.",
+    "rules": [
+        {
+            "slug": "EXCHANGES",
+            "title": "Exchanges",
+            "type": "RULE",
+            "text": "When a character attacks or casts an offensive spell at another creature or creatures an exchange begins. To start the exchange, make an attack roll and add the relevant stats depending on your class. Compare the total attack to the creatures Defense and Counter. If you roll above their Defense then the hit is clean and there is no room for retaliation. If the roll is between their Defense and Counter then you clash. You can either choose to deal no damage or strike but leave yourself open to counter attack. Your attack is resolved first, and then the target can use one of their counter moves. If you roll below their Counter, your attack is countered and the target can use one of their counter moves.",
+            "rules": [{
+                "title": "AOE Exchanges",
+                "type": "RULE",
+                "text": "When your action targets multiple enemies, roll a single attack test, and compare to each enemies defenses. If any target clashes or counters, the GM chooses which creature will take advantage of the opening. If two or more enemies clash or counter, the creature makes the attack with Fortune's Favor. Only a single enemy can clash or counter a single exchange."
+            }]
+        },
+        {
+            "slug": "BASIC-ACTIONS",
+            "title": "Basic Actions",
+            "type": "LIST",
+            "text": "These Actions are available to all players all the time.",
+            "list": [{
+                "title": "Attack",
+                "text": "Attack with one of your proficient weapons or magic. You deal your base damage."
+            },
+            {
+                "title": "Sprint",
+                "text": "Double your Speed this turn."
+            },
+            {
+                "title": "Defend",
+                "text": "Add +2 to your Armor and Counter."
+            },
+            {
+                "title": "Hide",
+                "text": "When you are obscured from enemies you can try and hide. See the rules on stealth for how to handle this."
+            },
+            {
+                "title": "Slip Away",
+                "text": "Your movement does not trigger counter moves this round."
+            }]
+        },
+        {
+            "slug": "BASIC-COUNTERS",
+            "title": "Basic Counters",
+            "type": "LIST",
+            "text": "These Counters are available to all players all the time.",
+            "list": [{
+                "title": "Counter Attack",
+                "text": "Attack the target with your currently equipped weapon or magic. The attack deals half your base damage rounded down."
+            },
+            {
+                "title": "Sprint",
+                "text": "Move up to half your Speed without triggering Counters."
+            }]
+        },
+        {
+            "slug": "MOVING-COMBAT",
+            "title": "Moving in Combat",
+            "type": "RULE",
+            "text": "In addition to an action, you can move during your turn in combat, moving up to your Speed in any direction. You can move at any point during your turn, and can split your move before and after your action. Eg. You move 10 ft. Make an Attack and then move another 20 ft. If you move away from an enemy, they get a chance to make a counter attack against you as you try to slip by."
+        },
+        {
+            "slug": "TAKING-DMG",
+            "title": "Taking Damage",
+            "type": "RULE",
+            "text": "When you take damage, you can lose your Health or your Stamina. At least 1 damage must be directed to Health, the rest can be directed to Health or Stamina. You cannot go below 0 Health or Stamina."
+        }
+    ]
+
+}
