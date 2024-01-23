@@ -1,18 +1,6 @@
 {
     "slug": "LIFT-DRAG",
     "title": "Movement",
-    "type": "LIST",
-    "text": null,
-    "list":[{
-        "text": "Your Lift, Drag & Pack (how much you can carry in your backpack and on your person) are all effected by your size. For each size below Medium, amounts are halved, and for each size above Medium they are doubled."
-    },
-    {
-        "text": "Using both hands, you can lift up to 50+10x your Mettle pounds."
-    },
-    {
-        "text": "You can drag up to 4x your lifting capacity."
-    },
-    {
-        "text": "You can pack up to 30+5x your Mettle pounds."
-    }]
+    "type": "RULE",
+    "text": ["Your Lift, Drag & Pack (how much you can carry in your backpack and on your person) are all effected by your size. For each size below Medium, amounts are halved, and for each size above Medium they are doubled.", "Using both hands, you can lift up to 50+10x your Mettle pounds.","You can drag up to 4x your lifting capacity.", "You can pack up to 30+5x your Mettle pounds."]
 }

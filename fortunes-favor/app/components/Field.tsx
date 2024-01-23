@@ -4,7 +4,7 @@ export type field_type = {
     type: field_options;
     title?: string;
     slug?: string;
-    text?: string;
+    text?: string | [string];
     eg?: string;
     list?: field_type[];
     rules?: field_type[];
@@ -46,11 +46,20 @@ const Field = ({field, depth=1}: fieldProps) => {
                 {field.title}
             </div>
             <div className="pb-2 mx-5">
-                {field.text !== undefined && 
-                    <div className="mb-2">
-                        {field.text}
-                    </div>
+                {field.text != undefined && typeof field.text === "string" &&
+                        <div className="mb-2">
+                            {field.text}
+                        </div>
                 }
+                {field.text != undefined &&
+                    typeof field.text !== "string" &&
+                        <div className="mb-2 space-y-3">
+                            {field.text.map(row => {
+                                return(<div className="">{row}</div>)
+                            })}
+                        </div>
+                }
+                
                 {field.eg !== undefined && 
                     <div>
                         <p>e.g. <i>{field.eg}</i></p>
@@ -58,7 +67,7 @@ const Field = ({field, depth=1}: fieldProps) => {
                 }
                 {field.list &&
                     <ul>
-                        {field.list.map((f)=> <li key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
+                        {field.list.map((f)=> <li className="space-y-2" key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
                     </ul>
                 }
             </div>
