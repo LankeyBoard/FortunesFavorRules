@@ -83,6 +83,18 @@
                 "title": "Heavy Armor",
                 "text": "17"
             }]
+        },
+        {
+            "title": "Equipment",
+            "slug": "EQUIPMENT",
+            "text": "While traveling, it's assumed your pack has all the items you need to get through a normal day. This might include a bed roll, some rope, etc. For specific adventuring gear, if you haven't already established that you have the item, you can make a luck test. The pass/fail are determined by the GMs judgment of the likelihood of you having the item. A mixed result might mean an item that is similar enough to be used in this instance, like a bed sheet instead of rope, or inferior to what you want, a small hatchet instead of a wood splitting axe.",
+            "type": "RULE",
+            "rules": [
+            {
+                "title": "General Difficulty Guidelines",
+                "text": ["Likely - Pass: 10 Fail: 5", "Unlikely - Pass: 15 Fail: 10", "Very Unlikely - Pass: 18 Fail: 13"]
+            }
+            ]
         }
     ]
 }

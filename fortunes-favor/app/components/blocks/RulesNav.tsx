@@ -1,38 +1,44 @@
 'use client'
 import Link from "next/link";
+import { nav } from "@/app/layout";
 import { usePathname } from "next/navigation";
 
-const cleanPath = (path: string) => {
-    const i = path.lastIndexOf("/");
-    return(path.substring(i+1));
-}
-
-export const NavElem = ({directory}: {directory: string}) => {
-    const path = cleanPath(usePathname());
+export const NavElem = ({navEl}: {navEl: nav}) => {
+    const path = usePathname();
+    console.log("path - ", path)
     let isCurrent = false;
-    let name = cleanPath(directory);
-    console.log(name + " - " + path);
-    if(path === name){
+
+    if(path === navEl.href){
         isCurrent = true;
     }
-    name = name.split("_").map(word => {
-        return word[0].toUpperCase() + word.substring(1);
-    }).join(" ")
     return(
-        <Link href={"./"+directory}>
-            <div className={isCurrent?"font-medium text-xl text-amber-300 text-ellipsis whitespace-nowrap" :"font-light text-lg hover:tracking-wide hover: text-amber-100 whitespace-nowrap"}>
-                {name}
+        <div>
+            {(navEl.href && !isCurrent) 
+            ?   <Link href={navEl.href} className="font-light text-lg hover:tracking-wide hover: text-amber-100 whitespace-nowrap">
+                    <div className={"font-light text-lg hover:tracking-wide hover: text-amber-100 whitespace-nowrap"}>
+                        {navEl.title}
+                    </div>
+                </Link>
+            :   <div className={isCurrent?"text-amber-300 text-lg text-ellipsis whitespace-nowrap ": "font-medium text-xl text-teal-300 text-ellipsis whitespace-nowrap"}>
+                    {navEl.title}
+                </div>
+            }
+            <div className="mx-2">
+                {navEl.subroutes?.map((r) => {
+                    return <NavElem navEl={r}/>
+                })}
             </div>
-        </Link>
+        
+        </div>
     )
 }
 
-const RulesNav = ({directories}: {directories: string[]}) => {
+const RulesNav = ({navMap}: {navMap: nav[]}) => {
     return(
         <div className="flex-col my-5">
-            {directories.map(dir => {
+            {navMap.map(n => {
                 return(
-                    <NavElem directory={dir}/>);
+                    <NavElem navEl={n}/>);
             })}     
         </div>
     )

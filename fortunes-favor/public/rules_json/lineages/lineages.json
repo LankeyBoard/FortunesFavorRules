@@ -1,0 +1,44 @@
+{
+    "list": [
+        {
+            "title": "Human",
+            "slug": "HUMAN",
+            "desc": "Humans typically have a wide range of appearances, with various skin tones, hair colors, and facial features.",
+            "size": "MEDIUM",
+            "speed": 30,
+            "stat": "+1 to any stat",
+            "traits": [
+                {
+                    "title": "Adaptable",
+                    "text": "Pick an extra Novice Feature at level 1."
+                },
+                {
+                    "title": "Resilient Immune System",
+                    "text": "Gain Fortune's Favor on tests to resist the effects of diseases."
+                }
+            ]
+        },
+        {
+            "title": "Dwarf",
+            "slug": "DWARF",
+            "desc": "Dwarves are stout and stocky, with thick beards and durable builds",
+            "size": "MEDIUM",
+            "speed": 25,
+            "stat": "+1 to Mettle",
+            "traits": [
+                {
+                    "title": "Low Light Vision",
+                    "text": "You can see in dim light as though it were bright. You cannot see in total darkness."
+                },
+                {
+                    "title": "Diggy Hole",
+                    "text": "You dig at twice the normal speed, gain Fortune's Favor on any Tests related to digging."
+                },
+                {
+                    "title": "Hearty",
+                    "text": "Gain Fortune's Favor on checks to resist poisons as well as alcohol related effects."
+                }
+            ]
+        }
+    ]
+}

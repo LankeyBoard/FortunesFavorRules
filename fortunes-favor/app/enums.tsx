@@ -23,6 +23,18 @@ export enum stat_options {
     error = "ERROR"
 }
 
+export enum size_options {
+    Miniscule = "MINISCULE",
+    Tiny = "TINY",
+    Small = "SMALL",
+    Medium = "MEDIUM",
+    Large = "LARGE",
+    Gigantic = "GIGANTIC",
+    Titanic = "TITANIC",
+    Colossal = "COLOSSAL",
+    error = "ERROR"
+}
+
 export function findEnum(s: String, e: any): any|undefined{
     let keys: string[] = Object.keys(e);
     let match = undefined;
