@@ -79,6 +79,10 @@ const navRoutes: nav[] = [
   {
     "title": "Lineages",
     "href": "/lineages"
+  },
+  {
+    "title": "Cultures",
+    "href": "/cultures"
   }
 ]
 

@@ -1,12 +1,7 @@
 import { size_options, findEnum } from "../enums"
-class trait {
-    title: string;
-    text: string;
-    constructor(json: any){
-        this.title = json.title;
-        this.text = json.text;
-    }
-}
+import Traits from "./Traits"
+import { trait } from "./blocks/Trait";
+
 class lineage {
     title: string;
     slug: string;
@@ -67,33 +62,9 @@ const Lineage = (json: any) => {
             <div>
                 <span className="font-semibold">Stat - </span>{l.stat}
             </div>
-            <div>
-            <span className="text-lg font-semibold">Traits</span>
-                <div className="px-3 border-amber-800 border-l-2 space-y-1">
-                {l.traits.map(t => {
-                    return(
-                        <div>
-                            <span className="font-semibold">{t.title} - </span>
-                            <span>{t.text}</span>
-                        </div>
-                    )
-                })}
-                </div>
-            </div>
+            <Traits title="Traits" traits={l.traits}/>
             {l.options && 
-            <div>
-                <span className="text-lg font-semibold">{l.title} options</span>
-                <div className="px-3 border-amber-800 border-l-2 space-y-1">
-                {l.options.map(t => {
-                    return(
-                        <div>
-                            <span className="font-semibold">{t.title} - </span>
-                            <span>{t.text}</span>
-                        </div>
-                    )
-                })}
-                </div>
-            </div>
+            <Traits title="Options" traits={l.options}/>
             }
         </div>
     )
