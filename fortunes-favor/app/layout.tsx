@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export type nav = {
   title: string,
   href?: string,
-  subroutes?: [nav]
+  subroutes?: nav[]
 }
 
 const navRoutes: nav[] = [
@@ -19,6 +19,46 @@ const navRoutes: nav[] = [
     "subroutes": [{
       "title": "Building A Character",
       "href": "/player_rules/getting_started/building_a_character"
+    },
+    {
+      "title": "Character Components",
+      "href": "/player_rules/getting_started/character_components"
+    },
+    {
+      "title": "Character Resources",
+      "href": "/player_rules/getting_started/character_resources"
+    },
+    {
+      "title": "Tests",
+      "href": "/player_rules/getting_started/tests"
+    },
+    {
+      "title": "Combat",
+      "href": "/player_rules/getting_started/combat"
+    },
+    {
+      "title": "Dying & Last Stand",
+      "href": "/player_rules/getting_started/dying"
+    },
+    {
+      "title": "Healing",
+      "href": "/player_rules/getting_started/healing"
+    },
+    {
+      "title": "Movement",
+      "href": "/player_rules/getting_started/movement"
+    },
+    {
+      "title": "Lift, Drag, & Pack",
+      "href": "/player_rules/getting_started/lift_drag_pack"
+    },
+    {
+      "title": "Equipment",
+      "href": "/player_rules/getting_started/equipment"
+    },
+    {
+      "title": "Reference",
+      "href": "/player_rules/getting_started/references"
     }]
   },
   {

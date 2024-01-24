@@ -45,7 +45,7 @@ const Field = ({field, depth=1}: fieldProps) => {
             <div className={titleStyler(depth)}>
                 {field.title}
             </div>
-            <div className={field.type != field_options.List ? "pb-2 mx-5" : "pb-2 mx-10"}>
+            <div className={field.type != field_options.List ? "pb-2 mx-5" : "pb-2 mx-2"}>
                 {field.text != undefined && typeof field.text === "string" &&
                         <div className="">
                             {field.text}
@@ -67,7 +67,7 @@ const Field = ({field, depth=1}: fieldProps) => {
                 }
                 {field.list &&
                     <ul className="">
-                        {field.list.map((f)=> <li className={f.title ? "" :"space-y-2 list-disc"} key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
+                        {field.list.map((f)=> <li className={f.title ? "" :"space-y-2"} key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
                     </ul>
                 }
             </div>
