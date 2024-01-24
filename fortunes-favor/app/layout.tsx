@@ -66,6 +66,14 @@ const navRoutes: nav[] = [
     "subroutes": [{
       "title": "Brawler",
       "href": "/classes/brawler"
+    },
+    {
+      "title": "Elementalist",
+      "href": "/classes/elementalist"
+    },
+    {
+      "title": "Knight",
+      "href": "/classes/knight"
     }]
   },
   {

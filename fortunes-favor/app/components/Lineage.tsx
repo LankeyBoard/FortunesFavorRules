@@ -15,10 +15,10 @@ class lineage {
     speed: number;
     stat: string;
     traits: [
-        {
-            title: string;
-            text: string;
-        }
+        trait
+    ];
+    options?:[
+        trait
     ]
     constructor(json: any){
         console.log("JSON - ", json.json)
@@ -37,7 +37,12 @@ class lineage {
         this.stat = json.stat;
         this.traits = json.traits.map((t: any) => {
             return new trait(t);
-        })
+        });
+        if(json.options){
+            this.options = json.options.map((o: any) => {
+                return new trait(o);
+            })
+        }
         console.log("Lineage - ", lineage);
     }
 }
@@ -75,6 +80,21 @@ const Lineage = (json: any) => {
                 })}
                 </div>
             </div>
+            {l.options && 
+            <div>
+                <span className="text-lg font-semibold">{l.title} options</span>
+                <div className="px-3 border-amber-800 border-l-2 space-y-1">
+                {l.options.map(t => {
+                    return(
+                        <div>
+                            <span className="font-semibold">{t.title} - </span>
+                            <span>{t.text}</span>
+                        </div>
+                    )
+                })}
+                </div>
+            </div>
+            }
         </div>
     )
 }
