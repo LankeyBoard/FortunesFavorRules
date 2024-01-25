@@ -203,9 +203,9 @@ const makeTrainingString = (training_list: [string] | undefined) => {
     if(!training_list || training_list.length < 1 || training_list[0] == null)
         return "None"
     if(parseInt(training_list[0])){
-        return "Choose " + training_list[0] + " of the following options : " + training_list.slice(1).join(', ');
+        return ("Choose " + training_list[0] + " of the following options " + "[ "+ training_list.slice(1).join(', ') + " ]");
     }
-    return(training_list.join(', '));
+    return("[ " + training_list.join(', ') + " ]");
 }
 
 type classProps = {
@@ -238,13 +238,13 @@ const ClassRule = ({class_json}: classProps) => {
                     <div id="classTraining" className="mt-2 p-3 border-amber-800 border-y-2">
                         <p className="font-semibold text-lg">Training</p>
                         <ul className="px-4">
-                            <li><span className="font-normal">Armor: </span><span className="font-light">{armorString}</span></li>
-                            <li><span className="font-normal">Shield: </span><span className="font-light">{shieldString}</span></li>
+                            <li><span className="font-normal">Armor - </span><span className="font-light">{armorString}</span></li>
+                            <li><span className="font-normal">Shield - </span><span className="font-light">{shieldString}</span></li>
                             <li><p className="font-normal">Weapons </p>
                                 <div className="font-extralight px-4">
-                                    <p><span className="font-normal">Melee: </span>{meleeString}</p>
-                                    <p><span className="font-normal">Ranged: </span>{rangedString}</p>
-                                    <p><span className="font-normal">Special: </span>{specialString}</p>
+                                    <p><span className="font-normal">Melee: - </span>{meleeString}</p>
+                                    <p><span className="font-normal">Ranged - </span>{rangedString}</p>
+                                    <p><span className="font-normal">Special - </span>{specialString}</p>
                                 </div>
                             </li>
                             <li><span className="font-normal">Magic: </span><span className="font-light">{magicString}</span></li>

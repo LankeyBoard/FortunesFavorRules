@@ -29,7 +29,7 @@ const titleStyler =(depth: number) => {
         case 1:
             return("text-3xl tracking-wide font-bold py-4 px-1");
         case 2:
-            return("my-4 mx-2 text-2xl tracking-wide");
+            return("mt-3 mb-1 mx-2 text-2xl tracking-wide");
         case 3:
             return("text-lg p-2 font-semibold")
     }
@@ -65,19 +65,26 @@ const Field = ({field, depth=1}: fieldProps) => {
                         <p>e.g. <i>{field.eg}</i></p>
                     </div>
                 }
-                {field.list &&
+                {field.list && field.type === field_options.CompactList &&
+                        <div>
+                            {field.list.map((rule) => <div><span className="font-semibold">{rule.title}</span><span> - {rule.text}</span></div>)}
+                        </div>
+                }
+                {field.list && field.type !== field_options.CompactList &&
                     <ul className="">
                         {field.list.map((f)=> <li className={f.title ? "" :"space-y-2"} key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
                     </ul>
                 }
             </div>
-            <div className={depth>1?"mx-4 border-amber-800 border-l-2":""}>
-                {field.rules !== undefined &&
-                <div className="">
-                    {field.rules.map((f) => <Field field={f} depth={depth+1}></Field>)}
+            {field.rules &&
+                <div className={depth>1?"mx-4 border-amber-800 border-l-2":""}>
+                    {field.rules !== undefined &&
+                    <div className="">
+                        {field.rules.map((f) => <Field field={f} depth={depth+1}></Field>)}
+                    </div>
+                    }
                 </div>
-                }
-            </div>
+            }
         </div>
     )
 

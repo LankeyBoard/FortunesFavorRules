@@ -68,12 +68,20 @@ const navRoutes: nav[] = [
       "href": "/classes/brawler"
     },
     {
+      "title": "Devoted",
+      "href": "/classes/devoted"
+    },
+    {
       "title": "Elementalist",
       "href": "/classes/elementalist"
     },
     {
       "title": "Knight",
       "href": "/classes/knight"
+    },
+    {
+      "title": "Ranger",
+      "href": "/classes/ranger"
     }]
   },
   {

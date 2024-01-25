@@ -1,0 +1,205 @@
+{
+    "name": "Devoted",
+    "slug": "DEVOTED",
+    "flavor_text": "Your reverence and constant spread of your gods holy words has earned you their favor which you use to perform greater deeds in their name.",
+    "complexity": "standard",
+    "health": 14,
+    "health_on_level": 2,
+    "stamina_stat": "Heart",
+    "stamina": 6,
+    "stamina_on_level": 2,
+    "training": {
+      "armor": [null],
+      "shields": [null],
+      "weapons": {"melee": ["none"], "ranged": ["none"], "special": null},
+      "magic": ["Divine"]
+    },
+    "attack_stat": "Heart",
+    "range": {"min": 0, "max": 60},
+    "damage": {"dice": 6, "count": 1, "stat": "Heart"},
+    "features": [
+      {
+        "level": 1,
+        "name": "Spellcasting",
+        "slug": "DEVOTED-SPELLCASTING",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Learning Spells: Start with Heart spells known from the Divine list. You can only learn spells that are less than or equal to your current level. When you level up, learn 1 additional spell."
+          },
+          {
+            "type": "RULE",
+            "text": "Casting Spells: To cast a spell you spend stamina equal to the spell's level while using your Holy Symbol."
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "name": "Holy Symbol",
+        "slug": "DEVOTEDHS",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "You need a holy symbol to cast your divine spells. You require one hand either holding your holy symbol or free to cast."
+          },
+          {
+            "type": "FLAVOR",
+            "text": "E.g., if you are using a staff, you have to be holding it in one hand or if you have a tattoo on the back of your hand, then you can't have anything in that hand to cast."
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "name": "I've Studied the Word",
+        "slug": "DEVOTEDStW",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Gain a +3 on Intellect tests to recall specific bits of history or religious information."
+          },
+          {
+            "type": "FLAVOR",
+            "text": "Your years of study and devotion have granted you deep knowledge of historical and religious facts."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "name": "Rapid Recuperation",
+        "slug": "DEVOTEDRR",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "3 charges, when you Catch Your Breath, you can expend a charge, you and up to 5 allies regain Health equal to your Heart. You regain all charges when you Rest & Recuperate"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "name": "Reading the Signs",
+        "slug": "DEVOTEDRS",
+        "stamina_cost": 1,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Spend 1 stamina and 10 minutes in deep meditation or praying on a solution to an issue to gain Fortune's Favor on the next Test to resolve the issue."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "name": "Minor Intervention",
+        "slug": "DEVOTEDMI",
+        "stamina_cost": null,
+        "fortunes_favor": true,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Once a day you can spend Fortune's Favor to improve yours or your allies Test results. Turning a Failure to a Mixed or a Mixed to a Success. You can do this after the dice are rolled but before consequences are applied."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "name": "Stat Up",
+        "slug": "DEVOTEDSU1",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+          },
+          {
+            "type": "RULE",
+            "text": "Select a new Novice Feature."
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "name": "Shepherd of the Word",
+        "slug": "DEVOTEDSW",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "You act as a conduit for the word of your god and you know how to gather others to your cause."
+          },
+          {
+            "type": "RULE",
+            "text": "Add a +3 to tests to persuade others to follow your god's tenets."
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "name": "Martyr",
+        "slug": "DEVOTEDM",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "Before you die, you make yourself a holy martyr seeking the final praise of your god."
+          },
+          {
+            "type": "RULE",
+            "text": "When you use your Last Stand, you can cast 2 spells per action, and increase your base damage by 1 dice step."
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "name": "Divine Inspiration",
+        "slug": "DEVOTEDDI",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "3 times per adventure, cast a spell without spending stamina. Any additional effects of the spell that require stamina still require you to spend stamina."
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "DEVOTEDSU2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Increase a stat by 1 (max 5)"
+          },
+          {
+            "type": "RULE",
+            "text": "Select a Veteran Feature."
+          }
+        ]
+      }
+    ]
+  }
+  

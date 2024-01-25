@@ -7,7 +7,7 @@
         "title": "Languages",
         "slug": "LANGS",
         "text": null,
-        "type": "LIST",
+        "type": "LIST-COMPACT",
         "list":[{
             "title": "Allspeak",
             "text": "The universal language known by most civilized peoples, it is a harmonious blend of words and expressions drawn from various cultures, offering a common ground for communication."
@@ -51,7 +51,7 @@
         "title": "Statuses",
         "slug": "STATUSES",
         "text": null,
-        "type": "LIST",
+        "type": "LIST-COMPACT",
         "list":[{
             "title": "Incapacitated",
             "text": "You cannot take actions or move and are unaware of your surroundings."
@@ -100,7 +100,7 @@
     {
         "title": "Creature Sizes",
         "text": null,
-        "type": "LIST",
+        "type": "LIST-COMPACT",
         "list": [{
             "text": "Miniscule(>6in)"
         },

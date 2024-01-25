@@ -18,7 +18,7 @@
         {
             "slug": "BASIC-ACTIONS",
             "title": "Basic Actions",
-            "type": "LIST",
+            "type": "LIST-COMPACT",
             "text": "These Actions are available to all players all the time.",
             "list": [{
                 "title": "Attack",
@@ -44,7 +44,7 @@
         {
             "slug": "BASIC-COUNTERS",
             "title": "Basic Counters",
-            "type": "LIST",
+            "type": "LIST-COMPACT",
             "text": "These Counters are available to all players all the time.",
             "list": [{
                 "title": "Counter Attack",

@@ -3,6 +3,7 @@ export enum field_options {
     Flavor = "FLAVOR",
     Eg = "EG",
     List = "LIST",
+    CompactList = "LIST-COMPACT",
     Choice = "CHOICE",
     Attack = "ATTACK",
     error = "ERROR"

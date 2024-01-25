@@ -9,9 +9,9 @@
     "stamina": 6,
     "stamina_on_level": 2,
     "training": {
-        "armor": ["light, medium, heavy"],
-        "sheilds": ["light, medium, heavy"],
-        "weapons": {"melee": 2, "ranged": 2, "special": null},
+        "armor": ["Light, Medium, Heavy"],
+        "sheilds": ["Light, Medium, Heavy"],
+        "weapons": {"melee": [2, "Hammers & Clubs", "Slashing Swords", "Piercing Swords & Daggers", "Axes", "Flails, Ball & Chain, etc."], "ranged": [2, "Heavy Throwing", "Light Throwing", "Bows", "Crossbows"], "special": null},
         "magic": [null]
     },
     "attack_stat": "Mettle",
