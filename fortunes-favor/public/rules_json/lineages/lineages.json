@@ -84,7 +84,7 @@
             "title": "Chimeric",
             "slug": "CHIMERIC",
             "desc": "Chimeric are a whole class of people who are humanoids who express animal traits. Often they have the head of their animal, but they come in many shapes and sizes, sometimes indistinguishable from humans, to obviously Chimeric.",
-            "size": ["SMALL,LARGE"],
+            "size": ["SMALL", "MEDIUM", "LARGE"],
             "speed": 30,
             "stat": "+1 to any stat",
             "traits": [

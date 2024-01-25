@@ -6,7 +6,7 @@ class lineage {
     title: string;
     slug: string;
     desc: string;
-    size: size_options;
+    size: size_options | size_options[];
     speed: number;
     stat: string;
     traits: [
@@ -20,13 +20,23 @@ class lineage {
         this.title = json.title;
         this.slug = json.slug;
         this.desc = json.desc;
-        const s = findEnum(json.size, size_options);
-        this.size = size_options.error;
-        if(s){
-            this.size = s;
+        if(typeof json.size === "string"){
+            const s = findEnum(json.size, size_options);
+            this.size = size_options.error;
+            if(s){
+                this.size = s;
+            }
+            else{
+                console.log("Error matching size %s in json file", json.size);
+            }
         }
         else{
-            console.log("Error matching size %s in json file", json.size);
+            let sizeList: size_options[] = [];
+            json.size.forEach((sizeOpt: string) => {
+                const s = findEnum(sizeOpt, size_options);
+                sizeList.push(s);
+            });
+            this.size = sizeList;
         }
         this.speed = json.speed;
         this.stat = json.stat;
@@ -46,7 +56,7 @@ const Lineage = (json: any) => {
     console.log("Lineage json input: ", json)
     const l = new lineage(json.json);
     return(
-        <div id={l.slug}>
+        <div id={l.slug} className="mb-6">
             <div className="my-4 text-2xl tracking-wide">
                 {l.title}
             </div>
@@ -54,7 +64,9 @@ const Lineage = (json: any) => {
                 {l.desc}
             </div>
             <div>
-                <span className="font-semibold">Size - </span>{l.size.at(0)?.toUpperCase()+l.size.substring(1).toLocaleLowerCase()}
+                <span className="font-semibold">Size - </span> {typeof l.size === "string"
+                ? <span className="capitalize">{l.size.toLocaleLowerCase()}</span> 
+                : l.size.map((s) => {return(<span className="capitalize">{s.toLocaleLowerCase()} </span>)})}
             </div>
             <div>
                 <span className="font-semibold">Speed - </span>{l.speed}

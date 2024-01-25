@@ -1,5 +1,5 @@
 import { field_options, complexity_options, stat_options, findEnum } from "../enums"
-
+import { getOrdinal } from "../utils/utils";
 class ClassType {
     name: string;
     slug: string;
@@ -173,7 +173,7 @@ const FeatureDisplay = ({feature}: featureProps) => {
         <div id={feature.slug} className="bg-slate-800 my-5">
             <div className="bg-teal-700 text-lg p-2 font-semibold">
                 {feature.name}
-                <div className="float-right">{feature.level}</div>
+                <div className="text-slate-200 text-sm ordinal float-right">{feature.level+getOrdinal(feature.level)} level</div>
             </div>
             <div className="px-4 py-2">
                 {feature.stamina &&<div><span className="font-semibold">Costs - </span> {feature.stamina} Stamina</div>}

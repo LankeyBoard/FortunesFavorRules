@@ -21,15 +21,15 @@ export const NavElem = ({navEl, isSub} : navProps) => {
             {(navEl.href && !isCurrent) 
             ?
                 <div className={isSub?"border-l-amber-700 border-l":""}>   
-                    <Link href={navEl.href} className="font-light text-lg hover:tracking-wide hover: text-amber-100 whitespace-nowrap">
-                        <div className={"font-light text-lg hover:tracking-wide hover: text-amber-100 whitespace-nowrap ml-3"}>
+                    <Link href={navEl.href} className="font-light text-lg hover:tracking-wide whitespace-nowrap">
+                        <div className={"font-light text-lg text-slate-200 hover:tracking-wide hover:text-amber-100 whitespace-nowrap ml-3"}>
                             {navEl.title}
                         </div>
                     </Link>
                 </div>
             :   
                 <div className={isCurrent && isSub ?"border-l-amber-500 border-l":""}>
-                    <div className={isCurrent?"text-amber-300 text-lg text-ellipsis whitespace-nowrap ml-3": "font-medium text-xl text-teal-300 text-ellipsis whitespace-nowrap"}>
+                    <div className={isCurrent?"text-amber-300 text-lg text-ellipsis whitespace-nowrap ml-3": "font-medium text-xl text-white text-ellipsis whitespace-nowrap"}>
                         {navEl.title}
                     </div>
                 </div>

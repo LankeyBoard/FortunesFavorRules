@@ -36,7 +36,7 @@ const Culture = (json: any) => {
     console.log("Lineage json input: ", json)
     const c = new culture(json.json);
     return(
-        <div id={c.slug}>
+        <div id={c.slug} className="mb-6">
             <div className="my-4 text-2xl tracking-wide">
                 {c.title}
             </div>

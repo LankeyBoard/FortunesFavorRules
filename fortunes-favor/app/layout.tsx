@@ -98,7 +98,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
     return(
       <div className='container mx-auto max-w-screen-xxl'>
         <div className="h-screen flex">
-            <div className="w-60 bg-gradient-to-b from-indigo-950 to-blue-900 p-4">
+            <div className="w-60 bg-slate-950 p-4">
                 <RulesNav navMap={navRoutes} />
             </div>
             <div className="flex-1 flex overflow-hidden pl-10">
