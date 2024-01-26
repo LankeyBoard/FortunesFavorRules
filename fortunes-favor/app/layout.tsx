@@ -96,7 +96,7 @@ const navRoutes: nav[] = [
 
 export default function RootLayout({ children }: {children: React.ReactNode}) {
     return(
-      <div className='container mx-auto max-w-screen-xxl'>
+      <div className='container mx-auto max-w-screen-xxl bg-gray-900'>
         <div className="h-screen flex">
             <div className="w-60 bg-slate-950 p-4">
                 <RulesNav navMap={navRoutes} />

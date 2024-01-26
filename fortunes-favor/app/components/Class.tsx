@@ -1,5 +1,7 @@
+import { arrayBuffer } from "stream/consumers";
 import { field_options, complexity_options, stat_options, findEnum } from "../enums"
 import { getOrdinal } from "../utils/utils";
+import { ReactComponentElement, ReactElement } from "react";
 class ClassType {
     name: string;
     slug: string;
@@ -208,6 +210,56 @@ const makeTrainingString = (training_list: [string] | undefined) => {
     return("[ " + training_list.join(', ') + " ]");
 }
 
+type tagProps = {
+    text: string,
+    style?: string,
+}
+
+const Tag =({text, style}: tagProps) => {
+    const s = style? style : "bg-teal-900";
+    const tagStyle = s + " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm";
+    return(
+        <div className={tagStyle}>
+            {text}
+        </div>
+    )
+}
+type classTagsProps = {
+    c: ClassType;
+    
+}
+
+const ClassTags = ({c}: classTagsProps) => {
+    let tags: ReactElement[]= new Array;
+    let tagStyle;
+    switch(c.complexity){
+        case complexity_options.simple:
+            tagStyle = "bg-green-800";
+            break;
+        case complexity_options.std:
+            tagStyle = "bg-amber-800";
+            break;
+        case complexity_options.complex:
+            tagStyle = "bg-blue-800";
+            break;
+        default:
+            tagStyle = "bg-rose-500";
+    }
+    tags.push(<Tag style={tagStyle} text={c.complexity}/>);
+    tags.push(<Tag text={c.attkStat}/>);
+    if(c.attkStat !== c.dmg.stat){
+        tags.push(<Tag text={c.dmg.stat}/>);
+    }
+    if(c.attkStat !== c.dmg.stat && c.dmg.stat !== c.staminaStat && c.attkStat !== c.staminaStat){
+        tags.push(<Tag text={c.staminaStat}/>);
+    }
+    return(
+        <div>
+            {tags}
+        </div>
+    )
+}
+
 type classProps = {
     class_json: any
 }
@@ -223,10 +275,13 @@ const ClassRule = ({class_json}: classProps) => {
     const dmgString = class_rules.dmg.count+"d"+class_rules.dmg.dice+" + "+class_rules.dmg.stat;
     return(
         <div id={class_rules.slug} className="">
-            <div className="text-3xl tracking-wide font-bold py-4 px-1">
-                {class_rules.name}
+            <div className="w-full">
+                <div className="text-3xl tracking-wide font-bold py-4 px-1">
+                    {class_rules.name}
+                </div>
             </div>
-            <div className="">
+            <ClassTags c={class_rules}/>
+            <div className="clear-both">
                 <div className="mx-3">
                     <p className="italic">{class_rules.flavor_text}</p>
                 </div>

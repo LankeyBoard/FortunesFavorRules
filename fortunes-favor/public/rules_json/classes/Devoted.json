@@ -2,7 +2,7 @@
     "name": "Devoted",
     "slug": "DEVOTED",
     "flavor_text": "Your reverence and constant spread of your gods holy words has earned you their favor which you use to perform greater deeds in their name.",
-    "complexity": "standard",
+    "complexity": "complex",
     "health": 14,
     "health_on_level": 2,
     "stamina_stat": "Heart",
