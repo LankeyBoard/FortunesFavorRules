@@ -109,17 +109,23 @@ const navRoutes: nav[] = [
 
 export default function RootLayout({ children }: {children: React.ReactNode}) {
     return(
-      <div className='container mx-auto max-w-screen-xxl bg-gray-900'>
-        <div className="h-screen flex">
-            <div className="w-60 bg-slate-950 p-4">
-                <RulesNav navMap={navRoutes} />
-            </div>
-            <div className="flex-1 flex overflow-hidden pl-10">
-                <div className="flex-1 overflow-y-scroll">
-                    {children}
+      <html lang='en'>
+        <head>
+        </head>
+        <body>
+          <div className='container mx-auto max-w-screen-xxl bg-gray-900'>
+            <div className="h-screen flex">
+                <div className="w-60 bg-slate-950 p-4">
+                    <RulesNav navMap={navRoutes} />
+                </div>
+                <div className="flex-1 flex overflow-hidden pl-10">
+                    <div className="flex-1 overflow-y-scroll">
+                        {children}
+                    </div>
                 </div>
             </div>
-        </div>
-      </div>
+          </div>
+        </body>
+      </html>
     )
 }
