@@ -10,14 +10,13 @@ type navProps = {
 
 export const NavElem = ({navEl, isSub} : navProps) => {
     const path = usePathname();
-    console.log("path - ", path)
     let isCurrent = false;
 
     if(path === navEl.href){
         isCurrent = true;
     }
     return(
-        <div>
+        <div key={navEl.title}>
             {(navEl.href && !isCurrent) 
             ?
                 <div className={isSub?"border-l-amber-700 border-l":""}>   

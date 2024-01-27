@@ -91,6 +91,19 @@ const navRoutes: nav[] = [
   {
     "title": "Cultures",
     "href": "/cultures"
+  },
+  {
+    "title": "Generic Features",
+    "subroutes": [
+      {
+        "title": "Novice Features",
+        "href": "/generic_features/novice_features"
+      },
+      {
+        "title": "Veteran Features",
+        "href": "/generic_features/veteran_features"
+      }
+    ]
   }
 ]
 
