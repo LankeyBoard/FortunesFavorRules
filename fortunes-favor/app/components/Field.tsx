@@ -67,7 +67,12 @@ const Field = ({field, depth=1}: fieldProps) => {
                 }
                 {field.list && field.type === field_options.CompactList &&
                         <div>
-                            {field.list.map((rule) => <div><span className="font-semibold">{rule.title}</span><span> - {rule.text}</span></div>)}
+                            {field.list.map((rule) => <div>
+                                {rule.title
+                                    ?<><span className="text-amber-600">- </span><span className="font-semibold">{rule.title}</span><span> - {rule.text}</span></>
+                                    : <><span className="text-amber-600">- </span><span>{rule.text}</span></>
+                                }
+                            </div>)}
                         </div>
                 }
                 {field.list && field.type !== field_options.CompactList &&

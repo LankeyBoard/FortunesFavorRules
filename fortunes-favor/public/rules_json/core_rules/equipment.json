@@ -65,7 +65,7 @@
         {
             "title": "Armor",
             "slug": "ARMOR",
-            "type": "LIST",
+            "type": "LIST-COMPACT",
             "text": ["You can wear armor from any class you are trained in that you are trained in. Armors have different requirements based on how hard they are to move in and how much protection they provide. Each armor indicates how to calculate your armor while waring it."],
             "list":[{
                 "title": "No Armor",

@@ -8,7 +8,7 @@ type genericFeature = {
 
 const Feature = ({feature}: {feature: genericFeature}) => {
     return(
-        <div className="py-2 mx-5">
+        <div className="py-2 mx-5" key={feature.title}>
             <span className="font-semibold">
                 {feature.title}
             </span>
