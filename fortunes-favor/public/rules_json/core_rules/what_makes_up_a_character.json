@@ -25,7 +25,7 @@
         {
             "slug": "stats",
             "title": "Stats",
-            "type": "LIST",
+            "type": "LIST-COMPACT",
             "list": [
                 {
                     "slug": "mettle",

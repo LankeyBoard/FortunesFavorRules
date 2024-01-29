@@ -1,0 +1,100 @@
+{
+    "slug": "EQUIPMENT",
+    "title": "Weapons, Shields, Armor & Equipment",
+    "type": "RULE",
+    "text": "",
+    "rules": [
+        {
+            "slug": "WEAPONS",
+            "title": "Weapons",
+            "type": "RULE",
+            "text": ["Characters can be proficient in different groups of weapons. It is up to your GMs discretion what category a weapon falls into, or if it is a unique weapon that requires its own training.", "If a weapon requires two hands to wield or you are wielding a weapon in each hand, increase your base damage while wielding the weapon by one dice step.", "1d4 - 1d6 - 1d8 - 1d10 - 1d12 - 2d6 - 2d8 - etc."],
+            "rules": [
+                {
+                    "title": "Melee",
+                    "slug": "MELEE-WEAPONS",
+                    "type": "LIST",
+                    "list": [
+                        {"text": "Hammers & Clubs"},
+                        {"text": "Slashing Swords"},
+                        {"text": "Piercing Swords & Daggers"},
+                        {"text": "Axes"},
+                        {"text": "Flails, Ball & Chain, etc."}
+                    ]
+                },
+                {
+                    "title": "Ranged",
+                    "slug": "RANGED-WEAPONS",
+                    "type": "LIST",
+                    "list": [
+                        {"text": "Bows"},
+                        {"text": "Crossbows"},
+                        {"text": "Light Throwing weapons (Dart, Throwing Dagger)"},
+                        {"text": "Heavy Throwing weapons (Shotput, Heavy Spear)"}
+                    ]
+                },
+                {
+                    "title": "Special Weapons",
+                    "slug": "SPECIAL-WEAPONS",
+                    "type": "LIST",
+                    "list": [
+                        {"text": "Whips: Range: 10-20ft"},
+                        {"text": "Pole Weapons: Range: Melee – 10ft"}
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Shields",
+            "slug": "SHIELDS",
+            "type": "LIST",
+            "text": ["Shields come in three sizes, light (bucklers and dueling shields), medium (kite shields), and heavy (tower shields).", "Shields not only increase your armor, can also reduce your damage taken when you clash. They cannot reduce the damage taken below 1."],
+            "list":[{
+                "title": "Light Shields",
+                "text": "Require at least 3 Agility: +1 to Armor and reduce clash damage taken by your Agility."
+            },
+            {
+                "title": "Medium Shields",
+                "text": "Require at least 1 Agility and 1 Mettle: +2 to Armor and reduce clash damage taken by 2."
+            },
+            {
+                "title": "Heavy Shields",
+                "text": "Require at least 3 mettle: +2 to Armor reduce clash damage taken by Mettle."
+            }]
+        },
+        {
+            "title": "Armor",
+            "slug": "ARMOR",
+            "type": "LIST-COMPACT",
+            "text": ["You can wear armor from any class you are trained in that you are trained in. Armors have different requirements based on how hard they are to move in and how much protection they provide. Each armor indicates how to calculate your armor while waring it."],
+            "list":[{
+                "title": "No Armor",
+                "text": "10 + Agility"
+            },
+            {
+                "title": "Light Armor",
+                "text": "12 + Agility"
+            },
+            {
+                "title": "Medium Armor",
+                "text": "14 + Agility(Max 2)"
+            },
+            {
+                "title": "Heavy Armor",
+                "text": "17"
+            }]
+        },
+        {
+            "title": "Equipment",
+            "slug": "EQUIPMENT",
+            "text": "While traveling, it's assumed your pack has all the items you need to get through a normal day. This might include a bed roll, some rope, etc. For specific adventuring gear, if you haven't already established that you have the item, you can make a luck test. The pass/fail are determined by the GMs judgment of the likelihood of you having the item. A mixed result might mean an item that is similar enough to be used in this instance, like a bed sheet instead of rope, or inferior to what you want, a small hatchet instead of a wood splitting axe.",
+            "type": "RULE",
+            "rules": [
+            {
+                "title": "General Difficulty Guidelines",
+                "text": ["Likely - Pass: 10 Fail: 5", "Unlikely - Pass: 15 Fail: 10", "Very Unlikely - Pass: 18 Fail: 13"]
+            }
+            ]
+        }
+    ]
+}

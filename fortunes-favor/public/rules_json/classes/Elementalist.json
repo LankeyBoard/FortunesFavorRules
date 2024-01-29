@@ -3,7 +3,6 @@
     "slug": "ELEMENTALIST",
     "flavor_text": "An elemental magic user who uses their mastery over their chosen elements to defeat their enemies.",
     "complexity": "simple",
-    "health_stat": "Heart",
     "health": 10,
     "health_on_level": 2,
     "stamina_stat": "Intellect",
@@ -17,7 +16,7 @@
     },
     "attack_stat": "Intellect",
     "range": {"min": 0, "max": 80},
-    "damage": {"dice": 6, "count": 1, "stat": "Mettle"},
+    "damage": {"dice": 6, "count": 1, "stat": "Intellect"},
     "features": [{
         "level": 1,
         "name": "Elemental Adept",

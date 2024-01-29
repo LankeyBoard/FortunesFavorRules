@@ -1,0 +1,140 @@
+{
+    "list": [
+        {
+            "title": "Deep Mining",
+            "slug": "DEEP-MINING",
+            "desc": "The Deep Mining culture hails from the subterranean realms, where they've mastered the art of extracting precious stones and metals. Known for their resilience and craftsmanship, they carve magnificent halls and forge legendary artifacts beneath the earth.",
+            "stat": "+1 to Mettle or Heart",
+            "lang": "Allspeak & Dwarvish",
+            "traits": [
+                {
+                    "title": "A Sense of Value",
+                    "text": "You always know the approximate value of precious stones and metals."
+                },
+                {
+                    "title": "The Stone Remembers",
+                    "text": "You always have Fortune's Favor on tests to gather and recall information about stones, mining and masonry."
+                }
+            ]
+        },
+        {
+            "title": "Forest Folk",
+            "slug": "FOREST-FOLK",
+            "desc": "The Forest Folk are a mystical elven culture deeply connected to the woods. Their elegant language, infused with nature's harmony, resonates with the rustling leaves and songs of birds. Renowned for their arboreal wisdom, they protect ancient groves and practice the arts and music.",
+            "stat": "+1 to Agility or Intellect",
+            "lang": "Allspeak & Elvish",
+            "traits": [
+              {
+                "title": "Nature's Steward",
+                "text": "You always have Fortune's Favor on tests to gather and recall information about trees, plants, and animals."
+              },
+              {
+                "title": "Woodland Skills",
+                "text": "Gain training in a musical instrument or artist's tools."
+              }
+            ]
+        },
+        {
+            "title": "Nomads",
+            "slug": "NOMADS",
+            "desc": "Nomads roam the vast landscapes, embodying a harmonious existence with nature. Unencumbered by permanent settlements, they excel in survival and navigation, possessing an innate connection to the lands they travel.",
+            "stat": "+1 to Wits or Mettle",
+            "lang": "Allspeak and one language of your choice based on the regions most traveled in.",
+            "traits": [
+              {
+                "title": "Natural Navigator",
+                "text": "You unconsciously keep track of your location and know how to retrace your steps without issue. As long as you aren't incapacitated or deprived of all senses and moved, you know your way back to the last place you slept."
+              },
+              {
+                "title": "Versatile Skills",
+                "text": "Gain training in one gaming set or musical instrument."
+              }
+            ]
+        },
+        {
+            "title": "Empyrian",
+            "slug": "EMPYRIAN",
+            "desc": "Hailing from a vast multicultural empire, Empyrians seek to foster diplomacy and learning. Their open-mindedness enables them to connect with individuals from various backgrounds, making them skilled negotiators and diplomats.",
+            "stat": "+1 to Intelligence or Wits",
+            "lang": "Allspeak & Another language of your choice",
+            "traits": [
+              {
+                "title": "Multi-culturalist",
+                "text": "You always have Fortune's Favor on tests to communicate with characters who you don't share a language with."
+              },
+              {
+                "title": "Gaming Expertise",
+                "text": "Gain training in one gaming set."
+              }
+            ]
+        },
+        {
+            "title": "The Mariners",
+            "slug": "THE-MARINERS",
+            "desc": "The Mariners are seasoned sailors, tradesmen, and shipwrights, navigating the vast oceans of the world. Known for their seafaring instincts, they excel in maritime activities and shipbuilding.",
+            "stat": "+1 to Agility or Heart",
+            "lang": "Allspeak and one language of your choice based on the regions most traveled in.",
+            "traits": [
+              {
+                "title": "Born on the Water",
+                "text": "Double your normal swim speed and you can hold your breath for twice as long."
+              },
+              {
+                "title": "Knotty",
+                "text": "Gain +2 on tests to tie knots."
+              }
+            ]
+        },
+        {
+            "title": "Highland Clans",
+            "slug": "HIGHLAND-CLANS",
+            "desc": "Highland Clans reside in rugged mountainous regions. Known for their expertise in mountain survival and climbing, they forge strong communal bonds and defend their territories with unwavering resolve.",
+            "stat": "+1 to Mettle or Heart",
+            "lang": "Allspeak",
+            "traits": [
+              {
+                "title": "Rugged Mountaineer",
+                "text": "You always have Fortune's Favor on mettle tests to resist the effects of cold weather. You also gain +2 on checks to navigate cliffs and mountains."
+              },
+              {
+                "title": "Craig Jumper",
+                "text": "Your horizontal jump distance is increased by 5ft."
+              }
+            ]
+        },
+        {
+            "title": "Peoples of the Meadowlands",
+            "slug": "MEADOWLANDS",
+            "desc": "The Peoples of the Meadowlands are a community deeply rooted in the fertile plains and gentle meadows of the world. They are known for their idyllic farms, vibrant orchards, and close-knit communal spirit. The Meadowlands people balance hard work and relaxation, and their harvest festivals are some of the most spectacular in all the land.",
+            "stat": "+1 to Heart or Wit",
+            "lang": "Allspeak",
+            "traits": [
+              {
+                "title": "Helping Hand",
+                "text": "When you have Fortune’s Favor and an ally within 5ft of you is Tested, you can spend your Fortune’s Favor to grant them a +3 on the Test."
+              },
+              {
+                "title": "Meadowland Hospitality",
+                "text": "+2 bonus to Heart tests when talking with strangers for the first time."
+              }
+            ]
+        },
+        {
+            "title": "Fae Folk",
+            "slug": "FAE-FOLK",
+            "desc": "The Fae are a strange and enigmatic folk; they spend most of their time deep in the woods where the magic is strongest and the barrier between the world and the beyond is thin.",
+            "stat": "+1 to Intellect or Heart",
+            "lang": "Allspeak, Thissletongue",
+            "traits": [
+              {
+                "title": "Never Trust a Tulip",
+                "text": "You grew up having to double and triple check your interactions for deceptions. Add a +2 to heart checks to determine if someone is lying."
+              },
+              {
+                "title": "Fae Touched",
+                "text": "Spend 10 minutes to make flowers blossom and plants grow as if they've been growing for a month."
+              }
+            ]
+        }          
+    ]
+}

@@ -1,0 +1,95 @@
+{
+    "noviceFeatures": [
+        {
+            "title": "Academic",
+            "text": "When researching information in a library or another collection of knowledge you can roll with Fortune's Favor."
+        },
+        {
+            "title": "Aid",
+            "text": "Add an additional +2 to tests when helping an ally."
+        },
+        {
+            "title": "Artisan",
+            "text": "Gain training in one set of artisan's tools (Woodworking, masonry, weaving, etc.)",
+            "multiSelect": true
+        },
+        {
+            "title": "Athletic",
+            "text": "Add +3 to mettle tests for feats of strength or endurance."
+        },        
+        {
+            "title": "Daring",
+            "text": "On 3 tests per R&R, instead of rolling dice, flip a coin. If you win the flip, you pass the test. Otherwise, you fail."
+        },
+        {
+            "title": "Disguise Master",
+            "text": "Add +3 to tests to disguise yourself as another humanoid."
+        },
+        {
+            "title": "Imitator",
+            "text": "Add +3 to tests when trying to imitate another humanoid's speech."
+        },
+        {
+            "title": "Independent",
+            "text": "Once per day, when you make a non-combat test without help, add +3 to the results."
+        },
+        {
+            "title": "Infiltrator",
+            "text": "Add +3 to stealth tests."
+        },
+        {
+            "title": "Insightful",
+            "text": "Add +3 to heart tests to determine if someone is lying to you or to determine their intentions."
+        },
+        {
+            "title": "Keen Eyed",
+            "text": "Add +3 to heart tests to spot hidden objects and creatures."
+        },
+        {
+            "title": "Knowledgeable",
+            "text": "When you take this feature pick a subject from the list below that you are well versed in. When you take Tests that rely on this knowledge, add a +3 to the roll.",
+            "options": ["Botany", "Carpentry", "Geology", "History", "Oceanography", "Religion"],
+            "multiSelect": true
+        },
+        {
+            "title": "Linguist",
+            "text": "Learn another language. Add a +3 to intellect tests to decipher languages and codes you don't already know."
+        },
+        {
+            "title": "Long Jumper",
+            "text": "Increase your jump distance by 5ft."
+        },
+        {
+            "title": "Medical Training",
+            "text": "When you an intellect test to heal a dying ally, make the roll with Fortune's Favor."
+        },
+        {
+            "title": "Performer",
+            "text": "Add +3 to tests to determine the quality of your performance art. Gain training in one performance art of your choice (1 musical instrument, dance, acrobatics, etc.)"
+        },
+        {
+            "title": "Reliable Skill",
+            "text": "When you make a non-combat test, before you roll, you can choose to treat the test as though you rolled a 12. You can do this 3 times per R&R."
+        },
+        {
+            "title": "Silver Tongued",
+            "text": "When you make a heart test to convince others with emotional appeal, add a +3 to the test."
+        },
+        {
+            "title": "Swift",
+            "text": "Increase your speed by 10ft."
+        },
+        {
+            "title": "Swift Climber",
+            "text": "Increase your climb speed by 5ft."
+        },
+        {
+            "title": "Swift Swimmer",
+            "text": "Increase your swim speed by 5ft."
+        },
+        {
+            "title": "Trekker",
+            "text": "Double your lift, drag, and pack capacity."
+        }                     
+    ]
+}

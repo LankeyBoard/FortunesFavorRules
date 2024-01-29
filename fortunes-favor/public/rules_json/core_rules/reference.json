@@ -1,0 +1,129 @@
+{
+    "slug": "REFERENCE",
+    "title": "Reference",
+    "type": "RULE",
+    "text": null,
+    "rules":[{
+        "title": "Languages",
+        "slug": "LANGS",
+        "text": null,
+        "type": "LIST-COMPACT",
+        "list":[{
+            "title": "Allspeak",
+            "text": "The universal language known by most civilized peoples, it is a harmonious blend of words and expressions drawn from various cultures, offering a common ground for communication."
+        },
+        {
+            "title": "Elvish",
+            "text": "The common language of elves, spoken with a grace and intertwined lyrical tones."
+        },
+        {
+            "title": "Dwarvish",
+            "text": "The language of dwarves and others who share their culture. Dwarvish is a robust and resonant tongue, usually spoken loud enough to be heard over the rhythmic clinks of hammers and chisels."
+        },
+        {
+            "title": "Thistletongue",
+            "text": "The language of faeries and other fae folk. Thistletongue is ethereal, filled with delicate trills and melodic nuances."
+        },
+        {
+            "title": "Starrend",
+            "text": "The language of celestials as well as some air elementals and other sky dwellers. Starrend is a celestial tongue, each word carrying the weight of cosmic forces, and is characterized by crystalline tones and etherial echoes."
+        },
+        {
+            "title": "Deeproot",
+            "text": "The language of Ents and Stone Colossi. It's a deep and slow language for deep and slow creatures. Deeproot rumbles like the earth, each word a deliberate and ancient utterance resonating with the solidity of stone."
+        },
+        {
+            "title": "Seawhisper",
+            "text": "A fluid and melodic language spoken by merfolk and other denizens of the ocean. Seawhisper uses clicks and sharp bursts of noise and can only properly be spoken under water."
+        },
+        {
+            "title": "Voidhowl",
+            "text": "Spoken by demons and other infernal beings.  Voidhowl is a cacophony of malevolent sounds, mixing guttural growling and ear-splitting shrieks."
+        }]
+    },
+    {
+        "title": "Damage Types",
+        "slug": "DAMAGE-TYPES",
+        "type": "RULE",
+        "text": "Bludgeoning, piercing, slashing, fire, cold, lightning, rot, radiant, & psychic"
+    },
+    {
+        "title": "Statuses",
+        "slug": "STATUSES",
+        "text": null,
+        "type": "LIST-COMPACT",
+        "list":[{
+            "title": "Incapacitated",
+            "text": "You cannot take actions or move and are unaware of your surroundings."
+        },
+        {
+            "title": "Dying",
+            "text": "0 Health. See the Dead & Dying rules for more information."
+        },
+        {
+            "title": "Dead",
+            "text": "0 Health and 0 Stamina. See the Dead & Dying rules for more information."
+        },
+        {
+            "title": "Blind",
+            "text": "You cannot see. All attacks have misfortune and attacks against you gain fortune's favor."
+        },
+        {
+            "title": "Deaf",
+            "text": "You cannot hear. You have Misfortune on all tests to stealth or notice something sneaking up on you."
+        },
+        {
+            "title": "Entangled",
+            "text": "Your speed is reduced to 0."
+        },
+        {
+            "title": "Pinned",
+            "text": "Your speed is reduced to 0, you have misfortune on all attacks and spellcasting tests."
+        },
+        {
+            "title": "Exhausted",
+            "text": "You cannot spend stamina, your Speed is reduced by half and your attacks deal half damage."
+        },
+        {
+            "title": "Hidden",
+            "text": "You cannot be seen and gain a +3 to attack tests while hidden. Attacking or casting."
+        },
+        {
+            "title": "Prone",
+            "text": "Your speed is reduced by 20ft to a minimum of 5ft. Ranged attacks against you have Misfortune while melee attacks have Fortune's Favor."
+        },
+        {
+            "title": "Hindered",
+            "text": "Your speed is halved."
+        }]
+    },
+    {
+        "title": "Creature Sizes",
+        "text": null,
+        "type": "LIST-COMPACT",
+        "list": [{
+            "text": "Miniscule(>6in)"
+        },
+        {
+            "text": "Tiny (~6in - 2ft)"
+        },
+        {
+            "text": "Small (~2ft - 4ft)"
+        },
+        {
+            "text": "Medium (~4ft - 7ft)"
+        },
+        {
+            "text": "Large (~7ft- 10ft)"
+        },
+        {
+            "text": "Gigantic (~10ft - 20ft)"
+        },
+        {
+            "text": "Titanic (~20ft-50ft)"
+        },
+        {
+            "text": "Colossal (<50ft)"
+        }]
+    }]
+}

@@ -4,7 +4,7 @@ export type field_type = {
     type: field_options;
     title?: string;
     slug?: string;
-    text?: string;
+    text?: string | [string];
     eg?: string;
     list?: field_type[];
     rules?: field_type[];
@@ -29,7 +29,7 @@ const titleStyler =(depth: number) => {
         case 1:
             return("text-3xl tracking-wide font-bold py-4 px-1");
         case 2:
-            return("my-4 mx-2 text-2xl tracking-wide");
+            return("mt-3 mb-1 mx-2 text-2xl tracking-wide");
         case 3:
             return("text-lg p-2 font-semibold")
     }
@@ -45,30 +45,51 @@ const Field = ({field, depth=1}: fieldProps) => {
             <div className={titleStyler(depth)}>
                 {field.title}
             </div>
-            <div className="pb-2 mx-5">
-                {field.text !== undefined && 
-                    <div className="mb-2">
-                        {field.text}
-                    </div>
+            <div className={field.type != field_options.List ? "pb-2 mx-5" : "pb-2 mx-2"}>
+                {field.text != undefined && typeof field.text === "string" &&
+                        <div className="">
+                            {field.text}
+                        </div>
                 }
+                {field.text != undefined &&
+                    typeof field.text !== "string" &&
+                        <div className="mb-2 space-y-3">
+                            {field.text.map(row => {
+                                return(<div className="">{row}</div>)
+                            })}
+                        </div>
+                }
+                
                 {field.eg !== undefined && 
                     <div>
                         <p>e.g. <i>{field.eg}</i></p>
                     </div>
                 }
-                {field.list &&
-                    <ul>
-                        {field.list.map((f)=> <li key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
+                {field.list && field.type === field_options.CompactList &&
+                        <div>
+                            {field.list.map((rule) => <div>
+                                {rule.title
+                                    ?<><span className="text-amber-600">- </span><span className="font-semibold">{rule.title}</span><span> - {rule.text}</span></>
+                                    : <><span className="text-amber-600">- </span><span>{rule.text}</span></>
+                                }
+                            </div>)}
+                        </div>
+                }
+                {field.list && field.type !== field_options.CompactList &&
+                    <ul className="">
+                        {field.list.map((f)=> <li className={f.title ? "" :"space-y-2"} key={f.slug}><Field field={f} depth={depth+1}></Field></li>)}
                     </ul>
                 }
             </div>
-            <div className={depth>1?"mx-4 bg-teal-900 border-white-200 border-l-2":""}>
-                {field.rules !== undefined &&
-                <div className="">
-                    {field.rules.map((f) => <Field field={f} depth={depth+1}></Field>)}
+            {field.rules &&
+                <div className={depth>1?"mx-4 border-amber-800 border-l-2":""}>
+                    {field.rules !== undefined &&
+                    <div className="">
+                        {field.rules.map((f) => <Field field={f} depth={depth+1}></Field>)}
+                    </div>
+                    }
                 </div>
-                }
-            </div>
+            }
         </div>
     )
 

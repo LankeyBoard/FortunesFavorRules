@@ -3,6 +3,7 @@ export enum field_options {
     Flavor = "FLAVOR",
     Eg = "EG",
     List = "LIST",
+    CompactList = "LIST-COMPACT",
     Choice = "CHOICE",
     Attack = "ATTACK",
     error = "ERROR"
@@ -20,6 +21,18 @@ export enum stat_options {
     agility = "Agility",
     heart = "Heart",
     int = "Intellect",
+    error = "ERROR"
+}
+
+export enum size_options {
+    Miniscule = "MINISCULE",
+    Tiny = "TINY",
+    Small = "SMALL",
+    Medium = "MEDIUM",
+    Large = "LARGE",
+    Gigantic = "GIGANTIC",
+    Titanic = "TITANIC",
+    Colossal = "COLOSSAL",
     error = "ERROR"
 }
 

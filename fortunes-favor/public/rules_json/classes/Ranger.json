@@ -1,0 +1,191 @@
+{
+    "name": "Ranger",
+    "slug": "RANGER",
+    "flavor_text": "A skilled survivalist as well as ranged and melee fighter relying more on quickness and skill than outright strength.",
+    "complexity": "simple",
+    "health": 16,
+    "health_on_level": 2,
+    "stamina_stat": "Agility",
+    "stamina": 6,
+    "stamina_on_level": 2,
+    "training": {
+      "armor": ["Light"],
+      "shields": [null],
+      "weapons": {"melee": [1, "Axes", "Piercing Swords & Dagers", "Slashing Swords" ], "ranged": [2, "Bows", "Crossbows", "Light Throwing"], "special": null},
+      "magic": [null]
+    },
+    "attack_stat": "Agility",
+    "range": {"min": 0, "max": 120},
+    "damage": {"dice": 8, "count": 1, "stat": "Agility"},
+    "features": [
+      {
+        "level": 1,
+        "name": "Predator's Sense",
+        "slug": "RangerPredatorsSense",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "You have almost supernaturally heightened senses."
+          },
+          {
+            "type": "RULE",
+            "text": "Gain +3 to tests when tracking as well as on tests to find hidden creatures."
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "name": "Precision of the Hawk",
+        "slug": "RangerPrecisionHawk",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "Your attacks are incredibly accurate, always targeting the weakest points in the target."
+          },
+          {
+            "type": "RULE",
+            "text": "When you roll weapon attack damage, you can reroll any 1s, taking the new result."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "name": "Cunning Stalker",
+        "slug": "RangerCunningStalker",
+        "stamina_cost": 1,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "You have spent countless hours tracking prey through the woods or back alleys and instinctively step lightly and quietly."
+          },
+          {
+            "type": "RULE",
+            "text": "Spend 1 stamina, you leave no tracks, enemies have Misfortune when trying to track you and you get a +2 on stealth tests."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "name": "Wild Guide",
+        "slug": "RangerWildGuide",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "You move through rough and wild terrain with skill and can guide others along the safest routes with ease."
+          },
+          {
+            "type": "RULE",
+            "text": "Your party can add your Heart to their daily pace when traveling across terrain without roads."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "name": "Quickdraw Counter",
+        "slug": "RangerQuickdrawCounter",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "FLAVOR",
+            "text": "Your weapons are just a hand twitch away."
+          },
+          {
+            "type": "RULE",
+            "text": "When you counterattack, you can use any weapon on your person to make the counter."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "name": "Stat Up",
+        "slug": "RangerStatUp1",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Increase one of your stats by 1 (max 5)"
+          },
+          {
+            "type": "RULE",
+            "text": "Select a new Novice Feature."
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "name": "Poisoned Blade",
+        "slug": "RangerPoisonedBlade",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Whenever you Catch Your Breath you can coat one of your weapons in poison. When you deal damage with that weapon, deal an extra 1d4 rot damage."
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "name": "Final Hunt",
+        "slug": "RangerFinalHunt",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "When you make a Last Stand, your speed increases by 10ft. All of your weapons gain the effect of Poisoned Blade and double your bonus from Predator's Sense."
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "name": "Long Shot",
+        "slug": "RangerLongShot",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "If you do not move this turn, double your range until the start of your next turn."
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "name": "Stat Up 2",
+        "slug": "RangerStatUp2",
+        "stamina_cost": null,
+        "fortunes_favor": false,
+        "type": "RULE",
+        "fields": [
+          {
+            "type": "RULE",
+            "text": "Increase a stat by 1 (max 5)"
+          },
+          {
+            "type": "RULE",
+            "text": "Select a Veteran Feature."
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -1,5 +1,7 @@
+import { arrayBuffer } from "stream/consumers";
 import { field_options, complexity_options, stat_options, findEnum } from "../enums"
-
+import { getOrdinal } from "../utils/utils";
+import { ReactComponentElement, ReactElement } from "react";
 class ClassType {
     name: string;
     slug: string;
@@ -173,7 +175,7 @@ const FeatureDisplay = ({feature}: featureProps) => {
         <div id={feature.slug} className="bg-slate-800 my-5">
             <div className="bg-teal-700 text-lg p-2 font-semibold">
                 {feature.name}
-                <div className="float-right">{feature.level}</div>
+                <div className="text-slate-200 text-sm ordinal float-right">{feature.level+getOrdinal(feature.level)} level</div>
             </div>
             <div className="px-4 py-2">
                 {feature.stamina &&<div><span className="font-semibold">Costs - </span> {feature.stamina} Stamina</div>}
@@ -203,9 +205,59 @@ const makeTrainingString = (training_list: [string] | undefined) => {
     if(!training_list || training_list.length < 1 || training_list[0] == null)
         return "None"
     if(parseInt(training_list[0])){
-        return "Choose " + training_list[0] + " of the following options : " + training_list.slice(1).join(', ');
+        return ("Choose " + training_list[0] + " of the following options " + "[ "+ training_list.slice(1).join(', ') + " ]");
     }
-    return(training_list.join(', '));
+    return("[ " + training_list.join(', ') + " ]");
+}
+
+type tagProps = {
+    text: string,
+    style?: string,
+}
+
+const Tag =({text, style}: tagProps) => {
+    const s = style? style : "bg-teal-900";
+    const tagStyle = s + " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm";
+    return(
+        <div className={tagStyle}>
+            {text}
+        </div>
+    )
+}
+type classTagsProps = {
+    c: ClassType;
+    
+}
+
+const ClassTags = ({c}: classTagsProps) => {
+    let tags: ReactElement[]= new Array;
+    let tagStyle;
+    switch(c.complexity){
+        case complexity_options.simple:
+            tagStyle = "bg-green-800";
+            break;
+        case complexity_options.std:
+            tagStyle = "bg-amber-800";
+            break;
+        case complexity_options.complex:
+            tagStyle = "bg-blue-800";
+            break;
+        default:
+            tagStyle = "bg-rose-500";
+    }
+    tags.push(<Tag style={tagStyle} text={c.complexity}/>);
+    tags.push(<Tag text={c.attkStat}/>);
+    if(c.attkStat !== c.dmg.stat){
+        tags.push(<Tag text={c.dmg.stat}/>);
+    }
+    if(c.attkStat !== c.dmg.stat && c.dmg.stat !== c.staminaStat && c.attkStat !== c.staminaStat){
+        tags.push(<Tag text={c.staminaStat}/>);
+    }
+    return(
+        <div>
+            {tags}
+        </div>
+    )
 }
 
 type classProps = {
@@ -223,10 +275,13 @@ const ClassRule = ({class_json}: classProps) => {
     const dmgString = class_rules.dmg.count+"d"+class_rules.dmg.dice+" + "+class_rules.dmg.stat;
     return(
         <div id={class_rules.slug} className="">
-            <div className="text-3xl tracking-wide font-bold py-4 px-1">
-                {class_rules.name}
+            <div className="w-full">
+                <div className="text-3xl tracking-wide font-bold py-4 px-1">
+                    {class_rules.name}
+                </div>
             </div>
-            <div className="">
+            <ClassTags c={class_rules}/>
+            <div className="clear-both">
                 <div className="mx-3">
                     <p className="italic">{class_rules.flavor_text}</p>
                 </div>
@@ -238,13 +293,13 @@ const ClassRule = ({class_json}: classProps) => {
                     <div id="classTraining" className="mt-2 p-3 border-amber-800 border-y-2">
                         <p className="font-semibold text-lg">Training</p>
                         <ul className="px-4">
-                            <li><span className="font-normal">Armor: </span><span className="font-light">{armorString}</span></li>
-                            <li><span className="font-normal">Shield: </span><span className="font-light">{shieldString}</span></li>
+                            <li><span className="font-normal">Armor - </span><span className="font-light">{armorString}</span></li>
+                            <li><span className="font-normal">Shield - </span><span className="font-light">{shieldString}</span></li>
                             <li><p className="font-normal">Weapons </p>
                                 <div className="font-extralight px-4">
-                                    <p><span className="font-normal">Melee: </span>{meleeString}</p>
-                                    <p><span className="font-normal">Ranged: </span>{rangedString}</p>
-                                    <p><span className="font-normal">Special: </span>{specialString}</p>
+                                    <p><span className="font-normal">Melee: - </span>{meleeString}</p>
+                                    <p><span className="font-normal">Ranged - </span>{rangedString}</p>
+                                    <p><span className="font-normal">Special - </span>{specialString}</p>
                                 </div>
                             </li>
                             <li><span className="font-normal">Magic: </span><span className="font-light">{magicString}</span></li>
