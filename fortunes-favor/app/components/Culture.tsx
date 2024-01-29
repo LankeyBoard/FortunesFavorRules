@@ -14,15 +14,19 @@ class culture {
         trait
     ]
     constructor(json: any){
-        console.log("JSON - ", json.json)
         this.title = json.title;
         this.slug = json.slug;
         this.desc = json.desc;
         this.lang = json.lang;
         this.stat = json.stat;
-        this.traits = json.traits.map((t: any) => {
-            return new trait(t);
-        });
+        if(json.traits){
+            this.traits = json.traits.map((t: any) => {
+                return new trait(t);
+            });
+        }
+        else {
+            this.traits = [new trait({title: "Test", text: "Dummy"})];
+        }
         if(json.options){
             this.options = json.options.map((o: any) => {
                 return new trait(o);
@@ -33,8 +37,8 @@ class culture {
 }
 
 const Culture = (json: any) => {
-    console.log("Lineage json input: ", json)
-    const c = new culture(json.json);
+    console.log("culture json - ", json);
+    const c = json.json? new culture(json.json): new culture(json.culture);
     return(
         <div id={c.slug} className="mb-6">
             <div className="my-4 text-2xl tracking-wide">

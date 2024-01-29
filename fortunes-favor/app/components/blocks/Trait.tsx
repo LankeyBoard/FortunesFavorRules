@@ -9,7 +9,7 @@ export class trait {
 }
 const Trait = ({t}: {t: trait}) => {
     return(
-        <div>
+        <div key={t.title+"trait"}>
             <span className="font-semibold">{t.title} - </span>
             <span>{t.text}</span>
         </div>

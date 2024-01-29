@@ -62,14 +62,14 @@ const Tab = ({name, setCurrentTab, isCurrent, isComplete = false, isEnabled = tr
     console.log(style);
     if(isEnabled && !isCurrent){
         return(
-            <div className={style} onClick={()=>setCurrentTab(name)} >
+            <div className={style} onClick={()=>setCurrentTab(name)} key={name+"builder-tab"}>
                 {name}
             </div>
         )
     }
     else{
         return(
-            <div className={style}>
+            <div className={style} key={name}>
                 {name}
             </div>
         )

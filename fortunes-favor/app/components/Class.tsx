@@ -34,6 +34,7 @@ class ClassType {
     };
     features: Feature[]
     constructor(json: any){
+        console.log("Feature - ", json)
         this.name = json.name;
         this.slug = json.slug;
         this.flavor_text = json.flavor_text;
@@ -261,10 +262,11 @@ const ClassTags = ({c}: classTagsProps) => {
 }
 
 type classProps = {
-    class_json: any
+    json: any
 }
-const ClassRule = ({class_json}: classProps) => {
-    const class_rules: ClassType = new ClassType(class_json)
+const ClassRule = ({json}: classProps) => {
+    console.log("ClassRules input", json)
+    const class_rules: ClassType = new ClassType(json)
     const armorString = makeTrainingString(class_rules.training.armor);
     const shieldString = makeTrainingString(class_rules.training.shield);
     const meleeString = makeTrainingString(class_rules.training.weapon?.melee);
