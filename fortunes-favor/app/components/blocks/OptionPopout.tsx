@@ -18,7 +18,7 @@ const OptionPopout = ({child, showPopout, isSelected=false, setSelectedSlug}: po
         <div className="items-top flex fixed inset-0 z-50 outline-none focus:outline-none container mx-auto"
             onClick={()=> {showPopout(false)}}>
             <div className="w-80"></div>
-            <div className="my-40 flex justify-center">
+            <div className="my-40 flex justify-center w-full">
                 <div id={"popout-"+child.props.id} className={popoutStyle}
                 onClick={(e)=> {e.stopPropagation(); 
                     console.log("clicked - ",e, child.props.id);
@@ -28,7 +28,7 @@ const OptionPopout = ({child, showPopout, isSelected=false, setSelectedSlug}: po
                     <div className="">
                         {child}
                     </div>
-                    <div className="relative bottom-0 right-0 m-10 clear-both float-right">
+                    <div className="relative bottom-0 right-0 m-2 clear-both float-right">
                         <button 
                             className="p-3 bg-emerald-600 hover:bg-emerald-500 mx-3 rounded-md"
                             onClick={(e)=> {e.stopPropagation(); 
