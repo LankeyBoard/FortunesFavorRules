@@ -119,7 +119,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
                     <RulesNav navMap={navRoutes} />
                 </div>
                 <div className="flex-1 flex overflow-hidden pl-10">
-                    <div className="flex-1 overflow-y-scroll">
+                    <div className="flex-1 overflow-auto">
                         {children}
                     </div>
                 </div>
