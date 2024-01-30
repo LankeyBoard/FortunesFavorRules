@@ -3,19 +3,17 @@ import Card from "./blocks/Card";
 import OptionPopout from "./blocks/OptionPopout";
 
 type option = {
-    // slug: string,
-    // title: string,
-    // desc: string,
     [key: string]: unknown
     
 }
 
 type selectFromCardsProps ={
     options: option[],
-    popoutInner: (json: any) => JSX.Element
+    popoutInner: (json: any) => JSX.Element,
+    optionsDescription: string
 }
 
-const SelectFromCards = ({options, popoutInner}: selectFromCardsProps) => {
+const SelectFromCards = ({options, popoutInner, optionsDescription}: selectFromCardsProps) => {
     const [showPopout, setShowPoput] = useState(false);
     const [selectedSlug, setSelectedSlug] = useState<string | undefined>(undefined);
     const [currentSlug, setCurentSlug] = useState<string | undefined>(undefined);
@@ -39,15 +37,17 @@ const SelectFromCards = ({options, popoutInner}: selectFromCardsProps) => {
 
     return (
         <div className="w-full">
-            Select a culture
             {showPopout && <OptionPopout child={currentChild} showPopout={setShowPoput} isSelected={selectedSlug===currentSlug} setSelectedSlug={setSelectedSlug}/>}
-
-            <div className="flex flex-wrap w-full">
-                {options.map((c) => {
-                    if(typeof c.title === "string" && typeof c.desc === "string" && typeof c.slug === "string"){
-                        return(<Card title={c.title} text={c.desc} slug={c.slug} pickCard={pickCard} selectedSlug={selectedSlug} key={"card-"+c.title}/>)
-                    }
-                })}
+            <div>
+                <div className="italic my-4 mx-4">{optionsDescription}</div>
+                <div className="text-sm text-slate-300 mx-4">Click on each of the options below for more information.</div>
+                <div className="flex flex-wrap w-full">
+                    {options.map((c) => {
+                        if(typeof c.title === "string" && typeof c.desc === "string" && typeof c.slug === "string"){
+                            return(<Card title={c.title} text={c.desc} slug={c.slug} pickCard={pickCard} selectedSlug={selectedSlug} key={"card-"+c.title}/>)
+                        }
+                    })}
+                </div>
             </div>
         </div>
     );

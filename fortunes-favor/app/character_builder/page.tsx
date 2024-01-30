@@ -97,7 +97,7 @@ function CharacterBuilder() {
     console.log("current tab: ", currentTab);
     return(
         <div>
-            <div className="flex flex-row mt-4">
+            <div className="flex flex-row mt-4 border-b-amber-800 border-b-8 px-10">
                 {tabs.map((tab) => {return(<Tab name={tab.name} setCurrentTab={setCurrentTab} isCurrent={currentTab === tab.name} isComplete={tab.isComplete} isEnabled={tab.isEnabled}/>)})}
             </div>
             <div>

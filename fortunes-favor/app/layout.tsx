@@ -118,7 +118,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
                 <div className="w-60 bg-slate-950 p-4">
                     <RulesNav navMap={navRoutes} />
                 </div>
-                <div className="flex-1 flex overflow-hidden pl-10">
+                <div className="flex-1 flex overflow-hidden">
                     <div className="flex-1 overflow-auto">
                         {children}
                     </div>
