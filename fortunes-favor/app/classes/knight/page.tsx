@@ -5,7 +5,7 @@ function Knight () {
     console.log(knight_json)
     return(
         <>
-            <ClassRule class_json={knight_json}/>
+            <ClassRule json={knight_json}/>
         </>
     )
 }

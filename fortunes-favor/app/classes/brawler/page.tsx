@@ -5,7 +5,7 @@ function Brawler () {
     console.log(brawler_json)
     return(
         <>
-            <ClassRule class_json={brawler_json}/>
+            <ClassRule json={brawler_json}/>
         </>
     )
 }

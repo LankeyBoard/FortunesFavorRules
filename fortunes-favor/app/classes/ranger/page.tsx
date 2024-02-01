@@ -5,7 +5,7 @@ function Ranger () {
     console.log(ranger_json)
     return(
         <>
-            <ClassRule class_json={ranger_json}/>
+            <ClassRule json={ranger_json}/>
         </>
     )
 }

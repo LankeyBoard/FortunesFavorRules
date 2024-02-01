@@ -5,7 +5,7 @@ function Devoted () {
     console.log(devoted_json)
     return(
         <>
-            <ClassRule class_json={devoted_json}/>
+            <ClassRule json={devoted_json}/>
         </>
     )
 }

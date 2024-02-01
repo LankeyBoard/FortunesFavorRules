@@ -5,7 +5,7 @@ function Elementalist () {
     console.log(elementalist_json)
     return(
         <>
-            <ClassRule class_json={elementalist_json}/>
+            <ClassRule json={elementalist_json}/>
         </>
     )
 }

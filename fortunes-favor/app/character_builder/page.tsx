@@ -5,6 +5,7 @@ import LineageSelectBuilder from './lineage/builder';
 import CultureSelectBuilder from './culture/builder';
 import ClassSelectBuilder from './class/builder';
 import QuestionsBuilder from './questions/builder';
+import CharacterInfo from '../utils/CharacterInfo';
 
 const tabs =[
     {
@@ -77,23 +78,24 @@ const Tab = ({name, setCurrentTab, isCurrent, isComplete = false, isEnabled = tr
 
 }
 
-function CharacterInner(title: string){
+function CharacterInner(title: string, createdCharacter: CharacterInfo, setCreatedCharacter: Dispatch<SetStateAction<CharacterInfo>>){
     switch(title){
         case "Basic Info":
-            return <BasicInfoBuilder/>
+            return <BasicInfoBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
         case "Lineage":
-            return <LineageSelectBuilder/>
+            return <LineageSelectBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
         case "Culture":
-            return <CultureSelectBuilder/>
+            return <CultureSelectBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
         case "Class":
-            return <ClassSelectBuilder/>
+            return <ClassSelectBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
         case "Questions":
-            return <QuestionsBuilder/>
+            return <QuestionsBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
     }
 }
 
 function CharacterBuilder() {
-    const [currentTab, setCurrentTab] = useState(tabs[0].name)
+    const [currentTab, setCurrentTab] = useState(tabs[0].name);
+    const [createdCharacter, setCreatedCharacter] = useState(new CharacterInfo())
     console.log("current tab: ", currentTab);
     return(
         <div>
@@ -101,7 +103,7 @@ function CharacterBuilder() {
                 {tabs.map((tab) => {return(<Tab name={tab.name} setCurrentTab={setCurrentTab} isCurrent={currentTab === tab.name} isComplete={tab.isComplete} isEnabled={tab.isEnabled}/>)})}
             </div>
             <div>
-                {CharacterInner(currentTab)}
+                {CharacterInner(currentTab, createdCharacter, setCreatedCharacter)}
             </div>
         </div>
         

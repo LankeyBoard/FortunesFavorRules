@@ -1,7 +1,14 @@
 import InputArea from "@/app/components/blocks/InputArea";
 import InputField from "@/app/components/blocks/InputField";
+import CharacterInfo from "@/app/utils/CharacterInfo";
+import { Dispatch, SetStateAction } from "react";
 
-function BasicInfoBuilder(){
+type basicInfoProps = {
+    currentCharacter: CharacterInfo,
+    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
+}
+
+function BasicInfoBuilder({currentCharacter, updateCharacter}: basicInfoProps){
     return (
     <div className="p-10">
         Basic Info about the character
