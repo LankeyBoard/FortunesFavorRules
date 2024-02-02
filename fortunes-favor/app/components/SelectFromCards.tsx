@@ -48,18 +48,22 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
     }
 
     useEffect(()=> {
-        if(selectedSlug){
-            console.log("Selected slug changed")
-            handleSelection(selectedSlug);
-        }
+        console.log("Selected slug changed", selectedSlug)
+        handleSelection(selectedSlug);
     },[selectedSlug])
-    
-    const handleSelection=(slug: string)=>{
+
+    const handleSelection=(slug: string | undefined)=>{
         setCurentSlug(slug);
         console.log(optionType)
         switch(optionType){
             case option_type.culture:
-                let culture = options.find((c)=>c.slug===slug);
+                let culture;
+                if(slug === undefined){
+                    culture = undefined;
+                }
+                else{
+                    culture = options.find((c)=>c.slug===slug);
+                }
                 console.log("Updating character culture to ", culture)
                 updateCharacter({
                     ...currentCharacter,
@@ -67,7 +71,13 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 });
                 break;
             case option_type.class:
-                let characterClass = options.find((c)=>c.slug===slug);
+                let characterClass;
+                if(slug === undefined){
+                    characterClass = undefined;
+                }
+                else{
+                    characterClass = options.find((c)=>c.slug===slug);
+                }
                 console.log("Updating character class to ", characterClass)
                 updateCharacter({
                     ...currentCharacter,
@@ -75,7 +85,13 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 });
                 break;
             case option_type.lineage:
-                let lineage = options.find((c)=>c.slug===slug);
+                let lineage;
+                if(slug === undefined){
+                    lineage = undefined;
+                }
+                else{
+                    lineage = options.find((c)=>c.slug===slug);
+                }
                 console.log("Updating character lineage to ", lineage)
                 updateCharacter({
                     ...currentCharacter,

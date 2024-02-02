@@ -21,9 +21,10 @@ const OptionPopout = ({child, showPopout, isSelected=false, setSelectedSlug}: po
             <div className="my-40 flex justify-center w-full">
                 <div id={"popout-"+child.props.id} className={popoutStyle}
                 onClick={(e)=> {e.stopPropagation(); 
-                    console.log("clicked - ",e, child.props.id);
-                    setSelected(true);
-                    setSelectedSlug(child.props.id);
+                    console.log("clicked - ", child.props.id);
+                    setSelectedSlug(!selected? child.props.id: undefined);
+                    setSelected(!selected);
+                    console.log("selected slug ", selected)
                 }}>
                     <div className="">
                         {child}
