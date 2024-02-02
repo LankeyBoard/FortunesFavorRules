@@ -48,25 +48,25 @@ type tabProps = {
     isEnabled?: boolean;
 }
 
-const COMPLETE_CURRENT = "emerald-600";
-const CURRENT = "amber-800";
-const COMPLETE = "emerald-800";
-const ENABLED = "violet-900";
-const DISABLED = "slate-800";
+const COMPLETE_CURRENT = "bg-emerald-600";
+const CURRENT = "bg-amber-800";
+const COMPLETE = "bg-emerald-800";
+const ENABLED = "bg-violet-900";
+const DISABLED = "bg-slate-800";
 
 const Tab = ({name, setCurrentTab, isCurrent, isComplete = false, isEnabled = true}: tabProps) => {
     console.log("Tab props", name, isCurrent, isComplete, isEnabled)
     let style = "basis-1/5 py-3 mx-2 rounded-t-lg text-center "
     if(isCurrent && isComplete)
-    style += "bg-"+COMPLETE_CURRENT+" cursor-default"
+        style += COMPLETE_CURRENT+" cursor-default"
     else if(isCurrent)
-        style += "bg-"+CURRENT+" cursor-default"
+        style += CURRENT+" cursor-default"
     else if(isComplete)
-        style += "bg-"+COMPLETE+" cursor-pointer"
+        style += COMPLETE+" cursor-pointer"
     else if(isEnabled)
-        style += "bg-"+ENABLED+" hover:bg-violet-800 hover:tracking-wider cursor-pointer"
+        style += ENABLED+" hover:bg-violet-800 hover:tracking-wider cursor-pointer"
     else
-        style += "bg-"+DISABLED+" cursor-default"
+        style += DISABLED+" cursor-default"
     console.log(style);
     if(isEnabled && !isCurrent){
         return(
@@ -119,11 +119,11 @@ function CharacterBuilder() {
     }
     
     return(
-        <div>
+        <div className="w-full">
             <div className={"flex flex-row mt-4"}>
                 {tabs.map((tab) => {return(<Tab name={tab.name} setCurrentTab={setCurrentTab} isCurrent={currentTab === tab.name} isComplete={isTabCompleted(tab.name)} isEnabled={tab.isEnabled}/>)})}
             </div>
-            <div>
+            <div className=''>
                 {CharacterInner(currentTab, createdCharacter, setCreatedCharacter)}
             </div>
         </div>

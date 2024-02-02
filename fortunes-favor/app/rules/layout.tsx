@@ -103,7 +103,7 @@ const navRoutes: nav[] = [
 
 export default function RulesLayout({ children }: {children: React.ReactNode}) {
     return(
-      <div className="h-screen flex">
+      <div className="">
           <div className="w-60 bg-slate-950 p-4">
               <RulesNav navMap={navRoutes} />
           </div>

@@ -103,16 +103,18 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
 
     return (
         <div className="w-full">
-            {showPopout && <OptionPopout child={currentChild} showPopout={setShowPoput} isSelected={selectedSlug===currentSlug} setSelectedSlug={setSelectedSlug}/>}
+            {showPopout && <OptionPopout child={currentChild} showPopout={setShowPoput} isSelected={selectedSlug===currentSlug} setSelectedSlug={setSelectedSlug} large={optionType === option_type.class}/>}
             <div>
                 <div className="italic my-4 mx-4">{optionsDescription}</div>
                 <div className="text-sm text-slate-300 mx-4">Click on each of the options below for more information.</div>
-                <div className="flex flex-wrap w-full">
-                    {options.map((c) => {
-                        if(typeof c.title === "string" && typeof c.desc === "string" && typeof c.slug === "string"){
-                            return(<Card title={c.title} text={c.desc} slug={c.slug} pickCard={pickCard} selectedSlug={selectedSlug} key={"card-"+c.title}/>)
-                        }
-                    })}
+                <div className="">
+                    <div className="flex flex-wrap">
+                        {options.map((c) => {
+                            if(typeof c.title === "string" && typeof c.desc === "string" && typeof c.slug === "string"){
+                                return(<Card title={c.title} text={c.desc} slug={c.slug} pickCard={pickCard} selectedSlug={selectedSlug} key={"card-"+c.title}/>)
+                            }
+                        })}
+                    </div>
                 </div>
             </div>
         </div>
