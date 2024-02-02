@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { nav } from "@/app/layout";
+import { nav } from "@/app/rules/layout";
 import { usePathname } from "next/navigation";
 
 type navProps = {
@@ -11,7 +11,6 @@ type navProps = {
 export const NavElem = ({navEl, isSub} : navProps) => {
     const path = usePathname();
     let isCurrent = false;
-
     if(path === navEl.href){
         isCurrent = true;
     }
@@ -35,7 +34,7 @@ export const NavElem = ({navEl, isSub} : navProps) => {
             }
             <div className="mx-2">
                 {navEl.subroutes?.map((r) => {
-                    return <NavElem navEl={r} isSub={true}/>
+                    return <NavElem navEl={r} isSub={true} key={r.title}/>
                 })}
             </div>
         
@@ -48,7 +47,7 @@ const RulesNav = ({navMap}: {navMap: nav[]}) => {
         <div className="flex-col my-5">
             {navMap.map(n => {
                 return(
-                    <NavElem navEl={n}/>);
+                    <NavElem navEl={n} key={n.title}/>);
             })}     
         </div>
     )

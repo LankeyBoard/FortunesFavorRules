@@ -128,7 +128,7 @@ const ClassRule = ({json}: classProps) => {
     const rangeString = (class_rules.range.min===0)? "Melee - "+class_rules.range.max+"ft" : class_rules.range.min+"ft - "+class_rules.range.max+"ft";
     const dmgString = class_rules.dmg.count+"d"+class_rules.dmg.dice+" + "+class_rules.dmg.stat;
     return(
-        <div id={class_rules.slug} className="">
+        <div id={class_rules.slug}>
             <div className="w-full">
                 <div className="text-3xl tracking-wide font-bold py-4 px-1">
                     {class_rules.name}
