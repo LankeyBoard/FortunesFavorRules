@@ -34,3 +34,11 @@ export default class CharacterCulture {
         console.log("Culture - ", this);
     }
 }
+
+export const characterCultureListBuilder = (cultures_json: Array<any>): CharacterCulture[] => {
+    let cultures: CharacterCulture[] = [];
+    cultures_json.forEach((culture)=> {
+        cultures.push(new CharacterCulture(culture))
+    });
+    return cultures;
+}

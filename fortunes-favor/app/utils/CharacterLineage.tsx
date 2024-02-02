@@ -15,7 +15,6 @@ export default class CharacterLineage {
         CharacterTrait
     ]
     constructor(json: any){
-        console.log("JSON - ", json.json)
         this.title = json.title;
         this.slug = json.slug;
         this.desc = json.desc;
@@ -49,4 +48,12 @@ export default class CharacterLineage {
         }
         console.log("Lineage - ", CharacterLineage);
     }
+}
+
+export const characterLineageListBuilder = (lineages_json: Array<any>): CharacterLineage[] => {
+    let cultures: CharacterLineage[] = [];
+    lineages_json.forEach((lineage)=> {
+        cultures.push(new CharacterLineage(lineage))
+    });
+    return cultures;
 }

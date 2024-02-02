@@ -1,5 +1,5 @@
 "use client"
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import BasicInfoBuilder from "./basic_info/builder"
 import LineageSelectBuilder from './lineage/builder';
 import CultureSelectBuilder from './culture/builder';
@@ -48,18 +48,25 @@ type tabProps = {
     isEnabled?: boolean;
 }
 
+const COMPLETE_CURRENT = "emerald-600";
+const CURRENT = "amber-800";
+const COMPLETE = "emerald-800";
+const ENABLED = "violet-900";
+const DISABLED = "slate-800";
+
 const Tab = ({name, setCurrentTab, isCurrent, isComplete = false, isEnabled = true}: tabProps) => {
     console.log("Tab props", name, isCurrent, isComplete, isEnabled)
     let style = "basis-1/5 py-3 mx-2 rounded-t-lg text-center "
-
-    if(isCurrent)
-        style += "bg-amber-800 cursor-default"
+    if(isCurrent && isComplete)
+    style += "bg-"+COMPLETE_CURRENT+" cursor-default"
+    else if(isCurrent)
+        style += "bg-"+CURRENT+" cursor-default"
     else if(isComplete)
-        style += "bg-emerald-800 cursor-pointer"
+        style += "bg-"+COMPLETE+" cursor-pointer"
     else if(isEnabled)
-        style += "bg-violet-900 hover:bg-violet-800 hover:tracking-wider cursor-pointer"
+        style += "bg-"+ENABLED+" hover:bg-violet-800 hover:tracking-wider cursor-pointer"
     else
-        style += "bg-slate-800 cursor-default"
+        style += "bg-"+DISABLED+" cursor-default"
     console.log(style);
     if(isEnabled && !isCurrent){
         return(
@@ -95,12 +102,26 @@ function CharacterInner(title: string, createdCharacter: CharacterInfo, setCreat
 
 function CharacterBuilder() {
     const [currentTab, setCurrentTab] = useState(tabs[0].name);
-    const [createdCharacter, setCreatedCharacter] = useState(new CharacterInfo())
-    console.log("current tab: ", currentTab);
+    const [createdCharacter, setCreatedCharacter] = useState(new CharacterInfo());
+
+    const isTabCompleted =(tabName: string) => {
+        switch(tabName){
+            case "Culture":
+                console.log("Comparing cultures", createdCharacter.characterCulture);
+                return createdCharacter.characterCulture != undefined;
+            case "Lineage":
+                console.log("Comparing lineage", createdCharacter.characterLineage);
+                return createdCharacter.characterLineage != undefined;
+            case "Class":
+                console.log("Comparing lineage", createdCharacter.characterClass);
+                return createdCharacter.characterClass != undefined;
+        }
+    }
+    
     return(
         <div>
-            <div className="flex flex-row mt-4 border-b-amber-800 border-b-8 px-10">
-                {tabs.map((tab) => {return(<Tab name={tab.name} setCurrentTab={setCurrentTab} isCurrent={currentTab === tab.name} isComplete={tab.isComplete} isEnabled={tab.isEnabled}/>)})}
+            <div className={"flex flex-row mt-4"}>
+                {tabs.map((tab) => {return(<Tab name={tab.name} setCurrentTab={setCurrentTab} isCurrent={currentTab === tab.name} isComplete={isTabCompleted(tab.name)} isEnabled={tab.isEnabled}/>)})}
             </div>
             <div>
                 {CharacterInner(currentTab, createdCharacter, setCreatedCharacter)}

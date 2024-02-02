@@ -1,25 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import Card from "./blocks/Card";
 import OptionPopout from "./blocks/OptionPopout";
+import CharacterInfo from "../utils/CharacterInfo";
+import { option_type } from "../enums";
 
-type option = {
-    [key: string]: unknown
-    
+const getSelectedSlug = (optionType: option_type, currentCharacter: CharacterInfo) => {
+    switch(optionType){
+        case option_type.culture:
+            return currentCharacter.characterCulture?.slug;
+        case option_type.lineage:
+            return currentCharacter.characterLineage?.slug;
+        case option_type.class:
+            return currentCharacter.characterClass?.slug;
+        default:
+            return undefined;
+    }
 }
 
 type selectFromCardsProps ={
-    options: option[],
+    optionType: option_type,
+    options: any[],
     popoutInner: (json: any) => JSX.Element,
-    optionsDescription: string
+    optionsDescription: string,
+    currentCharacter: CharacterInfo,
+    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
 }
 
-const SelectFromCards = ({options, popoutInner, optionsDescription}: selectFromCardsProps) => {
+const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, currentCharacter, updateCharacter}: selectFromCardsProps) => {
     const [showPopout, setShowPoput] = useState(false);
-    const [selectedSlug, setSelectedSlug] = useState<string | undefined>(undefined);
-    const [currentSlug, setCurentSlug] = useState<string | undefined>(undefined);
+    const [selectedSlug, setSelectedSlug] = useState<string | undefined>(getSelectedSlug(optionType, currentCharacter));
+    const [currentSlug, setCurentSlug] = useState<string | undefined>(getSelectedSlug(optionType, currentCharacter));
     const [currentChild, setCurrentChild] = useState<JSX.Element | undefined>(undefined);
+    console.log("currentSlug=",currentSlug)
     useEffect(()=> {
-        console.log("options: ", options);
         if(currentSlug){
             const selectedJson = {
                 json: options.find((o)=>o.slug === currentSlug)
@@ -28,11 +41,48 @@ const SelectFromCards = ({options, popoutInner, optionsDescription}: selectFromC
                 setCurrentChild(popoutInner(selectedJson));
             }
         }
-        console.log("useEffect", selectedSlug===currentSlug, options);
     },[currentSlug]);
     const pickCard=(slug: string)=>{
         setCurentSlug(slug);
         setShowPoput(true);
+    }
+
+    useEffect(()=> {
+        if(selectedSlug){
+            console.log("Selected slug changed")
+            handleSelection(selectedSlug);
+        }
+    },[selectedSlug])
+    
+    const handleSelection=(slug: string)=>{
+        setCurentSlug(slug);
+        console.log(optionType)
+        switch(optionType){
+            case option_type.culture:
+                let culture = options.find((c)=>c.slug===slug);
+                console.log("Updating character culture to ", culture)
+                updateCharacter({
+                    ...currentCharacter,
+                    characterCulture: culture
+                });
+                break;
+            case option_type.class:
+                let characterClass = options.find((c)=>c.slug===slug);
+                console.log("Updating character class to ", characterClass)
+                updateCharacter({
+                    ...currentCharacter,
+                    characterClass: characterClass
+                });
+                break;
+            case option_type.lineage:
+                let lineage = options.find((c)=>c.slug===slug);
+                console.log("Updating character lineage to ", lineage)
+                updateCharacter({
+                    ...currentCharacter,
+                    characterLineage: lineage
+                });
+                break;
+        }
     }
 
     return (
