@@ -2,7 +2,7 @@ type inputFieldProps = {
     name: string,
     type?: string,
     isRequired?: boolean,
-    defaultValue?: string
+    defaultValue?: string | number
 }
 
 const InputField = ({name, type="text", isRequired=false, defaultValue}: inputFieldProps) => {

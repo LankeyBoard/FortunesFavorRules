@@ -5,7 +5,7 @@ import LineageSelectBuilder from './lineage/builder';
 import CultureSelectBuilder from './culture/builder';
 import ClassSelectBuilder from './class/builder';
 import QuestionsBuilder from './questions/builder';
-import CharacterInfo from '../utils/CharacterInfo';
+import PlayerCharacter from '../utils/PlayerCharacter';
 
 const tabs =[
     {
@@ -85,7 +85,7 @@ const Tab = ({name, setCurrentTab, isCurrent, isComplete = false, isEnabled = tr
 
 }
 
-function CharacterInner(title: string, createdCharacter: CharacterInfo, setCreatedCharacter: Dispatch<SetStateAction<CharacterInfo>>){
+function CharacterInner(title: string, createdCharacter: PlayerCharacter, setCreatedCharacter: Dispatch<SetStateAction<PlayerCharacter>>){
     switch(title){
         case "Basic Info":
             return <BasicInfoBuilder currentCharacter = {createdCharacter} updateCharacter = {setCreatedCharacter}/>
@@ -102,19 +102,19 @@ function CharacterInner(title: string, createdCharacter: CharacterInfo, setCreat
 
 function CharacterBuilder() {
     const [currentTab, setCurrentTab] = useState(tabs[0].name);
-    const [createdCharacter, setCreatedCharacter] = useState(new CharacterInfo());
+    const [createdCharacter, setCreatedCharacter] = useState(new PlayerCharacter());
 
     const isTabCompleted =(tabName: string) => {
         switch(tabName){
             case "Culture":
-                console.log("Comparing cultures", createdCharacter.characterCulture);
-                return createdCharacter.characterCulture != undefined;
+                console.log("Comparing cultures", createdCharacter.culture);
+                return createdCharacter.culture != undefined;
             case "Lineage":
-                console.log("Comparing lineage", createdCharacter.characterLineage);
-                return createdCharacter.characterLineage != undefined;
+                console.log("Comparing lineage", createdCharacter.lineage);
+                return createdCharacter.lineage != undefined;
             case "Class":
-                console.log("Comparing lineage", createdCharacter.characterClass);
-                return createdCharacter.characterClass != undefined;
+                console.log("Comparing lineage", createdCharacter.class);
+                return createdCharacter.class != undefined;
         }
     }
     

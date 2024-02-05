@@ -1,9 +1,9 @@
-import CharacterInfo from "@/app/utils/CharacterInfo";
+import PlayerCharacter from "@/app/utils/PlayerCharacter";
 import { Dispatch, SetStateAction } from "react";
 
 type questionProps = {
-    currentCharacter: CharacterInfo,
-    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
+    currentCharacter: PlayerCharacter,
+    updateCharacter: Dispatch<SetStateAction<PlayerCharacter>>
 }
 
 function QuestionsBuilder({currentCharacter, updateCharacter}: questionProps){

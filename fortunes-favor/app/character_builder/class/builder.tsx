@@ -1,13 +1,13 @@
 import ClassRule from "@/app/components/Class";
 import SelectFromCards from "@/app/components/SelectFromCards";
 import { option_type } from "@/app/enums";
-import CharacterInfo from "@/app/utils/CharacterInfo";
+import PlayerCharacter from "@/app/utils/PlayerCharacter";
 import class_list_json from "@/public/rules_json/classes/AllClasses.json";
 import { Dispatch, SetStateAction } from "react";
 
 type classSelectProps = {
-    currentCharacter: CharacterInfo,
-    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
+    currentCharacter: PlayerCharacter,
+    updateCharacter: Dispatch<SetStateAction<PlayerCharacter>>
 }
 
 function ClassSelectBuilder({currentCharacter, updateCharacter}: classSelectProps){

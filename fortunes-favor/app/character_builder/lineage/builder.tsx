@@ -1,14 +1,14 @@
 import Lineage from "@/app/components/Lineage";
 import SelectFromCards from "@/app/components/SelectFromCards";
 import { option_type } from "@/app/enums";
-import CharacterInfo from "@/app/utils/CharacterInfo";
+import PlayerCharacter from "@/app/utils/PlayerCharacter";
 import { characterLineageListBuilder } from "@/app/utils/CharacterLineage";
 import lineages_json from "@/public/rules_json/lineages/lineages.json"
 import { Dispatch, SetStateAction } from "react";
 
 type lineageSelectProps = {
-    currentCharacter: CharacterInfo,
-    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
+    currentCharacter: PlayerCharacter,
+    updateCharacter: Dispatch<SetStateAction<PlayerCharacter>>
 }
 
 function LineageSelectBuilder({currentCharacter, updateCharacter}: lineageSelectProps){

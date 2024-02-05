@@ -1,17 +1,17 @@
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import Card from "./blocks/Card";
 import OptionPopout from "./blocks/OptionPopout";
-import CharacterInfo from "../utils/CharacterInfo";
+import PlayerCharacter from "../utils/PlayerCharacter";
 import { option_type } from "../enums";
 
-const getSelectedSlug = (optionType: option_type, currentCharacter: CharacterInfo) => {
+const getSelectedSlug = (optionType: option_type, currentCharacter: PlayerCharacter) => {
     switch(optionType){
         case option_type.culture:
-            return currentCharacter.characterCulture?.slug;
+            return currentCharacter.culture?.slug;
         case option_type.lineage:
-            return currentCharacter.characterLineage?.slug;
+            return currentCharacter.lineage?.slug;
         case option_type.class:
-            return currentCharacter.characterClass?.slug;
+            return currentCharacter.class?.slug;
         default:
             return undefined;
     }
@@ -22,8 +22,8 @@ type selectFromCardsProps ={
     options: any[],
     popoutInner: (json: any) => JSX.Element,
     optionsDescription: string,
-    currentCharacter: CharacterInfo,
-    updateCharacter: Dispatch<SetStateAction<CharacterInfo>>
+    currentCharacter: PlayerCharacter,
+    updateCharacter: Dispatch<SetStateAction<PlayerCharacter>>
 }
 
 const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, currentCharacter, updateCharacter}: selectFromCardsProps) => {
@@ -54,6 +54,7 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
 
     const handleSelection=(slug: string | undefined)=>{
         setCurentSlug(slug);
+        let updatedCharacter = structuredClone(currentCharacter);
         console.log(optionType)
         switch(optionType){
             case option_type.culture:
@@ -65,10 +66,7 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                     culture = options.find((c)=>c.slug===slug);
                 }
                 console.log("Updating character culture to ", culture)
-                updateCharacter({
-                    ...currentCharacter,
-                    characterCulture: culture
-                });
+                updatedCharacter.culture = culture;
                 break;
             case option_type.class:
                 let characterClass;
@@ -79,10 +77,7 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                     characterClass = options.find((c)=>c.slug===slug);
                 }
                 console.log("Updating character class to ", characterClass)
-                updateCharacter({
-                    ...currentCharacter,
-                    characterClass: characterClass
-                });
+                updatedCharacter.class = characterClass;
                 break;
             case option_type.lineage:
                 let lineage;
@@ -93,12 +88,10 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                     lineage = options.find((c)=>c.slug===slug);
                 }
                 console.log("Updating character lineage to ", lineage)
-                updateCharacter({
-                    ...currentCharacter,
-                    characterLineage: lineage
-                });
+                updatedCharacter.lineage = lineage;
                 break;
         }
+        updateCharacter(updatedCharacter);
     }
 
     return (
@@ -107,7 +100,7 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
             <div>
                 <div className="italic my-4 mx-4">{optionsDescription}</div>
                 <div className="text-sm text-slate-300 mx-4">Click on each of the options below for more information.</div>
-                <div className="">
+                <div className="w-fit">
                     <div className="flex flex-wrap">
                         {options.map((c) => {
                             if(typeof c.title === "string" && typeof c.desc === "string" && typeof c.slug === "string"){

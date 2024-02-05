@@ -52,3 +52,14 @@ export enum option_type {
     lineage = "LINEAGE",
     culture = "CULTURE"
 }
+
+export enum LANGUAGES {
+    allspeak = "AllSpeak",
+    elvish = "Elvish",
+    dwarvish = "Dwarvish",
+    thistletongue = "Thistletongue",
+    starrend = "Starrend",
+    deeproot = "Deeproot",
+    seawhisper = "Seawhisper",
+    voidhowl = "Voidhowl"
+}
