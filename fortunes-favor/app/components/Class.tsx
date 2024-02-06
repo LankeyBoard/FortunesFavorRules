@@ -26,10 +26,10 @@ type featureProps = {
 const FeatureDisplay = ({feature}: featureProps) => {
 
     return(
-        <div id={feature.slug} className="bg-slate-800 my-5">
-            <div className="bg-teal-700 text-lg p-2 font-semibold">
+        <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
+            <div className="bg-teal-300 dark:bg-teal-700 text-lg p-2 font-semibold">
                 {feature.name}
-                <div className="text-slate-200 text-sm ordinal float-right">{feature.level+getOrdinal(feature.level)} level</div>
+                <div className="text-slate-700 dark:text-slate-200 text-sm ordinal float-right">{feature.level+getOrdinal(feature.level)} level</div>
             </div>
             <div className="px-4 py-2">
                 {feature.stamina &&<div><span className="font-semibold">Costs - </span> {feature.stamina} Stamina</div>}
@@ -71,7 +71,7 @@ type tagProps = {
 
 const Tag =({text, style}: tagProps) => {
     const s = style? style : "bg-teal-900";
-    const tagStyle = s + " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm";
+    const tagStyle = s + " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm text-white dark:text-black";
     return(
         <div className={tagStyle}>
             {text}

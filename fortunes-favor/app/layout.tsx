@@ -12,7 +12,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
         <head>
         </head>
         <body>
-          <div className='container mx-auto max-w-screen-xxl bg-gray-900 h-screen flex'>
+          <div className='container mx-auto max-w-screen-xxl bg-gray-100 dark:bg-gray-900 h-screen flex'>
             {children}
           </div>
         </body>

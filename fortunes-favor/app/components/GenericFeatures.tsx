@@ -8,7 +8,7 @@ type genericFeature = {
 
 const Feature = ({feature}: {feature: genericFeature}) => {
     return(
-        <div className="py-2 mx-5 odd:bg-slate-800" key={feature.title}>
+        <div className="py-2 px-5 even:bg-slate-300 dark:even:bg-slate-800" key={feature.title}>
             <span className="font-semibold">
                 {feature.title}
             </span>
@@ -23,7 +23,7 @@ const Feature = ({feature}: {feature: genericFeature}) => {
                 </ul>
             </div>
             {feature.multiSelect &&
-                <div className="mt-2 italic text-slate-300">
+                <div className="mt-2 italic text-slate-600 dark:text-slate-300">
                     You can select this multiple times, choosing a different option each time.
                 </div>
             }
