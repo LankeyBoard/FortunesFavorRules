@@ -3,14 +3,14 @@ import Link from "next/link";
 import { nav } from "@/app/rules/layout";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '@/tailwind.config'
+
+import useWindowDimensions from "@/app/utils/useWindowDimensions";
+import { isSmallWindow } from "@/app/utils/isSmallWindow";
 
 type navProps = {
     navEl: nav,
     isSub?: boolean
 }
-const fullConfig = resolveConfig(tailwindConfig);
 
 export const NavElem = ({navEl, isSub} : navProps) => {
     const path = usePathname();
@@ -19,7 +19,7 @@ export const NavElem = ({navEl, isSub} : navProps) => {
         isCurrent = true;
     }
     return(
-        <div key={navEl.title}>
+        <div key={navEl.title} className="">
             {(navEl.href && !isCurrent) 
             ?
                 <div className={isSub?"border-l-amber-700 border-l":""}>   
@@ -48,7 +48,7 @@ export const NavElem = ({navEl, isSub} : navProps) => {
 const NavMenu = ({navMap}: {navMap: nav[]}) => {
     return(
         <div className="flex-left">
-            <aside id="sidebar-multi-level-sidebar" className="z-40 w-64 h-screen bg-slate-950 p-4" aria-label="Sidebar">
+            <aside id="sidebar-multi-level-sidebar" className="z-40 w-64 h-screen bg-slate-950 p-4 overflow-auto" aria-label="Sidebar">
                 <div className="flex-col my-5">
                     {navMap.map(n => {
                         return(
@@ -60,19 +60,12 @@ const NavMenu = ({navMap}: {navMap: nav[]}) => {
     )
 }
 
-const isSmallWindow = (windowWidth: number) => {
-    console.log("IS small window", window.innerWidth <= Number(fullConfig.theme.screens.sm.slice(0,-2)))
-    return(windowWidth <= Number(fullConfig.theme.screens.sm.slice(0,-2)));
-}
-
 const RulesNav = ({navMap}: {navMap: nav[]}) => {
     
-
-    const [windowWidth, setWindowWidth] = useState(0);
-    const [menuVisible, setMenuVisible] = useState(!isSmallWindow(windowWidth));
+    const { height, width } = useWindowDimensions();
+    const [menuVisible, setMenuVisible] = useState(!isSmallWindow(width));
     const [menuStyle, setMenuStyle] = useState("flex");
     useEffect(()=> {
-        console.log("WINDOW SIZE = ", window.innerWidth, fullConfig.theme.screens.sm.slice(0,-2));
         if(!isSmallWindow(window.innerWidth)){
             console.log("Not small")
             setMenuStyle("flex");
@@ -83,15 +76,14 @@ const RulesNav = ({navMap}: {navMap: nav[]}) => {
             setMenuStyle("fixed flex");
             setMenuVisible(false)
         }
-        setWindowWidth(window.innerWidth);
-    },[window]);
+    },[width]);
     
     return(
         <div className={menuStyle}>
             {menuVisible && 
                 <NavMenu navMap={navMap}/>
             }
-            {(isSmallWindow(windowWidth) || !menuVisible)&&
+            {(isSmallWindow(width) || !menuVisible)&&
                 <div className="flex-left z-50">
                     <button aria-controls="sidebar-multi-level-sidebar" type="button" onClick={()=> setMenuVisible(!menuVisible)} className="items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
                         <span className="sr-only">Open sidebar</span>
