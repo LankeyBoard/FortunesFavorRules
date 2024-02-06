@@ -22,7 +22,7 @@ export const NavElem = ({navEl, isSub} : navProps) => {
         <div key={navEl.title} className="">
             {(navEl.href && !isCurrent) 
             ?
-                <div className={isSub?"border-l-amber-700 border-l":""}>   
+                <div className={isSub?"border-l-amber-700 border-l hover:border-l-amber-600":""}>   
                     <Link href={navEl.href} className="font-light text-lg hover:tracking-wide whitespace-nowrap">
                         <div className={"font-light text-lg text-slate-200 hover:tracking-wide hover:text-amber-100 whitespace-nowrap ml-3"}>
                             {navEl.title}
@@ -63,10 +63,10 @@ const NavMenu = ({navMap}: {navMap: nav[]}) => {
 const RulesNav = ({navMap}: {navMap: nav[]}) => {
     
     const { height, width } = useWindowDimensions();
-    const [menuVisible, setMenuVisible] = useState(!isSmallWindow(width));
+    const [menuVisible, setMenuVisible] = useState(true);
     const [menuStyle, setMenuStyle] = useState("flex");
     useEffect(()=> {
-        if(!isSmallWindow(window.innerWidth)){
+        if(!isSmallWindow(width)){
             console.log("Not small")
             setMenuStyle("flex");
             setMenuVisible(true);
@@ -76,13 +76,14 @@ const RulesNav = ({navMap}: {navMap: nav[]}) => {
             setMenuStyle("fixed flex");
             setMenuVisible(false)
         }
-    },[width]);
+    },[]);
     
     return(
         <div className={menuStyle}>
-            {menuVisible && 
+            <div className={menuVisible? "":"hidden"}>
                 <NavMenu navMap={navMap}/>
-            }
+            </div>
+
             {(isSmallWindow(width) || !menuVisible)&&
                 <div className="flex-left z-50">
                     <button aria-controls="sidebar-multi-level-sidebar" type="button" onClick={()=> setMenuVisible(!menuVisible)} className="items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
