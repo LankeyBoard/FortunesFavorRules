@@ -1,15 +1,7 @@
-
-export class trait {
-    title: string;
-    text: string;
-    constructor(json: any){
-        this.title = json.title;
-        this.text = json.text;
-    }
-}
-const Trait = ({t}: {t: trait}) => {
+import { CharacterTrait } from "@/app/utils/CharacterTrait";
+const Trait = ({t}: {t: CharacterTrait}) => {
     return(
-        <div>
+        <div key={t.title+"trait"}>
             <span className="font-semibold">{t.title} - </span>
             <span>{t.text}</span>
         </div>

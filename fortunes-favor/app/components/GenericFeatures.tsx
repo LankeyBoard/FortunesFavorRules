@@ -8,7 +8,7 @@ type genericFeature = {
 
 const Feature = ({feature}: {feature: genericFeature}) => {
     return(
-        <div className="py-2 mx-5" key={feature.title}>
+        <div className="py-2 px-5 even:bg-slate-300 dark:even:bg-slate-800" key={feature.title}>
             <span className="font-semibold">
                 {feature.title}
             </span>
@@ -16,16 +16,18 @@ const Feature = ({feature}: {feature: genericFeature}) => {
                 &nbsp;- {feature.text}
             </span>
             {feature.options &&
+            <>
             <div className="ml-5 mt-2">
                 <ul>
                     {feature.options.map((text) => {return(<li><span className="text-amber-600">- </span>{text}</li>)})}
                 </ul>
-                {feature.multiSelect &&
-                <div className="mt-2 italic text-slate-300">
+            </div>
+            {feature.multiSelect &&
+                <div className="mt-2 italic text-slate-600 dark:text-slate-300">
                     You can select this multiple times, choosing a different option each time.
                 </div>
-                }
-            </div>
+            }
+            </>
             }
         </div>
     )

@@ -1,0 +1,884 @@
+{
+    "list":[
+        {
+            "name": "Brawler",
+            "slug": "BRAWLER",
+            "flavor_text": "The brawler is a master of close-quarters combat, relying on unmatched agility, mettle, and strategic counterattacks to prevail in the heat of battle.",
+            "complexity": "standard",
+            "health": 20,
+            "health_on_level": 2,
+            "stamina_stat": "Mettle",
+            "stamina": 6,
+            "stamina_on_level": 2,
+            "training": {
+                "armor": [null],
+                "shields": [null],
+                "weapons": {"melee": ["unarmed", "improvised"], "ranged": ["improvised"], "special": null},
+                "magic": [null]
+            },
+            "attack_stat": "Mettle",
+            "range": {"min": 0, "max": 40},
+            "damage": {"dice": 10, "count": 1, "stat": "Mettle"},
+            "features": [{
+                "level": 1,
+                "name": "Muscle Bound Body",
+                "slug": "BrawlerMBB",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "When you are not wearing armor, you can calculate your Armor as 10+mettle+dex (max of 2)"       
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "Your years of training and fighting have honed your body to take blows that would have felled a lesser being."
+                }]
+            },
+            {
+                "level": 1,
+                "name": "Tag Team",
+                "slug": "BrawlerTT",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "When you succeed in a melee attack test, you can move the enemy up to 5ft into melee range of an ally or swap places with it if you can move. If that ally attacks the enemy before the start of the next round of combat, they have Fortune's Favor for that attack."
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "Teamwork is the greatest weapon. You know just how to set the stage for your allies to attack."
+                }]
+            },
+            {
+                "level": 2,
+                "name": "Bravado",
+                "slug": "BrawlerBravado",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "When trying to intimidate an enemy, add your mettle in addition to any other bonuses to the test."
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "Intimidation is as easy as breathing for you."
+                }]
+            },
+            {
+                "level": 2,
+                "name": "Counter Puncher",
+                "slug": "BrawlerCounter",
+                "stamina_cost": 1,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "When you make a counter attack, you can spend 1 stamina to remove the counter attack damage penalty, allowing you to deal your base damage on this counter attack."
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "If an enemy is foolish enough to open themselves up to your counter attacks, you make sure they pay the price."
+                }]
+            },
+            {
+                "level": 3,
+                "name": "Mix It Up",
+                "slug": "BrawlerMIU",
+                "stamina_cost": null,
+                "fortunes_favor": true,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "If you are attacking an enemy you did not attack last turn you can spend Fortune's Favor before the attack to double your base damage if you hit."
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "Always striking a single enemy is boring and predictable. Mix it up by attacking different enemies."
+                }]
+            },
+            {
+                "level": 4,
+                "name": "Stat Up",
+                "slug": "BrawlerSU1",
+                "stamina_cost": null,
+                "type": "RULE",
+                "fields":[
+                {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a new Novice Feature."
+                }]
+            },
+            {
+                "level": 5,
+                "name": "Spinning Lariat",
+                "slug": "BrawlerSL",
+                "stamina_cost": 1,
+                "fortunes_favor": false,
+                "type": "ATTACK",
+                "action": "ACTION",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "Spend 1 Stamina plus 1 Stamina per enemy within melee range of you. Make an AOE Attack that deals your base damage against all enemies within melee range of you."
+                }]
+            },
+            {
+                "level": 6,
+                "name": "Slab of Beef",
+                "slug": "BrawlerSoB",
+                "stamina_cost": null,
+                "fortunes_favor": true,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "Spend Fortune's Favor, halve all damage taken until the start your next turn."
+                },
+                {
+                    "type": "FLAVOR",
+                    "text": "Your incredibly beefy body can deflect blows just by flexing your muscles."
+                }]
+            },
+            {
+                "level": 7,
+                "name": "Running on Pure Adrenaline",
+                "slug": "BrawlerRoPA",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[{
+                    "type": "RULE",
+                    "text": "While making a Last Stand, double your lift, carry and drag amounts, gain Fortune's Favor on all Mettle Tests and double your jump distance."
+                }]
+            },
+            {
+                "level": 8,
+                "name": "Stat Up 2",
+                "slug": "BrawlerSU2",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[
+                {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a Veteran Feature"
+                }]
+            }]
+        },
+        {
+            "name": "Devoted",
+            "slug": "DEVOTED",
+            "flavor_text": "Your reverence and constant spread of your gods holy words has earned you their favor which you use to perform greater deeds in their name.",
+            "complexity": "complex",
+            "health": 14,
+            "health_on_level": 2,
+            "stamina_stat": "Heart",
+            "stamina": 6,
+            "stamina_on_level": 2,
+            "training": {
+              "armor": [null],
+              "shields": [null],
+              "weapons": {"melee": ["none"], "ranged": ["none"], "special": null},
+              "magic": ["Divine"]
+            },
+            "attack_stat": "Heart",
+            "range": {"min": 0, "max": 60},
+            "damage": {"dice": 6, "count": 1, "stat": "Heart"},
+            "features": [
+              {
+                "level": 1,
+                "name": "Spellcasting",
+                "slug": "DEVOTED-SPELLCASTING",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Learning Spells: Start with Heart spells known from the Divine list. You can only learn spells that are less than or equal to your current level. When you level up, learn 1 additional spell."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Casting Spells: To cast a spell you spend stamina equal to the spell's level while using your Holy Symbol."
+                  }
+                ]
+              },
+              {
+                "level": 1,
+                "name": "Holy Symbol",
+                "slug": "DEVOTEDHS",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "You need a holy symbol to cast your divine spells. You require one hand either holding your holy symbol or free to cast."
+                  },
+                  {
+                    "type": "FLAVOR",
+                    "text": "E.g., if you are using a staff, you have to be holding it in one hand or if you have a tattoo on the back of your hand, then you can't have anything in that hand to cast."
+                  }
+                ]
+              },
+              {
+                "level": 1,
+                "name": "I've Studied the Word",
+                "slug": "DEVOTEDStW",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Gain a +3 on Intellect tests to recall specific bits of history or religious information."
+                  },
+                  {
+                    "type": "FLAVOR",
+                    "text": "Your years of study and devotion have granted you deep knowledge of historical and religious facts."
+                  }
+                ]
+              },
+              {
+                "level": 2,
+                "name": "Rapid Recuperation",
+                "slug": "DEVOTEDRR",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "3 charges, when you Catch Your Breath, you can expend a charge, you and up to 5 allies regain Health equal to your Heart. You regain all charges when you Rest & Recuperate"
+                  }
+                ]
+              },
+              {
+                "level": 3,
+                "name": "Reading the Signs",
+                "slug": "DEVOTEDRS",
+                "stamina_cost": 1,
+                "fortunes_favor": true,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Spend 1 stamina and 10 minutes in deep meditation or praying on a solution to an issue to gain Fortune's Favor on the next Test to resolve the issue."
+                  }
+                ]
+              },
+              {
+                "level": 3,
+                "name": "Minor Intervention",
+                "slug": "DEVOTEDMI",
+                "stamina_cost": null,
+                "fortunes_favor": true,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Once a day you can spend Fortune's Favor to improve yours or your allies Test results. Turning a Failure to a Mixed or a Mixed to a Success. You can do this after the dice are rolled but before consequences are applied."
+                  }
+                ]
+              },
+              {
+                "level": 4,
+                "name": "Stat Up",
+                "slug": "DEVOTEDSU1",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Select a new Novice Feature."
+                  }
+                ]
+              },
+              {
+                "level": 5,
+                "name": "Shepherd of the Word",
+                "slug": "DEVOTEDSW",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "You act as a conduit for the word of your god and you know how to gather others to your cause."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Add a +3 to tests to persuade others to follow your god's tenets."
+                  }
+                ]
+              },
+              {
+                "level": 6,
+                "name": "Martyr",
+                "slug": "DEVOTEDM",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "Before you die, you make yourself a holy martyr seeking the final praise of your god."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "When you use your Last Stand, you can cast 2 spells per action, and increase your base damage by 1 dice step."
+                  }
+                ]
+              },
+              {
+                "level": 7,
+                "name": "Divine Inspiration",
+                "slug": "DEVOTEDDI",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "3 times per adventure, cast a spell without spending stamina. Any additional effects of the spell that require stamina still require you to spend stamina."
+                  }
+                ]
+              },
+              {
+                "level": 8,
+                "name": "Stat Up 2",
+                "slug": "DEVOTEDSU2",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Increase a stat by 1 (max 5)"
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Select a Veteran Feature."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Elementalist",
+            "slug": "ELEMENTALIST",
+            "flavor_text": "An elemental magic user who uses their mastery over their chosen elements to defeat their enemies.",
+            "complexity": "simple",
+            "health": 10,
+            "health_on_level": 2,
+            "stamina_stat": "Intellect",
+            "stamina": 6,
+            "stamina_on_level": 2,
+            "training": {
+                "armor": [null],
+                "sheilds": [null],
+                "weapons": {"melee": null, "ranged": null, "special": null},
+                "magic": [1,"fire","cold","lightning", "rot", "psychic"]
+            },
+            "attack_stat": "Intellect",
+            "range": {"min": 0, "max": 80},
+            "damage": {"dice": 6, "count": 1, "stat": "Intellect"},
+            "features": [{
+                "level": 1,
+                "name": "Elemental Adept",
+                "stamina_cost": null,
+                "fields":[{
+                    "name": "RULE",
+                    "text": "You can summon forth your chosen magic to perform minor tasks and tricks as are reasonable for your element."   
+                },
+                {
+                    "name": "EG",
+                    "text": "You can summon flames to start a fire or shed light, or use psychic powers to pull a book from the shelves. Your base damage is also based on your element."
+                }]
+            },
+            {
+                "level": 1,
+                "name": "Elemental Burst",
+                "stamina_cost": 1,
+                "type": "ATTACK",
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "A burst of elemental energy surrounds you, warding off nearby foes."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "Attack all creatures within 5ft of you. Dealing base damage to those you hit."
+                }]
+            },
+            {
+                "level": 2,
+                "name": "Enhance",
+                "stamina_cost": 1,
+                "type": "RULE",
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "Surround yourself or an ally with your element, bolstering their natural abilities."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "Select yourself or an ally you can see within 30ft of you, add your intellect to the next Mettle or Agility test they make. If you have fortunes favor, you can spend it to double the bonus Enhance provides."
+                }]
+            },
+            {
+                "level": 3,
+                "name": "Focused Training",
+                "stamina_cost": 1,
+                "type": "CHOICE",
+                "fields":[{
+                    "name": "RULE",
+                    "text": "Pick one of the following options to enhance yourself"       
+                }],
+                "choices": [
+                    {"name": "Elemental Armor", "text": "Add your Intellect to your armor and take half damage from your chosen element."},
+                    {"name": "Bolt Thrower", "text": "Increase your base attack range by 30ft"},
+                    {"name": "Bigger Burst", "text": "Increase the size of your burst to all creatures within 10ft of you."}            
+                ]
+            },
+            {
+                "level": 4,
+                "name": "Stat Up",
+                "slug": "ElemSU1",
+                "stamina_cost": null,
+                "type": "RULE",
+                "fields":[
+                {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a new Novice Feature."
+                }]
+            },
+            {
+                "level": 5,
+                "name": "Twin Attack",
+                "slug": "ElemTA",
+                "stamina_cost": 2,
+                "type": "RULE",
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "Spend 2 Stamina, you can target two different creatures or the same creature twice with your attack."
+                }]
+            },
+            {
+                "level": 5,
+                "name": "Overcharge",
+                "slug": "ElemTA",
+                "stamina_cost": null,
+                "type": "RULE",
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "When you take damage of your elemental type, increase your base damage by 2 dice steps the next time you deal elemental damage."
+                }]
+            },
+            {
+                "level": 6,
+                "name": "Power Overwhelming",
+                "slug": "ElemPO",
+                "stamina_cost": null,
+                "type": "RULE",
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "During your last stand you can choose to end it early and die. If you choose to do so, make a final 30ft radius attack. The attack deals 3 times your base damage dice to those who it hits, and half damage to all who you either clash or miss. Using this ability kills you."
+                }]
+            },
+            {
+                "level": 7,
+                "name": "Bursting Shot",
+                "slug": "ElemBS",
+                "stamina_cost": null,
+                "fortunes_favor": true,
+                "type": "RULE",
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "You can spend your Fortune's Favor when you make a magic attack. If the attack hits, all enemies within 5ft of the target take half as much damage."
+                }]
+            },
+            {
+                "level": 8,
+                "name": "Stat Up 2",
+                "slug": "ElemSU2",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[
+                {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a Veteran Feature"
+                }]
+            }]
+        },
+        {
+            "name": "Knight",
+            "Slug": "KNIGHT",
+            "complexity": "simple",
+            "flavor_text": "An honorable fighter heavily armed and armored against the evils of the world.",
+            "health": 18,
+            "health_on_level": 2,
+            "stamina_stat": "Mettle",
+            "stamina": 6,
+            "stamina_on_level": 2,
+            "training": {
+                "armor": ["Light, Medium, Heavy"],
+                "sheilds": ["Light, Medium, Heavy"],
+                "weapons": {"melee": [2, "Hammers & Clubs", "Slashing Swords", "Piercing Swords & Daggers", "Axes", "Flails, Ball & Chain, etc."], "ranged": [2, "Heavy Throwing", "Light Throwing", "Bows", "Crossbows"], "special": null},
+                "magic": [null]
+            },
+            "attack_stat": "Mettle",
+            "range": {"min": 0, "max": 120},
+            "damage": {"dice": 10, "count": 1, "stat": "Mettle"},
+            "features": [
+            {
+                "level": 1,
+                "name": "Driving Attack",
+                "stamina_cost": 1,
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "Your flurry of attacks drive the enemy back."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "When you make an attack action you may spend 1 stamina to attempt to also drive your enemy back 5ft. On a mix, you chose whether to damage or move the creature back. On a pass, you can do both.\nIf you chose to move a creature, they can opt to instead take an extra base attacks worth of damage to avoid being moved."
+                }]
+            },
+            {
+                "level": 1,
+                "name": "Sweeping Attack",
+                "slug": "KnightSA",
+                "stamina_cost": 1,
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "You sweep your attacks, aiming to harm all who stand in your way."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "When you take an attack action with a melee weapon, you may spend 1 stamina to attempt to also attack enemies adjacent to your target and within your weapons reach."
+                }]
+            },
+            {
+                "level": 2,
+                "name": "Vow",
+                "slug": "KnightVOW",
+                "stamina_cost": null,
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "Your word is your bond, those who recognize your station believe you when you speak truth."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "When you take a Heart test to convince someone of true information, you gain a +3 on the test."
+                }]
+            },
+            {
+                "level": 3,
+                "name": "Intercept",
+                "slug": "KnightI",
+                "stamina_cost": 1,
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "You swiftly step between your ally and danger."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "When an ally within 5ft of you would be hit by an attack or counter, you can spend 1 stamina to switch places with your ally, taking the hit for them."
+                }]
+            },
+            {
+                "level": 4,
+                "name": "Stat Up",
+                "slug": "KnightSU1",
+                "stamina_cost": null,
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a new Novice Feature."
+                }]
+            },
+            {
+                "level": 5,
+                "name": "Unstoppable",
+                "slug": "KnightU",
+                "stamina_cost": null,
+                "fortunes_favor": true,
+                "fields":[{
+                    "name": "RULE",
+                    "text": "Spend Fortune's Favor, until the end of your next turn, your speed cannot be reduced below half your base speed."
+                }]
+            },
+            {
+                "level": 6,
+                "name": "No Retreat, No Surrender",
+                "slug": "KnightNRNS",
+                "stamina_cost": null,
+                "fields":[{
+                    "name": "FLAVOR",
+                    "text": "You never run from a fight and don’t stop until your enemies are dead."       
+                },
+                {
+                    "name": "RULE",
+                    "text": "If you attack the same creature you attacked last turn and did not willingly get further away from them, increase your Base Damage by 1 step."
+                }]
+            },
+            {
+                "level": 6,
+                "name": "Mounted Combatant",
+                "slug": "KnightMC",
+                "stamina_cost": null,
+                "fields":[{
+                    "name": "RULE",
+                    "text": "Gain a +3 to tests to control a trained mount."
+                }]
+            },
+            {
+                "level": 7,
+                "name": "You Won't Be The One To Kill Me",
+                "slug": "KnightYWBTOTKM",
+                "stamina_cost": null,
+                "fields":[
+                {
+                    "name": "RULE",
+                    "text": "When you make your Last Stand, pick a creature, you are immune to damage from that creature."
+                }]
+            },
+            {
+                "level": 8,
+                "name": "Stat Up 2",
+                "slug": "KnightSU2",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields":[
+                {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                },
+                {
+                    "type": "RULE",
+                    "text": "Select a Veteran Feature"
+                }]
+            }]
+        },
+        {
+            "name": "Ranger",
+            "slug": "RANGER",
+            "flavor_text": "A skilled survivalist as well as ranged and melee fighter relying more on quickness and skill than outright strength.",
+            "complexity": "simple",
+            "health": 16,
+            "health_on_level": 2,
+            "stamina_stat": "Agility",
+            "stamina": 6,
+            "stamina_on_level": 2,
+            "training": {
+              "armor": ["Light"],
+              "shields": [null],
+              "weapons": {"melee": [1, "Axes", "Piercing Swords & Dagers", "Slashing Swords" ], "ranged": [2, "Bows", "Crossbows", "Light Throwing"], "special": null},
+              "magic": [null]
+            },
+            "attack_stat": "Agility",
+            "range": {"min": 0, "max": 120},
+            "damage": {"dice": 8, "count": 1, "stat": "Agility"},
+            "features": [
+              {
+                "level": 1,
+                "name": "Predator's Sense",
+                "slug": "RangerPredatorsSense",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "You have almost supernaturally heightened senses."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Gain +3 to tests when tracking as well as on tests to find hidden creatures."
+                  }
+                ]
+              },
+              {
+                "level": 1,
+                "name": "Precision of the Hawk",
+                "slug": "RangerPrecisionHawk",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "Your attacks are incredibly accurate, always targeting the weakest points in the target."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "When you roll weapon attack damage, you can reroll any 1s, taking the new result."
+                  }
+                ]
+              },
+              {
+                "level": 2,
+                "name": "Cunning Stalker",
+                "slug": "RangerCunningStalker",
+                "stamina_cost": 1,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "You have spent countless hours tracking prey through the woods or back alleys and instinctively step lightly and quietly."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Spend 1 stamina, you leave no tracks, enemies have Misfortune when trying to track you and you get a +2 on stealth tests."
+                  }
+                ]
+              },
+              {
+                "level": 2,
+                "name": "Wild Guide",
+                "slug": "RangerWildGuide",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "You move through rough and wild terrain with skill and can guide others along the safest routes with ease."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Your party can add your Heart to their daily pace when traveling across terrain without roads."
+                  }
+                ]
+              },
+              {
+                "level": 3,
+                "name": "Quickdraw Counter",
+                "slug": "RangerQuickdrawCounter",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "FLAVOR",
+                    "text": "Your weapons are just a hand twitch away."
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "When you counterattack, you can use any weapon on your person to make the counter."
+                  }
+                ]
+              },
+              {
+                "level": 4,
+                "name": "Stat Up",
+                "slug": "RangerStatUp1",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Increase one of your stats by 1 (max 5)"
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Select a new Novice Feature."
+                  }
+                ]
+              },
+              {
+                "level": 5,
+                "name": "Poisoned Blade",
+                "slug": "RangerPoisonedBlade",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Whenever you Catch Your Breath you can coat one of your weapons in poison. When you deal damage with that weapon, deal an extra 1d4 rot damage."
+                  }
+                ]
+              },
+              {
+                "level": 6,
+                "name": "Final Hunt",
+                "slug": "RangerFinalHunt",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "When you make a Last Stand, your speed increases by 10ft. All of your weapons gain the effect of Poisoned Blade and double your bonus from Predator's Sense."
+                  }
+                ]
+              },
+              {
+                "level": 7,
+                "name": "Long Shot",
+                "slug": "RangerLongShot",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "If you do not move this turn, double your range until the start of your next turn."
+                  }
+                ]
+              },
+              {
+                "level": 8,
+                "name": "Stat Up 2",
+                "slug": "RangerStatUp2",
+                "stamina_cost": null,
+                "fortunes_favor": false,
+                "type": "RULE",
+                "fields": [
+                  {
+                    "type": "RULE",
+                    "text": "Increase a stat by 1 (max 5)"
+                  },
+                  {
+                    "type": "RULE",
+                    "text": "Select a Veteran Feature."
+                  }
+                ]
+              }
+            ]
+          }                  
+    ]
+}

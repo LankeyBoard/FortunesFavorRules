@@ -1,3 +1,14 @@
+export function findEnum(s: String, e: any): any|undefined{
+    let keys: string[] = Object.keys(e);
+    let match = undefined;
+    keys.forEach((key) => {
+        if(s === e[key]){
+            match = e[key];
+        }
+    })
+    return match;
+}
+
 export enum field_options {
     Rule = "RULE",
     Flavor = "FLAVOR",
@@ -36,13 +47,19 @@ export enum size_options {
     error = "ERROR"
 }
 
-export function findEnum(s: String, e: any): any|undefined{
-    let keys: string[] = Object.keys(e);
-    let match = undefined;
-    keys.forEach((key) => {
-        if(s === e[key]){
-            match = e[key];
-        }
-    })
-    return match;
+export enum option_type {
+    class = "CLASS",
+    lineage = "LINEAGE",
+    culture = "CULTURE"
+}
+
+export enum LANGUAGES {
+    allspeak = "AllSpeak",
+    elvish = "Elvish",
+    dwarvish = "Dwarvish",
+    thistletongue = "Thistletongue",
+    starrend = "Starrend",
+    deeproot = "Deeproot",
+    seawhisper = "Seawhisper",
+    voidhowl = "Voidhowl"
 }

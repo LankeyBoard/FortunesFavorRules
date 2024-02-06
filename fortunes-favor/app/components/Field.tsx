@@ -41,7 +41,7 @@ type fieldProps = {
 }
 const Field = ({field, depth=1}: fieldProps) => {
     return(
-        <div id={field.slug}>
+        <div id={field.slug} className="">
             <div className={titleStyler(depth)}>
                 {field.title}
             </div>
