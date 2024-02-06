@@ -103,10 +103,8 @@ const navRoutes: nav[] = [
 
 export default function RulesLayout({ children }: {children: React.ReactNode}) {
     return(
-      <div className="">
-          <div className="w-60 bg-slate-950 p-4">
-              <RulesNav navMap={navRoutes} />
-          </div>
+      <div className="flex flex-row">
+          <RulesNav navMap={navRoutes} />
           <div className="flex-1 flex overflow-hidden">
               <div className="flex-1 overflow-auto">
                 <Rule>

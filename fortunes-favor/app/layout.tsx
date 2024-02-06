@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import RulesNav from "./components/blocks/RulesNav"
 
 export const metadata: Metadata = {
   title: "Fortune's Favor",
