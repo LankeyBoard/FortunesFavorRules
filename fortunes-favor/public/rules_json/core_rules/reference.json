@@ -58,11 +58,11 @@
         },
         {
             "title": "Dying",
-            "text": "0 Health. See the Dead & Dying rules for more information."
+            "text": "0 Health. See the [Dead & Dying rules](/rules/player_rules/getting_started/dying) for more information."
         },
         {
             "title": "Dead",
-            "text": "0 Health and 0 Stamina. See the Dead & Dying rules for more information."
+            "text": "0 Health and 0 Stamina. See the [Dead & Dying rules](/rules/player_rules/getting_started/dying) for more information."
         },
         {
             "title": "Blind",

@@ -1,33 +1,38 @@
 import { field_options, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
-import Feature from "../utils/Feature";
+import CharacterFeature from "../utils/Feature";
 import { Field, Choice } from "@/app/utils/FieldTypes";
 import CharacterClass from "../utils/CharacterClass";
+import SlugLinker from "./blocks/SlugLinker";
 
 type fieldProps = {
   field: Field;
 };
 const FieldDisplay = ({ field }: fieldProps) => {
-  const cn = "field" + field.type;
   const displayVariants = {
     reg: "",
     flavor: "italic",
+    eg: "italic text-slate-300",
   };
+  let fieldDisplayStyle = displayVariants.reg;
+  switch (field.type) {
+    case field_options.Flavor:
+      fieldDisplayStyle = displayVariants.flavor;
+      break;
+    case field_options.Eg:
+      fieldDisplayStyle = displayVariants.eg;
+      break;
+  }
   return (
-    <div
-      className={
-        field.type === field_options.Flavor
-          ? displayVariants.flavor
-          : displayVariants.reg
-      }
-    >
-      {field.text}
+    <div className={fieldDisplayStyle}>
+      {field.type === field_options.Eg && <span>Eg. </span>}
+      <SlugLinker text={field.text} />
     </div>
   );
 };
 type featureProps = {
-  feature: Feature;
+  feature: CharacterFeature;
 };
 const FeatureDisplay = ({ feature }: featureProps) => {
   return (
@@ -39,22 +44,26 @@ const FeatureDisplay = ({ feature }: featureProps) => {
         </div>
       </div>
       <div className="px-4 py-2">
-        {feature.stamina && (
-          <div>
-            <span className="font-semibold">Costs - </span> {feature.stamina}{" "}
-            Stamina
+        {(feature.stamina || feature.ff) && (
+          <div className="mb-2">
+            <span className="font-semibold">Costs - </span>
+            {feature.stamina && <span>{feature.stamina} Stamina</span>}
+            {feature.stamina && feature.ff && <span> & </span>}
+            {feature.ff && <span className="">Fortune&apos;s Favor</span>}
           </div>
         )}
-        {feature.ff && (
-          <div className="font-semibold">Fortune&apos;s Favor</div>
-        )}
-        <div>
+        <div className="space-y-2">
           {feature.fields.map((f) => (
             <FieldDisplay field={f} key={f.text} />
           ))}
         </div>
-        {feature.choices &&
-          feature.choices.map((c) => <ChoiceDisplay choice={c} key={c.name} />)}
+        {feature.choices && (
+          <tbody className="mt-2 space-y-0.5">
+            {feature.choices.map((c) => (
+              <ChoiceDisplay choice={c} key={c.name} />
+            ))}
+          </tbody>
+        )}
       </div>
     </div>
   );
@@ -65,11 +74,11 @@ type choiceProps = {
 };
 const ChoiceDisplay = ({ choice }: choiceProps) => {
   return (
-    <div>
-      <p>
-        <b>{choice.name}</b> - {choice.text}
-      </p>
-    </div>
+    <tr className="">
+      <td className="px-2">
+        <b>{choice.name}</b> - <SlugLinker text={choice.text} />
+      </td>
+    </tr>
   );
 };
 
@@ -99,7 +108,7 @@ const Tag = ({ text, style }: tagProps) => {
   const s = style ? style : "bg-teal-900";
   const tagStyle =
     s +
-    " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm text-white dark:text-black";
+    " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm text-white";
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
@@ -248,7 +257,7 @@ const ClassRule = ({ json }: classProps) => {
         <div className="my-4 mx-2 text-2xl tracking-wide">Features</div>
         <div className="px-10">
           {class_rules.features.map((f) => (
-            <FeatureDisplay feature={f} key={f.slug}/>
+            <FeatureDisplay feature={f} key={f.slug} />
           ))}
         </div>
       </div>
