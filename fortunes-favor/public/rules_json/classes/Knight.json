@@ -23,11 +23,11 @@
         "name": "Driving Attack",
         "stamina_cost": 1,
         "fields":[{
-            "name": "FLAVOR",
+            "type": "FLAVOR",
             "text": "Your flurry of attacks drive the enemy back."       
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "When you make an attack action you may spend 1 stamina to attempt to also drive your enemy back 5ft. On a mix, you chose whether to damage or move the creature back. On a pass, you can do both.\nIf you chose to move a creature, they can opt to instead take an extra base attacks worth of damage to avoid being moved."
         }]
     },
@@ -37,11 +37,11 @@
         "slug": "KnightSA",
         "stamina_cost": 1,
         "fields":[{
-            "name": "FLAVOR",
+            "type": "FLAVOR",
             "text": "You sweep your attacks, aiming to harm all who stand in your way."       
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "When you take an attack action with a melee weapon, you may spend 1 stamina to attempt to also attack enemies adjacent to your target and within your weapons reach."
         }]
     },
@@ -51,11 +51,11 @@
         "slug": "KnightVOW",
         "stamina_cost": null,
         "fields":[{
-            "name": "FLAVOR",
+            "type": "FLAVOR",
             "text": "Your word is your bond, those who recognize your station believe you when you speak truth."       
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "When you take a Heart test to convince someone of true information, you gain a +3 on the test."
         }]
     },
@@ -65,11 +65,11 @@
         "slug": "KnightI",
         "stamina_cost": 1,
         "fields":[{
-            "name": "FLAVOR",
+            "type": "FLAVOR",
             "text": "You swiftly step between your ally and danger."       
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "When an ally within 5ft of you would be hit by an attack or counter, you can spend 1 stamina to switch places with your ally, taking the hit for them."
         }]
     },
@@ -80,7 +80,7 @@
         "stamina_cost": null,
         "fields":[
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "Increase one of your stats by 1 (max 5)"
         },
         {
@@ -95,7 +95,7 @@
         "stamina_cost": null,
         "fortunes_favor": true,
         "fields":[{
-            "name": "RULE",
+            "type": "RULE",
             "text": "Spend Fortune's Favor, until the end of your next turn, your speed cannot be reduced below half your base speed."
         }]
     },
@@ -105,11 +105,11 @@
         "slug": "KnightNRNS",
         "stamina_cost": null,
         "fields":[{
-            "name": "FLAVOR",
+            "type": "FLAVOR",
             "text": "You never run from a fight and don’t stop until your enemies are dead."       
         },
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "If you attack the same creature you attacked last turn and did not willingly get further away from them, increase your Base Damage by 1 step."
         }]
     },
@@ -119,7 +119,7 @@
         "slug": "KnightMC",
         "stamina_cost": null,
         "fields":[{
-            "name": "RULE",
+            "type": "RULE",
             "text": "Gain a +3 to tests to control a trained mount."
         }]
     },
@@ -130,7 +130,7 @@
         "stamina_cost": null,
         "fields":[
         {
-            "name": "RULE",
+            "type": "RULE",
             "text": "When you make your Last Stand, pick a creature, you are immune to damage from that creature."
         }]
     },

@@ -19,7 +19,7 @@ const Feature = ({feature}: {feature: genericFeature}) => {
             <>
             <div className="ml-5 mt-2">
                 <ul>
-                    {feature.options.map((text) => {return(<li><span className="text-amber-600">- </span>{text}</li>)})}
+                    {feature.options.map((text) => {return(<li key={text}><span className="text-amber-600">- </span>{text}</li>)})}
                 </ul>
             </div>
             {feature.multiSelect &&
@@ -42,7 +42,7 @@ const GenericFeatures = ({features_json}: genericFeaturesProps) => {
         <div className="divide-slate-700 divide-y">
             {features_json.map((feature: genericFeature) => {
                 return(
-                    <Feature feature={feature}/>
+                    <Feature feature={feature} key={feature.title}/>
                 )
             })}
         </div>
