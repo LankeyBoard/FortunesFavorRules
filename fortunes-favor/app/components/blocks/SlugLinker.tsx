@@ -58,6 +58,7 @@ const linkMaker = (text: string) => {
 };
 
 const parseLinksFromString = (text: string) => {
+  if (typeof text !== "string") return;
   // TODO: slug should change the link href to the location of the slug
   const links = text.split(splitLinks);
   const display: JSX.Element[] = [];

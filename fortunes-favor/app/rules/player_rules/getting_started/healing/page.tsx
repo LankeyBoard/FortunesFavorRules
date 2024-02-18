@@ -1,16 +1,14 @@
-import Field, {field_type, fieldCreator} from "@/app/components/Field";
-import healing from "@/public/rules_json/core_rules/healing.json"
+import Field, { FieldType, fieldCreator } from "@/app/components/Field";
+import healing from "@/public/rules_json/core_rules/healing.json";
 
-function CharacterResources(){
-    console.log(healing)
-    let r: field_type|null = fieldCreator(healing);
-    return (
+function CharacterResources() {
+  console.log(healing);
+  let r: FieldType | null = fieldCreator(healing);
+  return (
     <div className="CharacterResources">
-        {r !== null &&
-        <Field field={r}></Field>
-        }
+      {r !== null && <Field field={r}></Field>}
     </div>
-    );
+  );
 }
 
 export default CharacterResources;

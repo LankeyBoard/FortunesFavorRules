@@ -1,20 +1,21 @@
 import { field_options } from "../enums";
+import { TextField } from "../utils/FieldTypes";
 import SlugLinker from "./blocks/SlugLinker";
 
-export type field_type = {
+export type FieldType = {
   type: field_options;
   title?: string;
   slug?: string;
-  text?: string | [string];
+  text?: TextField[];
   eg?: string;
-  list?: field_type[];
-  rules?: field_type[];
+  list?: FieldType[];
+  rules?: FieldType[];
 };
 
 export function fieldCreator(json: any) {
   if ("type" in json) {
     if (Object.values(field_options).includes(json.type)) {
-      let f: field_type = { type: json.type };
+      let f: FieldType = { type: json.type };
       f = json;
       console.log("Field creator", f);
       return f;
@@ -36,7 +37,7 @@ const titleStyler = (depth: number) => {
 };
 
 type fieldProps = {
-  field: field_type;
+  field: FieldType;
   depth?: number;
 };
 const Field = ({ field, depth = 1 }: fieldProps) => {
@@ -55,8 +56,8 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
           <div className="mb-2 space-y-3">
             {field.text.map((row) => {
               return (
-                <div className="" key={row}>
-                  <SlugLinker text={row} />
+                <div className="" key={row.text}>
+                  <SlugLinker text={row.text} />
                 </div>
               );
             })}
@@ -80,14 +81,19 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
                     <span className="font-semibold">{rule.title}</span>
                     <span>
                       {" "}
-                      - <SlugLinker text={rule.text} />
+                      -{" "}
+                      {rule.text?.map((t) => (
+                        <SlugLinker key={t.text} text={t.text} />
+                      ))}
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="text-amber-600">- </span>
                     <span>
-                      <SlugLinker text={rule.text} />
+                      {rule.text?.map((t) => (
+                        <SlugLinker key={t.text} text={t.text} />
+                      ))}
                     </span>
                   </>
                 )}

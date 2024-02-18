@@ -1,8 +1,13 @@
 import { complexity_options, findEnum, stat_options } from "../enums";
 import CharacterFeature from "./Feature";
 
+export type TrainingOptions = {
+  pick: number;
+  options: [string];
+};
+
 export default class CharacterClass {
-  name: string;
+  title: string;
   slug: string;
   flavor_text: string;
   complexity: complexity_options;
@@ -15,11 +20,11 @@ export default class CharacterClass {
     armor?: [string];
     shield?: [string];
     weapon?: {
-      melee?: [string];
-      ranged?: [string];
-      special?: [string];
+      melee?: TrainingOptions;
+      ranged?: TrainingOptions;
+      special?: TrainingOptions;
     };
-    magic?: [string];
+    magic?: TrainingOptions;
   };
   attkStat: stat_options;
   range: {
@@ -32,73 +37,73 @@ export default class CharacterClass {
     stat: stat_options;
   };
   features: CharacterFeature[];
-  constructor(json: any) {
-    console.log("Feature - ", json);
-    this.name = json.name;
-    this.slug = json.slug;
-    this.flavor_text = json.flavor_text;
-    const c = findEnum(json.complexity, complexity_options);
+  constructor(data: any) {
+    console.log("Feature - ", data);
+    this.title = data.title;
+    this.slug = data.slug;
+    this.flavor_text = data.description;
+    const c = findEnum(data.complexity, complexity_options);
     this.complexity = complexity_options.error;
     if (c) {
       this.complexity = c;
     } else {
-      console.log("Error matching complexity %s in json file", json.complexity);
+      console.log("Error matching complexity %s in data file", data.complexity);
     }
-    this.health = json.health;
-    this.lvlHealth = json.health_on_level;
-    const ss = findEnum(json.stamina_stat, stat_options);
+    this.health = data.health;
+    this.lvlHealth = data.healthOnLevel;
+    const ss = findEnum(data.staminaStat, stat_options);
     this.staminaStat = stat_options.error;
     if (ss) {
       this.staminaStat = ss;
     } else {
       console.log(
-        "Error matching stamina stat %s in json file",
-        json.stamina_stat
+        "Error matching stamina stat %s in data file",
+        data.staminaStat
       );
     }
-    this.stamina = json.stamina;
-    this.lvlStamina = json.stamina_on_level;
+    this.stamina = data.stamina;
+    this.lvlStamina = data.staminaOnLevel;
     this.training = {
-      armor: json.training.armor,
-      shield: json.training.shields,
+      armor: data.training.armor,
+      shield: data.training.shields,
       weapon: {
-        melee: json.training.weapons.melee,
-        ranged: json.training.weapons.ranged,
-        special: json.training.weapons.special,
+        melee: data.training.weapons.melee,
+        ranged: data.training.weapons.ranged,
+        special: data.training.weapons.special,
       },
-      magic: json.training.magic,
+      magic: data.training.magic,
     };
-    const as = findEnum(json.attack_stat, stat_options);
+    const as = findEnum(data.attackStat, stat_options);
     this.attkStat = stat_options.error;
     if (as) {
       this.attkStat = as;
     } else {
       console.log(
-        "Error matching attack stat %s in json file",
-        json.attack_stat
+        "Error matching attack stat %s in data file",
+        data.attackStat
       );
     }
     this.range = {
-      min: json.range.min,
-      max: json.range.max,
+      min: data.range.min,
+      max: data.range.max,
     };
-    const ds = findEnum(json.damage.stat, stat_options);
+    const ds = findEnum(data.damage.stat, stat_options);
     let dmgStat: stat_options = stat_options.error;
     if (ds) {
       dmgStat = ds;
     } else {
       console.log(
-        "Error matching attack dmg stat %s in json file",
-        json.damage.stat
+        "Error matching attack dmg stat %s in data file",
+        data.damage.stat
       );
     }
     this.dmg = {
-      dice: json.damage.dice,
-      count: json.damage.count,
+      dice: data.damage.dice,
+      count: data.damage.count,
       stat: dmgStat,
     };
-    this.features = json.features.map(
-      (json_feature: any) => new CharacterFeature(json_feature)
+    this.features = data.features.map(
+      (feature_data: any) => new CharacterFeature(feature_data)
     );
   }
 }

@@ -2,12 +2,13 @@ import { field_options, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/Feature";
-import { Field, Choice } from "@/app/utils/FieldTypes";
-import CharacterClass from "../utils/CharacterClass";
+import { TextField } from "@/app/utils/FieldTypes";
+import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
+import { FieldType } from "./Field";
 
 type fieldProps = {
-  field: Field;
+  field: TextField;
 };
 const FieldDisplay = ({ field }: fieldProps) => {
   const displayVariants = {
@@ -45,11 +46,15 @@ const FeatureDisplay = ({ feature }: featureProps) => {
       </div>
       <div className="px-4 py-2">
         {(feature.stamina || feature.ff) && (
-          <div className="mb-2">
+          <div className="mb-2" id="FeatureCosts">
             <span className="font-semibold">Costs - </span>
-            {feature.stamina && <span>{feature.stamina} Stamina</span>}
-            {feature.stamina && feature.ff && <span> & </span>}
-            {feature.ff && <span className="">Fortune&apos;s Favor</span>}
+            {feature.stamina ? (
+              <span id="StaminaCost">{feature.stamina} Stamina</span>
+            ) : (
+              <></>
+            )}
+            {feature.stamina && feature.ff ? <span> & </span> : <></>}
+            {feature.ff && <span id="FortuneCost">Fortune&apos;s Favor</span>}
           </div>
         )}
         <div className="space-y-2">
@@ -60,7 +65,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
         {feature.choices && (
           <tbody className="mt-2 space-y-0.5">
             {feature.choices.map((c) => (
-              <ChoiceDisplay choice={c} key={c.name} />
+              <ChoiceDisplay choice={c} key={c.slug} />
             ))}
           </tbody>
         )}
@@ -70,33 +75,53 @@ const FeatureDisplay = ({ feature }: featureProps) => {
 };
 
 type choiceProps = {
-  choice: Choice;
+  choice: FieldType;
 };
 const ChoiceDisplay = ({ choice }: choiceProps) => {
   return (
     <tr className="">
-      <td className="px-2">
-        <b>{choice.name}</b> - <SlugLinker text={choice.text} />
+      <td className="px-2" id={choice.slug}>
+        <b>{choice.title}</b> -{" "}
+        {choice.text?.map((t) => <FieldDisplay key={t.text} field={t} />)}
       </td>
     </tr>
   );
 };
 
-const makeTrainingString = (training_list: [string] | undefined) => {
+type trainingProps = {
+  training_type: string;
+  training_list: string[] | TrainingOptions | undefined;
+};
+
+const Training = ({ training_type, training_list }: trainingProps) => {
   console.log("training list = " + training_list);
-  if (!training_list || training_list.length < 1 || training_list[0] == null)
-    return "None";
-  if (parseInt(training_list[0])) {
-    return (
-      "Choose " +
-      training_list[0] +
-      " of the following options " +
-      "[ " +
-      training_list.slice(1).join(", ") +
-      " ]"
+  let training;
+  if (
+    !training_list ||
+    (Array.isArray(training_list) && training_list.length === 0)
+  )
+    training = <span>None</span>;
+  else if (!Array.isArray(training_list)) {
+    training = (
+      <span>
+        <span>Choose </span>
+        <span>{training_list.pick}</span>
+        <span> of the following options [ </span>
+        <span>{training_list.options.join(", ")}</span>
+        <span> ]</span>
+      </span>
     );
+  } else {
+    if (training_list.length > 0 && training_list[0] !== null)
+      training = <span>[ {training_list.join(", ")} ]</span>;
+    else training = <span>None</span>;
   }
-  return "[ " + training_list.join(", ") + " ]";
+  return (
+    <li>
+      <span className="font-normal">{training_type} - </span>
+      <span className="font-light">{training}</span>
+    </li>
+  );
 };
 
 type tagProps = {
@@ -147,19 +172,11 @@ const ClassTags = ({ c }: classTagsProps) => {
 };
 
 type classProps = {
-  json: any;
+  data: any;
 };
-const ClassRule = ({ json }: classProps) => {
-  console.log("ClassRules input", json);
-  const class_rules: CharacterClass = new CharacterClass(json);
-  const armorString = makeTrainingString(class_rules.training.armor);
-  const shieldString = makeTrainingString(class_rules.training.shield);
-  const meleeString = makeTrainingString(class_rules.training.weapon?.melee);
-  const rangedString = makeTrainingString(class_rules.training.weapon?.ranged);
-  const specialString = makeTrainingString(
-    class_rules.training.weapon?.special
-  );
-  const magicString = makeTrainingString(class_rules.training.magic);
+const ClassRule = ({ data }: classProps) => {
+  console.log("ClassRules input", data);
+  const class_rules: CharacterClass = new CharacterClass(data);
   const rangeString =
     class_rules.range.min === 0
       ? "Melee - " + class_rules.range.max + "ft"
@@ -174,7 +191,7 @@ const ClassRule = ({ json }: classProps) => {
     <div id={class_rules.slug}>
       <div className="w-full">
         <div className="text-3xl tracking-wide font-bold py-4 px-1">
-          {class_rules.name}
+          {class_rules.title}
         </div>
       </div>
       <ClassTags c={class_rules} />
@@ -206,35 +223,35 @@ const ClassRule = ({ json }: classProps) => {
           >
             <p className="font-semibold text-lg">Training</p>
             <ul className="px-4">
-              <li>
-                <span className="font-normal">Armor - </span>
-                <span className="font-light">{armorString}</span>
-              </li>
-              <li>
-                <span className="font-normal">Shield - </span>
-                <span className="font-light">{shieldString}</span>
-              </li>
+              <Training
+                training_type="Armor"
+                training_list={class_rules.training.armor}
+              />
+              <Training
+                training_type="Shield"
+                training_list={class_rules.training.shield}
+              />
               <li>
                 <p className="font-normal">Weapons </p>
-                <div className="font-extralight px-4">
-                  <p>
-                    <span className="font-normal">Melee: - </span>
-                    {meleeString}
-                  </p>
-                  <p>
-                    <span className="font-normal">Ranged - </span>
-                    {rangedString}
-                  </p>
-                  <p>
-                    <span className="font-normal">Special - </span>
-                    {specialString}
-                  </p>
-                </div>
+                <ul className="font-extralight px-4">
+                  <Training
+                    training_type="Melee"
+                    training_list={class_rules.training.weapon?.melee}
+                  />
+                  <Training
+                    training_type="Ranged"
+                    training_list={class_rules.training.weapon?.ranged}
+                  />
+                  <Training
+                    training_type="Special"
+                    training_list={class_rules.training.weapon?.special}
+                  />
+                </ul>
               </li>
-              <li>
-                <span className="font-normal">Magic: </span>
-                <span className="font-light">{magicString}</span>
-              </li>
+              <Training
+                training_type="Magic"
+                training_list={class_rules.training.magic}
+              />
             </ul>
           </div>
           <div className="mx-3 mt-2">

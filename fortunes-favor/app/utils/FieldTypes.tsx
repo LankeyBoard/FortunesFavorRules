@@ -1,6 +1,6 @@
 import { field_options, findEnum } from "../enums";
 
-export class Field {
+export class TextField {
   type: field_options;
   text: string;
   constructor(json_field: any) {
@@ -19,10 +19,10 @@ export class Field {
 }
 
 export class Choice {
-  name: string;
+  title: string;
   text: string;
   constructor(json_choice: any) {
-    this.name = json_choice.name;
+    this.title = json_choice.title;
     this.text = json_choice.text;
   }
 }
