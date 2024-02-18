@@ -1,4 +1,3 @@
-import culuture_data from "@/public/rules_json/cultures/cultures.json";
 import Culture from "@/app/components/Culture";
 import { gql } from "@apollo/client";
 import { getClient } from "@/app/utils/graphQLclient";
