@@ -1,4 +1,5 @@
 import CharacterLineage from "../utils/CharacterLineage";
+import RuleField from "./RuleField";
 import Traits from "./Traits";
 
 const Lineage = (json: any) => {
@@ -13,13 +14,9 @@ const Lineage = (json: any) => {
         {typeof l.size === "string" ? (
           <span className="capitalize">{l.size.toLocaleLowerCase()}</span>
         ) : (
-          l.size.map((s) => {
-            return (
-              <span className="capitalize" key={s}>
-                {s.toLocaleLowerCase()}{" "}
-              </span>
-            );
-          })
+          <span className="capitalize">
+            {l.size.join(", ").toLocaleLowerCase()}
+          </span>
         )}
       </div>
       <div>
@@ -30,8 +27,9 @@ const Lineage = (json: any) => {
         <span className="font-semibold">Stat - </span>
         {l.stat}
       </div>
-      <Traits title="Traits" traits={l.traits} />
-      {l.options && <Traits title="Options" traits={l.options} />}
+      {l.traits.map((trait) => {
+        return <RuleField key={trait.slug} field={trait} />;
+      })}
     </div>
   );
 };

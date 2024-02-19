@@ -1,4 +1,4 @@
-import Field, { FieldType, fieldCreator } from "@/app/components/Field";
+import RuleField, { FieldType, fieldCreator } from "@/app/components/RuleField";
 import build_a_character from "@/public/rules_json/core_rules/building_a_character.json";
 
 function BuildACharacter() {
@@ -6,7 +6,7 @@ function BuildACharacter() {
   let r: FieldType | null = fieldCreator(build_a_character);
   return (
     <div className="BuildACharacter">
-      {r !== null && <Field field={r}></Field>}
+      {r !== null && <RuleField field={r}></RuleField>}
     </div>
   );
 }

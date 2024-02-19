@@ -1,29 +1,6 @@
 import { field_options } from "../enums";
-import { TextField } from "../utils/FieldTypes";
+import Rule from "../utils/Rules";
 import SlugLinker from "./blocks/SlugLinker";
-
-export type FieldType = {
-  type: field_options;
-  title?: string;
-  slug?: string;
-  text?: TextField[];
-  eg?: string;
-  list?: FieldType[];
-  rules?: FieldType[];
-};
-
-export function fieldCreator(json: any) {
-  if ("type" in json) {
-    if (Object.values(field_options).includes(json.type)) {
-      let f: FieldType = { type: json.type };
-      f = json;
-      console.log("Field creator", f);
-      return f;
-    }
-  }
-  console.log("Error creating field from json", json);
-  return null;
-}
 
 const titleStyler = (depth: number) => {
   switch (depth) {
@@ -37,15 +14,17 @@ const titleStyler = (depth: number) => {
 };
 
 type fieldProps = {
-  field: FieldType;
+  field: Rule;
   depth?: number;
 };
-const Field = ({ field, depth = 1 }: fieldProps) => {
+const RuleField = ({ field, depth = 1 }: fieldProps) => {
   return (
     <div id={field.slug} className="">
       <div className={titleStyler(depth)}>{field.title}</div>
       <div
-        className={field.type != field_options.List ? "pb-2 mx-5" : "pb-2 mx-2"}
+        className={
+          field.ruleType != field_options.List ? "pb-2 mx-5" : "pb-2 mx-2"
+        }
       >
         {field.text != undefined && typeof field.text === "string" && (
           <div className="">
@@ -63,17 +42,9 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
             })}
           </div>
         )}
-
-        {field.eg !== undefined && (
+        {field.rules && field.ruleType === field_options.CompactList && (
           <div>
-            <p>
-              e.g. <i>{field.eg}</i>
-            </p>
-          </div>
-        )}
-        {field.list && field.type === field_options.CompactList && (
-          <div>
-            {field.list.map((rule) => (
+            {field.rules.map((rule) => (
               <div key={rule.slug}>
                 {rule.title ? (
                   <>
@@ -101,11 +72,11 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
             ))}
           </div>
         )}
-        {field.list && field.type !== field_options.CompactList && (
+        {field.rules && field.ruleType !== field_options.CompactList && (
           <ul className="">
-            {field.list.map((f) => (
+            {field.rules.map((f) => (
               <li className={f.title ? "" : "space-y-2"} key={f.slug}>
-                <Field field={f} depth={depth + 1}></Field>
+                <RuleField field={f} depth={depth + 1}></RuleField>
               </li>
             ))}
           </ul>
@@ -116,7 +87,7 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
           {field.rules !== undefined && (
             <div className="">
               {field.rules.map((f) => (
-                <Field field={f} depth={depth + 1} key={f.slug}></Field>
+                <RuleField field={f} depth={depth + 1} key={f.slug}></RuleField>
               ))}
             </div>
           )}
@@ -126,4 +97,4 @@ const Field = ({ field, depth = 1 }: fieldProps) => {
   );
 };
 
-export default Field;
+export default RuleField;

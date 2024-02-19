@@ -1,22 +1,25 @@
 import { TextField, Choice } from "@/app/utils/FieldTypes";
 import { field_options, findEnum } from "../enums";
-import RuleText from "./Rules";
-import { FieldType } from "../components/Field";
+import Rule from "./Rules";
 
-export default class CharacterFeature extends RuleText {
+export default class CharacterFeature extends Rule {
   level: number;
-  name: string;
-  slug: string;
   stamina?: number;
   ff?: number;
   type: field_options;
   fields: TextField[];
-  choices?: FieldType[];
+  choices?: Rule[];
   constructor(feature_data: any) {
-    super(feature_data.title, feature_data.slug);
+    super(
+      feature_data.title,
+      feature_data.slug,
+      feature_data.ruleType,
+      feature_data.text,
+      feature_data.rules,
+      feature_data.list,
+      feature_data.shortText
+    );
     this.level = feature_data.level;
-    this.name = feature_data.title;
-    this.slug = feature_data.slug;
     this.stamina = feature_data.staminaCost;
     this.ff = feature_data.costsFortunesFavor;
     this.type = field_options.error;

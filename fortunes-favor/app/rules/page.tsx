@@ -1,9 +1,7 @@
 import SlugLinker from "../components/blocks/SlugLinker";
-import RuleText from "../utils/Rules";
+import Rule from "../utils/Rules";
 
-const rules: RuleText[] = [
-  new RuleText("Title", "Slug", "Description of the rule"),
-];
+const rules: Rule[] = [new Rule("Title", "Slug", "Description of the rule")];
 
 const fs = require("fs");
 const path = require("path");

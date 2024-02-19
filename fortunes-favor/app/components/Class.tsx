@@ -5,7 +5,6 @@ import CharacterFeature from "../utils/Feature";
 import { TextField } from "@/app/utils/FieldTypes";
 import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
-import { FieldType } from "./Field";
 
 type fieldProps = {
   field: TextField;
@@ -39,7 +38,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-300 dark:bg-teal-700 text-lg p-2 font-semibold">
-        {feature.name}
+        {feature.title}
         <div className="text-slate-700 dark:text-slate-200 text-sm ordinal float-right">
           {feature.level + getOrdinal(feature.level)} level
         </div>
@@ -75,7 +74,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
 };
 
 type choiceProps = {
-  choice: FieldType;
+  choice: TextField;
 };
 const ChoiceDisplay = ({ choice }: choiceProps) => {
   return (

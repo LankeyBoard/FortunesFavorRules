@@ -1,4 +1,4 @@
-import Field, { FieldType, fieldCreator } from "@/app/components/Field";
+import RuleField, { FieldType, fieldCreator } from "@/app/components/RuleField";
 import data from "@/public/rules_json/core_rules/reference.json";
 
 function Reference() {
@@ -6,7 +6,7 @@ function Reference() {
   let r: FieldType | null = fieldCreator(data);
   return (
     <div className="CharacterResources">
-      {r !== null && <Field field={r}></Field>}
+      {r !== null && <RuleField field={r}></RuleField>}
     </div>
   );
 }

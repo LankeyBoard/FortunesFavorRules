@@ -1,4 +1,4 @@
-import Field, { FieldType, fieldCreator } from "@/app/components/Field";
+import RuleField, { FieldType, fieldCreator } from "@/app/components/RuleField";
 import character_resources from "@/public/rules_json/core_rules/character_resources.json";
 
 function CharacterResources() {
@@ -6,7 +6,7 @@ function CharacterResources() {
   let r: FieldType | null = fieldCreator(character_resources);
   return (
     <div className="CharacterResources">
-      {r !== null && <Field field={r}></Field>}
+      {r !== null && <RuleField field={r}></RuleField>}
     </div>
   );
 }

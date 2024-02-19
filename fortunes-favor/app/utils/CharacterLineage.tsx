@@ -1,5 +1,5 @@
 import { size_options, findEnum } from "../enums";
-import { CharacterTrait } from "./CharacterTrait";
+import Rule from "./Rules";
 
 export default class CharacterLineage {
   title: string;
@@ -8,12 +8,11 @@ export default class CharacterLineage {
   size: size_options | size_options[];
   speed: number;
   stat: string;
-  traits: [CharacterTrait];
-  options?: [CharacterTrait];
+  traits: [Rule];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
-    this.desc = json.text;
+    this.desc = json.description;
     if (typeof json.size === "string") {
       const s = findEnum(json.size, size_options);
       this.size = size_options.error;
@@ -33,13 +32,15 @@ export default class CharacterLineage {
     this.speed = json.speed;
     this.stat = json.stat;
     this.traits = json.traits.map((t: any) => {
-      return new CharacterTrait(t);
+      return new Rule(
+        t.title,
+        t.slug,
+        t.ruleType || "RULE",
+        t.text,
+        t.rules,
+        t.list
+      );
     });
-    if (json.options) {
-      this.options = json.options.map((o: any) => {
-        return new CharacterTrait(o);
-      });
-    }
     console.log("Lineage - ", CharacterLineage);
   }
 }
@@ -47,9 +48,9 @@ export default class CharacterLineage {
 export const characterLineageListBuilder = (
   lineages_json: Array<any>
 ): CharacterLineage[] => {
-  let cultures: CharacterLineage[] = [];
+  let lineages: CharacterLineage[] = [];
   lineages_json.forEach((lineage) => {
-    cultures.push(new CharacterLineage(lineage));
+    lineages.push(new CharacterLineage(lineage));
   });
-  return cultures;
+  return lineages;
 };
