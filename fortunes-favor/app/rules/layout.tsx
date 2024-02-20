@@ -17,9 +17,7 @@ type nav_section = {
 
 const NavBuilder = (sections: nav_section[]): nav[] => {
   const navRoutes: nav[] = [];
-  console.log("building nav for sections: ", sections);
   sections.forEach((section) => {
-    console.log("building nav for sections: ", sections);
     if (section.subroutes) {
       let route: nav = { title: section.title, subroutes: [] };
       section.subroutes.forEach((subRoute) => {
@@ -37,103 +35,6 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
   return navRoutes;
 };
 
-// const navRoutes: nav[] = [
-//   {
-//     title: "Rules",
-//     subroutes: [
-//       {
-//         title: "Building A Character",
-//         href: "/rules/player_rules/getting_started/building_a_character",
-//       },
-//       {
-//         title: "Character Components",
-//         href: "/rules/player_rules/getting_started/character_components",
-//       },
-//       {
-//         title: "Character Resources",
-//         href: "/rules/player_rules/getting_started/character_resources",
-//       },
-//       {
-//         title: "Tests",
-//         href: "/rules/player_rules/getting_started/tests",
-//       },
-//       {
-//         title: "Combat",
-//         href: "/rules/player_rules/getting_started/combat",
-//       },
-//       {
-//         title: "Dying & Last Stand",
-//         href: "/rules/player_rules/getting_started/dying",
-//       },
-//       {
-//         title: "Healing",
-//         href: "/rules/player_rules/getting_started/healing",
-//       },
-//       {
-//         title: "Movement",
-//         href: "/rules/player_rules/getting_started/movement",
-//       },
-//       {
-//         title: "Lift, Drag, & Pack",
-//         href: "/rules/player_rules/getting_started/lift_drag_pack",
-//       },
-//       {
-//         title: "Equipment",
-//         href: "/rules/player_rules/getting_started/equipment",
-//       },
-//       {
-//         title: "Reference",
-//         href: "/rules/player_rules/getting_started/references",
-//       },
-//     ],
-//   },
-//   {
-//     title: "Classes",
-//     subroutes: [
-//       {
-//         title: "Brawler",
-//         href: "/rules/classes/brawler",
-//       },
-//       {
-//         title: "Devoted",
-//         href: "/rules/classes/devoted",
-//       },
-//       {
-//         title: "Elementalist",
-//         href: "/rules/classes/elementalist",
-//       },
-//       {
-//         title: "Knight",
-//         href: "/rules/classes/knight",
-//       },
-//       {
-//         title: "Ranger",
-//         href: "/rules/classes/ranger",
-//       },
-//     ],
-//   },
-//   {
-//     title: "Lineages",
-//     href: "/rules/lineages",
-//   },
-//   {
-//     title: "Cultures",
-//     href: "/rules/cultures",
-//   },
-//   {
-//     title: "Generic Features",
-//     subroutes: [
-//       {
-//         title: "Novice Features",
-//         href: "/rules/generic_features/novice_features",
-//       },
-//       {
-//         title: "Veteran Features",
-//         href: "/rules/generic_features/veteran_features",
-//       },
-//     ],
-//   },
-// ];
 const query = gql`
   query GetSlugs {
     genericRules {
@@ -174,7 +75,14 @@ export default async function RulesLayout({
     basePath: "/rules/classes",
     subroutes: data.characterClasses,
   };
-
+  const noviceFeaturesSection: nav_section = {
+    title: "Novice Features",
+    basePath: "/rules/generic_features/novice_features",
+  };
+  const veteranFeaturesSection: nav_section = {
+    title: "Veteran Features",
+    basePath: "/rules/generic_features/veteran_features",
+  };
   return (
     <div className="flex flex-row">
       <RulesNav
@@ -183,6 +91,8 @@ export default async function RulesLayout({
           culturesSection,
           lineagesSection,
           characterClassesSection,
+          noviceFeaturesSection,
+          veteranFeaturesSection,
         ])}
       />
       <div className="flex-1 flex overflow-hidden">
