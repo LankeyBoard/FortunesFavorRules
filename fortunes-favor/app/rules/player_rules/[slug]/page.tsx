@@ -7,29 +7,43 @@ import { gql } from "@apollo/client";
 const query = gql`
   query GetGenericRule($slug: String) {
     genericRules(slug: $slug) {
-      list
-      ruleType
       slug
       title
-      text {
-        text
-        type
-      }
+      list
+      ruleType
       rules {
         list
         ruleType
         rules {
-          ruleType
           list
+          ruleType
+          rules {
+            list
+            ruleType
+            slug
+            title
+            text {
+              text
+              type
+            }
+          }
           slug
+          text {
+            text
+            type
+          }
           title
         }
         slug
+        title
         text {
           text
           type
         }
-        title
+      }
+      text {
+        text
+        type
       }
     }
   }
