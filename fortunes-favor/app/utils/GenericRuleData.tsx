@@ -1,22 +1,23 @@
-import { field_options } from "../enums";
+import { rule_type } from "../enums";
 import { TextField } from "./FieldTypes";
+import { GenericRule } from "./graphQLtypes";
 
-export default class Rule {
+export default class RuleData implements GenericRule {
   readonly title: string;
   readonly slug: string;
-  ruleType: field_options;
-  text: [TextField];
-  rules: [Rule];
-  list: [string];
+  ruleType: rule_type;
+  text: TextField[];
+  rules: RuleData[];
+  list: string[];
   shortText?: string;
 
   constructor(
     title: string,
     slug: string,
-    ruleType: field_options,
-    text: [TextField],
-    rules: [Rule],
-    list: [string],
+    ruleType: rule_type,
+    text: TextField[],
+    rules: RuleData[],
+    list: string[],
     shortText?: string
   ) {
     this.title = title;

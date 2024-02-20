@@ -1,5 +1,5 @@
-import { field_options } from "../enums";
-import Rule from "../utils/Rules";
+import { rule_type } from "../enums";
+import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
 
 const titleStyler = (depth: number) => {
@@ -14,17 +14,15 @@ const titleStyler = (depth: number) => {
 };
 
 type fieldProps = {
-  field: Rule;
+  field: GenericRule;
   depth?: number;
 };
-const RuleField = ({ field, depth = 1 }: fieldProps) => {
+const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
     <div id={field.slug} className="">
       <div className={titleStyler(depth)}>{field.title}</div>
       <div
-        className={
-          field.ruleType != field_options.List ? "pb-2 mx-5" : "pb-2 mx-2"
-        }
+        className={field.ruleType != rule_type.List ? "pb-2 mx-5" : "pb-2 mx-2"}
       >
         {field.text != undefined && typeof field.text === "string" && (
           <div className="">
@@ -42,7 +40,7 @@ const RuleField = ({ field, depth = 1 }: fieldProps) => {
             })}
           </div>
         )}
-        {field.rules && field.ruleType === field_options.CompactList && (
+        {field.rules && field.ruleType === rule_type.CompactList && (
           <div>
             {field.rules.map((rule) => (
               <div key={rule.slug}>
@@ -72,7 +70,7 @@ const RuleField = ({ field, depth = 1 }: fieldProps) => {
             ))}
           </div>
         )}
-        {field.rules && field.ruleType !== field_options.CompactList && (
+        {field.rules && field.ruleType !== rule_type.CompactList && (
           <ul className="">
             {field.rules.map((f) => (
               <li className={f.title ? "" : "space-y-2"} key={f.slug}>
@@ -82,7 +80,7 @@ const RuleField = ({ field, depth = 1 }: fieldProps) => {
           </ul>
         )}
       </div>
-      {field.rules && (
+      {/* {field.rules && (
         <div className={depth > 1 ? "mx-4 border-amber-800 border-l-2" : ""}>
           {field.rules !== undefined && (
             <div className="">
@@ -92,7 +90,7 @@ const RuleField = ({ field, depth = 1 }: fieldProps) => {
             </div>
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

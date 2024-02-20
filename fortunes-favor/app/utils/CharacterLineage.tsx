@@ -1,5 +1,5 @@
 import { size_options, findEnum } from "../enums";
-import Rule from "./Rules";
+import RuleData from "./GenericRuleData";
 
 export default class CharacterLineage {
   title: string;
@@ -8,7 +8,7 @@ export default class CharacterLineage {
   size: size_options | size_options[];
   speed: number;
   stat: string;
-  traits: [Rule];
+  traits: [RuleData];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
@@ -32,7 +32,7 @@ export default class CharacterLineage {
     this.speed = json.speed;
     this.stat = json.stat;
     this.traits = json.traits.map((t: any) => {
-      return new Rule(
+      return new RuleData(
         t.title,
         t.slug,
         t.ruleType || "RULE",

@@ -1,11 +1,11 @@
-import { field_options, findEnum } from "../enums";
+import { rule_type, findEnum } from "../enums";
 
 export class TextField {
-  type: field_options;
+  type: rule_type;
   text: string;
   constructor(json_field: any) {
-    this.type = field_options.error;
-    const t = findEnum(json_field.type, field_options);
+    this.type = rule_type.error;
+    const t = findEnum(json_field.type, rule_type);
     if (t !== undefined) {
       this.type = t;
     } else {

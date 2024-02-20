@@ -1,6 +1,5 @@
 import ClassRule from "@/app/components/Class";
 import { getClient } from "@/app/utils/graphQLclient";
-import brawler_json from "@/public/rules_json/classes/Brawler.json";
 import { gql } from "@apollo/client";
 
 const query = gql`
@@ -75,7 +74,7 @@ const query = gql`
   }
 `;
 
-async function Brawler({ params }: { params: { slug: string } }) {
+async function PlayerClass({ params }: { params: { slug: string } }) {
   const client = getClient();
   const { data } = await client.query({
     query,
@@ -88,4 +87,4 @@ async function Brawler({ params }: { params: { slug: string } }) {
   );
 }
 
-export default Brawler;
+export default PlayerClass;

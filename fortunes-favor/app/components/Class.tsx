@@ -1,9 +1,9 @@
-import { field_options, complexity_options } from "../enums";
+import { rule_type, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
-import CharacterFeature from "../utils/Feature";
+import CharacterFeature from "../utils/CharacterFeature";
 import { TextField } from "@/app/utils/FieldTypes";
-import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
+import CharacterClassData, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 
 type fieldProps = {
@@ -17,16 +17,16 @@ const FieldDisplay = ({ field }: fieldProps) => {
   };
   let fieldDisplayStyle = displayVariants.reg;
   switch (field.type) {
-    case field_options.Flavor:
+    case rule_type.Flavor:
       fieldDisplayStyle = displayVariants.flavor;
       break;
-    case field_options.Eg:
+    case rule_type.Eg:
       fieldDisplayStyle = displayVariants.eg;
       break;
   }
   return (
     <div className={fieldDisplayStyle}>
-      {field.type === field_options.Eg && <span>Eg. </span>}
+      {field.type === rule_type.Eg && <span>Eg. </span>}
       <SlugLinker text={field.text} />
     </div>
   );
@@ -136,7 +136,7 @@ const Tag = ({ text, style }: tagProps) => {
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
-  c: CharacterClass;
+  c: CharacterClassData;
 };
 
 const ClassTags = ({ c }: classTagsProps) => {
@@ -156,14 +156,14 @@ const ClassTags = ({ c }: classTagsProps) => {
       tagStyle = "bg-rose-500";
   }
   tags.push(<Tag style={tagStyle} text={c.complexity} />);
-  tags.push(<Tag text={c.attkStat} />);
-  if (c.attkStat !== c.dmg.stat) {
-    tags.push(<Tag text={c.dmg.stat} />);
+  tags.push(<Tag text={c.attackStat} />);
+  if (c.attackStat !== c.damage.stat) {
+    tags.push(<Tag text={c.damage.stat} />);
   }
   if (
-    c.attkStat !== c.dmg.stat &&
-    c.dmg.stat !== c.staminaStat &&
-    c.attkStat !== c.staminaStat
+    c.attackStat !== c.damage.stat &&
+    c.damage.stat !== c.staminaStat &&
+    c.attackStat !== c.staminaStat
   ) {
     tags.push(<Tag text={c.staminaStat} />);
   }
@@ -175,17 +175,17 @@ type classProps = {
 };
 const ClassRule = ({ data }: classProps) => {
   console.log("ClassRules input", data);
-  const class_rules: CharacterClass = new CharacterClass(data);
+  const class_rules: CharacterClassData = new CharacterClassData(data);
   const rangeString =
     class_rules.range.min === 0
       ? "Melee - " + class_rules.range.max + "ft"
       : class_rules.range.min + "ft - " + class_rules.range.max + "ft";
   const dmgString =
-    class_rules.dmg.count +
+    class_rules.damage.count +
     "d" +
-    class_rules.dmg.dice +
+    class_rules.damage.dice +
     " + " +
-    class_rules.dmg.stat;
+    class_rules.damage.stat;
   return (
     <div id={class_rules.slug}>
       <div className="w-full">
@@ -196,7 +196,7 @@ const ClassRule = ({ data }: classProps) => {
       <ClassTags c={class_rules} />
       <div className="clear-both">
         <div className="mx-3">
-          <p className="italic">{class_rules.flavor_text}</p>
+          <p className="italic">{class_rules.description}</p>
         </div>
         <div className="mt-2">
           <div className="mx-3">
@@ -204,7 +204,8 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold">Health</span>
               <span className="">
                 {" "}
-                - {class_rules.health} (+{class_rules.lvlHealth} on level up)
+                - {class_rules.health} (+{class_rules.healthOnLevel} on level
+                up)
               </span>
             </p>
             <p>
@@ -212,7 +213,8 @@ const ClassRule = ({ data }: classProps) => {
               <span>
                 {" "}
                 - {class_rules.stamina}+{class_rules.staminaStat} (+
-                {class_rules.lvlStamina}+{class_rules.staminaStat} on level up)
+                {class_rules.staminaOnLevel}+{class_rules.staminaStat} on level
+                up)
               </span>
             </p>
           </div>
@@ -256,7 +258,7 @@ const ClassRule = ({ data }: classProps) => {
           <div className="mx-3 mt-2">
             <p>
               <span className="font-semibold">Attack Stat</span>
-              <span className=""> - {class_rules.attkStat}</span>
+              <span className=""> - {class_rules.attackStat}</span>
             </p>
             <p>
               <span className="font-semibold clear-left">Range</span>

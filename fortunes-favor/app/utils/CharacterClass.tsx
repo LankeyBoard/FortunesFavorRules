@@ -1,37 +1,38 @@
 import { complexity_options, findEnum, stat_options } from "../enums";
-import CharacterFeature from "./Feature";
+import CharacterFeature from "./CharacterFeature";
+import { CharacterClass } from "./graphQLtypes";
 
 export type TrainingOptions = {
-  pick: number;
+  pick?: number;
   options: [string];
 };
 
-export default class CharacterClass {
+export default class CharacterClassData implements CharacterClass {
   title: string;
   slug: string;
-  flavor_text: string;
+  description: string[];
   complexity: complexity_options;
   health: number;
-  lvlHealth: number;
+  healthOnLevel: number;
   staminaStat: stat_options;
   stamina: number;
-  lvlStamina: number;
+  staminaOnLevel: number;
   training: {
-    armor?: [string];
-    shield?: [string];
-    weapon?: {
-      melee?: TrainingOptions;
-      ranged?: TrainingOptions;
-      special?: TrainingOptions;
+    armor: [string];
+    shields: [string];
+    weapons: {
+      melee: TrainingOptions;
+      ranged: TrainingOptions;
+      special: TrainingOptions;
     };
-    magic?: TrainingOptions;
+    magic: TrainingOptions;
   };
-  attkStat: stat_options;
+  attackStat: stat_options;
   range: {
     min: number;
     max: number;
   };
-  dmg: {
+  damage: {
     dice: number;
     count: number;
     stat: stat_options;
@@ -41,7 +42,7 @@ export default class CharacterClass {
     console.log("Feature - ", data);
     this.title = data.title;
     this.slug = data.slug;
-    this.flavor_text = data.description;
+    this.description = data.description;
     const c = findEnum(data.complexity, complexity_options);
     this.complexity = complexity_options.error;
     if (c) {
@@ -50,7 +51,7 @@ export default class CharacterClass {
       console.log("Error matching complexity %s in data file", data.complexity);
     }
     this.health = data.health;
-    this.lvlHealth = data.healthOnLevel;
+    this.healthOnLevel = data.healthOnLevel;
     const ss = findEnum(data.staminaStat, stat_options);
     this.staminaStat = stat_options.error;
     if (ss) {
@@ -62,11 +63,11 @@ export default class CharacterClass {
       );
     }
     this.stamina = data.stamina;
-    this.lvlStamina = data.staminaOnLevel;
+    this.staminaOnLevel = data.staminaOnLevel;
     this.training = {
       armor: data.training.armor,
-      shield: data.training.shields,
-      weapon: {
+      shields: data.training.shields,
+      weapons: {
         melee: data.training.weapons.melee,
         ranged: data.training.weapons.ranged,
         special: data.training.weapons.special,
@@ -74,9 +75,9 @@ export default class CharacterClass {
       magic: data.training.magic,
     };
     const as = findEnum(data.attackStat, stat_options);
-    this.attkStat = stat_options.error;
+    this.attackStat = stat_options.error;
     if (as) {
-      this.attkStat = as;
+      this.attackStat = as;
     } else {
       console.log(
         "Error matching attack stat %s in data file",
@@ -97,7 +98,7 @@ export default class CharacterClass {
         data.damage.stat
       );
     }
-    this.dmg = {
+    this.damage = {
       dice: data.damage.dice,
       count: data.damage.count,
       stat: dmgStat,

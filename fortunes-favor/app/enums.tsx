@@ -9,13 +9,16 @@ export function findEnum(s: string, e: any): any | undefined {
   });
   return match;
 }
-
-export enum field_options {
+export enum action_type {
+  action = "ACTION",
+  counter = "COUNTER",
+}
+export enum rule_type {
   Rule = "RULE",
   Flavor = "FLAVOR",
   Eg = "EG",
   List = "LIST",
-  CompactList = "LIST-COMPACT",
+  CompactList = "LISTCOMPACT",
   Choice = "CHOICE",
   Attack = "ATTACK",
   error = "ERROR",
