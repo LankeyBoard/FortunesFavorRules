@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body>
-        <TopNav />
-        <div className="container mx-auto max-w-screen-xxl bg-gray-100 dark:bg-gray-900 h-screen flex">
+      <body className="h-screen">
+        <div className="container mx-auto max-w-screen-xxl flexf flex-grow bg-gray-100 dark:bg-gray-900">
+          <TopNav />
           {children}
         </div>
       </body>
