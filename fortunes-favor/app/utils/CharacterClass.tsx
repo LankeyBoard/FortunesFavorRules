@@ -1,104 +1,110 @@
 import { complexity_options, findEnum, stat_options } from "../enums";
-import CharacterFeature from "./Feature";
+import CharacterFeature from "./CharacterFeature";
+import { CharacterClass } from "./graphQLtypes";
 
-export default class CharacterClass {
-  name: string;
+export type TrainingOptions = {
+  pick?: number;
+  options: [string];
+};
+
+export default class CharacterClassData implements CharacterClass {
+  title: string;
   slug: string;
-  flavor_text: string;
+  description: string[];
   complexity: complexity_options;
   health: number;
-  lvlHealth: number;
+  healthOnLevel: number;
   staminaStat: stat_options;
   stamina: number;
-  lvlStamina: number;
+  staminaOnLevel: number;
   training: {
-    armor?: [string];
-    shield?: [string];
-    weapon?: {
-      melee?: [string];
-      ranged?: [string];
-      special?: [string];
+    armor: [string];
+    shields: [string];
+    weapons: {
+      melee: TrainingOptions;
+      ranged: TrainingOptions;
+      special: TrainingOptions;
     };
-    magic?: [string];
+    magic: TrainingOptions;
   };
-  attkStat: stat_options;
+  attackStat: stat_options;
   range: {
     min: number;
     max: number;
   };
-  dmg: {
+  damage: {
     dice: number;
     count: number;
     stat: stat_options;
   };
   features: CharacterFeature[];
-  constructor(json: any) {
-    console.log("Feature - ", json);
-    this.name = json.name;
-    this.slug = json.slug;
-    this.flavor_text = json.flavor_text;
-    const c = findEnum(json.complexity, complexity_options);
+  constructor(data: any) {
+    console.log("Feature - ", data);
+    this.title = data.title;
+    this.slug = data.slug;
+    this.description = data.description;
+    const c = findEnum(data.complexity, complexity_options);
     this.complexity = complexity_options.error;
     if (c) {
       this.complexity = c;
     } else {
-      console.log("Error matching complexity %s in json file", json.complexity);
+      console.log("Error matching complexity %s in data file", data.complexity);
     }
-    this.health = json.health;
-    this.lvlHealth = json.health_on_level;
-    const ss = findEnum(json.stamina_stat, stat_options);
+    this.health = data.health;
+    this.healthOnLevel = data.healthOnLevel;
+    const ss = findEnum(data.staminaStat, stat_options);
     this.staminaStat = stat_options.error;
     if (ss) {
       this.staminaStat = ss;
     } else {
       console.log(
-        "Error matching stamina stat %s in json file",
-        json.stamina_stat
+        "Error matching stamina stat %s in data file",
+        data.staminaStat
       );
     }
-    this.stamina = json.stamina;
-    this.lvlStamina = json.stamina_on_level;
+    this.stamina = data.stamina;
+    this.staminaOnLevel = data.staminaOnLevel;
     this.training = {
-      armor: json.training.armor,
-      shield: json.training.shields,
-      weapon: {
-        melee: json.training.weapons.melee,
-        ranged: json.training.weapons.ranged,
-        special: json.training.weapons.special,
+      armor: data.training.armor,
+      shields: data.training.shields,
+      weapons: {
+        melee: data.training.weapons.melee,
+        ranged: data.training.weapons.ranged,
+        special: data.training.weapons.special,
       },
-      magic: json.training.magic,
+      magic: data.training.magic,
     };
-    const as = findEnum(json.attack_stat, stat_options);
-    this.attkStat = stat_options.error;
+    const as = findEnum(data.attackStat, stat_options);
+    this.attackStat = stat_options.error;
     if (as) {
-      this.attkStat = as;
+      this.attackStat = as;
     } else {
       console.log(
-        "Error matching attack stat %s in json file",
-        json.attack_stat
+        "Error matching attack stat %s in data file",
+        data.attackStat
       );
     }
     this.range = {
-      min: json.range.min,
-      max: json.range.max,
+      min: data.range.min,
+      max: data.range.max,
     };
-    const ds = findEnum(json.damage.stat, stat_options);
+    const ds = findEnum(data.damage.stat, stat_options);
     let dmgStat: stat_options = stat_options.error;
     if (ds) {
       dmgStat = ds;
     } else {
       console.log(
-        "Error matching attack dmg stat %s in json file",
-        json.damage.stat
+        "Error matching attack dmg stat %s in data file",
+        data.damage.stat
       );
     }
-    this.dmg = {
-      dice: json.damage.dice,
-      count: json.damage.count,
+    this.damage = {
+      dice: data.damage.dice,
+      count: data.damage.count,
       stat: dmgStat,
     };
-    this.features = json.features.map(
-      (json_feature: any) => new CharacterFeature(json_feature)
+    this.features = data.features.map(
+      (feature_data: any) => new CharacterFeature(feature_data)
     );
   }
 }

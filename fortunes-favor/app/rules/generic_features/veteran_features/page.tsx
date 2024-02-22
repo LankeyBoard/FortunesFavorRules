@@ -1,16 +1,38 @@
-import veteran_features_data from "@/public/rules_json/generic_features/veteran_features.json";
+import { gql } from "@apollo/client";
+import { getClient } from "@/app/utils/graphQLclient";
 import GenericFeatures from "@/app/components/GenericFeatures";
-function VeteranFeaturesPage(){
-    return (
-    <div className="">
-        <div id="veteran_features">
-            <div className="text-3xl tracking-wide font-bold py-4 px-1">
-                Veteran Features
-            </div>
-            <GenericFeatures features_json={veteran_features_data.veteranFeatures}/>
+
+const query = gql`
+  query VeteranFeatures {
+    genericFeatures(featureType: VETERAN) {
+      multiSelect
+      options
+      ruleType
+      shortText
+      slug
+      text {
+        text
+        type
+      }
+      title
+    }
+  }
+`;
+async function VeteranFeaturesPage() {
+  const client = getClient();
+  const { data } = await client.query({
+    query,
+  });
+  return (
+    <div className="grid grid-cols-1 divide-y-2 divide-slate-500 mb-2">
+      <div id="novice_features">
+        <div className="text-3xl tracking-wide font-bold py-4 px-1">
+          Veteran Features
         </div>
+        <GenericFeatures generic_feature_data={data.genericFeatures} />
+      </div>
     </div>
-    );
+  );
 }
 
 export default VeteranFeaturesPage;

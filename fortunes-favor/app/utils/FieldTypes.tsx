@@ -1,11 +1,11 @@
-import { field_options, findEnum } from "../enums";
+import { rule_type, findEnum } from "../enums";
 
-export class Field {
-  type: field_options;
+export class TextField {
+  type: rule_type;
   text: string;
   constructor(json_field: any) {
-    this.type = field_options.error;
-    const t = findEnum(json_field.type, field_options);
+    this.type = rule_type.error;
+    const t = findEnum(json_field.type, rule_type);
     if (t !== undefined) {
       this.type = t;
     } else {
@@ -19,10 +19,10 @@ export class Field {
 }
 
 export class Choice {
-  name: string;
+  title: string;
   text: string;
   constructor(json_choice: any) {
-    this.name = json_choice.name;
+    this.title = json_choice.title;
     this.text = json_choice.text;
   }
 }
