@@ -2,12 +2,12 @@ import { rule_type, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
-import { TextField } from "@/app/utils/FieldTypes";
 import CharacterClassData, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
+import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 
 type fieldProps = {
-  field: TextField;
+  field: RuleText;
 };
 const FieldDisplay = ({ field }: fieldProps) => {
   const displayVariants = {
@@ -44,16 +44,22 @@ const FeatureDisplay = ({ feature }: featureProps) => {
         </div>
       </div>
       <div className="px-4 py-2">
-        {(feature.stamina || feature.ff) && (
+        {(feature.staminaCost || feature.costsFortunesFavor) && (
           <div className="mb-2" id="FeatureCosts">
             <span className="font-semibold">Costs - </span>
-            {feature.stamina ? (
-              <span id="StaminaCost">{feature.stamina} Stamina</span>
+            {feature.staminaCost ? (
+              <span id="StaminaCost">{feature.staminaCost} Stamina</span>
             ) : (
               <></>
             )}
-            {feature.stamina && feature.ff ? <span> & </span> : <></>}
-            {feature.ff && <span id="FortuneCost">Fortune&apos;s Favor</span>}
+            {feature.staminaCost && feature.costsFortunesFavor ? (
+              <span> & </span>
+            ) : (
+              <></>
+            )}
+            {feature.costsFortunesFavor && (
+              <span id="FortuneCost">Fortune&apos;s Favor</span>
+            )}
           </div>
         )}
         <div className="space-y-2">
@@ -74,7 +80,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
 };
 
 type choiceProps = {
-  choice: TextField;
+  choice: GenericFeature;
 };
 const ChoiceDisplay = ({ choice }: choiceProps) => {
   return (
@@ -230,22 +236,22 @@ const ClassRule = ({ data }: classProps) => {
               />
               <Training
                 training_type="Shield"
-                training_list={class_rules.training.shield}
+                training_list={class_rules.training.shields}
               />
               <li>
                 <p className="font-normal">Weapons </p>
                 <ul className="font-extralight px-4">
                   <Training
                     training_type="Melee"
-                    training_list={class_rules.training.weapon?.melee}
+                    training_list={class_rules.training.weapons?.melee}
                   />
                   <Training
                     training_type="Ranged"
-                    training_list={class_rules.training.weapon?.ranged}
+                    training_list={class_rules.training.weapons?.ranged}
                   />
                   <Training
                     training_type="Special"
-                    training_list={class_rules.training.weapon?.special}
+                    training_list={class_rules.training.weapons?.special}
                   />
                 </ul>
               </li>
