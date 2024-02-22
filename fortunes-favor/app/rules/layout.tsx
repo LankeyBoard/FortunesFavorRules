@@ -11,8 +11,9 @@ export type nav = {
 
 type nav_section = {
   title: string;
+  shortTitle?: string;
   basePath: string;
-  subroutes?: { title: string; slug: string }[];
+  subroutes?: { title: string; shortTitle?: string; slug: string }[];
 };
 
 const NavBuilder = (sections: nav_section[]): nav[] => {
@@ -23,7 +24,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
       section.subroutes.forEach((subRoute) => {
         console.log(subRoute);
         const sub: nav = {
-          title: subRoute.title,
+          title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
           href: section.basePath + "/" + subRoute.slug,
         };
         if (!route.subroutes) route.subroutes = [sub];
@@ -40,10 +41,12 @@ const query = gql`
     genericRules {
       slug
       title
+      shortTitle
     }
     characterClasses {
       slug
       title
+      shortTitle
     }
   }
 `;
