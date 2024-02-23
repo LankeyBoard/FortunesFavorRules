@@ -1,11 +1,9 @@
-"use client";
+import SearchBar from "./blocks/SearchBar";
+
 const TopNav = () => {
-  const handleSearch = (term: string) => {
-    console.info(term);
-  };
   return (
     <>
-      <nav className="bg-white border-gray-200 dark:bg-slate-900">
+      <nav className="bg-white border-gray-200 dark:bg-slate-900 border-b-2 border-b-teal-400">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <div className="flex md:order-2">
             <button
@@ -32,35 +30,7 @@ const TopNav = () => {
               </svg>
               <span className="sr-only">Search</span>
             </button>
-            <div className="relative hidden md:block">
-              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-                <span className="sr-only">Search icon</span>
-              </div>
-              <input
-                type="text"
-                id="search-navbar"
-                className="block w-full p-2 ps-10 text-sm text-gray-900 border border-slate-300 rounded-lg bg-gray-50 dark:bg-slate-950 dark:border-slate-600 dark:placeholder-gray-400 dark:text-white"
-                placeholder="Search..."
-                onChange={(e) => {
-                  handleSearch(e.target.value);
-                }}
-              />
-            </div>
+            <SearchBar />
             <button
               data-collapse-toggle="navbar-search"
               type="button"
