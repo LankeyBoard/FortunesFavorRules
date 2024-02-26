@@ -5,7 +5,7 @@ const TopNav = () => {
     <>
       <nav className="bg-white border-gray-200 dark:bg-slate-900 border-b-2 border-b-teal-400">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <div className="flex md:order-2 grow align-middle">
+          <div className="flex md:order-2 grow align-right">
             <button
               type="button"
               data-collapse-toggle="navbar-search"
@@ -30,7 +30,7 @@ const TopNav = () => {
               </svg>
               <span className="sr-only">Search</span>
             </button>
-            <div className="m-auto min-w-96">
+            <div className="flex-auto min-w-96">
               <SearchBar />
             </div>
 
@@ -88,10 +88,10 @@ const TopNav = () => {
                 placeholder="Search..."
               />
             </div>
-            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
+            <ul className="flex flex-col p-4 md:p-0 mt-4 mr-8 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="block py-2 px-3 text-white rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 hover:text-amber-500"
                   aria-current="page"
                 >
@@ -100,7 +100,7 @@ const TopNav = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/rules"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >
                   Rules
