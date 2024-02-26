@@ -7,29 +7,33 @@ const Lineage = (json: any) => {
   const l = new CharacterLineage(json.json);
   return (
     <div id={l.slug} className="mb-6">
-      <div className="my-4 text-2xl tracking-wide">{l.title}</div>
-      <div className="italic">{l.desc}</div>
-      <div>
-        <span className="font-semibold">Size - </span>{" "}
-        {typeof l.size === "string" ? (
-          <span className="capitalize">{l.size.toLocaleLowerCase()}</span>
-        ) : (
-          <span className="capitalize">
-            {l.size.join(", ").toLocaleLowerCase()}
-          </span>
-        )}
+      <div className="py-4 px-2 text-2xl tracking-wide bg-sky-300 dark:bg-sky-800">
+        {l.title}
       </div>
-      <div>
-        <span className="font-semibold">Speed - </span>
-        {l.speed}
+      <div className="px-3">
+        <div className="italic">{l.desc}</div>
+        <div>
+          <span className="font-semibold">Size - </span>{" "}
+          {typeof l.size === "string" ? (
+            <span className="capitalize">{l.size.toLocaleLowerCase()}</span>
+          ) : (
+            <span className="capitalize">
+              {l.size.join(", ").toLocaleLowerCase()}
+            </span>
+          )}
+        </div>
+        <div>
+          <span className="font-semibold">Speed - </span>
+          {l.speed}
+        </div>
+        <div>
+          <span className="font-semibold">Stat - </span>
+          {l.stat}
+        </div>
+        {l.traits.map((trait) => {
+          return <RuleField key={trait.slug} field={trait} />;
+        })}
       </div>
-      <div>
-        <span className="font-semibold">Stat - </span>
-        {l.stat}
-      </div>
-      {l.traits.map((trait) => {
-        return <RuleField key={trait.slug} field={trait} />;
-      })}
     </div>
   );
 };

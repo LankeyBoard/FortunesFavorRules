@@ -1,7 +1,7 @@
 import GenericFeatureData from "../utils/GenericFeatureData";
 import SlugLinker from "./blocks/SlugLinker";
 
-const Feature = ({ feature }: { feature: GenericFeatureData }) => {
+export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
   return (
     <div
       className="py-2 px-5 even:bg-slate-300 dark:even:bg-slate-800"
@@ -48,7 +48,7 @@ const GenericFeatures = ({ generic_feature_data }: genericFeaturesProps) => {
   return (
     <div className="divide-slate-700 divide-y">
       {generic_feature_data.map((feature: GenericFeatureData) => {
-        return <Feature feature={feature} key={feature.title} />;
+        return <FeatureLi feature={feature} key={feature.title} />;
       })}
     </div>
   );

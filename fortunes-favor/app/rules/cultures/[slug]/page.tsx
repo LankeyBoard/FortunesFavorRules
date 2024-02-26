@@ -3,8 +3,8 @@ import { gql } from "@apollo/client";
 import { getClient } from "@/app/utils/graphQLclient";
 
 const query = gql`
-  query AllCultures {
-    cultures {
+  query FindCulture($slug: String) {
+    cultures(slug: $slug) {
       description
       title
       languages
@@ -33,10 +33,11 @@ const query = gql`
     }
   }
 `;
-async function CulturePage() {
+async function SingleCulturePage({ params }: { params: { slug: string } }) {
   const client = getClient();
   const { data } = await client.query({
     query,
+    variables: { slug: params.slug },
   });
   return (
     <div className="grid grid-cols-1 mb-2">
@@ -47,4 +48,4 @@ async function CulturePage() {
   );
 }
 
-export default CulturePage;
+export default SingleCulturePage;

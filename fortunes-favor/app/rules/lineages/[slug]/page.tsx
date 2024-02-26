@@ -4,8 +4,8 @@ import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
 
 const query = gql`
-  query AllLineages {
-    lineages {
+  query GetLineage($slug: String) {
+    lineages($slug) {
       description
       size
       slug
@@ -36,10 +36,11 @@ const query = gql`
   }
 `;
 
-async function LineagePage() {
+async function SingleLineagePage({ params }: { params: { slug: string } }) {
   const client = getClient();
   const { data } = await client.query({
     query,
+    variables: { slug: params.slug },
   });
   return (
     <div className="grid grid-cols-1 mb-2">
@@ -50,4 +51,4 @@ async function LineagePage() {
   );
 }
 
-export default LineagePage;
+export default SingleLineagePage;
