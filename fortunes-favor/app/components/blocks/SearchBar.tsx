@@ -1,21 +1,29 @@
 "use client";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SearchBar = () => {
+  const [term, setTerm] = useState<string>();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const router = useRouter();
-  const handleSearch = (term: string) => {
+  const handleSearch = (searchTerm: string) => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("query", term);
+    if (searchTerm) {
+      params.set("query", searchTerm);
+      setTerm(searchTerm);
     } else {
       params.delete("query");
+      setTerm(undefined);
     }
     replace(`${pathname}?${params.toString()}`);
-    console.info(term);
   };
+  const submitSearch = (query: string) => {
+    console.info("Submit", query);
+    router.push("/rules/search?query=" + query);
+  };
+
   return (
     <div className="relative hidden md:block">
       <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -47,11 +55,36 @@ const SearchBar = () => {
         }}
         onKeyUp={(e) => {
           if (e.key === "Enter") {
-            console.info("Submit");
-            router.push("/search?query=" + e.currentTarget.value);
+            submitSearch(e.currentTarget.value);
           }
         }}
       />
+      <div className="absolute inset-y-0 end-3 flex items-center ps-3">
+        <button
+          className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-300 disabled:text-slate-700"
+          disabled={!term}
+          onClick={() => {
+            if (term) submitSearch(term);
+            else console.error("Cannot search for [" + term + "]");
+          }}
+        >
+          <svg
+            className="w-6 h-6 "
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M1 5h12m0 0L9 1m4 4L9 9"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };

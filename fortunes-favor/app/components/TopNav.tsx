@@ -5,7 +5,7 @@ const TopNav = () => {
     <>
       <nav className="bg-white border-gray-200 dark:bg-slate-900 border-b-2 border-b-teal-400">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <div className="flex md:order-2">
+          <div className="flex md:order-2 grow align-middle">
             <button
               type="button"
               data-collapse-toggle="navbar-search"
@@ -30,7 +30,10 @@ const TopNav = () => {
               </svg>
               <span className="sr-only">Search</span>
             </button>
-            <SearchBar />
+            <div className="m-auto min-w-96">
+              <SearchBar />
+            </div>
+
             <button
               data-collapse-toggle="navbar-search"
               type="button"

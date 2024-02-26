@@ -1,4 +1,4 @@
-import SearchResuls from "../components/SearchResults";
+import SearchResuls from "../../components/SearchResults";
 
 const SearchPage = ({
   searchParams,
