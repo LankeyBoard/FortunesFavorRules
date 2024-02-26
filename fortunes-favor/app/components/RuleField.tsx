@@ -5,7 +5,7 @@ import SlugLinker from "./blocks/SlugLinker";
 const titleStyler = (depth: number) => {
   switch (depth) {
     case 1:
-      return "text-3xl tracking-wide font-bold py-4 px-1";
+      return "text-3xl tracking-wide font-bold py-4 px-2 bg-purple-300 dark:bg-purple-800";
     case 2:
       return "mt-3 mb-1 mx-2 text-2xl tracking-wide";
     case 3:

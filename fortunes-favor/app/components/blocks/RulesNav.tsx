@@ -68,10 +68,10 @@ export const NavElem = ({ navEl, isSub }: navProps) => {
 
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   return (
-    <div className="flex-left">
+    <div className="flex-left flex-grow">
       <aside
         id="sidebar-multi-level-sidebar"
-        className="z-40 w-64 h-screen bg-slate-300 dark:bg-slate-950 p-4 overflow-auto"
+        className="z-40 w-64 bg-slate-300 dark:bg-slate-950 p-4 overflow-auto"
         aria-label="Sidebar"
       >
         <div className="flex-col my-5">

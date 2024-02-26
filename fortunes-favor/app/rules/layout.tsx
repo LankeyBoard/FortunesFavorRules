@@ -87,7 +87,7 @@ export default async function RulesLayout({
     basePath: "/rules/generic_features/veteran_features",
   };
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row flex-grow">
       <RulesNav
         navMap={NavBuilder([
           rulesSection,

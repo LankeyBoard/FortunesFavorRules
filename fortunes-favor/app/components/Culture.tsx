@@ -7,18 +7,22 @@ const Culture = (json: any) => {
     : new CharacterCulture(json.culture);
   return (
     <div id={c.slug} className="mb-6">
-      <div className="my-4 text-2xl tracking-wide">{c.title}</div>
-      <div className="italic">{c.desc}</div>
-      <div>
-        <span className="font-semibold">Language - </span>
-        {c.lang}
+      <div className="py-4 px-2 text-2xl tracking-wide bg-blue-300 dark:bg-blue-800">
+        {c.title}
       </div>
-      <div>
-        <span className="font-semibold">Stat - </span>
-        {c.stat}
+      <div className="px-3">
+        <div className="italic">{c.desc}</div>
+        <div>
+          <span className="font-semibold">Language - </span>
+          {c.lang}
+        </div>
+        <div>
+          <span className="font-semibold">Stat - </span>
+          {c.stat}
+        </div>
+        <Traits title="Traits" traits={c.traits} />
+        {c.options && <Traits title="Options" traits={c.options} />}
       </div>
-      <Traits title="Traits" traits={c.traits} />
-      {c.options && <Traits title="Options" traits={c.options} />}
     </div>
   );
 };
