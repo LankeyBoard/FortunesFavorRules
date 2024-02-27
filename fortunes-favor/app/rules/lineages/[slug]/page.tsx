@@ -5,7 +5,7 @@ import { gql } from "@apollo/client";
 
 const query = gql`
   query GetLineage($slug: String) {
-    lineages($slug) {
+    lineages(slug: $slug) {
       description
       size
       slug
