@@ -30,9 +30,7 @@ const Lineage = (json: any) => {
           <span className="font-semibold">Stat - </span>
           {l.stat}
         </div>
-        {l.traits.map((trait) => {
-          return <RuleField key={trait.slug} field={trait} />;
-        })}
+        <Traits title="Traits" traits={l.traits} />
       </div>
     </div>
   );

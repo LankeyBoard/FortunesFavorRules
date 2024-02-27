@@ -13,11 +13,11 @@ const Culture = (json: any) => {
       <div className="px-3">
         <div className="italic">{c.desc}</div>
         <div>
-          <span className="font-semibold">Language - </span>
+          <span className="font-semibold">Language: </span>
           {c.lang}
         </div>
         <div>
-          <span className="font-semibold">Stat - </span>
+          <span className="font-semibold">Stat: </span>
           {c.stat}
         </div>
         <Traits title="Traits" traits={c.traits} />
