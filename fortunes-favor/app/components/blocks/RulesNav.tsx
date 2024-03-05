@@ -89,20 +89,16 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
   const [menuVisible, setMenuVisible] = useState(true);
   const [menuStyle, setMenuStyle] = useState("flex");
   useEffect(() => {
-    console.log("useEffect Triggered");
     if (!isSmallWindow(width)) {
-      console.log("Not small");
       setMenuStyle("flex");
       setMenuVisible(true);
     } else {
-      console.log("Small");
       setMenuStyle("fixed flex");
       setMenuVisible(false);
     }
   }, [width]);
 
   const handleMenuHideButton = () => {
-    console.log("button clicked");
     setMenuVisible((prevVisible) => !prevVisible);
   };
 

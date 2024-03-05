@@ -9,7 +9,6 @@ type LineageProps = {
 };
 
 const Lineage = ({ data, isList = false }: LineageProps) => {
-  console.log("Lineage data input: ", data);
   const l = new CharacterLineage(data);
   return (
     <div id={l.slug} className="mb-6">

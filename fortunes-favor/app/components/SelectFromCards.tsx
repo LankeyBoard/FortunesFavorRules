@@ -31,7 +31,6 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
     const [selectedSlug, setSelectedSlug] = useState<string | undefined>(getSelectedSlug(optionType, currentCharacter));
     const [currentSlug, setCurentSlug] = useState<string | undefined>(getSelectedSlug(optionType, currentCharacter));
     const [currentChild, setCurrentChild] = useState<JSX.Element | undefined>(undefined);
-    console.log("currentSlug=",currentSlug)
     useEffect(()=> {
         if(currentSlug){
             const selectedJson = {
@@ -41,21 +40,19 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 setCurrentChild(popoutInner(selectedJson));
             }
         }
-    },[currentSlug]);
+    },[currentSlug, options, popoutInner]);
     const pickCard=(slug: string)=>{
         setCurentSlug(slug);
         setShowPoput(true);
     }
 
     useEffect(()=> {
-        console.log("Selected slug changed", selectedSlug)
         handleSelection(selectedSlug);
     },[selectedSlug])
 
     const handleSelection=(slug: string | undefined)=>{
         setCurentSlug(slug);
         let updatedCharacter = structuredClone(currentCharacter);
-        console.log(optionType)
         switch(optionType){
             case option_type.culture:
                 let culture;
@@ -65,7 +62,6 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 else{
                     culture = options.find((c)=>c.slug===slug);
                 }
-                console.log("Updating character culture to ", culture)
                 updatedCharacter.culture = culture;
                 break;
             case option_type.class:
@@ -76,7 +72,6 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 else{
                     characterClass = options.find((c)=>c.slug===slug);
                 }
-                console.log("Updating character class to ", characterClass)
                 updatedCharacter.class = characterClass;
                 break;
             case option_type.lineage:
@@ -87,7 +82,6 @@ const SelectFromCards = ({optionType, options, popoutInner, optionsDescription, 
                 else{
                     lineage = options.find((c)=>c.slug===slug);
                 }
-                console.log("Updating character lineage to ", lineage)
                 updatedCharacter.lineage = lineage;
                 break;
         }

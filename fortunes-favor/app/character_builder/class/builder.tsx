@@ -18,7 +18,6 @@ function ClassSelectBuilder({
   classList.list.map((json: any) => {
     (json.desc = json.flavor_text), (json.title = json.name);
   });
-  console.log(classList.list);
   const description =
     "A characters class represents their unique set of skills that help them survive and thrive on grand adventures.";
   return (

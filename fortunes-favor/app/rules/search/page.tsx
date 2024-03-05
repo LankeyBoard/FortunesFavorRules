@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SearchResuls from "../../components/SearchResults";
 
 const SearchPage = ({
@@ -8,6 +9,10 @@ const SearchPage = ({
     page?: string;
   };
 }) => {
-  return <SearchResuls searchParams={searchParams} />;
+  return (
+    <Suspense>
+      <SearchResuls searchParams={searchParams} />
+    </Suspense>
+  );
 };
 export default SearchPage;

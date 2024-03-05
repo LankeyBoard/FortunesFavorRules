@@ -20,7 +20,7 @@ export default class CharacterLineage {
       if (s) {
         this.size = s;
       } else {
-        console.log("Error matching size %s in json file", json.size);
+        console.error("Error matching size %s in json file", json.size);
       }
     } else {
       let sizeList: size_options[] = [];
@@ -42,7 +42,6 @@ export default class CharacterLineage {
         t.list
       );
     });
-    console.log("Lineage - ", CharacterLineage);
   }
 }
 

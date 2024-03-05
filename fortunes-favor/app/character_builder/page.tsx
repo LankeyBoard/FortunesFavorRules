@@ -61,7 +61,6 @@ const Tab = ({
   isComplete = false,
   isEnabled = true,
 }: tabProps) => {
-  console.log("Tab props", name, isCurrent, isComplete, isEnabled);
   let style = "basis-1/5 py-3 mx-2 rounded-t-lg text-center ";
   if (isCurrent && isComplete) style += COMPLETE_CURRENT + " cursor-default";
   else if (isCurrent) style += CURRENT + " cursor-default";
@@ -70,7 +69,6 @@ const Tab = ({
     style +=
       ENABLED + " hover:bg-violet-800 hover:tracking-wider cursor-pointer";
   else style += DISABLED + " cursor-default";
-  console.log(style);
   if (isEnabled && !isCurrent) {
     return (
       <div
@@ -143,13 +141,10 @@ function CharacterBuilder() {
   const isTabCompleted = (tabName: string) => {
     switch (tabName) {
       case "Culture":
-        console.log("Comparing cultures", createdCharacter.culture);
         return createdCharacter.culture != undefined;
       case "Lineage":
-        console.log("Comparing lineage", createdCharacter.lineage);
         return createdCharacter.lineage != undefined;
       case "Class":
-        console.log("Comparing lineage", createdCharacter.class);
         return createdCharacter.class != undefined;
     }
   };

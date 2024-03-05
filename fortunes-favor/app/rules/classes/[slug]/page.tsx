@@ -1,6 +1,7 @@
 import ClassRule from "@/app/components/CharacterClass";
 import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
+import { Suspense } from "react";
 
 const query = gql`
   query GetClass($slug: String) {
@@ -81,9 +82,9 @@ async function PlayerClass({ params }: { params: { slug: string } }) {
     variables: { slug: params.slug },
   });
   return (
-    <>
+    <Suspense>
       <ClassRule data={data.characterClasses[0]} />
-    </>
+    </Suspense>
   );
 }
 

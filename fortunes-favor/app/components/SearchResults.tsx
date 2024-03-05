@@ -119,7 +119,6 @@ type SearchResultsTableProps = {
 };
 
 const SearchResultsTable = ({ results }: SearchResultsTableProps) => {
-  console.log("results = ", results.searchAll);
   return (
     <div id="SearchResults" className="border-spacing-3 flex flex-col">
       {results.searchAll.map((result: any) => {
@@ -151,7 +150,6 @@ const SearchResuls = async ({
     query,
     variables: { search: searchQuery },
   });
-  console.log(data.searchAll);
   return (
     <>
       <Suspense key={searchQuery + currentPage} fallback={<>Searching...</>}>

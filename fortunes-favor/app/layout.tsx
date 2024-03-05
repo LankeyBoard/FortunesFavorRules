@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import TopNav from "./components/TopNav";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Fortune's Favor",
@@ -17,7 +18,9 @@ export default function RootLayout({
       <head></head>
       <body className="h-screen">
         <div className="container mx-auto max-w-screen-xxl flexf flex-grow bg-gray-100 dark:bg-gray-900">
-          <TopNav />
+          <Suspense>
+            <TopNav />
+          </Suspense>
           {children}
         </div>
       </body>

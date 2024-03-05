@@ -99,7 +99,6 @@ type trainingProps = {
 };
 
 const Training = ({ training_type, training_list }: trainingProps) => {
-  console.log("training list = " + training_list?.toLocaleString());
   let training;
   if (
     !training_list ||
@@ -116,7 +115,6 @@ const Training = ({ training_type, training_list }: trainingProps) => {
         </span>
       );
     } else {
-      console.log(training_list.pick, training_list.options);
       training = (
         <span>
           <span>Choose </span>
@@ -191,7 +189,6 @@ type classProps = {
   data: any;
 };
 const ClassRule = ({ data }: classProps) => {
-  console.log("ClassRules input", data);
   const class_rules: CharacterClassData = new CharacterClassData(data);
   const rangeString =
     class_rules.range.min === 0

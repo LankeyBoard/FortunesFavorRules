@@ -9,7 +9,7 @@ export class TextField {
     if (t !== undefined) {
       this.type = t;
     } else {
-      console.log(
+      console.error(
         "Error matching feature type %s in json file",
         json_field.type
       );

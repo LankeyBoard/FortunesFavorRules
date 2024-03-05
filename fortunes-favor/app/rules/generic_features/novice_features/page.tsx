@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { getClient } from "@/app/utils/graphQLclient";
 import GenericFeatures from "@/app/components/GenericFeatures";
+import { Suspense } from "react";
 
 const query = gql`
   query NoviceFeatures {
@@ -29,7 +30,9 @@ async function NoviceFeaturesPage() {
         <div className="text-3xl tracking-wide font-bold py-4 px-5 bg-fuchsia-300 dark:bg-fuchsia-900">
           Novice Features
         </div>
-        <GenericFeatures generic_feature_data={data.genericFeatures} />
+        <Suspense>
+          <GenericFeatures generic_feature_data={data.genericFeatures} />
+        </Suspense>
       </div>
     </div>
   );

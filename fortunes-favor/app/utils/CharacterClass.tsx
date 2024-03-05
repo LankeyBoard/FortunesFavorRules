@@ -39,7 +39,6 @@ export default class CharacterClassData implements CharacterClass {
   };
   features: CharacterFeature[];
   constructor(data: any) {
-    console.log("Feature - ", data);
     this.title = data.title;
     this.slug = data.slug;
     this.description = data.description;
@@ -48,7 +47,7 @@ export default class CharacterClassData implements CharacterClass {
     if (c) {
       this.complexity = c;
     } else {
-      console.log("Error matching complexity %s in data file", data.complexity);
+      console.error("Error matching complexity %s in data file", data.complexity);
     }
     this.health = data.health;
     this.healthOnLevel = data.healthOnLevel;
@@ -57,7 +56,7 @@ export default class CharacterClassData implements CharacterClass {
     if (ss) {
       this.staminaStat = ss;
     } else {
-      console.log(
+      console.error(
         "Error matching stamina stat %s in data file",
         data.staminaStat
       );
@@ -79,7 +78,7 @@ export default class CharacterClassData implements CharacterClass {
     if (as) {
       this.attackStat = as;
     } else {
-      console.log(
+      console.error(
         "Error matching attack stat %s in data file",
         data.attackStat
       );
@@ -93,7 +92,7 @@ export default class CharacterClassData implements CharacterClass {
     if (ds) {
       dmgStat = ds;
     } else {
-      console.log(
+      console.error(
         "Error matching attack dmg stat %s in data file",
         data.damage.stat
       );

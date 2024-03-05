@@ -15,7 +15,6 @@ function CultureSelectBuilder({
   currentCharacter,
   updateCharacter,
 }: cultureSelectProps) {
-  console.log(cultures_json.list);
   const cultures = characterCultureListBuilder(cultures_json.list);
   const description =
     "A characters culture represents the society that they are most strongly tied to. Usually this is the culture they were brought up in, but if they've spent enough time in a different region it would make sense for a characters culture to match their new location.";
