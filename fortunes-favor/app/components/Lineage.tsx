@@ -1,14 +1,44 @@
+import Link from "next/link";
 import CharacterLineage from "../utils/CharacterLineage";
-import RuleField from "./RuleField";
+import { graphQLLineage } from "../utils/graphQLtypes";
 import Traits from "./Traits";
 
-const Lineage = (json: any) => {
-  console.log("Lineage json input: ", json);
-  const l = new CharacterLineage(json.json);
+type LineageProps = {
+  data: graphQLLineage;
+  isList?: boolean;
+};
+
+const Lineage = ({ data, isList = false }: LineageProps) => {
+  console.log("Lineage data input: ", data);
+  const l = new CharacterLineage(data);
   return (
     <div id={l.slug} className="mb-6">
-      <div className="py-4 px-2 text-2xl tracking-wide bg-sky-300 dark:bg-sky-800">
-        {l.title}
+      <div className="py-4 px-2 text-2xl tracking-wide bg-sky-300 dark:bg-sky-800 flex flex-row">
+        <h1 className="flex-grow">{l.title}</h1>
+        {isList && (
+          <div className="flex items-center ps-3 z-10 mr-4">
+            <Link
+              className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-400 disabled:text-slate-700"
+              href={"/rules/lineages/" + l.slug}
+            >
+              <svg
+                className="w-6 h-6 "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
+              </svg>
+            </Link>
+          </div>
+        )}
       </div>
       <div className="px-3">
         <div className="italic">{l.desc}</div>
@@ -30,9 +60,7 @@ const Lineage = (json: any) => {
           <span className="font-semibold">Stat - </span>
           {l.stat}
         </div>
-        {l.traits.map((trait) => {
-          return <RuleField key={trait.slug} field={trait} />;
-        })}
+        <Traits title="Traits" traits={l.traits} />
       </div>
     </div>
   );

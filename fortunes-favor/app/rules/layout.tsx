@@ -37,7 +37,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
 };
 
 const query = gql`
-  query GetSlugs {
+  query GetNavSlugs {
     genericRules {
       slug
       title

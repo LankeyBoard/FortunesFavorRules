@@ -1,7 +1,7 @@
-import lineages_data from "@/public/rules_json/lineages/lineages.json";
-import Lineage from "@/app/components/Lineage";
 import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
+import Lineage from "@/app/components/Lineage";
+import { graphQLLineage } from "@/app/utils/graphQLtypes";
 
 const query = gql`
   query AllLineages {
@@ -43,8 +43,10 @@ async function LineagePage() {
   });
   return (
     <div className="grid grid-cols-1 mb-2">
-      {data.lineages.map((lineage_data: any) => {
-        return <Lineage json={lineage_data} key={lineage_data.slug} />;
+      {data.lineages.map((lineage_data: graphQLLineage) => {
+        return (
+          <Lineage data={lineage_data} key={lineage_data.slug} isList={true} />
+        );
       })}
     </div>
   );

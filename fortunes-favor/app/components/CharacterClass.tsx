@@ -37,7 +37,7 @@ type featureProps = {
 const FeatureDisplay = ({ feature }: featureProps) => {
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
-      <div className="bg-teal-300 dark:bg-teal-700 text-lg p-2 font-semibold">
+      <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
         {feature.title}
         <div className="text-slate-700 dark:text-slate-200 text-sm ordinal float-right">
           {feature.level + getOrdinal(feature.level)} level
@@ -46,7 +46,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
       <div className="px-4 py-2">
         {(feature.staminaCost || feature.costsFortunesFavor) && (
           <div className="mb-2" id="FeatureCosts">
-            <span className="font-semibold">Costs - </span>
+            <span className="font-semibold">Costs: </span>
             {feature.staminaCost ? (
               <span id="StaminaCost">{feature.staminaCost} Stamina</span>
             ) : (
@@ -99,7 +99,7 @@ type trainingProps = {
 };
 
 const Training = ({ training_type, training_list }: trainingProps) => {
-  console.log("training list = " + training_list);
+  console.log("training list = " + training_list?.toLocaleString());
   let training;
   if (
     !training_list ||
@@ -107,15 +107,26 @@ const Training = ({ training_type, training_list }: trainingProps) => {
   )
     training = <span>None</span>;
   else if (!Array.isArray(training_list)) {
-    training = (
-      <span>
-        <span>Choose </span>
-        <span>{training_list.pick}</span>
-        <span> of the following options [ </span>
-        <span>{training_list.options.join(", ")}</span>
-        <span> ]</span>
-      </span>
-    );
+    if (!training_list.pick || training_list.pick === 0) {
+      training = (
+        <span>
+          <span>[ </span>
+          <span className="capitalize">{training_list.options.join(", ")}</span>
+          <span> ]</span>
+        </span>
+      );
+    } else {
+      console.log(training_list.pick, training_list.options);
+      training = (
+        <span>
+          <span>Choose </span>
+          <span>{training_list.pick}</span>
+          <span> of the following options [ </span>
+          <span>{training_list.options.join(", ")}</span>
+          <span> ]</span>
+        </span>
+      );
+    }
   } else {
     if (training_list.length > 0 && training_list[0] !== null)
       training = <span>[ {training_list.join(", ")} ]</span>;
@@ -123,7 +134,7 @@ const Training = ({ training_type, training_list }: trainingProps) => {
   }
   return (
     <li>
-      <span className="font-normal">{training_type} - </span>
+      <span className="font-normal">{training_type}: </span>
       <span className="font-light">{training}</span>
     </li>
   );
@@ -195,7 +206,7 @@ const ClassRule = ({ data }: classProps) => {
   return (
     <div id={class_rules.slug}>
       <div className="w-full">
-        <div className="text-3xl tracking-wide font-bold py-4 px-1">
+        <div className="text-3xl tracking-wide font-bold py-4 px-3 bg-teal-300 dark:bg-teal-700 ">
           {class_rules.title}
         </div>
       </div>
@@ -210,7 +221,7 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold">Health</span>
               <span className="">
                 {" "}
-                - {class_rules.health} (+{class_rules.healthOnLevel} on level
+                : {class_rules.health} (+{class_rules.healthOnLevel} on level
                 up)
               </span>
             </p>
@@ -218,7 +229,7 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold clear-left">Stamina</span>
               <span>
                 {" "}
-                - {class_rules.stamina}+{class_rules.staminaStat} (+
+                : {class_rules.stamina}+{class_rules.staminaStat} (+
                 {class_rules.staminaOnLevel}+{class_rules.staminaStat} on level
                 up)
               </span>
@@ -264,15 +275,15 @@ const ClassRule = ({ data }: classProps) => {
           <div className="mx-3 mt-2">
             <p>
               <span className="font-semibold">Attack Stat</span>
-              <span className=""> - {class_rules.attackStat}</span>
+              <span className="">: {class_rules.attackStat}</span>
             </p>
             <p>
               <span className="font-semibold clear-left">Range</span>
-              <span> - {rangeString}</span>
+              <span>: {rangeString}</span>
             </p>
             <p>
               <span className="font-semibold clear-left">Damage</span>
-              <span> - {dmgString}</span>
+              <span>: {dmgString}</span>
             </p>
           </div>
         </div>

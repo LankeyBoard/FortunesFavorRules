@@ -1,4 +1,5 @@
 import { size_options, findEnum } from "../enums";
+import { CharacterTrait } from "./CharacterTrait";
 import RuleData from "./GenericRuleData";
 
 export default class CharacterLineage {
@@ -8,7 +9,7 @@ export default class CharacterLineage {
   size: size_options | size_options[];
   speed: number;
   stat: string;
-  traits: [RuleData];
+  traits: [CharacterTrait];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
