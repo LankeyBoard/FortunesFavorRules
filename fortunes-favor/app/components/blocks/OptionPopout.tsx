@@ -21,7 +21,6 @@ const OptionPopout = ({
     "h-min max-h-full bg-slate-700 p-4 items-start border-2 relative overflow-y-auto cursor-pointer "
       .concat(!selected ? "border-amber-700 " : "border-emerald-600 ")
       .concat(large ? "w-3/4" : "w-1/2");
-  console.log("child - ", child.props.id);
 
   return (
     <div
@@ -36,10 +35,9 @@ const OptionPopout = ({
           className={popoutStyle}
           onClick={(e) => {
             e.stopPropagation();
-            console.log("clicked - ", child.props.id);
             setSelectedSlug(!selected ? child.props.id : undefined);
             setSelected(!selected);
-            console.log("selected slug ", selected);
+            console.info("selected slug ", selected);
           }}
         >
           <div className="">{child}</div>
@@ -52,7 +50,6 @@ const OptionPopout = ({
               }
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("clicked - ", e, child.props.id);
                 setSelected(!selected);
                 setSelectedSlug(child.props.id);
               }}

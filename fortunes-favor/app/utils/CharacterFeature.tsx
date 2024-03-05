@@ -33,7 +33,7 @@ export default class CharacterFeatureData
     if (at) {
       this.actionType = at;
     } else {
-      console.log(
+      console.error(
         "Error matching feature type %s in json file",
         feature_data.actionType
       );

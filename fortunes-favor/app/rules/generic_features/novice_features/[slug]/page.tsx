@@ -1,6 +1,7 @@
 import { FeatureLi } from "@/app/components/GenericFeatures";
 import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
+import { Suspense } from "react";
 
 const query = gql`
   query SearchFeatures($slug: String) {
@@ -27,9 +28,9 @@ async function NoviceFeature({ params }: { params: { slug: string } }) {
     variables: { slug: params.slug },
   });
   return (
-    <>
+    <Suspense>
       <FeatureLi feature={data.genericFeatures[0]} />
-    </>
+    </Suspense>
   );
 }
 

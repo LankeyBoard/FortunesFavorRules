@@ -26,7 +26,6 @@ export default class CharacterCulture {
         return new CharacterTrait(o);
       });
     }
-    console.log("Culture - ", this);
   }
 }
 

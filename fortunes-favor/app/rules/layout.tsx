@@ -22,7 +22,6 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
     if (section.subroutes) {
       let route: nav = { title: section.title, subroutes: [] };
       section.subroutes.forEach((subRoute) => {
-        console.log(subRoute);
         const sub: nav = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
           href: section.basePath + "/" + subRoute.slug,

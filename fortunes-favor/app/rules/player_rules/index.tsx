@@ -1,13 +1,8 @@
-import type { ReactElement } from 'react'
-import Layout from '../components/layout'
+import Layout from "@/app/components/layout";
+import type { ReactElement } from "react";
 
- 
 function Page(page: ReactElement) {
-  return (
-    <Layout>
-      {page}
-    </Layout>
-  )
+  return <Layout>{page}</Layout>;
 }
- 
-export default Page
+
+export default Page;
