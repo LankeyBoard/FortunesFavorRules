@@ -5,6 +5,7 @@ import PlayerCharacter from "@/app/utils/PlayerCharacter";
 import { characterLineageListBuilder } from "@/app/utils/CharacterLineage";
 import lineages_json from "@/public/rules_json/lineages/lineages.json";
 import { Dispatch, SetStateAction } from "react";
+import Lineage from "@/app/components/Lineage";
 
 type lineageSelectProps = {
   currentCharacter: PlayerCharacter;
@@ -21,7 +22,7 @@ function LineageSelectBuilder({
   return (
     <div
       className={
-        currentCharacter.characterLineage
+        currentCharacter.lineage
           ? "border-t-emerald-600 border-t-8 px-10"
           : "border-t-amber-800 border-t-8 px-10"
       }
