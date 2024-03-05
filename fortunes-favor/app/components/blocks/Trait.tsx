@@ -9,11 +9,20 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
         ))}
       </span>
       {t.rules && (
-        <div className="px-4 py-2 space-y-2 bg-slate-700">
+        <table className="ml-4 my-2 space-y-2">
           {t.rules?.map((rule) => {
-            return <Trait key={rule.slug} t={rule} />;
+            return (
+              <tr
+                key={rule.slug}
+                className="odd:bg-slate-950 even:bg-slate-700"
+              >
+                <div className="p-2">
+                  <Trait t={rule} />
+                </div>
+              </tr>
+            );
           })}
-        </div>
+        </table>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import ClassRule from "@/app/components/Class";
+import ClassRule from "@/app/components/CharacterClass";
 import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
 

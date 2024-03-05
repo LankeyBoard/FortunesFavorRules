@@ -27,7 +27,7 @@ export type GenericRule = {
   shortText?: string;
 };
 
-export type Culture = {
+export type graphQLCulture = {
   title: string;
   slug: string;
   description: string[];
@@ -36,7 +36,7 @@ export type Culture = {
   traits: GenericRule[];
 };
 
-export type Lineage = {
+export type graphQLLineage = {
   title: string;
   slug: string;
   description: string[];

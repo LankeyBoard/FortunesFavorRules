@@ -1,6 +1,7 @@
 import Culture from "@/app/components/Culture";
 import { gql } from "@apollo/client";
 import { getClient } from "@/app/utils/graphQLclient";
+import { graphQLCulture } from "@/app/utils/graphQLtypes";
 
 const query = gql`
   query AllCultures {
@@ -40,8 +41,14 @@ async function CulturePage() {
   });
   return (
     <div className="grid grid-cols-1 mb-2">
-      {data.cultures.map((culuture_data: any) => {
-        return <Culture json={culuture_data} key={culuture_data.slug} />;
+      {data.cultures.map((culuture_data: graphQLCulture) => {
+        return (
+          <Culture
+            data={culuture_data}
+            key={culuture_data.slug}
+            isList={true}
+          />
+        );
       })}
     </div>
   );

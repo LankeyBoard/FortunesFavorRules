@@ -72,7 +72,7 @@ const parseLinksFromString = (text: string) => {
   return <>{display}</>;
 };
 
-const SlugLinker = ({ text }: { text: string | [string] | undefined }) => {
+const SlugLinker = ({ text }: { text: string | string[] | undefined }) => {
   if (!text) {
     return;
   } else if (typeof text === "string") {

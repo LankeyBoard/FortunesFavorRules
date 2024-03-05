@@ -57,7 +57,7 @@ async function GeneralRule({ params }: { params: { slug: string } }) {
   });
   console.log("rule query results", data);
   const rules: GenericRule[] = [];
-  data.genericRules.forEach((rule: any) =>
+  data.genericRules.forEach((rule: any) => {
     rules.push(
       new RuleData(
         rule.title,
@@ -67,9 +67,9 @@ async function GeneralRule({ params }: { params: { slug: string } }) {
         rule.rules,
         rule.list
       )
-    )
-  );
-  console.log(rules);
+    );
+    console.log("rule-", rule);
+  });
   return (
     <>
       {rules.map((rule) => {
