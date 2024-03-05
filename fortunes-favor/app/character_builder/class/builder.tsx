@@ -24,7 +24,7 @@ function ClassSelectBuilder({
   return (
     <div
       className={
-        currentCharacter.characterClass
+        currentCharacter.class
           ? "border-t-emerald-600 border-t-8 px-10"
           : "border-t-amber-800 border-t-8 px-10"
       }
