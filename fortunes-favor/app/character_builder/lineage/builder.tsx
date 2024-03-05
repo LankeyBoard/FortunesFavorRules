@@ -1,4 +1,3 @@
-import graphQLLineage from "@/app/components/Lineage";
 import SelectFromCards from "@/app/components/SelectFromCards";
 import { option_type } from "@/app/enums";
 import PlayerCharacter from "@/app/utils/PlayerCharacter";
