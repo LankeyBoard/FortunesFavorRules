@@ -104,7 +104,7 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
 
   return (
     <div className={menuStyle}>
-      <div className={menuVisible ? "" : "hidden"}>
+      <div className={menuVisible ? "z-50" : "hidden"}>
         <NavMenu navMap={navMap} />
       </div>
       <Tooltip message={menuVisible ? "Hide Menu" : "Show Menu"}>
