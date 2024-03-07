@@ -25,8 +25,8 @@ const SearchBar = () => {
   };
 
   return (
-    <Suspense>
-      <div className="relative hidden md:block">
+    <>
+      <div className="relative block">
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500 dark:text-gray-400"
@@ -89,7 +89,7 @@ const SearchBar = () => {
           </button>
         </div>
       </div>
-    </Suspense>
+    </>
   );
 };
 
