@@ -1,10 +1,18 @@
 "use client";
+import { isSmallWindow } from "@/app/utils/isSmallWindow";
 import useWindowDimensions from "@/app/utils/useWindowDimensions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const NavHeader = () => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
+  useEffect(() => {
+    if (!isSmallWindow(width)) {
+      setMenuVisible(true);
+    } else {
+      setMenuVisible(false);
+    }
+  }, [width]);
   return (
     <div
       className="items-center justify-between w-full md:flex md:w-auto order-1"
@@ -37,7 +45,7 @@ const NavHeader = () => {
         </svg>
       </button>
       {menuVisible && (
-        <div className="absolute right-0 z-50">
+        <div className="absolute right-0 z-50 md:order-1 md:relative">
           <ul className="flex flex-col p-4 md:p-0 mt-4 mr-8 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
             <li>
               <a

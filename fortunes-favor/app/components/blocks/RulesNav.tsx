@@ -68,10 +68,10 @@ export const NavElem = ({ navEl, isSub }: navProps) => {
 
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   return (
-    <div className="flex-left flex-grow">
+    <div className="flex-left flex-grow overflow-auto h-[calc(100vh-72px)]">
       <aside
         id="sidebar-multi-level-sidebar"
-        className="z-40 w-64 bg-slate-300 dark:bg-slate-950 p-4 overflow-auto"
+        className="z-40 w-64 bg-slate-300 dark:bg-slate-950 p-4 overflow-auto "
         aria-label="Sidebar"
       >
         <div className="flex-col my-5">
@@ -93,7 +93,7 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
       setMenuStyle("flex");
       setMenuVisible(true);
     } else {
-      setMenuStyle("fixed flex");
+      setMenuStyle("fixed flex items-start h-screen");
       setMenuVisible(false);
     }
   }, [width]);
@@ -104,7 +104,7 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
 
   return (
     <div className={menuStyle}>
-      <div className={menuVisible ? "z-50" : "hidden"}>
+      <div className={menuVisible ? "z-50 overflow-hidden" : "hidden"}>
         <NavMenu navMap={navMap} />
       </div>
       <Tooltip message={menuVisible ? "Hide Menu" : "Show Menu"}>
