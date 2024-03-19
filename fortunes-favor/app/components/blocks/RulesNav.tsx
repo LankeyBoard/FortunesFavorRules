@@ -107,41 +107,43 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
       <div className={menuVisible ? "z-50 overflow-hidden" : "hidden"}>
         <NavMenu navMap={navMap} />
       </div>
-      <Tooltip message={menuVisible ? "Hide Menu" : "Show Menu"}>
-        <div className={"flex-left z-50 h-fit"}>
-          <div
-            className={
-              menuVisible
-                ? "-rotate-90 w-auto h-auto m-2"
-                : "rotate-90 w-auto h-auto m-2"
-            }
-          >
-            <button
-              aria-controls="sidebar-multi-level-sidebar"
-              type="button"
-              onClick={handleMenuHideButton}
-              className="items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+      <div className="mt-9">
+        <Tooltip message={menuVisible ? "Hide Menu" : "Show Menu"}>
+          <div className={"flex-left z-50 h-fit"}>
+            <div
+              className={
+                menuVisible
+                  ? "-rotate-90 w-auto h-auto m-2"
+                  : "rotate-90 w-auto h-auto m-2"
+              }
             >
-              <span className="sr-only">Open sidebar</span>
-              <svg
-                className="w-3 h-3 shrink-0"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
+              <button
+                aria-controls="sidebar-multi-level-sidebar"
+                type="button"
+                onClick={handleMenuHideButton}
+                className="items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5 5 1 1 5"
-                />
-              </svg>
-            </button>
+                <span className="sr-only">Open sidebar</span>
+                <svg
+                  className="w-3 h-3 shrink-0"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5 5 1 1 5"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
-      </Tooltip>
+        </Tooltip>
+      </div>
     </div>
   );
 };
