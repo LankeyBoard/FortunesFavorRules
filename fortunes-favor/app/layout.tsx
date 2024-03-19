@@ -17,11 +17,13 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body className="h-screen">
-        <div className="container mx-auto max-w-screen-xxl flexf flex-grow bg-gray-100 dark:bg-gray-900">
-          <Suspense>
+        <Suspense>
+          <div className="fixed top-0 w-full">
             <TopNav />
-          </Suspense>
-          {children}
+          </div>
+        </Suspense>
+        <div className="container mx-auto max-w-screen-xxl flex-grow bg-gray-100 dark:bg-gray-900">
+          <div className="mt-20">{children}</div>
         </div>
       </body>
     </html>

@@ -13,7 +13,12 @@ type nav_section = {
   title: string;
   shortTitle?: string;
   basePath: string;
-  subroutes?: { title: string; shortTitle?: string; slug: string }[];
+  subroutes?: {
+    title: string;
+    shortTitle?: string;
+    slug: string;
+    href: string;
+  }[];
 };
 
 const NavBuilder = (sections: nav_section[]): nav[] => {
@@ -24,7 +29,9 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
       section.subroutes.forEach((subRoute) => {
         const sub: nav = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
-          href: section.basePath + "/" + subRoute.slug,
+          href: subRoute.href.includes("#")
+            ? "/rules/" + subRoute.href
+            : section.basePath + "/" + subRoute.slug,
         };
         if (!route.subroutes) route.subroutes = [sub];
         route.subroutes.push(sub);
@@ -41,9 +48,11 @@ const query = gql`
       slug
       title
       shortTitle
+      href
     }
     characterClasses {
       slug
+      href
       title
       shortTitle
     }
@@ -87,16 +96,19 @@ export default async function RulesLayout({
   };
   return (
     <div className="flex flex-row flex-grow">
-      <RulesNav
-        navMap={NavBuilder([
-          rulesSection,
-          culturesSection,
-          lineagesSection,
-          characterClassesSection,
-          noviceFeaturesSection,
-          veteranFeaturesSection,
-        ])}
-      />
+      <div className="fixed">
+        <RulesNav
+          navMap={NavBuilder([
+            rulesSection,
+            culturesSection,
+            lineagesSection,
+            characterClassesSection,
+            noviceFeaturesSection,
+            veteranFeaturesSection,
+          ])}
+        />
+      </div>
+
       <div className="flex-1 flex overflow-hidden">
         <div className="flex-1 overflow-auto">
           <RuleDisplay>{children}</RuleDisplay>
