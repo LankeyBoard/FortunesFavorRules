@@ -1,6 +1,7 @@
 "use client";
 import { isSmallWindow } from "@/app/utils/isSmallWindow";
 import useWindowDimensions from "@/app/utils/useWindowDimensions";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const NavHeader = () => {
@@ -48,20 +49,30 @@ const NavHeader = () => {
         <div className="absolute right-0 z-50 md:order-1 md:relative">
           <ul className="flex flex-col p-4 md:p-0 mt-4 mr-8 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
             <li>
-              <a
+              <Link
                 href="/"
                 className="block py-2 px-3 text-white rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 hover:text-amber-500"
                 aria-current="page"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/rules"
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Rules
+              </Link>
+            </li>
+            <li>
+              <a
+                href="https://drive.google.com/file/d/1vFeswq_OIrhHdF2WNfe-ErR9bygaBsgt/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Character Sheet
               </a>
             </li>
           </ul>
