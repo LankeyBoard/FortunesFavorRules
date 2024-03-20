@@ -13,7 +13,7 @@ const FieldDisplay = ({ field }: fieldProps) => {
   const displayVariants = {
     reg: "",
     flavor: "italic",
-    eg: "italic text-slate-300",
+    eg: "italic text-slate-700 dark:text-slate-300",
   };
   let fieldDisplayStyle = displayVariants.reg;
   switch (field.type) {
