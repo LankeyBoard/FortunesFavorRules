@@ -63,7 +63,7 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
           </div>
         )}
         {field.list && field.list.length > 0 && (
-          <ul className="pl-4 text-slate-200 border-l-2 border-amber-800">
+          <ul className="pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
             {field.list.map((text) => {
               return (
                 <li key={text}>

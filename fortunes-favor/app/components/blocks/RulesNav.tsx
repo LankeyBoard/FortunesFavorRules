@@ -35,7 +35,7 @@ export const NavElem = ({ navEl, isSub }: navProps) => {
           >
             <div
               className={
-                "font-light text-lg text-slate-700 dark:text-slate-200 hover:tracking-wide hover:text-amber-700 dark:hover:text-amber-100 whitespace-nowrap ml-3"
+                "font-light text-lg text-slate-800 dark:text-slate-200 hover:tracking-wide hover:text-amber-700 dark:hover:text-amber-100 whitespace-nowrap ml-3"
               }
             >
               {navEl.title}

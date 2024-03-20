@@ -17,7 +17,7 @@ export default async function Home() {
           <table className="border border-slate-500 text-left border-spacing-3">
             <caption>Change Log</caption>
             <thead>
-              <tr className="bg-slate-700 border border-slate-500">
+              <tr className="bg-slate-200 dark:bg-slate-700 border border-slate-500">
                 <th>Date</th>
                 <th>Changes</th>
               </tr>
