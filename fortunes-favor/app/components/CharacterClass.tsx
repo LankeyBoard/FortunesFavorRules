@@ -5,6 +5,7 @@ import CharacterFeature from "../utils/CharacterFeature";
 import CharacterClassData, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
+import FormDisplay, { Form } from "./blocks/FormDisplay";
 
 type fieldProps = {
   field: RuleText;
@@ -79,6 +80,22 @@ const FeatureDisplay = ({ feature }: featureProps) => {
   );
 };
 
+type extrasDisplayProps = {
+  extras: any;
+};
+
+const ExtrasDisplay = ({ extras }: extrasDisplayProps) => {
+  if (extras.forms) {
+    return (
+      <div>
+        <h1 className="my-4 mx-2 text-2xl tracking-wide">Forms</h1>
+        {extras.forms.map((form: Form) => (
+          <FormDisplay form={form} key={form.slug} />
+        ))}
+      </div>
+    );
+  }
+};
 type choiceProps = {
   choice: GenericFeature;
 };
@@ -293,6 +310,11 @@ const ClassRule = ({ data }: classProps) => {
           ))}
         </div>
       </div>
+      {class_rules.extra && (
+        <div id="extras">
+          <ExtrasDisplay extras={class_rules.extra} />
+        </div>
+      )}
     </div>
   );
 };

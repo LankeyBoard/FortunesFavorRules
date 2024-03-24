@@ -38,6 +38,7 @@ export default class CharacterClassData implements CharacterClass {
     stat: stat_options;
   };
   features: CharacterFeature[];
+  extra: any;
   constructor(data: any) {
     this.title = data.title;
     this.slug = data.slug;
@@ -47,7 +48,10 @@ export default class CharacterClassData implements CharacterClass {
     if (c) {
       this.complexity = c;
     } else {
-      console.error("Error matching complexity %s in data file", data.complexity);
+      console.error(
+        "Error matching complexity %s in data file",
+        data.complexity
+      );
     }
     this.health = data.health;
     this.healthOnLevel = data.healthOnLevel;
@@ -105,5 +109,6 @@ export default class CharacterClassData implements CharacterClass {
     this.features = data.features.map(
       (feature_data: any) => new CharacterFeature(feature_data)
     );
+    this.extra = data.extra;
   }
 }
