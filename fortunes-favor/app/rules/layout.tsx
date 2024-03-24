@@ -43,7 +43,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
 };
 
 const query = gql`
-  query GetNavSlugs {
+  query GetNavSlugs2 {
     genericRules {
       slug
       title
@@ -67,6 +67,7 @@ export default async function RulesLayout({
   const { data } = await client.query({
     query,
   });
+  console.log(data);
 
   const rulesSection: nav_section = {
     title: "General Rules",

@@ -13,6 +13,30 @@ const query = gql`
         dice
         stat
       }
+      extra {
+        forms {
+          armor {
+            baseArmor
+            stat
+          }
+          attackStat
+          damage {
+            count
+            dice
+            stat
+            type
+          }
+          features {
+            text
+            title
+          }
+          href
+          shortTitle
+          size
+          slug
+          title
+        }
+      }
       features {
         actionType
         choices {
