@@ -113,7 +113,7 @@ export type CharacterClass = {
   staminaOnLevel: number;
   staminaStat: stat_options;
   training: Training;
-  attackStat: stat_options;
+  attackStat: stat_options[];
   range: Range;
   damage: Damage;
   features: CharacterClassFeature[];

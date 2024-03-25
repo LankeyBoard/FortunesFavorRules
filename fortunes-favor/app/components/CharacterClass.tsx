@@ -116,6 +116,7 @@ type trainingProps = {
 };
 
 const Training = ({ training_type, training_list }: trainingProps) => {
+  console.log("training", training_list);
   let training;
   if (
     !training_list ||
@@ -129,6 +130,14 @@ const Training = ({ training_type, training_list }: trainingProps) => {
           <span>[ </span>
           <span className="capitalize">{training_list.options.join(", ")}</span>
           <span> ]</span>
+        </span>
+      );
+    } else if (training_list.options.length === 1) {
+      training = (
+        <span>
+          <span>Choose </span>
+          <span>{training_list.pick}</span>
+          <span> {training_list.options}</span>
         </span>
       );
     } else {
@@ -173,6 +182,7 @@ type classTagsProps = {
 
 const ClassTags = ({ c }: classTagsProps) => {
   let tags: ReactElement[] = new Array();
+  let tagNames: string[] = new Array();
   let tagStyle;
   switch (c.complexity) {
     case complexity_options.simple:
@@ -188,15 +198,15 @@ const ClassTags = ({ c }: classTagsProps) => {
       tagStyle = "bg-rose-500";
   }
   tags.push(<Tag style={tagStyle} text={c.complexity} />);
-  tags.push(<Tag text={c.attackStat} />);
-  if (c.attackStat !== c.damage.stat) {
+  c.attackStat.forEach((stat) => {
+    tags.push(<Tag text={stat} />);
+    tagNames.push(stat);
+  });
+  if (!tagNames.includes(c.damage.stat)) {
     tags.push(<Tag text={c.damage.stat} />);
   }
-  if (
-    c.attackStat !== c.damage.stat &&
-    c.damage.stat !== c.staminaStat &&
-    c.attackStat !== c.staminaStat
-  ) {
+
+  if (!tagNames.includes(c.staminaStat)) {
     tags.push(<Tag text={c.staminaStat} />);
   }
   return <div>{tags}</div>;
@@ -207,10 +217,15 @@ type classProps = {
 };
 const ClassRule = ({ data }: classProps) => {
   const class_rules: CharacterClassData = new CharacterClassData(data);
-  const rangeString =
-    class_rules.range.min === 0
-      ? "Melee - " + class_rules.range.max + "ft"
-      : class_rules.range.min + "ft - " + class_rules.range.max + "ft";
+  let rangeString = "";
+  if (class_rules.range.min === 0) {
+    if (class_rules.range.max === 0) {
+      rangeString = "Melee";
+    } else rangeString = "Melee - " + class_rules.range.max + "ft";
+  } else {
+    rangeString =
+      class_rules.range.min + "ft - " + class_rules.range.max + "ft";
+  }
   const dmgString =
     class_rules.damage.count +
     "d" +
@@ -289,7 +304,23 @@ const ClassRule = ({ data }: classProps) => {
           <div className="mx-3 mt-2">
             <p>
               <span className="font-semibold">Attack Stat</span>
-              <span className="">: {class_rules.attackStat}</span>
+
+              <span className="">
+                :{" "}
+                {class_rules.attackStat.map((stat, i) => {
+                  if (i < class_rules.attackStat.length - 2) {
+                    return <span key={stat}>{stat}, </span>;
+                  } else if (i === class_rules.attackStat.length - 2) {
+                    return (
+                      <span key={stat}>
+                        {stat}, <span className="lowercase">or</span>{" "}
+                      </span>
+                    );
+                  } else {
+                    return <span key={stat}>{stat}</span>;
+                  }
+                })}
+              </span>
             </p>
             <p>
               <span className="font-semibold clear-left">Range</span>
