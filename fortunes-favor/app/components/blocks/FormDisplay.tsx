@@ -67,16 +67,19 @@ const FormDisplay = ({ form }: formProps) => {
       </h1>
       <div className="px-4 py-2">
         <span className="font-bold">Size: </span>
-        <span>{form.size}</span>
+        <span className="capitalize">{form.size.toLocaleLowerCase()}</span>
         <div>
           <span className="font-bold">Armor: </span>
           <span className="capitalize">
-            {form.armor.baseArmor} {form.armor.stat && "+ " + form.armor.stat}
+            {form.armor.baseArmor}{" "}
+            {form.armor.stat && "+ " + form.armor.stat.toLocaleLowerCase()}
           </span>
         </div>
         <div>
           <span className="font-bold">Base Attack Stat: </span>
-          <span className="capitalize">{form.attackStat}</span>
+          <span className="capitalize">
+            {form.attackStat.toLocaleLowerCase()}
+          </span>
         </div>
         <div className="mb-4">
           <span className="font-bold">Damage: </span>

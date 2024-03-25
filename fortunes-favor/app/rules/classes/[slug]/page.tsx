@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { Suspense } from "react";
 
 const query = gql`
-  query GetClass($slug: String) {
+  query GetClass3($slug: String) {
     characterClasses(slug: $slug) {
       attackStat
       complexity

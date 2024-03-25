@@ -27,7 +27,7 @@ export default class CharacterClassData implements CharacterClass {
     };
     magic: TrainingOptions;
   };
-  attackStat: stat_options;
+  attackStat: stat_options[];
   range: {
     min: number;
     max: number;
@@ -77,8 +77,13 @@ export default class CharacterClassData implements CharacterClass {
       },
       magic: data.training.magic,
     };
-    const as = findEnum(data.attackStat, stat_options);
-    this.attackStat = stat_options.error;
+    const as = new Array();
+    if (Array.isArray(data.attackStat)) {
+      data.attackStat.forEach((stat: string) => {
+        as.push(findEnum(stat, stat_options));
+      });
+    }
+    this.attackStat = [stat_options.error];
     if (as) {
       this.attackStat = as;
     } else {
