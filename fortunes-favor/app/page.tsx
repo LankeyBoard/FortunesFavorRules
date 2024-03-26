@@ -62,6 +62,22 @@ export default async function Home() {
                   </ul>
                 </td>
               </tr>
+              <tr className="">
+                <td className="border-spacing-x-3 align-baseline">
+                  3/26/2024{" "}
+                </td>
+                <td>
+                  <ul>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Updated rules to clarify Counter calculation and the benefits of R&R."
+                        }
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
