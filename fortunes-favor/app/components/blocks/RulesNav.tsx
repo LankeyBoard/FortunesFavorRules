@@ -71,7 +71,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     <div className="flex-left flex-grow overflow-auto h-[calc(100vh-72px)]">
       <aside
         id="sidebar-multi-level-sidebar"
-        className="z-40 w-64 bg-slate-300 dark:bg-slate-950 p-4 overflow-auto "
+        className="z-40 w-64 bg-slate-200 dark:bg-slate-950 p-4 overflow-auto "
         aria-label="Sidebar"
       >
         <div className="flex-col my-5">

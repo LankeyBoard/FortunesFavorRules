@@ -51,7 +51,7 @@ const NavHeader = () => {
             <li>
               <Link
                 href="/"
-                className="block py-2 px-3 text-white rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 hover:text-amber-500"
+                className="block py-2 px-3 dark:text-white hover:bg-gray-100 hover:text-amber-800 rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 dark:hover:text-amber-500"
                 aria-current="page"
               >
                 Home
