@@ -42,10 +42,6 @@ export default class CharacterFeatureData
       (json_field: any) => new TextField(json_field)
     );
     this.rules = feature_data.rules;
-    if (this.ruleType === rule_type.Choice) {
-      this.choices = feature_data.choices.map(
-        (json_choice: any) => new Choice(json_choice)
-      );
-    } else this.choices = [];
+    this.choices = feature_data.choices;
   }
 }
