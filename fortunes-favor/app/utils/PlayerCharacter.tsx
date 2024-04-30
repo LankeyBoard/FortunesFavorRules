@@ -41,9 +41,9 @@ class Input {
 }
 
 class Feature extends Input {
-  readonly effects?: [Effect];
+  readonly effects?: Effect[];
 
-  constructor(title: string, text: string, effects: [Effect]) {
+  constructor(title: string, text: string, effects: Effect[]) {
     super(title, text);
     this.effects = effects;
   }
@@ -52,7 +52,7 @@ class Feature extends Input {
 class CharacterFeature extends Feature {
   readonly source: Object;
 
-  constructor(title: string, text: string, source: Object, effects: [Effect]) {
+  constructor(title: string, text: string, source: Object, effects: Effect[]) {
     super(title, text, effects);
     this.source = source;
   }
@@ -64,7 +64,7 @@ class Item extends Feature {
   constructor(
     title: string,
     text: string,
-    effects: [Effect],
+    effects: Effect[],
     isMagicItem: boolean,
     rarity: Rarity
   ) {
@@ -75,11 +75,12 @@ class Item extends Feature {
 }
 
 export default class PlayerCharacter {
-  name?: string;
+  character_name?: string;
+  player_name?: string;
   private _level?: number;
   private _characterClass?: CharacterClassData;
   private _characterCulture?: CharacterCulture;
-  private _stats?: Stats;
+  private _stats: Stats;
   private _characterLineage?: CharacterLineage;
   private _speeds?: [{ type: string; speed: number }];
   coin?: number;
@@ -91,23 +92,44 @@ export default class PlayerCharacter {
   private _counter?: number | undefined;
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
-  private _items?: [Item];
-  private _actions?: [CharacterFeature];
-  private _counters?: [CharacterFeature];
-  private _features?: [CharacterFeature];
-  private _languages?: [LANGUAGES];
+  private _items?: Item[];
+  private _actions?: CharacterFeature[];
+  private _counters?: CharacterFeature[];
+  private _features?: CharacterFeature[];
+  private _languages?: LANGUAGES[];
 
-  constructor() {
-    this._level = 1;
-    this.coin = 10;
+  constructor(
+    culture?: CharacterCulture,
+    lineage?: CharacterLineage,
+    characterClass?: CharacterClassData
+  ) {
+    this.level = 1;
+    this.coin = 5;
     this._languages = [LANGUAGES.allspeak];
+    this._characterClass = characterClass;
+    this._characterLineage = lineage;
+    this._characterCulture = culture;
+    this.currentHealth = 0;
+    this.currentStamina = 0;
+    this._maxHealth = 0;
+    this._maxStamina = 0;
+    this._speeds = [{ type: "ground", speed: 30 }];
+    this._armor = 0;
+    this._counter = 0;
+    this._baseDamage = 0;
+    this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
+    this._range = { min: 0, max: 0 };
+    this._items = [];
+    this._actions = [];
+    this._counters = [];
+    this._features = [];
   }
 
   public get level(): number | undefined {
     return this._level;
   }
   public set level(level: number) {
-    this._level = level;
+    if (this._level) this._level = level;
     // TODO: Hanle level up
   }
   public get class(): CharacterClassData | undefined {
@@ -131,7 +153,7 @@ export default class PlayerCharacter {
     this._characterLineage = characterLineage;
     // TODO: update the rest of the characters info based on the current class.
   }
-  public get stats(): Stats | undefined {
+  public get stats(): Stats {
     return this._stats;
   }
   public set stats(stats: Stats) {
@@ -157,11 +179,12 @@ export default class PlayerCharacter {
     return this._speeds;
   }
   public get maxHealth() {
-    return this._maxHealth;
-    // if(this._characterClass && this._level)
-    //     return (this._characterClass?.health + (this._level-1)*this._characterClass?.lvlHealth);
-    // else
-    //     return 0;
+    if (this._characterClass && this._level)
+      return (
+        this._characterClass?.health +
+        (this._level - 1) * this._characterClass?.healthOnLevel
+      );
+    else return 0;
   }
   public get maxStamina() {
     return this._maxStamina;
