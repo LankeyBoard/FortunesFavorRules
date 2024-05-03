@@ -45,6 +45,16 @@ const PlayerCharacterSheet = ({
             isRequired={true}
             type="number"
             defaultValue={character.level}
+            onChange={(e) => {
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
+              updatedCharacter.level = e.target.valueAsNumber;
+              setCharacter(updatedCharacter);
+            }}
           />
           <InputField
             name="Character Name"
@@ -65,7 +75,12 @@ const PlayerCharacterSheet = ({
                   const newCharacter = new PlayerCharacter(updatedCulture);
                   setCharacter(newCharacter);
                 } else {
-                  const updatedCharacter = character;
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character
+                  );
                   updatedCharacter.culture = updatedCulture;
                   setCharacter(updatedCharacter);
                 }
@@ -88,7 +103,12 @@ const PlayerCharacterSheet = ({
                   );
                   setCharacter(newCharacter);
                 } else {
-                  const updatedCharacter = character;
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character
+                  );
                   updatedCharacter.lineage = updatedLineage;
                   setCharacter(updatedCharacter);
                 }
@@ -104,6 +124,7 @@ const PlayerCharacterSheet = ({
               const updatedClass = characterClasses.find(
                 (c) => c.slug === slug
               );
+              console.log("class found: ", updatedClass);
               if (updatedClass) {
                 if (!character) {
                   const newCharacter = new PlayerCharacter(
@@ -113,7 +134,12 @@ const PlayerCharacterSheet = ({
                   );
                   setCharacter(newCharacter);
                 } else {
-                  const updatedCharacter = character;
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character
+                  );
                   updatedCharacter.class = updatedClass;
                   setCharacter(updatedCharacter);
                 }
@@ -132,7 +158,12 @@ const PlayerCharacterSheet = ({
             defaultValue={character.stats.mettle}
             onChange={(e) => {
               console.log(e.target.value);
-              const updatedCharacter = character;
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
               updatedCharacter.stats = {
                 mettle: e.target.valueAsNumber,
                 agility: character.stats.agility,
@@ -150,7 +181,12 @@ const PlayerCharacterSheet = ({
             defaultValue={character.stats.agility}
             onChange={(e) => {
               console.log(e.target.value);
-              const updatedCharacter = character;
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
               updatedCharacter.stats = {
                 mettle: character.stats.mettle,
                 agility: e.target.valueAsNumber,
@@ -168,13 +204,19 @@ const PlayerCharacterSheet = ({
             defaultValue={character.stats.heart}
             onChange={(e) => {
               console.log(e.target.value);
-              const updatedCharacter = character;
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
               updatedCharacter.stats = {
                 mettle: character.stats.mettle,
                 agility: character.stats.agility,
                 heart: e.target.valueAsNumber,
                 intellect: character.stats.intellect,
               };
+              console.log(updatedCharacter === character);
               setCharacter(updatedCharacter);
               console.log(updatedCharacter);
             }}
@@ -186,7 +228,12 @@ const PlayerCharacterSheet = ({
             defaultValue={character.stats.intellect}
             onChange={(e) => {
               console.log(e.target.value);
-              const updatedCharacter = character;
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
               updatedCharacter.stats = {
                 mettle: character.stats.intellect,
                 agility: character.stats.agility,
@@ -195,33 +242,18 @@ const PlayerCharacterSheet = ({
               };
               setCharacter(updatedCharacter);
               console.log(updatedCharacter);
+              console.log("max stamina: ", updatedCharacter.maxStamina);
             }}
           />
         </div>
       </div>
       <div className="flex flex-row">
-        <InputField
-          name="Max Stamina"
-          isRequired={true}
-          defaultValue={character.maxStamina}
-        />
-        <InputField
-          name="Current Stamina"
-          isRequired={true}
-          defaultValue={character.currentStamina}
-        />
+        <span>Max Stamina: </span>
+        <span>{character.maxStamina}</span>
       </div>
       <div className="flex flex-row">
-        <InputField
-          name="Max Health"
-          isRequired={true}
-          defaultValue={character.maxHealth}
-        />
-        <InputField
-          name="Current Health"
-          isRequired={true}
-          defaultValue={character.currentHealth}
-        />
+        <span>Max Health: </span>
+        <span>{character.maxHealth}</span>
       </div>
       <div className="flex flex-row">
         <InputField
@@ -258,16 +290,14 @@ const PlayerCharacterSheet = ({
       <div>
         <span>Range</span>
         <div className="flex flex-row">
-          <InputField
-            name="Min"
-            isRequired={true}
-            defaultValue={character.range?.min}
-          />
-          <InputField
-            name="Min"
-            isRequired={true}
-            defaultValue={character.range?.max}
-          />
+          <div>
+            <span>Min: </span>
+            <span>{character.range?.min}</span>
+          </div>
+          <div>
+            <span>Max: </span>
+            <span>{character.range?.max}</span>
+          </div>
         </div>
       </div>
       <div>
