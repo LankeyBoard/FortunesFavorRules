@@ -1,6 +1,7 @@
 import { LANGUAGES, action_type, stat_options } from "../enums";
 import CharacterClassData from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
+import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
 import { GenericFeature } from "./graphQLtypes";
 
@@ -74,6 +75,77 @@ class Item extends Feature {
     this.rarity = rarity;
   }
 }
+
+const updateFeatures = (
+  sourceType: string,
+  source: CharacterCulture | CharacterClassData | CharacterLineage,
+  currentCharacter: PlayerCharacter
+) => {
+  console.log("Updated features");
+
+  // Remove actions from old source
+  const updatedActions: CharacterFeature[] | undefined = [];
+  currentCharacter.actions?.forEach((action) => {
+    if (action.source !== sourceType) {
+      updatedActions.push(action);
+    }
+  });
+  const updatedCounters: CharacterFeature[] | undefined = [];
+  currentCharacter.counters?.forEach((action) => {
+    if (action.source !== sourceType) {
+      updatedCounters.push(action);
+    }
+  });
+  const updatedFeatures: CharacterFeature[] = [];
+  currentCharacter.features?.forEach((feature) => {
+    if (feature.source !== sourceType) {
+      updatedFeatures.push(feature);
+    }
+  });
+  console.log(updatedActions, updatedCounters, updatedFeatures);
+  source.features.forEach((feature) => {
+    if (feature instanceof CharacterFeatureData) {
+      if (feature.level <= currentCharacter.level) {
+        console.log(feature);
+        if (feature.actionType === action_type.action) {
+          console.log("action", feature);
+          updatedActions.push({
+            ...feature,
+            source: sourceType,
+            text: feature.text ? feature.text.toLocaleString() : "",
+          });
+        } else if (feature.actionType === action_type.counter) {
+          console.log("counter", feature);
+          updatedActions.push({
+            ...feature,
+            source: sourceType,
+            text: feature.text ? feature.text.toLocaleString() : "",
+          });
+        } else {
+          console.log("generic feature", feature);
+          updatedFeatures.push({
+            ...feature,
+            source: sourceType,
+            text: feature.text ? feature.text.toLocaleString() : "",
+          });
+        }
+      }
+    } else {
+      console.log("generic feature", feature);
+      updatedFeatures.push({
+        ...feature,
+        source: sourceType,
+        text: feature.text ? feature.text.toLocaleString() : "",
+      });
+    }
+  });
+
+  return {
+    features: updatedFeatures,
+    actions: updatedActions,
+    counters: updatedCounters,
+  };
+};
 
 export default class PlayerCharacter {
   character_name?: string;
@@ -181,59 +253,14 @@ export default class PlayerCharacter {
   public get class(): CharacterClassData | undefined {
     return this._characterClass;
   }
+
   public set class(characterClass: CharacterClassData) {
     this._characterClass = characterClass;
-    console.log("Updated features");
-    // Update Actions and Counters
-    const updatedActions: CharacterFeature[] | undefined = [];
-    this._actions?.forEach((action) => {
-      if (action.source !== "class") {
-        updatedActions.push(action);
-      }
-    });
-    const updatedCounters: CharacterFeature[] | undefined = [];
-    this._counters?.forEach((action) => {
-      if (action.source !== "class") {
-        updatedCounters.push(action);
-      }
-    });
-    const updatedFeatures: CharacterFeature[] = [];
-    this._features?.forEach((feature) => {
-      if (feature.source !== "class") {
-        updatedFeatures.push(feature);
-      }
-    });
 
-    characterClass.features.forEach((feature) => {
-      if (this.level && feature.level <= this.level) {
-        console.log(feature);
-        if (feature.actionType === action_type.action) {
-          console.log("action", feature);
-          updatedActions.push({
-            ...feature,
-            source: "class",
-            text: feature.text ? feature.text.toLocaleString() : "",
-          });
-        } else if (feature.actionType === action_type.counter) {
-          console.log("counter", feature);
-          updatedActions.push({
-            ...feature,
-            source: "class",
-            text: feature.text ? feature.text.toLocaleString() : "",
-          });
-        } else {
-          console.log("generic feature", feature);
-          updatedFeatures.push({
-            ...feature,
-            source: "class",
-            text: feature.text ? feature.text.toLocaleString() : "",
-          });
-        }
-      }
-    });
-    this._actions = updatedActions;
-    this._counters = updatedCounters;
-    this._features = updatedFeatures;
+    const updatedFeatures = updateFeatures("class", characterClass, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
     // TODO: update the rest of the characters info based on the current class.
   }
   public get culture(): CharacterCulture | undefined {
@@ -241,6 +268,12 @@ export default class PlayerCharacter {
   }
   public set culture(characterCulture: CharacterCulture) {
     this._characterCulture = characterCulture;
+
+    const updatedFeatures = updateFeatures("culture", characterCulture, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
+
     // TODO: update the rest of the characters info based on the current class.
   }
   public get lineage(): CharacterLineage | undefined {
@@ -248,6 +281,11 @@ export default class PlayerCharacter {
   }
   public set lineage(characterLineage: CharacterLineage) {
     this._characterLineage = characterLineage;
+
+    const updatedFeatures = updateFeatures("lineage", characterLineage, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
     // TODO: update the rest of the characters info based on the current class.
   }
   public get stats(): Stats {

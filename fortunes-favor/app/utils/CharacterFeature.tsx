@@ -29,13 +29,15 @@ export default class CharacterFeatureData
     this.staminaCost = feature_data.staminaCost;
     this.costsFortunesFavor = feature_data.costsFortunesFavor;
     this.actionType = undefined;
-    if (feature_data.action_type !== null) {
+    if (feature_data.actionType !== null) {
+      console.log(feature_data.actionType, feature_data.actionType !== null);
       const at = findEnum(feature_data.actionType, action_type);
       if (at) {
         this.actionType = at;
       } else {
         console.error(
-          "Error matching feature type %s in json file",
+          "Error matching feature [%s] type %s in json file",
+          feature_data,
           feature_data.actionType
         );
       }

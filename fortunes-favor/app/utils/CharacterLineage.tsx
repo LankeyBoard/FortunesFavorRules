@@ -9,7 +9,7 @@ export default class CharacterLineage {
   size: size_options | size_options[];
   speed: number;
   stat: string;
-  traits: [CharacterTrait];
+  features: [CharacterTrait];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
@@ -32,7 +32,7 @@ export default class CharacterLineage {
     }
     this.speed = json.speed;
     this.stat = json.stat;
-    this.traits = json.traits.map((t: any) => {
+    this.features = json.traits.map((t: any) => {
       return new RuleData(
         t.title,
         t.slug,

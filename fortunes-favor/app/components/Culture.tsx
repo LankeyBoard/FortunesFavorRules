@@ -50,7 +50,7 @@ const Culture = ({ data, isList = false }: CultureProps) => {
           <span className="font-semibold">Stat: </span>
           {c.stat}
         </div>
-        <Traits title="Traits" traits={c.traits} />
+        <Traits title="Traits" traits={c.features} />
         {c.options && <Traits title="Options" traits={c.options} />}
       </div>
     </div>
