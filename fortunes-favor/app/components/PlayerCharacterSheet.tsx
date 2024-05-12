@@ -66,6 +66,7 @@ const PlayerCharacterSheet = ({
           <DropdownField
             name="cultures"
             options={cultures}
+            unselectedOption={!character.culture}
             onChange={(e) => {
               console.log(e);
               const slug = e.target.value;
@@ -91,6 +92,7 @@ const PlayerCharacterSheet = ({
           <DropdownField
             name="lineages"
             options={lineages}
+            unselectedOption={!character.lineage}
             onChange={(e) => {
               console.log(e);
               const slug = e.target.value;
@@ -118,6 +120,7 @@ const PlayerCharacterSheet = ({
           <DropdownField
             name="classes"
             options={characterClasses}
+            unselectedOption={!character.class}
             onChange={(e) => {
               console.log(e);
               const slug = e.target.value;
@@ -277,12 +280,9 @@ const PlayerCharacterSheet = ({
         <div className="flex flex-row">
           {character.speeds?.map((s) => {
             return (
-              <InputField
-                name={s.type}
-                isRequired={true}
-                defaultValue={s.speed}
-                key={s.type}
-              />
+              <span key={s.type} className="capitalize">
+                {s.type}: {s.speed}ft.
+              </span>
             );
           })}
         </div>
@@ -290,9 +290,11 @@ const PlayerCharacterSheet = ({
       <div>
         <span>Range</span>
         <div className="flex flex-row">
-          <div>
+          <div className="mr-2">
             <span>Min: </span>
-            <span>{character.range?.min}</span>
+            <span>
+              {character.range?.min === 0 ? "Melee" : character.range?.min}
+            </span>
           </div>
           <div>
             <span>Max: </span>
@@ -303,9 +305,13 @@ const PlayerCharacterSheet = ({
       <div>
         <span>Items</span>
         <div>
-          {character.items?.map((item) => {
-            return <span key={item.title}>{item.title}</span>;
-          })}
+          {character.items && character.items?.length > 0 ? (
+            character.items?.map((item) => {
+              return <span key={item.title}>{item.title}</span>;
+            })
+          ) : (
+            <span>&#8212;</span>
+          )}
         </div>
       </div>
       <div>

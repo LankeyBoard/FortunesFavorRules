@@ -53,7 +53,7 @@ const Lineage = ({ data, isList = false }: LineageProps) => {
         </div>
         <div>
           <span className="font-semibold">Speed - </span>
-          {l.speed}
+          {l.speeds}
         </div>
         <div>
           <span className="font-semibold">Stat - </span>

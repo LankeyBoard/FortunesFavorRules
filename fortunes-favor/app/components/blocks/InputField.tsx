@@ -13,6 +13,7 @@ type dropdownFieldProps = {
   defaultValue?: string | number;
   options: any[];
   onChange?: ChangeEventHandler<HTMLSelectElement>;
+  unselectedOption?: boolean;
 };
 
 const InputField = ({
@@ -49,15 +50,16 @@ export const DropdownField = ({
   name,
   defaultValue = 0,
   options,
+  unselectedOption = false,
   onChange,
 }: dropdownFieldProps) => {
   return (
     <div>
       <label
         htmlFor={name}
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize"
       >
-        Lineage
+        {name}
       </label>
       <select
         id={name}
@@ -65,9 +67,14 @@ export const DropdownField = ({
         onChange={onChange}
         className="w-fit bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
+        {unselectedOption && (
+          <option key={"unknown"} value={undefined}>
+            &#8212;
+          </option>
+        )}
         {options.map((o) => {
           return (
-            <option key={o.slug} value={o.slug}>
+            <option key={o.slug} value={o.slug} className="capitalize">
               {o.title}
             </option>
           );

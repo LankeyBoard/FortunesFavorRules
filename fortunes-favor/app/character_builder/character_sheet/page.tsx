@@ -149,7 +149,10 @@ export default async function CharacterSheetPage() {
         shortTitle
         size
         slug
-        speed
+        speeds {
+          type
+          speed
+        }
         stat
         title
         traits {

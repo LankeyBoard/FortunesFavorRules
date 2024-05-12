@@ -155,7 +155,7 @@ export default class PlayerCharacter {
   private _characterCulture?: CharacterCulture;
   private _stats: Stats;
   private _characterLineage?: CharacterLineage;
-  private _speeds?: [{ type: string; speed: number }];
+  private _speeds?: [{ type: string; speed: number; source: string }];
   coin?: number;
   private _currentHealth?: number;
   private _maxHealth: number;
@@ -209,7 +209,7 @@ export default class PlayerCharacter {
       this.currentStamina = 0;
       this._maxHealth = 0;
       this._maxStamina = 0;
-      this._speeds = [{ type: "ground", speed: 30 }];
+      this._speeds = [{ type: "ground", speed: 30, source: "lineage" }];
       this._armor = 0;
       this._counter = 0;
       this._baseDamage = 0;
@@ -261,7 +261,8 @@ export default class PlayerCharacter {
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
-    // TODO: update the rest of the characters info based on the current class.
+
+    this._range = characterClass.range;
   }
   public get culture(): CharacterCulture | undefined {
     return this._characterCulture;
@@ -273,8 +274,6 @@ export default class PlayerCharacter {
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
-
-    // TODO: update the rest of the characters info based on the current class.
   }
   public get lineage(): CharacterLineage | undefined {
     return this._characterLineage;
@@ -286,7 +285,7 @@ export default class PlayerCharacter {
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
-    // TODO: update the rest of the characters info based on the current class.
+    this._speeds = characterLineage.speeds;
   }
   public get stats(): Stats {
     return this._stats;
@@ -329,13 +328,13 @@ export default class PlayerCharacter {
         case stat_options.mettle.toLowerCase():
           staminaStat = this._stats.mettle;
           break;
-        case stat_options.agility:
+        case stat_options.agility.toLowerCase():
           staminaStat = this._stats.agility;
           break;
-        case stat_options.heart:
+        case stat_options.heart.toLowerCase():
           staminaStat = this._stats.heart;
           break;
-        case stat_options.int:
+        case stat_options.int.toLowerCase():
           staminaStat = this._stats.intellect;
           break;
       }
