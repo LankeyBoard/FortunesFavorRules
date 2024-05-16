@@ -1,6 +1,5 @@
 import { TextField, Choice } from "@/app/utils/FieldTypes";
 import { rule_type, findEnum, action_type } from "../enums";
-import RuleData from "./GenericRuleData";
 import { CharacterClassFeature, GenericFeature } from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
 

@@ -34,7 +34,7 @@ type SearchResultProps = {
   result: SearchQueryResult;
 };
 
-const SearchResult = ({ result }: SearchResultProps) => {
+export const SearchResult = ({ result }: SearchResultProps) => {
   let titleStyle = "flex p-2";
   let resultType = "";
   switch (result.type) {
@@ -135,7 +135,7 @@ const SearchResultsTable = ({ results }: SearchResultsTableProps) => {
   );
 };
 
-const SearchResuls = async ({
+const SearchResults = async ({
   searchParams,
 }: {
   searchParams?: {
@@ -167,4 +167,4 @@ const SearchResuls = async ({
   );
 };
 
-export default SearchResuls;
+export default SearchResults;

@@ -1,9 +1,10 @@
-import { LANGUAGES, action_type, stat_options } from "../enums";
+import { LANGUAGES, action_type, rule_type, stat_options } from "../enums";
 import CharacterClassData from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
-import { GenericFeature } from "./graphQLtypes";
+import GenericFeatureData from "./GenericFeatureData";
+import { GenericFeature, RuleText } from "./graphQLtypes";
 
 type Stats = {
   mettle: number;
@@ -34,9 +35,9 @@ enum Rarity {
 
 class Input {
   readonly title: string;
-  readonly text: string;
+  readonly text: RuleText[];
 
-  constructor(title: string, text: string) {
+  constructor(title: string, text: [RuleText]) {
     this.title = title;
     this.text = text;
   }
@@ -45,18 +46,38 @@ class Input {
 class Feature extends Input {
   readonly effects?: Effect[];
 
-  constructor(title: string, text: string, effects: Effect[]) {
+  constructor(title: string, text: [RuleText], effects: Effect[]) {
     super(title, text);
     this.effects = effects;
   }
 }
 
-class CharacterFeature extends Feature {
+class CharacterFeature extends GenericFeatureData {
   readonly source: Object;
-
-  constructor(title: string, text: string, source: Object, effects: Effect[]) {
-    super(title, text, effects);
+  readonly effects: Effect[];
+  constructor(
+    title: string,
+    source: Object,
+    effects: Effect[],
+    slug: string,
+    ruleType: rule_type,
+    text: RuleText[],
+    multiSelect: boolean,
+    options: string[],
+    shortText?: string | undefined
+  ) {
+    super(
+      title,
+      slug,
+      ruleType,
+      text,
+      multiSelect,
+      options,
+      undefined,
+      shortText
+    );
     this.source = source;
+    this.effects = effects;
   }
 }
 
@@ -65,7 +86,7 @@ class Item extends Feature {
   readonly rarity: Rarity;
   constructor(
     title: string,
-    text: string,
+    text: [RuleText],
     effects: Effect[],
     isMagicItem: boolean,
     rarity: Rarity
@@ -112,21 +133,28 @@ const updateFeatures = (
           updatedActions.push({
             ...feature,
             source: sourceType,
-            text: feature.text ? feature.text.toLocaleString() : "",
+            text: feature.text,
+            ruleType: rule_type.Rule,
+            rules: undefined,
+            effects: [],
           });
         } else if (feature.actionType === action_type.counter) {
           console.log("counter", feature);
           updatedActions.push({
             ...feature,
             source: sourceType,
-            text: feature.text ? feature.text.toLocaleString() : "",
+            text: feature.text,
+            rules: undefined,
+            effects: [],
           });
         } else {
           console.log("generic feature", feature);
           updatedFeatures.push({
             ...feature,
             source: sourceType,
-            text: feature.text ? feature.text.toLocaleString() : "",
+            text: feature.text,
+            rules: undefined,
+            effects: [],
           });
         }
       }
@@ -135,7 +163,11 @@ const updateFeatures = (
       updatedFeatures.push({
         ...feature,
         source: sourceType,
-        text: feature.text ? feature.text.toLocaleString() : "",
+        text: feature.text,
+        rules: undefined,
+        effects: [],
+        multiSelect: false,
+        options: [],
       });
     }
   });
@@ -233,7 +265,8 @@ export default class PlayerCharacter {
             this.features?.push({
               ...feature,
               source: "class",
-              text: feature.text.toLocaleString(),
+              rules: feature.text,
+              effects: [],
             });
           }
         });

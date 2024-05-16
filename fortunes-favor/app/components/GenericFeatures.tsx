@@ -10,7 +10,7 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
       <span className="font-semibold">{feature.title}</span>
       <span>
         &nbsp;-{" "}
-        {feature.text.map((text) => (
+        {feature.text?.map((text) => (
           <SlugLinker key={text.text} text={text.text} />
         ))}
       </span>

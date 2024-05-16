@@ -5,6 +5,7 @@ import InputField, { DropdownField } from "./blocks/InputField";
 import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
+import { FeatureCard } from "./blocks/FeatureCard";
 type CharacterSheetProps = {
   currentCharacter?: PlayerCharacter;
   characterOptions?: any;
@@ -324,7 +325,17 @@ const PlayerCharacterSheet = ({
       <div>
         <span>Actions</span>
         {character.actions?.map((action) => {
-          return <div key={action.title}>{action.title}</div>;
+          const f = {
+            ...action,
+            slug: action.title,
+          };
+          return (
+            <FeatureCard
+              key={action.title}
+              feature={action}
+              source={action.source.toString()}
+            />
+          );
         })}
       </div>
       <div>
@@ -336,7 +347,13 @@ const PlayerCharacterSheet = ({
       <div>
         Features
         {character.features?.map((feature) => {
-          return <div key={feature.title}>{feature.title}</div>;
+          return (
+            <FeatureCard
+              key={feature.title}
+              feature={feature}
+              source={feature.source.toString()}
+            />
+          );
         })}
       </div>
     </div>

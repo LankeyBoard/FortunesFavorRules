@@ -6,6 +6,7 @@ export default class GenericFeatureData implements GenericFeature {
   slug: string;
   ruleType: rule_type;
   text: RuleText[];
+  rules?: RuleText[];
   shortText?: string;
   multiSelect: boolean;
   options: string[];
@@ -17,12 +18,14 @@ export default class GenericFeatureData implements GenericFeature {
     text: RuleText[],
     multiSelect: boolean,
     options: string[],
+    rules?: RuleText[],
     shortText?: string
   ) {
     this.title = title;
     this.slug = slug;
     this.ruleType = ruleType;
     this.text = text;
+    this.rules = rules;
     this.shortText = shortText;
     this.multiSelect = multiSelect;
     this.options = options;
