@@ -1,6 +1,11 @@
 import { TextField, Choice } from "@/app/utils/FieldTypes";
 import { rule_type, findEnum, action_type } from "../enums";
-import { CharacterClassFeature, GenericFeature } from "./graphQLtypes";
+import {
+  CharacterClassFeature,
+  FeatureChoices,
+  GenericFeature,
+  RuleText,
+} from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
 
 export default class CharacterFeatureData
@@ -8,12 +13,10 @@ export default class CharacterFeatureData
   implements CharacterClassFeature
 {
   level: number;
-  staminaCost?: number;
+  staminaCost: number;
   costsFortunesFavor: boolean;
-  rules: GenericFeature[];
   actionType?: action_type;
   fields: TextField[];
-  choices: GenericFeature[];
   constructor(feature_data: any) {
     super(
       feature_data.title,
@@ -22,7 +25,8 @@ export default class CharacterFeatureData
       feature_data.text,
       feature_data.rules,
       feature_data.list,
-      feature_data.shortText
+      feature_data.shortText,
+      feature_data.choices
     );
     this.level = feature_data.level;
     this.staminaCost = feature_data.staminaCost;

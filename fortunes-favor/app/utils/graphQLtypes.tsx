@@ -1,3 +1,4 @@
+import exp from "constants";
 import {
   action_type,
   complexity_options,
@@ -54,7 +55,7 @@ export type GenericFeature = {
   text: RuleText[];
   shortText?: string;
   multiSelect: boolean;
-  options: string[];
+  choices: FeatureChoices[];
 };
 
 export type SlugDict = {
@@ -91,16 +92,36 @@ export type Damage = {
   stat: stat_options;
 };
 
-export type CharacterClassFeature = {
+export type FeatureChoices = RuleText | FeatureWithoutChoices;
+
+export type FeatureWithoutChoices = {
   title: string;
   slug: string;
-  level: number;
-  staminaCost?: number;
+  href?: string;
+  shortTitle?: string;
+  staminaCost: number;
   costsFortunesFavor: boolean;
   ruleType: rule_type;
   actionType?: action_type;
-  rules: GenericFeature[];
-  choices: GenericFeature[];
+  text: RuleText[];
+  multiSelect: boolean;
+  shortText?: string;
+};
+
+export type CharacterClassFeature = {
+  title: string;
+  slug: string;
+  href?: string;
+  shortTitle?: string;
+  level: number;
+  staminaCost: number;
+  costsFortunesFavor: boolean;
+  ruleType: rule_type;
+  actionType?: action_type;
+  text: RuleText[];
+  multiSelect: boolean;
+  shortText?: string;
+  choices: FeatureChoices[];
 };
 
 export type CharacterClass = {

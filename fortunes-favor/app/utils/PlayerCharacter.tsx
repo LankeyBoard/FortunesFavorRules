@@ -193,8 +193,8 @@ export default class PlayerCharacter {
   private _maxHealth: number;
   private _maxStamina: number;
   private _currentStamina?: number;
-  private _armor?: number;
-  private _counter?: number | undefined;
+  private _armor: number;
+  private _counter: number;
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
   private _items?: Item[];
@@ -210,6 +210,7 @@ export default class PlayerCharacter {
     startingCharacter?: PlayerCharacter
   ) {
     if (startingCharacter) {
+      console.log("if");
       this._level = startingCharacter.level;
       this.coin = startingCharacter.coin;
       this._languages = startingCharacter.languages;
@@ -222,8 +223,7 @@ export default class PlayerCharacter {
       this._maxStamina = startingCharacter.maxStamina;
       this._speeds = startingCharacter.speeds;
       this._armor = startingCharacter.armor;
-      this._counter = startingCharacter.counter;
-      this._baseDamage = startingCharacter.baseDamage;
+      this._counter = startingCharacter.counter || this._armor - 5;
       this._stats = startingCharacter.stats;
       this._range = startingCharacter.range;
       this._items = startingCharacter.items;
@@ -231,6 +231,7 @@ export default class PlayerCharacter {
       this._counters = startingCharacter.counters;
       this._features = startingCharacter.features;
     } else {
+      console.log("else");
       this._level = 1;
       this.coin = 5;
       this._languages = [LANGUAGES.allspeak];
@@ -339,6 +340,14 @@ export default class PlayerCharacter {
     this._currentHealth = health;
   }
 
+  public get armor(): number {
+    return this._armor;
+  }
+  public set armor(value: number) {
+    console.log("armor", value);
+    this._armor = value;
+  }
+
   // Dirived Values
 
   public get speeds() {
@@ -383,14 +392,11 @@ export default class PlayerCharacter {
     }
     return 0;
   }
-  public get armor() {
-    return this._armor;
-  }
   public get counter(): number | undefined {
-    return this._counter;
+    return this._armor - 5;
   }
   public get baseDamage() {
-    return this._baseDamage;
+    return this._characterClass?.damage;
   }
   public get range() {
     return this._range;

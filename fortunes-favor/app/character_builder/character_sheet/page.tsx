@@ -3,64 +3,17 @@ import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
 export default async function CharacterSheetPage() {
   const query = gql`
-    query AllCharacterOptions {
-      cultures {
-        description
-        href
-        languages
-        shortTitle
-        slug
-        stat
-        title
-        traits {
-          list
-          ruleType
-          rules {
-            list
-            rules {
-              list
-              ruleType
-              shortText
-              shortTitle
-              slug
-              title
-              text {
-                options
-                text
-                type
-              }
-            }
-            ruleType
-            shortText
-            shortTitle
-            text {
-              options
-              text
-              type
-            }
-            slug
-            title
-          }
-          shortText
-          shortTitle
-          slug
-          title
-          text {
-            options
-            text
-            type
-          }
-        }
-      }
+    query GetAllCharacterOptions {
       characterClasses {
         attackStat
         complexity
         damage {
           count
-          dice
           stat
+          dice
           type
         }
+        description
         extra {
           forms {
             armor {
@@ -69,10 +22,10 @@ export default async function CharacterSheetPage() {
             }
             attackStat
             damage {
-              count
               dice
               stat
               type
+              count
             }
             features {
               text
@@ -85,33 +38,10 @@ export default async function CharacterSheetPage() {
             title
           }
         }
-        features {
-          actionType
-          choices {
-            multiSelect
-            options
-            ruleType
-            slug
-            title
-            text {
-              text
-              type
-            }
-          }
-          costsFortunesFavor
-          level
-          ruleType
-          rules {
-            text
-            type
-          }
-          slug
-          staminaCost
-          title
-        }
-        description
         health
         healthOnLevel
+        href
+        shortTitle
         range {
           max
           min
@@ -121,6 +51,50 @@ export default async function CharacterSheetPage() {
         staminaOnLevel
         staminaStat
         title
+        features {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
+              options
+              text
+            }
+          }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          level
+          href
+          ruleType
+          multiSelect
+          shortText
+          slug
+          shortTitle
+          staminaCost
+          title
+          text {
+            options
+            text
+            type
+          }
+          costsFortunesFavor
+        }
         training {
           armor
           magic {
@@ -138,14 +112,67 @@ export default async function CharacterSheetPage() {
               pick
             }
             special {
-              pick
               options
+              pick
             }
           }
         }
       }
+      cultures {
+        description
+        href
+        languages
+        shortTitle
+        slug
+        stat
+        traits {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
+              options
+              text
+            }
+          }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          costsFortunesFavor
+          href
+          multiSelect
+          ruleType
+          shortText
+          shortTitle
+          slug
+          staminaCost
+          text {
+            options
+            type
+            text
+          }
+          title
+        }
+        title
+      }
       lineages {
         description
+        href
         shortTitle
         size
         slug
@@ -156,30 +183,47 @@ export default async function CharacterSheetPage() {
         stat
         title
         traits {
-          list
-          ruleType
-          rules {
-            list
-            ruleType
-            shortText
-            shortTitle
-            slug
-            text {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
               options
               text
-              type
             }
-            title
           }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          costsFortunesFavor
+          href
+          multiSelect
+          ruleType
           shortText
           shortTitle
           slug
+          staminaCost
+          title
           text {
             options
             text
             type
           }
-          title
         }
       }
     }

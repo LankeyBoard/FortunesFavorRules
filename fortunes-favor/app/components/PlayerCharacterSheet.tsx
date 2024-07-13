@@ -11,6 +11,26 @@ type CharacterSheetProps = {
   characterOptions?: any;
 };
 
+enum armorTypes {
+  none = "none",
+  light = "light",
+  medium = "medium",
+  heavy = "heavy",
+}
+
+const calculateArmor = (armorType: string, baseStat: number) => {
+  switch (armorType) {
+    case armorTypes.light:
+      return 12 + baseStat;
+    case armorTypes.medium:
+      return 14 + Math.min(2, baseStat);
+    case armorTypes.heavy:
+      return 17;
+    default:
+      return 10 + baseStat;
+  }
+};
+
 const PlayerCharacterSheet = ({
   currentCharacter,
   characterOptions,
@@ -36,6 +56,12 @@ const PlayerCharacterSheet = ({
       characterClasses.push(new CharacterClass(characterClass));
     });
   }
+  let armorOptions = [
+    { title: "none" },
+    { title: "light" },
+    { title: "medium" },
+    { title: "heavy" },
+  ];
   return (
     <div>
       Player Character
@@ -65,7 +91,7 @@ const PlayerCharacterSheet = ({
         </div>
         <div className="flex flex-row">
           <DropdownField
-            name="cultures"
+            name="culture"
             options={cultures}
             unselectedOption={!character.culture}
             onChange={(e) => {
@@ -91,7 +117,7 @@ const PlayerCharacterSheet = ({
           />
 
           <DropdownField
-            name="lineages"
+            name="lineage"
             options={lineages}
             unselectedOption={!character.lineage}
             onChange={(e) => {
@@ -119,7 +145,7 @@ const PlayerCharacterSheet = ({
             }}
           />
           <DropdownField
-            name="classes"
+            name="class"
             options={characterClasses}
             unselectedOption={!character.class}
             onChange={(e) => {
@@ -246,7 +272,6 @@ const PlayerCharacterSheet = ({
               };
               setCharacter(updatedCharacter);
               console.log(updatedCharacter);
-              console.log("max stamina: ", updatedCharacter.maxStamina);
             }}
           />
         </div>
@@ -260,21 +285,43 @@ const PlayerCharacterSheet = ({
         <span>{character.maxHealth}</span>
       </div>
       <div className="flex flex-row">
-        <InputField
-          name="Armor"
-          isRequired={true}
-          defaultValue={character.armor}
-        />
-        <InputField
-          name="Counter"
-          isRequired={true}
-          defaultValue={character.counter}
-        />
-        <InputField
-          name="Base Damage"
-          isRequired={true}
-          defaultValue={character.baseDamage}
-        />
+        <div>
+          <DropdownField
+            name="Armor"
+            options={armorOptions}
+            unselectedOption={!character.class}
+            onChange={(e) => {
+              console.log(e);
+              const updatedCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character
+              );
+
+              updatedCharacter.armor = calculateArmor(
+                e.target.value,
+                character.stats.agility
+              );
+              setCharacter(updatedCharacter);
+              console.log(updatedCharacter);
+            }}
+          />
+          <span>{character.armor}</span>
+        </div>
+
+        <div>Counter: {character.counter}</div>
+        <div>
+          Base Damage:{" "}
+          {character.baseDamage ? (
+            <span>
+              {character.baseDamage.count}d{character.baseDamage?.dice} +{" "}
+              {character.baseDamage?.stat}
+            </span>
+          ) : (
+            <span>Select a Class</span>
+          )}
+        </div>
       </div>
       <div>
         <span>Speed</span>
@@ -319,6 +366,7 @@ const PlayerCharacterSheet = ({
         <InputField
           name="Coin"
           isRequired={true}
+          type="number"
           defaultValue={character.coin}
         />
       </div>
