@@ -1,11 +1,6 @@
-import { TextField, Choice } from "@/app/utils/FieldTypes";
+import { Choice } from "@/app/utils/FieldTypes";
 import { rule_type, findEnum, action_type } from "../enums";
-import {
-  CharacterClassFeature,
-  FeatureChoices,
-  GenericFeature,
-  RuleText,
-} from "./graphQLtypes";
+import { CharacterClassFeature } from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
 
 export default class CharacterFeatureData
@@ -16,14 +11,12 @@ export default class CharacterFeatureData
   staminaCost: number;
   costsFortunesFavor: boolean;
   actionType?: action_type;
-  fields: TextField[];
   constructor(feature_data: any) {
     super(
       feature_data.title,
       feature_data.slug,
       feature_data.ruleType,
       feature_data.text,
-      feature_data.rules,
       feature_data.list,
       feature_data.shortText,
       feature_data.choices
@@ -45,11 +38,8 @@ export default class CharacterFeatureData
         );
       }
     }
-    this.fields = feature_data.rules.map(
-      (json_field: any) => new TextField(json_field)
-    );
-    this.rules = feature_data.rules;
-    if (this.ruleType === rule_type.Choice) {
+    this.text = feature_data.text;
+    if (this.ruleType === rule_type.Choice && feature_data.choices) {
       this.choices = feature_data.choices.map(
         (json_choice: any) => new Choice(json_choice)
       );

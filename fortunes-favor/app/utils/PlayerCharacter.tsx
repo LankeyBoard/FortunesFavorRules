@@ -4,7 +4,7 @@ import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
-import { GenericFeature, RuleText } from "./graphQLtypes";
+import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
 
 type Stats = {
   mettle: number;
@@ -63,19 +63,10 @@ class CharacterFeature extends GenericFeatureData {
     ruleType: rule_type,
     text: RuleText[],
     multiSelect: boolean,
-    options: string[],
+    choices: FeatureChoices[],
     shortText?: string | undefined
   ) {
-    super(
-      title,
-      slug,
-      ruleType,
-      text,
-      multiSelect,
-      options,
-      undefined,
-      shortText
-    );
+    super(title, slug, ruleType, text, multiSelect, choices, shortText);
     this.source = source;
     this.effects = effects;
   }
@@ -135,7 +126,6 @@ const updateFeatures = (
             source: sourceType,
             text: feature.text,
             ruleType: rule_type.Rule,
-            rules: undefined,
             effects: [],
           });
         } else if (feature.actionType === action_type.counter) {
@@ -144,7 +134,6 @@ const updateFeatures = (
             ...feature,
             source: sourceType,
             text: feature.text,
-            rules: undefined,
             effects: [],
           });
         } else {
@@ -153,7 +142,6 @@ const updateFeatures = (
             ...feature,
             source: sourceType,
             text: feature.text,
-            rules: undefined,
             effects: [],
           });
         }
@@ -164,10 +152,9 @@ const updateFeatures = (
         ...feature,
         source: sourceType,
         text: feature.text,
-        rules: undefined,
         effects: [],
         multiSelect: false,
-        options: [],
+        choices: [],
       });
     }
   });
@@ -266,7 +253,7 @@ export default class PlayerCharacter {
             this.features?.push({
               ...feature,
               source: "class",
-              rules: feature.text,
+              text: feature.text,
               effects: [],
             });
           }
