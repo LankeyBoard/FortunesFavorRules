@@ -1,7 +1,8 @@
+import CharacterFeatureData from "@/app/utils/CharacterFeature";
 import GenericFeatureData from "@/app/utils/GenericFeatureData";
 
 type FeatureCardProps = {
-  feature: GenericFeatureData;
+  feature: GenericFeatureData | CharacterFeatureData;
   source: string;
 };
 
@@ -36,13 +37,17 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
     default:
       titleStyle += " bg-red-500";
   }
-  console.log(feature);
   return (
     <>
       <div className="pb-3">
         <div className={titleStyle}>
           <h1 className="text-lg font-semibold float-left grow">
             {feature.title}
+            {"level" in feature && (
+              <span className="ml-2 font-light text-base">
+                level {feature.level}
+              </span>
+            )}
           </h1>
           <h3 className="float-right">{resultType}</h3>
         </div>
@@ -56,9 +61,6 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                 </p>
               );
             })}
-          {feature.rules?.map((rule) => {
-            return <div key={rule.text}>{rule.text}</div>;
-          })}
         </div>
       </div>
     </>
