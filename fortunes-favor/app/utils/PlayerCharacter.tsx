@@ -93,8 +93,6 @@ const updateFeatures = (
   source: CharacterCulture | CharacterClassData | CharacterLineage,
   currentCharacter: PlayerCharacter
 ) => {
-  console.log("Updated features");
-
   // Remove actions from old source
   const updatedActions: CharacterFeature[] | undefined = [];
   currentCharacter.actions?.forEach((action) => {
@@ -114,7 +112,6 @@ const updateFeatures = (
       updatedFeatures.push(feature);
     }
   });
-  console.log(updatedActions, updatedCounters, updatedFeatures);
   source.features.forEach((feature) => {
     if (feature instanceof CharacterFeatureData) {
       if (feature.level <= currentCharacter.level) {
@@ -197,7 +194,6 @@ export default class PlayerCharacter {
     startingCharacter?: PlayerCharacter
   ) {
     if (startingCharacter) {
-      console.log("if");
       this._level = startingCharacter.level;
       this.coin = startingCharacter.coin;
       this._languages = startingCharacter.languages;
@@ -218,7 +214,6 @@ export default class PlayerCharacter {
       this._counters = startingCharacter.counters;
       this._features = startingCharacter.features;
     } else {
-      console.log("else");
       this._level = 1;
       this.coin = 5;
       this._languages = [LANGUAGES.allspeak];

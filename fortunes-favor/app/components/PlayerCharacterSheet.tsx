@@ -333,9 +333,23 @@ const PlayerCharacterSheet = ({
         </div>
       </div>
       <div className="flex flex-row m-2">
-        <div className="mr-2">Armor: {character.armor}</div>
+        <div className="mr-2">
+          Armor:{" "}
+          {character.armor > 0 ? (
+            <span>{character.armor}</span>
+          ) : (
+            <span>&#8212;</span>
+          )}
+        </div>
 
-        <div className="mr-2">Counter: {character.counter}</div>
+        <div className="mr-2">
+          Counter:{" "}
+          {character.counter && character.counter > 0 ? (
+            <span>{character.counter}</span>
+          ) : (
+            <span>&#8212;</span>
+          )}
+        </div>
         <div className="mr-2">
           Base Damage:{" "}
           {character.baseDamage ? (
@@ -344,7 +358,7 @@ const PlayerCharacterSheet = ({
               {character.baseDamage?.stat}
             </span>
           ) : (
-            <span>Select a Class</span>
+            <span>&#8212;</span>
           )}
         </div>
       </div>
