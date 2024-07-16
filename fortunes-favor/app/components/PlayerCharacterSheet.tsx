@@ -323,10 +323,7 @@ const PlayerCharacterSheet = ({
                   character
                 );
 
-                updatedCharacter.armor = calculateArmor(
-                  e.target.value,
-                  character.stats.agility
-                );
+                updatedCharacter.armorName = e.target.value;
                 setCharacter(updatedCharacter);
                 console.log(updatedCharacter);
               }}

@@ -177,7 +177,7 @@ export default class PlayerCharacter {
   private _maxHealth: number;
   private _maxStamina: number;
   private _currentStamina?: number;
-  private _armor: number;
+  private _armorName: string;
   private _counter: number;
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
@@ -187,6 +187,26 @@ export default class PlayerCharacter {
   private _features?: CharacterFeature[];
   private _languages?: LANGUAGES[];
 
+  private _armorValue = (armorName: string) => {
+    if (!armorName) return 10 + this.stats.agility;
+    switch (armorName.toLowerCase()) {
+      case "light":
+        return 12 + this.stats.agility;
+
+      case "medium":
+        return 14 + Math.min(this.stats.agility, 2);
+
+      case "heavy":
+        return 17;
+
+      case "muscle bound":
+        return 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+
+      default:
+        return 10 + this.stats.agility;
+    }
+  };
+
   constructor(
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
@@ -195,6 +215,7 @@ export default class PlayerCharacter {
   ) {
     if (startingCharacter) {
       this._level = startingCharacter.level;
+      this._stats = startingCharacter.stats;
       this.coin = startingCharacter.coin;
       this._languages = startingCharacter.languages;
       this._characterClass = startingCharacter.class;
@@ -205,9 +226,9 @@ export default class PlayerCharacter {
       this._maxHealth = startingCharacter.maxHealth;
       this._maxStamina = startingCharacter.maxStamina;
       this._speeds = startingCharacter.speeds;
-      this._armor = startingCharacter.armor;
-      this._counter = startingCharacter.counter || this._armor - 5;
-      this._stats = startingCharacter.stats;
+      this._armorName = startingCharacter.armorName;
+      this._counter =
+        startingCharacter.counter || this._armorValue(this._armorName) - 5;
       this._range = startingCharacter.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
@@ -215,6 +236,7 @@ export default class PlayerCharacter {
       this._features = startingCharacter.features;
     } else {
       this._level = 1;
+      this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
       this.coin = 5;
       this._languages = [LANGUAGES.allspeak];
       this._characterClass = characterClass;
@@ -225,10 +247,9 @@ export default class PlayerCharacter {
       this._maxHealth = 0;
       this._maxStamina = 0;
       this._speeds = [{ type: "ground", speed: 30, source: "lineage" }];
-      this._armor = 0;
-      this._counter = 0;
+      this._armorName = "None";
+      this._counter = this._armorValue(this._armorName) - 5;
       this._baseDamage = 0;
-      this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
       this._range = { min: 0, max: 0 };
       this._items = [];
       this._actions = [];
@@ -272,7 +293,6 @@ export default class PlayerCharacter {
 
   public set class(characterClass: CharacterClassData) {
     this._characterClass = characterClass;
-
     const updatedFeatures = updateFeatures("class", characterClass, this);
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
@@ -323,11 +343,18 @@ export default class PlayerCharacter {
   }
 
   public get armor(): number {
-    return this._armor;
+    console.log(
+      "get armor",
+      this._armorName,
+      this._armorValue(this._armorName)
+    );
+    return this._armorValue(this._armorName);
   }
-  public set armor(value: number) {
-    console.log("armor", value);
-    this._armor = value;
+  public get armorName(): string {
+    return this._armorName;
+  }
+  public set armorName(name: string) {
+    this._armorName = name;
   }
 
   // Dirived Values
@@ -375,7 +402,7 @@ export default class PlayerCharacter {
     return 0;
   }
   public get counter(): number | undefined {
-    return this._armor - 5;
+    return this._armorValue(this._armorName) - 5;
   }
   public get baseDamage() {
     return this._characterClass?.damage;
