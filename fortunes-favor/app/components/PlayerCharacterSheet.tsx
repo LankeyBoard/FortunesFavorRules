@@ -19,7 +19,7 @@ enum armorTypes {
 }
 
 const calculateArmor = (armorType: string, baseStat: number) => {
-  switch (armorType) {
+  switch (armorType.toLocaleLowerCase()) {
     case armorTypes.light:
       return 12 + baseStat;
     case armorTypes.medium:
@@ -56,17 +56,12 @@ const PlayerCharacterSheet = ({
       characterClasses.push(new CharacterClass(characterClass));
     });
   }
-  let armorOptions = [
-    { title: "none" },
-    { title: "light" },
-    { title: "medium" },
-    { title: "heavy" },
-  ];
+  let armorOptions = [{ title: "None" }];
   return (
     <div id="character_sheet">
       <div className="md:flex md:flex-row">
         <div className="md:w-1/2">
-          <h3 className="p-1 bg-teal-700 mb-3">Basic Info</h3>
+          <h3 className="p-1 bg-teal-300 dark:bg-teal-700 mb-3">Basic Info</h3>
           <div className="pl-3 pr-3 pb-2">
             <div className="flex flex-row">
               <InputField
@@ -189,8 +184,8 @@ const PlayerCharacterSheet = ({
           </div>
         </div>
         <div className="md:w-1/2 md:bg-slate-800">
-          <div id="stats" className="bg-slate-800 ">
-            <h3 className="p-1 bg-teal-700 mb-3">Stats</h3>
+          <div id="stats" className="bg-slate-200 dark:bg-slate-800 pb-2 ">
+            <h3 className="p-1 bg-teal-300 dark:bg-teal-700 mb-3">Stats</h3>
             <div className="flex flex-row">
               <div className="ml-2 mr-2 w-10">
                 <InputField
@@ -283,7 +278,7 @@ const PlayerCharacterSheet = ({
                       character
                     );
                     updatedCharacter.stats = {
-                      mettle: character.stats.intellect,
+                      mettle: character.stats.mettle,
                       agility: character.stats.agility,
                       heart: character.stats.heart,
                       intellect: e.target.valueAsNumber,
@@ -294,9 +289,12 @@ const PlayerCharacterSheet = ({
                 />
               </div>
             </div>
+            <span className="font-light text-slate-700 dark:text-slate-300 ml-2">
+              Standard Stat Array [ 3, 2, 0, -2 ]
+            </span>
           </div>
 
-          <div className="flex flex-row">
+          <div className="flex flex-row mt-2">
             <div>
               <span className="font-light ml-2 mr-1">Max Health: </span>
               <span>{character.maxHealth}</span>
@@ -310,7 +308,11 @@ const PlayerCharacterSheet = ({
             <h3 className="mr-3 mt-3">Select Armor: </h3>
             <DropdownField
               name=""
-              options={armorOptions}
+              options={
+                character.class?.training.armor
+                  ? character.class.training.armor
+                  : armorOptions
+              }
               unselectedOption={!character.class}
               onChange={(e) => {
                 console.log(e);
@@ -362,7 +364,7 @@ const PlayerCharacterSheet = ({
           )}
         </div>
       </div>
-      <div className="p-1 bg-slate-700 mb-2 flex flex-row">
+      <div className="p-1 bg-slate-300 dark:bg-slate-700 mb-2 flex flex-row">
         <h3 className="mr-2 font-semibold">Speeds: </h3>
         <div className="">
           {character.speeds?.map((s) => {
@@ -399,7 +401,7 @@ const PlayerCharacterSheet = ({
         />
       </div>
       <div>
-        <h3 className="p-1 bg-purple-900 mb-3">Actions</h3>
+        <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Actions</h3>
         {character.counters && character.counters?.length > 0 ? (
           character.actions?.map((action) => {
             const f = {
@@ -419,7 +421,7 @@ const PlayerCharacterSheet = ({
         )}
       </div>
       <div>
-        <h3 className="p-1 bg-purple-900 mb-3">Counters</h3>
+        <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Counters</h3>
         {character.counters && character.counters?.length > 0 ? (
           character.counters?.map((counter) => {
             return <div key={counter.title}>{counter.title}</div>;
@@ -429,7 +431,7 @@ const PlayerCharacterSheet = ({
         )}
       </div>
       <div>
-        <h3 className="p-1 bg-purple-900 mb-3">Features</h3>
+        <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Features</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {character.features && character.features?.length > 0 ? (
             character.features?.map((feature) => {
@@ -449,7 +451,7 @@ const PlayerCharacterSheet = ({
         </div>
       </div>
       <div>
-        <h3 className="p-1 bg-purple-900 mb-3">Items</h3>
+        <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Items</h3>
         <div>
           {character.items && character.items?.length > 0 ? (
             character.items?.map((item) => {

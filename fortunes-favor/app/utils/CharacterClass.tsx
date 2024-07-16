@@ -77,6 +77,10 @@ export default class CharacterClassData implements CharacterClass {
       },
       magic: data.training.magic,
     };
+    if (this.training.armor === null) this.training.armor = ["None"];
+    else if (!this.training.armor.includes("None"))
+      this.training.armor.splice(0, 0, "None");
+    console.log("training", this.title, this.training);
     const as = new Array();
     if (Array.isArray(data.attackStat)) {
       data.attackStat.forEach((stat: string) => {

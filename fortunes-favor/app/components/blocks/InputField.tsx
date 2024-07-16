@@ -53,6 +53,15 @@ export const DropdownField = ({
   unselectedOption = false,
   onChange,
 }: dropdownFieldProps) => {
+  console.log(options, typeof options.at(0));
+  if (options.length > 0 && typeof options.at(0) === "string") {
+    console.log("options updated");
+    let optionObjs = options.map((option) => {
+      return { title: option, slug: name + option };
+    });
+    options = optionObjs;
+    console.log(options);
+  }
   return (
     <div>
       <label
@@ -73,6 +82,7 @@ export const DropdownField = ({
           </option>
         )}
         {options.map((o) => {
+          if (!o.slug) o.slug = name.concat(o.title);
           return (
             <option key={o.slug} value={o.slug} className="capitalize">
               {o.title}
