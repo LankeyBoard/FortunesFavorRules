@@ -80,6 +80,9 @@ export default class CharacterClassData implements CharacterClass {
     if (this.training.armor === null) this.training.armor = ["None"];
     else if (!this.training.armor.includes("None"))
       this.training.armor.splice(0, 0, "None");
+    if (this.training.shields === null) this.training.shields = ["None"];
+    else if (!this.training.shields.includes("None"))
+      this.training.shields.splice(0, 0, "None");
     console.log("training", this.title, this.training);
     const as = new Array();
     if (Array.isArray(data.attackStat)) {

@@ -141,7 +141,6 @@ const updateFeatures = (
         }
       }
     } else {
-      console.warn("CharacterTrait");
       updatedFeatures.push({
         ...feature,
         source: sourceType,
@@ -175,6 +174,7 @@ export default class PlayerCharacter {
   private _maxStamina: number;
   private _currentStamina?: number;
   private _armorName: string;
+  private _shieldName: string;
   private _counter: number;
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
@@ -184,24 +184,40 @@ export default class PlayerCharacter {
   private _features?: CharacterFeature[];
   private _languages?: LANGUAGES[];
 
-  private _armorValue = (armorName: string) => {
-    if (!armorName) return 10 + this.stats.agility;
-    switch (armorName.toLowerCase()) {
+  private _armorValue = () => {
+    let armor = 10 + this.stats.agility;
+    switch (this._armorName.toLowerCase()) {
       case "light":
-        return 12 + this.stats.agility;
-
+        armor = 12 + this.stats.agility;
+        break;
       case "medium":
-        return 14 + Math.min(this.stats.agility, 2);
-
+        armor = 14 + Math.min(this.stats.agility, 2);
+        break;
       case "heavy":
-        return 17;
-
+        armor = 17;
+        break;
       case "muscle bound":
-        return 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
-
-      default:
-        return 10 + this.stats.agility;
+        armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+        break;
     }
+    switch (this._shieldName.toLowerCase()) {
+      case "light":
+        if (this.stats.agility >= 3) {
+          armor += 1;
+        }
+        break;
+      case "medium":
+        if (this.stats.agility >= 1 && this.stats.mettle >= 1) {
+          armor += 2;
+        }
+        break;
+      case "heavy":
+        if (this.stats.mettle >= 3) {
+          armor += 2;
+        }
+        break;
+    }
+    return armor;
   };
 
   constructor(
@@ -224,8 +240,8 @@ export default class PlayerCharacter {
       this._maxStamina = startingCharacter.maxStamina;
       this._speeds = startingCharacter.speeds;
       this._armorName = startingCharacter.armorName;
-      this._counter =
-        startingCharacter.counter || this._armorValue(this._armorName) - 5;
+      this._shieldName = startingCharacter.shieldName;
+      this._counter = startingCharacter.counter || this._armorValue() - 5;
       this._range = startingCharacter.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
@@ -245,7 +261,8 @@ export default class PlayerCharacter {
       this._maxStamina = 0;
       this._speeds = [{ type: "ground", speed: 30, source: "lineage" }];
       this._armorName = "None";
-      this._counter = this._armorValue(this._armorName) - 5;
+      this._shieldName = "None";
+      this._counter = this._armorValue() - 5;
       this._baseDamage = 0;
       this._range = { min: 0, max: 0 };
       this._items = [];
@@ -340,23 +357,23 @@ export default class PlayerCharacter {
     this._currentHealth = health;
   }
 
-  public get armor(): number {
-    console.log(
-      "get armor",
-      this._armorName,
-      this._armorValue(this._armorName)
-    );
-    return this._armorValue(this._armorName);
-  }
   public get armorName(): string {
     return this._armorName;
   }
   public set armorName(name: string) {
     this._armorName = name;
   }
+  public get shieldName(): string {
+    return this._shieldName;
+  }
+  public set shieldName(name: string) {
+    this._shieldName = name;
+  }
 
   // Dirived Values
-
+  public get armor(): number {
+    return this._armorValue();
+  }
   public get speeds() {
     if (this.lineage?.slug === "FAERY") {
       return [
@@ -406,7 +423,7 @@ export default class PlayerCharacter {
     return 0;
   }
   public get counter(): number | undefined {
-    return this._armorValue(this._armorName) - 5;
+    return this._armorValue() - 5;
   }
   public get baseDamage() {
     return this._characterClass?.damage;
