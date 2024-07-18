@@ -1,3 +1,5 @@
+import { TextField } from "../utils/FieldTypes";
+import { FeatureWithoutChoices } from "../utils/graphQLtypes";
 import GenericFeatureData from "../utils/GenericFeatureData";
 import SlugLinker from "./blocks/SlugLinker";
 
@@ -14,17 +16,23 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
           <SlugLinker key={text.text} text={text.text} />
         ))}
       </span>
-      {feature.options && (
+      {feature.choices && (
         <>
           <div className="ml-5 mt-2">
             <ul>
-              {feature.options.map((text) => {
-                return (
-                  <li key={text}>
-                    <span className="text-amber-600">- </span>
-                    {text}
-                  </li>
-                );
+              {feature.choices.map((choice) => {
+                if (choice instanceof TextField) {
+                  return (
+                    <li key={choice.text}>
+                      <span className="text-amber-600">- </span>
+                      {choice.text}
+                    </li>
+                  );
+                } else if ("slug" in choice) {
+                  return (
+                    <li key={choice.slug}>{choice.text.toLocaleString()}</li>
+                  );
+                }
               })}
             </ul>
           </div>

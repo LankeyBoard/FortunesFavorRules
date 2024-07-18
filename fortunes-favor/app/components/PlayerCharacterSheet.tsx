@@ -11,26 +11,6 @@ type CharacterSheetProps = {
   characterOptions?: any;
 };
 
-enum armorTypes {
-  none = "none",
-  light = "light",
-  medium = "medium",
-  heavy = "heavy",
-}
-
-const calculateArmor = (armorType: string, baseStat: number) => {
-  switch (armorType.toLocaleLowerCase()) {
-    case armorTypes.light:
-      return 12 + baseStat;
-    case armorTypes.medium:
-      return 14 + Math.min(2, baseStat);
-    case armorTypes.heavy:
-      return 17;
-    default:
-      return 10 + baseStat;
-  }
-};
-
 const PlayerCharacterSheet = ({
   currentCharacter,
   characterOptions,
@@ -56,6 +36,7 @@ const PlayerCharacterSheet = ({
       characterClasses.push(new CharacterClass(characterClass));
     });
   }
+  console.log("charracterOptions", characterOptions, lineages);
   let armorOptions = [{ title: "None" }];
   return (
     <div id="character_sheet">
@@ -186,112 +167,121 @@ const PlayerCharacterSheet = ({
         <div className="md:w-1/2 md:bg-slate-800">
           <div id="stats" className="bg-slate-200 dark:bg-slate-800 pb-2 ">
             <h3 className="p-1 bg-teal-300 dark:bg-teal-700 mb-3">Stats</h3>
-            <div className="flex flex-row">
-              <div className="ml-2 mr-2 w-10">
-                <InputField
-                  name="Mettle"
-                  isRequired={true}
-                  type="number"
-                  defaultValue={character.stats.mettle}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    const updatedCharacter = new PlayerCharacter(
-                      undefined,
-                      undefined,
-                      undefined,
-                      character
-                    );
-                    updatedCharacter.stats = {
-                      mettle: e.target.valueAsNumber,
-                      agility: character.stats.agility,
-                      heart: character.stats.heart,
-                      intellect: character.stats.intellect,
-                    };
-                    setCharacter(updatedCharacter);
-                    console.log(updatedCharacter);
-                  }}
-                />
+            <div className="lg:flex flex-row">
+              <div className="flex flex-row">
+                <div className="ml-2 mr-2 w-10">
+                  <InputField
+                    name="Mettle"
+                    isRequired={true}
+                    type="number"
+                    defaultValue={character.stats.mettle}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      const updatedCharacter = new PlayerCharacter(
+                        undefined,
+                        undefined,
+                        undefined,
+                        character
+                      );
+                      updatedCharacter.stats = {
+                        mettle: e.target.valueAsNumber,
+                        agility: character.stats.agility,
+                        heart: character.stats.heart,
+                        intellect: character.stats.intellect,
+                      };
+                      setCharacter(updatedCharacter);
+                      console.log(updatedCharacter);
+                    }}
+                  />
+                </div>
+                <div className="ml-2 mr-2 w-10">
+                  <InputField
+                    name="Agility"
+                    isRequired={true}
+                    type="number"
+                    defaultValue={character.stats.agility}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      const updatedCharacter = new PlayerCharacter(
+                        undefined,
+                        undefined,
+                        undefined,
+                        character
+                      );
+                      updatedCharacter.stats = {
+                        mettle: character.stats.mettle,
+                        agility: e.target.valueAsNumber,
+                        heart: character.stats.heart,
+                        intellect: character.stats.intellect,
+                      };
+                      setCharacter(updatedCharacter);
+                      console.log(updatedCharacter);
+                    }}
+                  />
+                </div>
+                <div className="ml-2 mr-2 w-10">
+                  <InputField
+                    name="Heart"
+                    isRequired={true}
+                    type="number"
+                    defaultValue={character.stats.heart}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      const updatedCharacter = new PlayerCharacter(
+                        undefined,
+                        undefined,
+                        undefined,
+                        character
+                      );
+                      updatedCharacter.stats = {
+                        mettle: character.stats.mettle,
+                        agility: character.stats.agility,
+                        heart: e.target.valueAsNumber,
+                        intellect: character.stats.intellect,
+                      };
+                      console.log(updatedCharacter === character);
+                      setCharacter(updatedCharacter);
+                      console.log(updatedCharacter);
+                    }}
+                  />
+                </div>
+                <div className="ml-2 mr-2 w-10">
+                  <InputField
+                    name="Intellect"
+                    isRequired={true}
+                    type="number"
+                    defaultValue={character.stats.intellect}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      const updatedCharacter = new PlayerCharacter(
+                        undefined,
+                        undefined,
+                        undefined,
+                        character
+                      );
+                      updatedCharacter.stats = {
+                        mettle: character.stats.mettle,
+                        agility: character.stats.agility,
+                        heart: character.stats.heart,
+                        intellect: e.target.valueAsNumber,
+                      };
+                      setCharacter(updatedCharacter);
+                      console.log(updatedCharacter);
+                    }}
+                  />
+                </div>
               </div>
-              <div className="ml-2 mr-2 w-10">
-                <InputField
-                  name="Agility"
-                  isRequired={true}
-                  type="number"
-                  defaultValue={character.stats.agility}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    const updatedCharacter = new PlayerCharacter(
-                      undefined,
-                      undefined,
-                      undefined,
-                      character
-                    );
-                    updatedCharacter.stats = {
-                      mettle: character.stats.mettle,
-                      agility: e.target.valueAsNumber,
-                      heart: character.stats.heart,
-                      intellect: character.stats.intellect,
-                    };
-                    setCharacter(updatedCharacter);
-                    console.log(updatedCharacter);
-                  }}
-                />
-              </div>
-              <div className="ml-2 mr-2 w-10">
-                <InputField
-                  name="Heart"
-                  isRequired={true}
-                  type="number"
-                  defaultValue={character.stats.heart}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    const updatedCharacter = new PlayerCharacter(
-                      undefined,
-                      undefined,
-                      undefined,
-                      character
-                    );
-                    updatedCharacter.stats = {
-                      mettle: character.stats.mettle,
-                      agility: character.stats.agility,
-                      heart: e.target.valueAsNumber,
-                      intellect: character.stats.intellect,
-                    };
-                    console.log(updatedCharacter === character);
-                    setCharacter(updatedCharacter);
-                    console.log(updatedCharacter);
-                  }}
-                />
-              </div>
-              <div className="ml-2 mr-2 w-10">
-                <InputField
-                  name="Intellect"
-                  isRequired={true}
-                  type="number"
-                  defaultValue={character.stats.intellect}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    const updatedCharacter = new PlayerCharacter(
-                      undefined,
-                      undefined,
-                      undefined,
-                      character
-                    );
-                    updatedCharacter.stats = {
-                      mettle: character.stats.mettle,
-                      agility: character.stats.agility,
-                      heart: character.stats.heart,
-                      intellect: e.target.valueAsNumber,
-                    };
-                    setCharacter(updatedCharacter);
-                    console.log(updatedCharacter);
-                  }}
-                />
+
+              <div className="font-light text-slate-700 dark:text-slate-300 ml-2">
+                <p>Standard Stat Array [ 3, 2, 0, -2 ]</p>
+                <p>
+                  {character.culture && <>Culture: {character.culture?.stat}</>}
+                </p>
+                <p>
+                  {character.lineage && <>Lineage: {character.lineage?.stat}</>}
+                </p>
               </div>
             </div>
-            <span className="font-light text-slate-700 dark:text-slate-300 ml-2">
-              Standard Stat Array [ 3, 2, 0, -2 ]
-            </span>
           </div>
 
           <div className="flex flex-row mt-2">
@@ -366,7 +356,7 @@ const PlayerCharacterSheet = ({
         <div className="">
           {character.speeds?.map((s) => {
             return (
-              <span key={s.type} className="capitalize">
+              <span key={s.type} className="capitalize mr-2">
                 {s.type}: <span className="font-light">{s.speed}ft.</span>
               </span>
             );
@@ -401,10 +391,6 @@ const PlayerCharacterSheet = ({
         <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Actions</h3>
         {character.counters && character.counters?.length > 0 ? (
           character.actions?.map((action) => {
-            const f = {
-              ...action,
-              slug: action.title,
-            };
             return (
               <FeatureCard
                 key={action.title}

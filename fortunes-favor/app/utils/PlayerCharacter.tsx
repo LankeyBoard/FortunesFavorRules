@@ -113,11 +113,10 @@ const updateFeatures = (
     }
   });
   source.features.forEach((feature) => {
+    console.log("feature updates", feature);
     if (feature instanceof CharacterFeatureData) {
       if (feature.level <= currentCharacter.level) {
-        console.log(feature);
         if (feature.actionType === action_type.action) {
-          console.log("action", feature);
           updatedActions.push({
             ...feature,
             source: sourceType,
@@ -126,7 +125,6 @@ const updateFeatures = (
             effects: [],
           });
         } else if (feature.actionType === action_type.counter) {
-          console.log("counter", feature);
           updatedActions.push({
             ...feature,
             source: sourceType,
@@ -134,7 +132,6 @@ const updateFeatures = (
             effects: [],
           });
         } else {
-          console.log("generic feature", feature);
           updatedFeatures.push({
             ...feature,
             source: sourceType,
@@ -144,14 +141,14 @@ const updateFeatures = (
         }
       }
     } else {
-      console.log("generic feature", feature);
+      console.warn("CharacterTrait");
       updatedFeatures.push({
         ...feature,
         source: sourceType,
         text: feature.text,
         effects: [],
-        multiSelect: false,
-        choices: [],
+        multiSelect: feature.multiSelect,
+        choices: feature.choices,
       });
     }
   });
@@ -171,7 +168,7 @@ export default class PlayerCharacter {
   private _characterCulture?: CharacterCulture;
   private _stats: Stats;
   private _characterLineage?: CharacterLineage;
-  private _speeds?: [{ type: string; speed: number; source: string }];
+  private _speeds: { type: string; speed: number; source: string }[];
   coin?: number;
   private _currentHealth?: number;
   private _maxHealth: number;
@@ -256,6 +253,7 @@ export default class PlayerCharacter {
       this._counters = [];
       this._features = [];
     }
+    console.log("playerCharacer features", this._features);
   }
 
   public get level(): number {
@@ -360,6 +358,12 @@ export default class PlayerCharacter {
   // Dirived Values
 
   public get speeds() {
+    if (this.lineage?.slug === "FAERY") {
+      return [
+        ...this._speeds,
+        { type: "flying", speed: 20, source: "lineage" },
+      ];
+    }
     return this._speeds;
   }
 

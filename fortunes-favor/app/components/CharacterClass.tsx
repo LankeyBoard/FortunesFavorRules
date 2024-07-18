@@ -64,7 +64,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
           </div>
         )}
         <div className="space-y-2">
-          {feature.fields.map((f) => (
+          {feature.text.map((f) => (
             <FieldDisplay field={f} key={f.text} />
           ))}
         </div>

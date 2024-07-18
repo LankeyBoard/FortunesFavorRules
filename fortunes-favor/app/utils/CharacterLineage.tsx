@@ -33,14 +33,7 @@ export default class CharacterLineage {
     this.speeds = json.speeds;
     this.stat = json.stat;
     this.features = json.traits.map((t: any) => {
-      return new RuleData(
-        t.title,
-        t.slug,
-        t.ruleType || "RULE",
-        t.text,
-        t.rules,
-        t.list
-      );
+      return new CharacterTrait(t);
     });
   }
 }

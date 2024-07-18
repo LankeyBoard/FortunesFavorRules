@@ -7,7 +7,6 @@ export default class CharacterCulture {
   lang: string;
   stat: string;
   features: [CharacterTrait];
-  options?: [CharacterTrait];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
@@ -20,11 +19,6 @@ export default class CharacterCulture {
       });
     } else {
       this.features = [new CharacterTrait({ title: "Test", text: "Dummy" })];
-    }
-    if (json.options) {
-      this.options = json.options.map((o: any) => {
-        return new CharacterTrait(o);
-      });
     }
   }
 }

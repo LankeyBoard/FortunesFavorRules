@@ -1,5 +1,6 @@
 import CharacterFeatureData from "@/app/utils/CharacterFeature";
 import GenericFeatureData from "@/app/utils/GenericFeatureData";
+import { FeatureChoices } from "@/app/utils/graphQLtypes";
 
 type FeatureCardProps = {
   feature: GenericFeatureData | CharacterFeatureData;
@@ -37,6 +38,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
     default:
       titleStyle += " bg-red-500";
   }
+  console.log("feature card choices", feature);
   return (
     <>
       <div className="pb-3">
@@ -61,6 +63,35 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                 </p>
               );
             })}
+          <div className="m-4 ">
+            {feature.choices &&
+              feature.choices.length > 0 &&
+              feature.choices.map((choice) => {
+                if (typeof choice.text === "string") {
+                  return <p key={choice.text}>{choice.text}</p>;
+                } else if ("slug" in choice) {
+                  return (
+                    <div
+                      key={choice.slug}
+                      id={choice.slug}
+                      className="odd:bg-slate-300 dark:odd:bg-slate-700 p-2"
+                    >
+                      <h3>{choice.title}</h3>
+                      {choice.staminaCost > 0 && (
+                        <span>{choice.staminaCost}</span>
+                      )}
+                      {choice.text.map((t) => {
+                        return (
+                          <p key={t.text} className="mx-2 font-light">
+                            {t.text}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  );
+                }
+              })}
+          </div>
         </div>
       </div>
     </>
