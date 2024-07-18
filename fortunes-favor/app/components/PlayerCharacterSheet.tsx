@@ -294,55 +294,57 @@ const PlayerCharacterSheet = ({
               <span>{character.maxStamina}</span>
             </div>
           </div>
-          <div className="m-2 flex flex-row">
-            <h3 className="mr-3 mt-3">Select Armor: </h3>
-            <DropdownField
-              name=""
-              options={
-                character.class?.training.armor
-                  ? character.class.training.armor
-                  : armorOptions
-              }
-              unselectedOption={!character.class}
-              onChange={(e) => {
-                console.log(e);
-                const updatedCharacter = new PlayerCharacter(
-                  undefined,
-                  undefined,
-                  undefined,
-                  character
-                );
+          <div className="flex flex-row">
+            <div className="m-2 flex flex-row">
+              <h3 className="mr-3 mt-3">Select Armor: </h3>
+              <DropdownField
+                name=""
+                options={
+                  character.class?.training.armor
+                    ? character.class.training.armor
+                    : armorOptions
+                }
+                unselectedOption={!character.class}
+                onChange={(e) => {
+                  console.log(e);
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character
+                  );
 
-                updatedCharacter.armorName = e.target.value;
-                setCharacter(updatedCharacter);
-                console.log(updatedCharacter);
-              }}
-            />
-          </div>
-          <div className="m-2 flex flex-row">
-            <h3 className="mr-3 mt-3">Select Shield: </h3>
-            <DropdownField
-              name=""
-              options={
-                character.class?.training.shields
-                  ? character.class.training.shields
-                  : armorOptions
-              }
-              unselectedOption={!character.class}
-              onChange={(e) => {
-                console.log(e);
-                const updatedCharacter = new PlayerCharacter(
-                  undefined,
-                  undefined,
-                  undefined,
-                  character
-                );
+                  updatedCharacter.armorName = e.target.value;
+                  setCharacter(updatedCharacter);
+                  console.log(updatedCharacter);
+                }}
+              />
+            </div>
+            <div className="m-2 flex flex-row">
+              <h3 className="mr-3 mt-3">Select Shield: </h3>
+              <DropdownField
+                name=""
+                options={
+                  character.class?.training.shields
+                    ? character.class.training.shields
+                    : armorOptions
+                }
+                unselectedOption={!character.class}
+                onChange={(e) => {
+                  console.log(e);
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character
+                  );
 
-                updatedCharacter.shieldName = e.target.value;
-                setCharacter(updatedCharacter);
-                console.log(updatedCharacter);
-              }}
-            />
+                  updatedCharacter.shieldName = e.target.value;
+                  setCharacter(updatedCharacter);
+                  console.log(updatedCharacter);
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
