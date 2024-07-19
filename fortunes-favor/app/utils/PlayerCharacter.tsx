@@ -33,6 +33,24 @@ enum Rarity {
   unique = "Unique",
 }
 
+const downgradeBaseDamage = (damage: {
+  dice: number;
+  count: number;
+  stat: stat_options;
+}) => {
+  console.log("initial damage", damage);
+  let updatedDamage = { ...damage };
+  if (damage.dice === 6 && damage.count > 1) {
+    updatedDamage.dice = 12;
+    updatedDamage.count -= 1;
+  } else {
+    if (damage.dice > 4) {
+      updatedDamage.dice -= 2;
+    }
+  }
+  console.log("downgraded damage", updatedDamage);
+  return updatedDamage;
+};
 class Input {
   readonly title: string;
   readonly text: RuleText[];
@@ -426,6 +444,10 @@ export default class PlayerCharacter {
     return this._armorValue() - 5;
   }
   public get baseDamage() {
+    if (this.shieldName && this.shieldName != "None") {
+      if (this._characterClass)
+        return downgradeBaseDamage(this._characterClass?.damage);
+    }
     return this._characterClass?.damage;
   }
   public get range() {

@@ -6,6 +6,26 @@ import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
 import { FeatureCard } from "./blocks/FeatureCard";
+type ArmorInfoProps = { currentCharacter?: PlayerCharacter };
+const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
+  console.log("armor info", currentCharacter);
+  if (!currentCharacter) return <></>;
+  let txt = "";
+  switch (currentCharacter.shieldName.toLowerCase()) {
+    case "light":
+      txt = "reduce clash damage taken by " + currentCharacter.stats.agility;
+      break;
+    case "medium":
+      txt = "reduce clash damage taken by 2";
+      break;
+    case "heavy":
+      txt = "reduce clash damage taken by " + currentCharacter.stats.mettle;
+      break;
+  }
+  console.log("armor text", txt);
+  return <p>{txt}</p>;
+};
+
 type CharacterSheetProps = {
   currentCharacter?: PlayerCharacter;
   characterOptions?: any;
@@ -38,6 +58,7 @@ const PlayerCharacterSheet = ({
   }
   console.log("charracterOptions", characterOptions, lineages);
   let armorOptions = [{ title: "None" }];
+
   return (
     <div id="character_sheet">
       <div className="md:flex md:flex-row">
@@ -239,9 +260,7 @@ const PlayerCharacterSheet = ({
                         heart: e.target.valueAsNumber,
                         intellect: character.stats.intellect,
                       };
-                      console.log(updatedCharacter === character);
                       setCharacter(updatedCharacter);
-                      console.log(updatedCharacter);
                     }}
                   />
                 </div>
@@ -252,7 +271,6 @@ const PlayerCharacterSheet = ({
                     type="number"
                     defaultValue={character.stats.intellect}
                     onChange={(e) => {
-                      console.log(e.target.value);
                       const updatedCharacter = new PlayerCharacter(
                         undefined,
                         undefined,
@@ -266,7 +284,6 @@ const PlayerCharacterSheet = ({
                         intellect: e.target.valueAsNumber,
                       };
                       setCharacter(updatedCharacter);
-                      console.log(updatedCharacter);
                     }}
                   />
                 </div>
@@ -296,7 +313,7 @@ const PlayerCharacterSheet = ({
           </div>
           <div className="flex flex-row">
             <div className="m-2 flex flex-row">
-              <h3 className="mr-3 mt-3">Select Armor: </h3>
+              <h3 className="mr-3 mt-4">Select Armor: </h3>
               <DropdownField
                 name=""
                 options={
@@ -321,7 +338,7 @@ const PlayerCharacterSheet = ({
               />
             </div>
             <div className="m-2 flex flex-row">
-              <h3 className="mr-3 mt-3">Select Shield: </h3>
+              <h3 className="mr-3 mt-4">Select Shield: </h3>
               <DropdownField
                 name=""
                 options={
@@ -352,30 +369,33 @@ const PlayerCharacterSheet = ({
         <div className="mr-2">
           Armor:{" "}
           {character.armor > 0 ? (
-            <span>{character.armor}</span>
+            <span className="font-light">{character.armor}</span>
           ) : (
-            <span>&#8212;</span>
+            <span className="font-light">&#8212;</span>
           )}
         </div>
 
         <div className="mr-2">
           Counter:{" "}
           {character.counter && character.counter > 0 ? (
-            <span>{character.counter}</span>
+            <span className="font-light">{character.counter}</span>
           ) : (
-            <span>&#8212;</span>
+            <span className="font-light">&#8212;</span>
           )}
         </div>
         <div className="mr-2">
           Base Damage:{" "}
           {character.baseDamage ? (
-            <span>
+            <span className="font-light">
               {character.baseDamage.count}d{character.baseDamage?.dice} +{" "}
               {character.baseDamage?.stat}
             </span>
           ) : (
-            <span>&#8212;</span>
+            <span className="font-light">&#8212;</span>
           )}
+        </div>
+        <div className="font-light mx-2">
+          <ArmorInfo currentCharacter={character} />
         </div>
       </div>
       <div className="p-1 bg-slate-300 dark:bg-slate-700 mb-2 flex flex-row">
