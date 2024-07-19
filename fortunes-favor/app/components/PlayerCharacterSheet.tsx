@@ -8,7 +8,6 @@ import CharacterClass from "../utils/CharacterClass";
 import { FeatureCard } from "./blocks/FeatureCard";
 type ArmorInfoProps = { currentCharacter?: PlayerCharacter };
 const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
-  console.log("armor info", currentCharacter);
   if (!currentCharacter) return <></>;
   let txt = "";
   switch (currentCharacter.shieldName.toLowerCase()) {
@@ -21,9 +20,15 @@ const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
     case "heavy":
       txt = "reduce clash damage taken by " + currentCharacter.stats.mettle;
       break;
+    default:
+      return;
   }
-  console.log("armor text", txt);
-  return <p>{txt}</p>;
+  return (
+    <p>
+      <span className="font-light">Shield Effect: </span>
+      {txt}
+    </p>
+  );
 };
 
 type CharacterSheetProps = {
@@ -366,27 +371,27 @@ const PlayerCharacterSheet = ({
         </div>
       </div>
       <div className="flex flex-row m-2">
-        <div className="mr-2">
+        <div className="mr-2 font-light">
           Armor:{" "}
           {character.armor > 0 ? (
-            <span className="font-light">{character.armor}</span>
+            <span className="font-normal">{character.armor}</span>
           ) : (
             <span className="font-light">&#8212;</span>
           )}
         </div>
 
-        <div className="mr-2">
+        <div className="mr-2 font-light">
           Counter:{" "}
           {character.counter && character.counter > 0 ? (
-            <span className="font-light">{character.counter}</span>
+            <span className="font-normal">{character.counter}</span>
           ) : (
             <span className="font-light">&#8212;</span>
           )}
         </div>
-        <div className="mr-2">
+        <div className="mr-2 font-light">
           Base Damage:{" "}
           {character.baseDamage ? (
-            <span className="font-light">
+            <span className="font-normal">
               {character.baseDamage.count}d{character.baseDamage?.dice} +{" "}
               {character.baseDamage?.stat}
             </span>
@@ -394,7 +399,7 @@ const PlayerCharacterSheet = ({
             <span className="font-light">&#8212;</span>
           )}
         </div>
-        <div className="font-light mx-2">
+        <div className="font-normal mx-2">
           <ArmorInfo currentCharacter={character} />
         </div>
       </div>
