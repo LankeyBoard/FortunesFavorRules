@@ -6,19 +6,26 @@ import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
 import { FeatureCard } from "./blocks/FeatureCard";
+
 type ArmorInfoProps = { currentCharacter?: PlayerCharacter };
 const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
   if (!currentCharacter) return <></>;
   let txt = "";
   switch (currentCharacter.shieldName.toLowerCase()) {
     case "light":
-      txt = "reduce clash damage taken by " + currentCharacter.stats.agility;
+      txt =
+        "reduce clash damage taken by " +
+        currentCharacter.stats.agility +
+        " (Agility)";
       break;
     case "medium":
       txt = "reduce clash damage taken by 2";
       break;
     case "heavy":
-      txt = "reduce clash damage taken by " + currentCharacter.stats.mettle;
+      txt =
+        "reduce clash damage taken by " +
+        currentCharacter.stats.mettle +
+        " (Mettle)";
       break;
     default:
       return;
@@ -305,17 +312,6 @@ const PlayerCharacterSheet = ({
               </div>
             </div>
           </div>
-
-          <div className="flex flex-row mt-2">
-            <div>
-              <span className="font-light ml-2 mr-1">Max Health: </span>
-              <span>{character.maxHealth}</span>
-            </div>
-            <div>
-              <span className="font-light ml-2 mr-1">Max Stamina: </span>
-              <span>{character.maxStamina}</span>
-            </div>
-          </div>
           <div className="flex flex-row">
             <div className="m-2 flex flex-row">
               <h3 className="mr-3 mt-4">Select Armor: </h3>
@@ -370,74 +366,81 @@ const PlayerCharacterSheet = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-row m-2">
-        <div className="mr-2 font-light">
-          Armor:{" "}
-          {character.armor > 0 ? (
-            <span className="font-normal">{character.armor}</span>
-          ) : (
-            <span className="font-light">&#8212;</span>
-          )}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="border-l-2 border-l-amber-500 p-2">
+          <div className="flex flex-col">
+            <div className="flex-none">
+              <span className="font-light ml-2 mr-1">Max Health: </span>
+              <span>{character.maxHealth}</span>
+            </div>
+            <div className="flex-none">
+              <span className="font-light ml-2 mr-1">Max Stamina: </span>
+              <span>{character.maxStamina}</span>
+            </div>
+            <div className="ml-2 font-light flex-none">
+              Armor:{" "}
+              {character.armor > 0 ? (
+                <span className="font-normal">{character.armor}</span>
+              ) : (
+                <span className="font-light">&#8212;</span>
+              )}
+            </div>
 
-        <div className="mr-2 font-light">
-          Counter:{" "}
-          {character.counter && character.counter > 0 ? (
-            <span className="font-normal">{character.counter}</span>
-          ) : (
-            <span className="font-light">&#8212;</span>
-          )}
+            <div className="ml-2 font-light flex-none">
+              Counter:{" "}
+              {character.counter && character.counter > 0 ? (
+                <span className="font-normal">{character.counter}</span>
+              ) : (
+                <span className="font-light">&#8212;</span>
+              )}
+            </div>
+            <div className="mx-2 font-light">
+              Base Damage:{" "}
+              {character.baseDamage ? (
+                <span className="font-normal">
+                  {character.baseDamage.count}d{character.baseDamage?.dice} +{" "}
+                  {character.baseDamage?.stat}
+                </span>
+              ) : (
+                <span className="font-light">&#8212;</span>
+              )}
+            </div>
+            <div className="mx-2 flex-none">
+              <ArmorInfo currentCharacter={character} />
+            </div>
+          </div>
         </div>
-        <div className="mr-2 font-light">
-          Base Damage:{" "}
-          {character.baseDamage ? (
-            <span className="font-normal">
-              {character.baseDamage.count}d{character.baseDamage?.dice} +{" "}
-              {character.baseDamage?.stat}
-            </span>
-          ) : (
-            <span className="font-light">&#8212;</span>
-          )}
-        </div>
-        <div className="font-normal mx-2">
-          <ArmorInfo currentCharacter={character} />
-        </div>
-      </div>
-      <div className="p-1 bg-slate-300 dark:bg-slate-700 mb-2 flex flex-row">
-        <h3 className="mr-2 font-semibold">Speeds: </h3>
-        <div className="">
-          {character.speeds?.map((s) => {
-            return (
-              <span key={s.type} className="capitalize mr-2">
-                {s.type}: <span className="font-light">{s.speed}ft.</span>
+        <div className="p-1 pb-2 flex flex-col">
+          <div className="flex flex-row mr-1">
+            <h3 className="mr-2 font-semibold">Range</h3>
+            <div className="mr-2">
+              <span>Min: </span>
+              <span className="font-light">
+                {character.range?.min === 0
+                  ? "Melee"
+                  : character.range?.min + " ft."}
               </span>
-            );
-          })}
+            </div>
+            <div>
+              <span>Max: </span>
+              <span className="font-light">
+                {character.range?.max === 0
+                  ? "Melee"
+                  : character.range?.max + " ft."}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <h3 className="mr-2 font-semibold">Speeds: </h3>
+            {character.speeds?.map((s) => {
+              return (
+                <span key={s.type} className="capitalize mr-2">
+                  {s.type}: <span className="font-light">{s.speed} ft.</span>
+                </span>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-row mr-1 ml-1">
-        <h3 className="mr-2 font-semibold">Range</h3>
-        <div className="mr-2">
-          <span>Min: </span>
-          <span className="font-light">
-            {character.range?.min === 0 ? "Melee" : character.range?.min}
-          </span>
-        </div>
-        <div>
-          <span>Max: </span>
-          <span className="font-light">
-            {character.range?.max === 0 ? "Melee" : character.range?.max}
-          </span>
-        </div>
-      </div>
-
-      <div className="ml-2 mr-2 w-10 mt-3">
-        <InputField
-          name="Coin"
-          isRequired={true}
-          type="number"
-          defaultValue={character.coin}
-        />
       </div>
       <div>
         <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Actions</h3>
@@ -487,6 +490,14 @@ const PlayerCharacterSheet = ({
       </div>
       <div>
         <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Items</h3>
+        <div className="ml-2 mr-2 w-10 mt-3">
+          <InputField
+            name="Coin"
+            isRequired={true}
+            type="number"
+            defaultValue={character.coin}
+          />
+        </div>
         <div>
           {character.items && character.items?.length > 0 ? (
             character.items?.map((item) => {

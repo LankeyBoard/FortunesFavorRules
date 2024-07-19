@@ -58,7 +58,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
             feature.text.length > 0 &&
             feature.text.map((t) => {
               return (
-                <p key={t.text} className={"line-clamp-3 pl-4 pr-3 pt-3"}>
+                <p key={t.text} className={"pl-4 pr-3 pt-3"}>
                   {t.text}
                 </p>
               );

@@ -214,8 +214,13 @@ export default class PlayerCharacter {
       case "heavy":
         armor = 17;
         break;
-      case "muscle bound":
-        armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+      case "none":
+        if (
+          this.class?.slug === "BRAWLER" &&
+          this.armorName.toLowerCase() === "none"
+        ) {
+          armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+        }
         break;
     }
     switch (this._shieldName.toLowerCase()) {
@@ -260,7 +265,7 @@ export default class PlayerCharacter {
       this._armorName = startingCharacter.armorName;
       this._shieldName = startingCharacter.shieldName;
       this._counter = startingCharacter.counter || this._armorValue() - 5;
-      this._range = startingCharacter.range;
+      this._range = startingCharacter.class?.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
       this._counters = startingCharacter.counters;
@@ -330,7 +335,6 @@ export default class PlayerCharacter {
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
-
     this._range = characterClass.range;
   }
   public get culture(): CharacterCulture | undefined {
@@ -451,6 +455,16 @@ export default class PlayerCharacter {
     return this._characterClass?.damage;
   }
   public get range() {
+    if (this.class && this._range) {
+      if (
+        this.class.slug === "BRAWLER" &&
+        this.stats.agility > this.stats.mettle
+      ) {
+        let tempRange = { ...this._range };
+        tempRange.max = this._range.max * 2;
+        return tempRange;
+      }
+    }
     return this._range;
   }
   public get items() {
