@@ -6,6 +6,8 @@ import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
 import { FeatureCard } from "./blocks/FeatureCard";
+import { GenericFeature } from "../utils/graphQLtypes";
+import { CharacterTrait } from "../utils/CharacterTrait";
 
 type ArmorInfoProps = { currentCharacter?: PlayerCharacter };
 const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
@@ -52,6 +54,8 @@ const PlayerCharacterSheet = ({
   );
   let cultures: CharacterCulture[] = [];
   let lineages: CharacterLineage[] = [];
+  let noviceFeatures: GenericFeature[] = [];
+  let veteranFeatures: GenericFeature[] = [];
   let characterClasses: CharacterClass[] = [];
   if (characterOptions.cultures) {
     characterOptions.cultures.forEach((culture: any) => {
@@ -68,7 +72,20 @@ const PlayerCharacterSheet = ({
       characterClasses.push(new CharacterClass(characterClass));
     });
   }
-  console.log("charracterOptions", characterOptions, lineages);
+  if (characterOptions.universalFeatures) {
+    characterOptions.universalFeatures.forEach((feature: any) => {
+      if (feature.featureType === "NOVICE")
+        noviceFeatures.push(new CharacterTrait(feature));
+      if (feature.featureType === "VETERAN")
+        veteranFeatures.push(new CharacterTrait(feature));
+    });
+  }
+  console.log(
+    "characterOptions",
+    characterOptions,
+    noviceFeatures,
+    veteranFeatures
+  );
   let armorOptions = [{ title: "None" }];
 
   return (

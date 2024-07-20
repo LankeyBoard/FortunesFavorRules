@@ -201,7 +201,6 @@ export default class PlayerCharacter {
   private _counters?: CharacterFeature[];
   private _features?: CharacterFeature[];
   private _languages?: LANGUAGES[];
-
   private _armorValue = () => {
     let armor = 10 + this.stats.agility;
     switch (this._armorName.toLowerCase()) {

@@ -226,6 +226,50 @@ export default async function CharacterSheetPage() {
           }
         }
       }
+      universalFeatures {
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
+            type
+            options
+            text
+          }
+        }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+        costsFortunesFavor
+        href
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        title
+        text {
+          options
+          text
+          type
+        }
+        featureType
+      }
     }
   `;
 
