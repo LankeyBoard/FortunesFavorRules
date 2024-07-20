@@ -41,6 +41,34 @@ const query = gql`
           type
         }
         title
+        subRules {
+          href
+          list
+          ruleType
+          shortText
+          shortTitle
+          subRules {
+            href
+            list
+            ruleType
+            shortText
+            shortTitle
+            slug
+            text {
+              text
+              type
+              options
+            }
+            title
+          }
+          slug
+          text {
+            options
+            text
+            type
+          }
+          title
+        }
       }
       text {
         options
@@ -64,7 +92,7 @@ async function GeneralRule() {
         rule.slug,
         rule.ruleType,
         rule.text,
-        rule.rules,
+        rule.subRules,
         rule.list
       )
     );

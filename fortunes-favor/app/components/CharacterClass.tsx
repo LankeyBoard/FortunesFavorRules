@@ -115,7 +115,9 @@ const ExtrasDisplay = ({ extras }: extrasDisplayProps) => {
   if (extras.forms) {
     return (
       <div>
-        <h1 className="my-4 mx-2 text-2xl tracking-wide">Forms</h1>
+        <h1 className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
+          Forms
+        </h1>
         {extras.forms.map((form: Form) => (
           <FormDisplay form={form} key={form.slug} />
         ))}
@@ -361,7 +363,9 @@ const ClassRule = ({ data }: classProps) => {
         </div>
       </div>
       <div id="features">
-        <div className="my-4 mx-2 text-2xl tracking-wide">Features</div>
+        <div className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
+          Features
+        </div>
         <div className="px-10">
           {class_rules.features.map((f) => (
             <FeatureDisplay feature={f} key={f.slug} />

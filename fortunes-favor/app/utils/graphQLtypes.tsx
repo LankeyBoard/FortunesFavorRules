@@ -23,7 +23,7 @@ export type GenericRule = {
   slug: string;
   ruleType: rule_type;
   text: RuleText[];
-  rules: GenericRule[];
+  subRules: GenericRule[];
   list: string[];
   shortText?: string;
 };

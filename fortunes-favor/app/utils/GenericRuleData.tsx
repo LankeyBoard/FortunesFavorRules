@@ -7,7 +7,7 @@ export default class RuleData implements GenericRule {
   readonly slug: string;
   ruleType: rule_type;
   text: TextField[];
-  rules: RuleData[];
+  subRules: RuleData[];
   list: string[];
   shortText?: string;
 
@@ -24,7 +24,7 @@ export default class RuleData implements GenericRule {
     this.slug = slug;
     this.ruleType = ruleType;
     this.text = text;
-    this.rules = rules;
+    this.subRules = rules;
     this.list = list;
     this.shortText = shortText;
   }
