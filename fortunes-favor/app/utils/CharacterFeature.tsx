@@ -1,6 +1,10 @@
 import { Choice } from "@/app/utils/FieldTypes";
 import { rule_type, findEnum, action_type } from "../enums";
-import { CharacterClassFeature } from "./graphQLtypes";
+import {
+  CharacterClassFeature,
+  FeatureWithoutChoices,
+  RuleText,
+} from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
 
 export default class CharacterFeatureData
@@ -39,10 +43,14 @@ export default class CharacterFeatureData
       }
     }
     this.text = feature_data.text;
-    if (this.ruleType === rule_type.Choice && feature_data.choices) {
-      this.choices = feature_data.choices.map(
-        (json_choice: any) => new Choice(json_choice)
-      );
-    } else this.choices = [];
+    this.choices = [];
+    feature_data.simpleChoices?.forEach((choice: RuleText) => {
+      if (choice.text) this.choices.push(choice);
+    });
+    feature_data.complexChoices?.forEach((choice: FeatureWithoutChoices) => {
+      if (choice.title != null) {
+        this.choices.push(choice);
+      }
+    });
   }
 }

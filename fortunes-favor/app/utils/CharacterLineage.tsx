@@ -1,6 +1,5 @@
 import { size_options, findEnum } from "../enums";
 import { CharacterTrait } from "./CharacterTrait";
-import RuleData from "./GenericRuleData";
 
 export default class CharacterLineage {
   title: string;

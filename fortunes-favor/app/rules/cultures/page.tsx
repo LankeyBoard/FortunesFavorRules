@@ -5,32 +5,57 @@ import { graphQLCulture } from "@/app/utils/graphQLtypes";
 import { Suspense } from "react";
 
 const query = gql`
-  query AllCultures {
+  query GetAllCultures {
     cultures {
       description
-      title
+      href
       languages
+      shortTitle
       slug
       stat
+      title
       traits {
-        list
-        ruleType
-        rules {
-          ruleType
-          text {
-            text
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
             type
+            options
+            text
           }
-          title
-          slug
-          list
         }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+        costsFortunesFavor
+        href
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
         slug
-        title
+        staminaCost
         text {
+          options
           text
           type
         }
+        title
       }
     }
   }

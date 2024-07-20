@@ -5,43 +5,45 @@ import { GenericRule } from "@/app/utils/graphQLtypes";
 import { gql } from "@apollo/client";
 
 const query = gql`
-  query GetGenericRule {
+  query GetGenericRules {
     genericRules {
-      slug
-      title
+      href
       list
       ruleType
-      rules {
+      shortText
+      shortTitle
+      slug
+      title
+      subRules {
+        href
         list
         ruleType
-        rules {
+        shortText
+        shortTitle
+        subRules {
+          href
           list
           ruleType
-          rules {
-            list
-            ruleType
-            slug
-            title
-            text {
-              text
-              type
-            }
-          }
+          shortText
+          shortTitle
           slug
           text {
             text
             type
+            options
           }
           title
         }
         slug
-        title
         text {
+          options
           text
           type
         }
+        title
       }
       text {
+        options
         text
         type
       }

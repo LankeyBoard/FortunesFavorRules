@@ -51,7 +51,6 @@ const Culture = ({ data, isList = false }: CultureProps) => {
           {c.stat}
         </div>
         <Traits title="Traits" traits={c.features} />
-        {c.options && <Traits title="Options" traits={c.options} />}
       </div>
     </div>
   );
