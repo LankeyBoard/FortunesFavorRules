@@ -23,7 +23,8 @@ export default class CharacterFeatureData
       feature_data.text,
       feature_data.list,
       feature_data.shortText,
-      feature_data.choices
+      feature_data.choices,
+      feature_data.chooseNum
     );
     this.level = feature_data.level;
     this.staminaCost = feature_data.staminaCost;
@@ -44,6 +45,7 @@ export default class CharacterFeatureData
     }
     this.text = feature_data.text;
     this.choices = [];
+    this.chooseNum = feature_data.chooseNum;
     feature_data.simpleChoices?.forEach((choice: RuleText) => {
       if (choice.text) this.choices.push(choice);
     });

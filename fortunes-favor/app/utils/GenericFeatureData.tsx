@@ -9,6 +9,7 @@ export default class GenericFeatureData implements GenericFeature {
   shortText?: string;
   multiSelect: boolean;
   choices: FeatureChoices[];
+  chooseNum: number;
 
   constructor(
     title: string,
@@ -17,6 +18,7 @@ export default class GenericFeatureData implements GenericFeature {
     text: RuleText[],
     multiSelect: boolean,
     choices: FeatureChoices[],
+    chooseNum: number,
     shortText?: string
   ) {
     this.title = title;
@@ -26,6 +28,7 @@ export default class GenericFeatureData implements GenericFeature {
     this.shortText = shortText;
     this.multiSelect = multiSelect;
     this.choices = choices;
-    console.log("genericFeature choice", title, choices);
+    this.chooseNum = chooseNum;
+    console.log("genericFeature choice", title, chooseNum, choices);
   }
 }

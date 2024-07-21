@@ -1,6 +1,5 @@
 import CharacterFeatureData from "@/app/utils/CharacterFeature";
 import GenericFeatureData from "@/app/utils/GenericFeatureData";
-import { FeatureChoices } from "@/app/utils/graphQLtypes";
 
 type FeatureCardProps = {
   feature: GenericFeatureData | CharacterFeatureData;

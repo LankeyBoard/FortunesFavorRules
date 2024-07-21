@@ -16,6 +16,7 @@ export class CharacterTrait implements GenericFeature {
   shortText?: string | undefined;
   multiSelect: boolean;
   choices: FeatureChoices[];
+  chooseNum: number;
   constructor(data: any) {
     this.title = data.title;
     this.text = data.text;
@@ -24,6 +25,7 @@ export class CharacterTrait implements GenericFeature {
     this.list = data.list;
     this.shortText = data.shortText;
     this.multiSelect = data.multiSelect;
+    this.chooseNum = data.chooseNum | 0;
     this.choices = [];
     data.simpleChoices?.forEach((choice: RuleText) => {
       if (choice.text) this.choices.push(choice);

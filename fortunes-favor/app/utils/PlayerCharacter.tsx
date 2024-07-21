@@ -82,11 +82,23 @@ class CharacterFeature extends GenericFeatureData {
     text: RuleText[],
     multiSelect: boolean,
     choices: FeatureChoices[],
+    chosen: string[],
+    chooseNum: number,
     shortText?: string | undefined
   ) {
-    super(title, slug, ruleType, text, multiSelect, choices, shortText);
+    super(
+      title,
+      slug,
+      ruleType,
+      text,
+      multiSelect,
+      choices,
+      chooseNum,
+      shortText
+    );
     this.source = source;
     this.effects = effects;
+    chosen = [];
   }
 }
 
@@ -166,6 +178,7 @@ const updateFeatures = (
         effects: [],
         multiSelect: feature.multiSelect,
         choices: feature.choices,
+        chooseNum: feature.chooseNum,
       });
     }
   });

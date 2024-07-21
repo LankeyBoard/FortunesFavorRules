@@ -3,7 +3,7 @@ import { getClient } from "@/app/utils/graphQLclient";
 import { gql } from "@apollo/client";
 export default async function CharacterSheetPage() {
   const query = gql`
-    query GetAllCharacterOptions {
+    query AllCharacterOptions {
       characterClasses {
         attackStat
         complexity
@@ -79,6 +79,7 @@ export default async function CharacterSheetPage() {
               }
             }
           }
+          chooseNum
           level
           href
           ruleType
@@ -153,6 +154,7 @@ export default async function CharacterSheetPage() {
               }
             }
           }
+          chooseNum
           costsFortunesFavor
           href
           multiSelect
@@ -210,6 +212,7 @@ export default async function CharacterSheetPage() {
               }
             }
           }
+          chooseNum
           costsFortunesFavor
           href
           multiSelect
@@ -254,6 +257,7 @@ export default async function CharacterSheetPage() {
             }
           }
         }
+        chooseNum
         costsFortunesFavor
         href
         multiSelect
