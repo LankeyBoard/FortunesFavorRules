@@ -1,11 +1,11 @@
-import { Choice } from "@/app/utils/FieldTypes";
-import { rule_type, findEnum, action_type } from "../enums";
+import { findEnum, action_type } from "../enums";
 import {
   CharacterClassFeature,
   FeatureWithoutChoices,
   RuleText,
 } from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
+import { PlayerCharacterFeature } from "./PlayerCharacter";
 
 export default class CharacterFeatureData
   extends GenericFeatureData
@@ -55,4 +55,33 @@ export default class CharacterFeatureData
       }
     });
   }
+  toPlayerFeature = (source: Object) => {
+    let f = {
+      title: this.title,
+      slug: this.slug,
+      ruleType: this.ruleType,
+      text: this.text,
+      multiSelect: this.multiSelect,
+      choices: this.choices,
+      chooseNum: this.chooseNum,
+      shortText: this.shortText,
+      level: this.level,
+      effects: [],
+      chosen: [],
+    };
+    return new PlayerCharacterFeature(
+      this.title,
+      source,
+      [],
+      this.slug,
+      this.ruleType,
+      this.text,
+      this.multiSelect,
+      this.choices,
+      [],
+      this.chooseNum,
+      this.shortText,
+      this.level
+    );
+  };
 }

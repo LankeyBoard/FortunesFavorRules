@@ -70,9 +70,11 @@ class Feature extends Input {
   }
 }
 
-class CharacterFeature extends GenericFeatureData {
+export class PlayerCharacterFeature extends GenericFeatureData {
   readonly source: Object;
   readonly effects: Effect[];
+  private _chosen: string[];
+  private _level: number;
   constructor(
     title: string,
     source: Object,
@@ -84,7 +86,8 @@ class CharacterFeature extends GenericFeatureData {
     choices: FeatureChoices[],
     chosen: string[],
     chooseNum: number,
-    shortText?: string | undefined
+    shortText?: string | undefined,
+    level?: number
   ) {
     super(
       title,
@@ -98,7 +101,27 @@ class CharacterFeature extends GenericFeatureData {
     );
     this.source = source;
     this.effects = effects;
-    chosen = [];
+    this._chosen = chosen;
+    this._level = level || 0;
+    console.log("PlayerCharacterFeature", this);
+  }
+  public get chosen() {
+    return this._chosen;
+  }
+  public set chosen(c: string[]) {
+    this._chosen = c;
+  }
+  public get level() {
+    return this._level;
+  }
+  public addChoice(choice: string) {
+    if (this.chosen.includes(choice)) return;
+    if (this.chosen.length < this.chooseNum) this.chosen.push(choice);
+    else this.chosen = [...this._chosen.slice(1), choice];
+  }
+  public removeChoice(choice: string) {
+    const i = this._chosen.indexOf(choice);
+    if (i !== -1) this._chosen.splice(i, 1);
   }
 }
 
@@ -124,19 +147,19 @@ const updateFeatures = (
   currentCharacter: PlayerCharacter
 ) => {
   // Remove actions from old source
-  const updatedActions: CharacterFeature[] | undefined = [];
+  const updatedActions: PlayerCharacterFeature[] | undefined = [];
   currentCharacter.actions?.forEach((action) => {
     if (action.source !== sourceType) {
       updatedActions.push(action);
     }
   });
-  const updatedCounters: CharacterFeature[] | undefined = [];
+  const updatedCounters: PlayerCharacterFeature[] | undefined = [];
   currentCharacter.counters?.forEach((action) => {
     if (action.source !== sourceType) {
       updatedCounters.push(action);
     }
   });
-  const updatedFeatures: CharacterFeature[] = [];
+  const updatedFeatures: PlayerCharacterFeature[] = [];
   currentCharacter.features?.forEach((feature) => {
     if (feature.source !== sourceType) {
       updatedFeatures.push(feature);
@@ -147,39 +170,73 @@ const updateFeatures = (
     if (feature instanceof CharacterFeatureData) {
       if (feature.level <= currentCharacter.level) {
         if (feature.actionType === action_type.action) {
-          updatedActions.push({
-            ...feature,
-            source: sourceType,
-            text: feature.text,
-            ruleType: rule_type.Rule,
-            effects: [],
-          });
+          updatedActions.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
         } else if (feature.actionType === action_type.counter) {
-          updatedActions.push({
-            ...feature,
-            source: sourceType,
-            text: feature.text,
-            effects: [],
-          });
+          updatedActions.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
         } else {
-          updatedFeatures.push({
-            ...feature,
-            source: sourceType,
-            text: feature.text,
-            effects: [],
-          });
+          updatedFeatures.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
         }
       }
     } else {
-      updatedFeatures.push({
-        ...feature,
-        source: sourceType,
-        text: feature.text,
-        effects: [],
-        multiSelect: feature.multiSelect,
-        choices: feature.choices,
-        chooseNum: feature.chooseNum,
-      });
+      updatedFeatures.push(
+        new PlayerCharacterFeature(
+          feature.title,
+          sourceType,
+          [],
+          feature.slug,
+          rule_type.Rule,
+          feature.text,
+          feature.multiSelect,
+          feature.choices,
+          [],
+          feature.chooseNum
+        )
+      );
     }
   });
 
@@ -210,9 +267,9 @@ export default class PlayerCharacter {
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
   private _items?: Item[];
-  private _actions?: CharacterFeature[];
-  private _counters?: CharacterFeature[];
-  private _features?: CharacterFeature[];
+  private _actions?: PlayerCharacterFeature[];
+  private _counters?: PlayerCharacterFeature[];
+  private _features?: PlayerCharacterFeature[];
   private _languages?: LANGUAGES[];
   private _armorValue = () => {
     let armor = 10 + this.stats.agility;
@@ -316,12 +373,22 @@ export default class PlayerCharacter {
       if (newLevel > this.level) {
         this.class?.features.forEach((feature) => {
           if (feature.level > this.level && feature.level <= newLevel) {
-            this.features?.push({
-              ...feature,
-              source: "class",
-              text: feature.text,
-              effects: [],
-            });
+            this.features?.push(
+              new PlayerCharacterFeature(
+                feature.title,
+                "class",
+                [],
+                feature.slug,
+                rule_type.Rule,
+                feature.text,
+                feature.multiSelect,
+                feature.choices,
+                [],
+                feature.chooseNum,
+                feature.shortText,
+                feature.level
+              )
+            );
           }
         });
       } else if (newLevel < this.level) {

@@ -1,12 +1,13 @@
-import CharacterFeatureData from "@/app/utils/CharacterFeature";
-import GenericFeatureData from "@/app/utils/GenericFeatureData";
+import { PlayerCharacterFeature } from "@/app/utils/PlayerCharacter";
+import { useState } from "react";
 
 type FeatureCardProps = {
-  feature: GenericFeatureData | CharacterFeatureData;
+  feature: PlayerCharacterFeature;
   source: string;
 };
 
 export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
+  const [cardFeature, setFeature] = useState(feature);
   let titleStyle = "flex p-2";
   let resultType = "";
   switch (source) {
@@ -38,24 +39,29 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
       titleStyle += " bg-red-500";
   }
   console.log("feature card choices", feature);
+  if (cardFeature.chosen.length > 0 && cardFeature.choices.length > 0)
+    console.log("here", cardFeature.chosen[0] in cardFeature.choices[0]);
+  const choiceStyle =
+    "odd:bg-slate-300 dark:odd:bg-slate-700 cursor-pointer p-2";
+  const selectedChoiceStyle = choiceStyle + " border-2 border-amber-500";
   return (
     <>
       <div className="pb-3">
         <div className={titleStyle}>
           <h1 className="text-lg font-semibold float-left grow">
-            {feature.title}
-            {"level" in feature && (
+            {cardFeature.title}
+            {cardFeature.level > 0 && (
               <span className="ml-2 font-light text-base">
-                level {feature.level}
+                level {cardFeature.level}
               </span>
             )}
           </h1>
           <h3 className="float-right">{resultType}</h3>
         </div>
         <div className="clear-both">
-          {feature.text &&
-            feature.text.length > 0 &&
-            feature.text.map((t) => {
+          {cardFeature.text &&
+            cardFeature.text.length > 0 &&
+            cardFeature.text.map((t) => {
               return (
                 <p key={t.text} className={"pl-4 pr-3 pt-3"}>
                   {t.text}
@@ -63,9 +69,9 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
               );
             })}
           <div className="m-4 ">
-            {feature.choices &&
-              feature.choices.length > 0 &&
-              feature.choices.map((choice) => {
+            {cardFeature.choices &&
+              cardFeature.choices.length > 0 &&
+              cardFeature.choices.map((choice) => {
                 if (typeof choice.text === "string") {
                   return <p key={choice.text}>{choice.text}</p>;
                 } else if ("slug" in choice) {
@@ -73,7 +79,33 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                     <div
                       key={choice.slug}
                       id={choice.slug}
-                      className="odd:bg-slate-300 dark:odd:bg-slate-700 p-2"
+                      className={
+                        cardFeature.chosen.includes(choice.slug)
+                          ? selectedChoiceStyle
+                          : choiceStyle
+                      }
+                      onClick={(click) => {
+                        if (feature.chosen.includes(click.currentTarget.id))
+                          feature.removeChoice(click.currentTarget.id);
+                        else feature.addChoice(click.currentTarget.id);
+                        setFeature(
+                          new PlayerCharacterFeature(
+                            feature.title,
+                            feature.source,
+                            feature.effects,
+                            feature.slug,
+                            feature.ruleType,
+                            feature.text,
+                            feature.multiSelect,
+                            feature.choices,
+                            feature.chosen,
+                            feature.chooseNum,
+                            feature.shortText,
+                            feature.level
+                          )
+                        );
+                        console.log("Clicked choice", cardFeature);
+                      }}
                     >
                       <h3>{choice.title}</h3>
                       {choice.staminaCost > 0 && (
