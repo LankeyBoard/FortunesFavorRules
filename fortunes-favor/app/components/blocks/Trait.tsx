@@ -14,7 +14,7 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
             return (
               <tr
                 key={rule.slug}
-                className="odd:bg-slate-950 even:bg-slate-700"
+                className="odd:bg-slate-300 even:bg-slate-200 dark:odd:bg-slate-950 dark:even:bg-slate-700"
               >
                 <div className="p-2">
                   <Trait t={rule} />

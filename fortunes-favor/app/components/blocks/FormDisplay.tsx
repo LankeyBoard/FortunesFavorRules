@@ -89,11 +89,14 @@ const FormDisplay = ({ form }: formProps) => {
                 key={damage.count + "-" + damage.dice}
                 className="capitalize"
               >
-                {damage.count}d{damage.dice} {damage.stat && "+ " + damage.stat}{" "}
-                <DamageTypes damageArr={damage.type} />
-                {form.damage.length > 1 &&
-                  index < form.damage.length - 1 &&
-                  " + "}
+                {damage.count}d{damage.dice}{" "}
+                {damage.stat && "+ " + damage.stat.toLocaleLowerCase()}{" "}
+                <span className="italic">
+                  <DamageTypes damageArr={damage.type} />
+                  {form.damage.length > 1 &&
+                    index < form.damage.length - 1 &&
+                    " + "}
+                </span>
               </span>
             );
           })}

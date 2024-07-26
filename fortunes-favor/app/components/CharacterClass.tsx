@@ -13,9 +13,9 @@ type fieldProps = {
 };
 const FieldDisplay = ({ field }: fieldProps) => {
   const displayVariants = {
-    reg: "",
-    flavor: "italic",
-    eg: "italic text-slate-700 dark:text-slate-300",
+    reg: "inline",
+    flavor: "inline italic",
+    eg: "inline italic text-slate-700 dark:text-slate-300",
   };
   let fieldDisplayStyle = displayVariants.reg;
   switch (field.type) {
@@ -30,6 +30,7 @@ const FieldDisplay = ({ field }: fieldProps) => {
     <div className={fieldDisplayStyle}>
       {field.type === rule_type.Eg && <span>Eg. </span>}
       <SlugLinker text={field.text} />
+      <span className="block" />
     </div>
   );
 };
@@ -130,12 +131,17 @@ type choiceProps = {
 };
 const ChoiceDisplay = ({ choice }: choiceProps) => {
   return (
-    <tr className="">
-      <td className="px-2" id={choice.slug}>
-        <b>{choice.title}</b> -{" "}
-        {choice.text?.map((t) => <FieldDisplay key={t.text} field={t} />)}
-      </td>
-    </tr>
+    <div
+      className="p-2 dark:odd:bg-slate-600 odd:bg-slate-300"
+      id={choice.slug}
+    >
+      <b className="inline">{choice.title}</b> -{" "}
+      {choice.text?.map((t) => (
+        <div key={t.text} className="inline">
+          <FieldDisplay field={t} />
+        </div>
+      ))}
+    </div>
   );
 };
 

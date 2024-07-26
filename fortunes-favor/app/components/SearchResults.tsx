@@ -125,7 +125,7 @@ const SearchResultsTable = ({ results }: SearchResultsTableProps) => {
         return (
           <div
             key={result.slug}
-            className="even:bg-slate-800 odd:bg-slate-950 min-h-5 mb-3 hover:scale-105"
+            className="bg-slate-200 dark:bg-slate-800 min-h-5 mb-3 hover:scale-105"
           >
             <SearchResult result={result} />
           </div>
