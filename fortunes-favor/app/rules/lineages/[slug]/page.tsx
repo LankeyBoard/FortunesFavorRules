@@ -7,27 +7,56 @@ const query = gql`
   query GetLineage($slug: String) {
     lineages(slug: $slug) {
       description
+      href
+      shortTitle
       size
       slug
-      speed
-      title
+      speeds {
+        type
+        speed
+      }
       stat
+      title
       traits {
-        list
-        ruleType
-        rules {
-          list
-          ruleType
-          slug
-          title
-          text {
-            text
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
             type
+            options
+            text
           }
         }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+
+        costsFortunesFavor
+        href
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
         slug
+        staminaCost
         title
         text {
+          options
           text
           type
         }

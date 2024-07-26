@@ -1,175 +1,286 @@
-"use client";
-import InputField from "@/app/components/blocks/InputField";
-import PlayerCharacter from "@/app/utils/PlayerCharacter";
-import { useEffect, useState } from "react";
+import PlayerCharacterSheet from "@/app/components/PlayerCharacterSheet";
+import { getClient } from "@/app/utils/graphQLclient";
+import { gql } from "@apollo/client";
+export default async function CharacterSheetPage() {
+  const query = gql`
+    query AllCharacterOptions {
+      characterClasses {
+        attackStat
+        complexity
+        damage {
+          count
+          stat
+          dice
+          type
+        }
+        description
+        extra {
+          forms {
+            armor {
+              baseArmor
+              stat
+            }
+            attackStat
+            damage {
+              dice
+              stat
+              type
+              count
+            }
+            features {
+              text
+              title
+            }
+            href
+            shortTitle
+            size
+            slug
+            title
+          }
+        }
+        health
+        healthOnLevel
+        href
+        shortTitle
+        range {
+          max
+          min
+        }
+        slug
+        stamina
+        staminaOnLevel
+        staminaStat
+        title
+        features {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
+              options
+              text
+            }
+          }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          chooseNum
+          level
+          href
+          ruleType
+          multiSelect
+          shortText
+          slug
+          shortTitle
+          staminaCost
+          title
+          text {
+            options
+            text
+            type
+          }
+          costsFortunesFavor
+        }
+        training {
+          armor
+          magic {
+            options
+            pick
+          }
+          shields
+          weapons {
+            melee {
+              options
+              pick
+            }
+            ranged {
+              options
+              pick
+            }
+            special {
+              options
+              pick
+            }
+          }
+        }
+      }
+      cultures {
+        description
+        href
+        languages
+        shortTitle
+        slug
+        stat
+        traits {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
+              options
+              text
+            }
+          }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          chooseNum
+          costsFortunesFavor
+          href
+          multiSelect
+          ruleType
+          shortText
+          shortTitle
+          slug
+          staminaCost
+          text {
+            options
+            type
+            text
+          }
+          title
+        }
+        title
+      }
+      lineages {
+        description
+        href
+        shortTitle
+        size
+        slug
+        speeds {
+          type
+          speed
+        }
+        stat
+        title
+        traits {
+          actionType
+          simpleChoices: choices {
+            ... on RuleText {
+              type
+              options
+              text
+            }
+          }
+          complexChoices: choices {
+            ... on FeatureWithoutChoices {
+              href
+              shortTitle
+              actionType
+              costsFortunesFavor
+              multiSelect
+              ruleType
+              shortText
+              slug
+              staminaCost
+              title
+              text {
+                options
+                text
+                type
+              }
+            }
+          }
+          chooseNum
+          costsFortunesFavor
+          href
+          multiSelect
+          ruleType
+          shortText
+          shortTitle
+          slug
+          staminaCost
+          title
+          text {
+            options
+            text
+            type
+          }
+        }
+      }
+      universalFeatures {
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
+            type
+            options
+            text
+          }
+        }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+        chooseNum
+        costsFortunesFavor
+        href
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        title
+        text {
+          options
+          text
+          type
+        }
+        featureType
+      }
+    }
+  `;
 
-export default function PlayerCharacterSheet() {
-  const [character, setCharacter] = useState(new PlayerCharacter());
+  const client = getClient();
+  const { data } = await client.query({
+    query,
+  });
 
-  return (
-    <div>
-      Player Character
-      <div className="">
-        <div className="flex flex-row">
-          <InputField
-            name="Level"
-            isRequired={true}
-            type="number"
-            defaultValue={character.level}
-          />
-          <InputField
-            name="Character Name"
-            isRequired={true}
-            defaultValue={character.name}
-          />
-        </div>
-        <div className="flex flex-row">
-          <InputField
-            name="Culture"
-            isRequired={true}
-            defaultValue={character.culture?.title}
-          />
-          <InputField
-            name="Lineage"
-            isRequired={true}
-            defaultValue={character.lineage?.title}
-          />
-          <InputField
-            name="Class"
-            isRequired={true}
-            defaultValue={character.class?.title}
-          />
-        </div>
-      </div>
-      <div>
-        Stats
-        <div className="flex flex-row">
-          <InputField
-            name="Mettle"
-            isRequired={true}
-            defaultValue={character.stats?.mettle}
-          />
-          <InputField
-            name="Agility"
-            isRequired={true}
-            defaultValue={character.stats?.agility}
-          />
-          <InputField
-            name="Heart"
-            isRequired={true}
-            defaultValue={character.stats?.heart}
-          />
-          <InputField
-            name="Intellect"
-            isRequired={true}
-            defaultValue={character.stats?.intellect}
-          />
-        </div>
-      </div>
-      <div className="flex flex-row">
-        <InputField
-          name="Max Stamina"
-          isRequired={true}
-          defaultValue={character.maxStamina}
-        />
-        <InputField
-          name="Current Stamina"
-          isRequired={true}
-          defaultValue={character.currentStamina}
-        />
-      </div>
-      <div className="flex flex-row">
-        <InputField
-          name="Max Health"
-          isRequired={true}
-          defaultValue={character.maxHealth}
-        />
-        <InputField
-          name="Current Health"
-          isRequired={true}
-          defaultValue={character.currentHealth}
-        />
-      </div>
-      <div className="flex flex-row">
-        <InputField
-          name="Armor"
-          isRequired={true}
-          defaultValue={character.armor}
-        />
-        <InputField
-          name="Counter"
-          isRequired={true}
-          defaultValue={character.counter}
-        />
-        <InputField
-          name="Base Damage"
-          isRequired={true}
-          defaultValue={character.baseDamage}
-        />
-      </div>
-      <div>
-        <span>Speed</span>
-        <div className="flex flex-row">
-          {character.speeds?.map((s) => {
-            return (
-              <InputField
-                name={s.type}
-                isRequired={true}
-                defaultValue={s.speed}
-                key={s.type}
-              />
-            );
-          })}
-        </div>
-      </div>
-      <div>
-        <span>Range</span>
-        <div className="flex flex-row">
-          <InputField
-            name="Min"
-            isRequired={true}
-            defaultValue={character.range?.min}
-          />
-          <InputField
-            name="Min"
-            isRequired={true}
-            defaultValue={character.range?.max}
-          />
-        </div>
-      </div>
-      <div>
-        <span>Items</span>
-        <div>
-          {character.items?.map((item) => {
-            return <span key={item.title}>{item.title}</span>;
-          })}
-        </div>
-      </div>
-      <div>
-        <InputField
-          name="Coin"
-          isRequired={true}
-          defaultValue={character.coin}
-        />
-      </div>
-      <div>
-        <span>Actions</span>
-        {character.actions?.map((action) => {
-          return <div key={action.title}>{action.title}</div>;
-        })}
-      </div>
-      <div>
-        <span>Counters</span>
-        {character.counters?.map((counter) => {
-          return <div key={counter.title}>{counter.title}</div>;
-        })}
-      </div>
-      <div>
-        Features
-        {character.features?.map((feature) => {
-          return <div key={feature.title}>{feature.title}</div>;
-        })}
-      </div>
-    </div>
-  );
+  return <PlayerCharacterSheet characterOptions={data} />;
 }

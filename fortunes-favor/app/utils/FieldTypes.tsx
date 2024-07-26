@@ -10,7 +10,8 @@ export class TextField {
       this.type = t;
     } else {
       console.error(
-        "Error matching feature type %s in json file",
+        "Error matching feature [%s] type %s in json file",
+        json_field,
         json_field.type
       );
     }

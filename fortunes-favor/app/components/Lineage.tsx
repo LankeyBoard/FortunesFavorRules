@@ -53,13 +53,19 @@ const Lineage = ({ data, isList = false }: LineageProps) => {
         </div>
         <div>
           <span className="font-semibold">Speed - </span>
-          {l.speed}
+          {l.speeds?.map((s) => {
+            return (
+              <span key={s.type} className="capitalize mr-2">
+                {s.type}: <span className="font-light">{s.speed} ft.</span>
+              </span>
+            );
+          })}
         </div>
         <div>
           <span className="font-semibold">Stat - </span>
           {l.stat}
         </div>
-        <Traits title="Traits" traits={l.traits} />
+        <Traits title="Traits" traits={l.features} />
       </div>
     </div>
   );

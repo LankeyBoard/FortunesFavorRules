@@ -4,30 +4,59 @@ import Lineage from "@/app/components/Lineage";
 import { graphQLLineage } from "@/app/utils/graphQLtypes";
 
 const query = gql`
-  query AllLineages {
+  query GetAllLineages {
     lineages {
       description
+      href
+      shortTitle
       size
       slug
-      speed
-      title
+      speeds {
+        type
+        speed
+      }
       stat
+      title
       traits {
-        list
-        ruleType
-        rules {
-          list
-          ruleType
-          slug
-          title
-          text {
-            text
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
             type
+            options
+            text
           }
         }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+
+        costsFortunesFavor
+        href
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
         slug
+        staminaCost
         title
         text {
+          options
           text
           type
         }

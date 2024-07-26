@@ -1,7 +1,10 @@
-import { LANGUAGES, stat_options } from "../enums";
+import { LANGUAGES, action_type, rule_type, stat_options } from "../enums";
 import CharacterClassData from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
+import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
+import GenericFeatureData from "./GenericFeatureData";
+import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
 
 type Stats = {
   mettle: number;
@@ -30,31 +33,95 @@ enum Rarity {
   unique = "Unique",
 }
 
+const downgradeBaseDamage = (damage: {
+  dice: number;
+  count: number;
+  stat: stat_options;
+}) => {
+  console.log("initial damage", damage);
+  let updatedDamage = { ...damage };
+  if (damage.dice === 6 && damage.count > 1) {
+    updatedDamage.dice = 12;
+    updatedDamage.count -= 1;
+  } else {
+    if (damage.dice > 4) {
+      updatedDamage.dice -= 2;
+    }
+  }
+  console.log("downgraded damage", updatedDamage);
+  return updatedDamage;
+};
 class Input {
   readonly title: string;
-  readonly text: string;
+  readonly text: RuleText[];
 
-  constructor(title: string, text: string) {
+  constructor(title: string, text: [RuleText]) {
     this.title = title;
     this.text = text;
   }
 }
 
 class Feature extends Input {
-  readonly effects?: [Effect];
+  readonly effects?: Effect[];
 
-  constructor(title: string, text: string, effects: [Effect]) {
+  constructor(title: string, text: [RuleText], effects: Effect[]) {
     super(title, text);
     this.effects = effects;
   }
 }
 
-class CharacterFeature extends Feature {
+export class PlayerCharacterFeature extends GenericFeatureData {
   readonly source: Object;
-
-  constructor(title: string, text: string, source: Object, effects: [Effect]) {
-    super(title, text, effects);
+  readonly effects: Effect[];
+  private _chosen: string[];
+  private _level: number;
+  constructor(
+    title: string,
+    source: Object,
+    effects: Effect[],
+    slug: string,
+    ruleType: rule_type,
+    text: RuleText[],
+    multiSelect: boolean,
+    choices: FeatureChoices[],
+    chosen: string[],
+    chooseNum: number,
+    shortText?: string | undefined,
+    level?: number
+  ) {
+    super(
+      title,
+      slug,
+      ruleType,
+      text,
+      multiSelect,
+      choices,
+      chooseNum,
+      shortText
+    );
     this.source = source;
+    this.effects = effects;
+    this._chosen = chosen;
+    this._level = level || 0;
+    console.log("PlayerCharacterFeature", this);
+  }
+  public get chosen() {
+    return this._chosen;
+  }
+  public set chosen(c: string[]) {
+    this._chosen = c;
+  }
+  public get level() {
+    return this._level;
+  }
+  public addChoice(choice: string) {
+    if (this.chosen.includes(choice)) return;
+    if (this.chosen.length < this.chooseNum) this.chosen.push(choice);
+    else this.chosen = [...this._chosen.slice(1), choice];
+  }
+  public removeChoice(choice: string) {
+    const i = this._chosen.indexOf(choice);
+    if (i !== -1) this._chosen.splice(i, 1);
   }
 }
 
@@ -63,8 +130,8 @@ class Item extends Feature {
   readonly rarity: Rarity;
   constructor(
     title: string,
-    text: string,
-    effects: [Effect],
+    text: [RuleText],
+    effects: Effect[],
     isMagicItem: boolean,
     rarity: Rarity
   ) {
@@ -74,126 +141,409 @@ class Item extends Feature {
   }
 }
 
+const updateFeatures = (
+  sourceType: string,
+  source: CharacterCulture | CharacterClassData | CharacterLineage,
+  currentCharacter: PlayerCharacter
+) => {
+  // Remove actions from old source
+  const updatedActions: PlayerCharacterFeature[] | undefined = [];
+  currentCharacter.actions?.forEach((action) => {
+    if (action.source !== sourceType) {
+      updatedActions.push(action);
+    }
+  });
+  const updatedCounters: PlayerCharacterFeature[] | undefined = [];
+  currentCharacter.counters?.forEach((action) => {
+    if (action.source !== sourceType) {
+      updatedCounters.push(action);
+    }
+  });
+  const updatedFeatures: PlayerCharacterFeature[] = [];
+  currentCharacter.features?.forEach((feature) => {
+    if (feature.source !== sourceType) {
+      updatedFeatures.push(feature);
+    }
+  });
+  source.features.forEach((feature) => {
+    console.log("feature updates", feature);
+    if (feature instanceof CharacterFeatureData) {
+      if (feature.level <= currentCharacter.level) {
+        if (feature.actionType === action_type.action) {
+          updatedActions.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
+        } else if (feature.actionType === action_type.counter) {
+          updatedActions.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
+        } else {
+          updatedFeatures.push(
+            new PlayerCharacterFeature(
+              feature.title,
+              sourceType,
+              [],
+              feature.slug,
+              rule_type.Rule,
+              feature.text,
+              feature.multiSelect,
+              feature.choices,
+              [],
+              feature.chooseNum,
+              feature.shortText,
+              feature.level
+            )
+          );
+        }
+      }
+    } else {
+      updatedFeatures.push(
+        new PlayerCharacterFeature(
+          feature.title,
+          sourceType,
+          [],
+          feature.slug,
+          rule_type.Rule,
+          feature.text,
+          feature.multiSelect,
+          feature.choices,
+          [],
+          feature.chooseNum
+        )
+      );
+    }
+  });
+
+  return {
+    features: updatedFeatures,
+    actions: updatedActions,
+    counters: updatedCounters,
+  };
+};
+
 export default class PlayerCharacter {
-  name?: string;
-  private _level?: number;
+  character_name?: string;
+  player_name?: string;
+  private _level: number;
   private _characterClass?: CharacterClassData;
   private _characterCulture?: CharacterCulture;
-  private _stats?: Stats;
+  private _stats: Stats;
   private _characterLineage?: CharacterLineage;
-  private _speeds?: [{ type: string; speed: number }];
+  private _speeds: { type: string; speed: number; source: string }[];
   coin?: number;
   private _currentHealth?: number;
-  private _maxHealth?: number;
-  private _maxStamina?: number;
+  private _maxHealth: number;
+  private _maxStamina: number;
   private _currentStamina?: number;
-  private _armor?: number;
-  private _counter?: number | undefined;
+  private _armorName: string;
+  private _shieldName: string;
+  private _counter: number;
   private _baseDamage?: number;
   private _range?: { min: number; max: number };
-  private _items?: [Item];
-  private _actions?: [CharacterFeature];
-  private _counters?: [CharacterFeature];
-  private _features?: [CharacterFeature];
-  private _languages?: [LANGUAGES];
+  private _items?: Item[];
+  private _actions?: PlayerCharacterFeature[];
+  private _counters?: PlayerCharacterFeature[];
+  private _features?: PlayerCharacterFeature[];
+  private _languages?: LANGUAGES[];
+  private _armorValue = () => {
+    let armor = 10 + this.stats.agility;
+    switch (this._armorName.toLowerCase()) {
+      case "light":
+        armor = 12 + this.stats.agility;
+        break;
+      case "medium":
+        armor = 14 + Math.min(this.stats.agility, 2);
+        break;
+      case "heavy":
+        armor = 17;
+        break;
+      case "none":
+        if (
+          this.class?.slug === "BRAWLER" &&
+          this.armorName.toLowerCase() === "none"
+        ) {
+          armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+        }
+        break;
+    }
+    switch (this._shieldName.toLowerCase()) {
+      case "light":
+        if (this.stats.agility >= 3) {
+          armor += 1;
+        }
+        break;
+      case "medium":
+        if (this.stats.agility >= 1 && this.stats.mettle >= 1) {
+          armor += 2;
+        }
+        break;
+      case "heavy":
+        if (this.stats.mettle >= 3) {
+          armor += 2;
+        }
+        break;
+    }
+    return armor;
+  };
 
-  constructor() {
-    this._level = 1;
-    this.coin = 10;
-    this._languages = [LANGUAGES.allspeak];
+  constructor(
+    culture?: CharacterCulture,
+    lineage?: CharacterLineage,
+    characterClass?: CharacterClassData,
+    startingCharacter?: PlayerCharacter
+  ) {
+    if (startingCharacter) {
+      this._level = startingCharacter.level;
+      this._stats = startingCharacter.stats;
+      this.coin = startingCharacter.coin;
+      this._languages = startingCharacter.languages;
+      this._characterClass = startingCharacter.class;
+      this._characterLineage = startingCharacter.lineage;
+      this._characterCulture = startingCharacter.culture;
+      this.currentHealth = startingCharacter.currentHealth;
+      this.currentStamina = startingCharacter.currentStamina;
+      this._maxHealth = startingCharacter.maxHealth;
+      this._maxStamina = startingCharacter.maxStamina;
+      this._speeds = startingCharacter.speeds;
+      this._armorName = startingCharacter.armorName;
+      this._shieldName = startingCharacter.shieldName;
+      this._counter = startingCharacter.counter || this._armorValue() - 5;
+      this._range = startingCharacter.class?.range;
+      this._items = startingCharacter.items;
+      this._actions = startingCharacter.actions;
+      this._counters = startingCharacter.counters;
+      this._features = startingCharacter.features;
+    } else {
+      this._level = 1;
+      this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
+      this.coin = 5;
+      this._languages = [LANGUAGES.allspeak];
+      this._characterClass = characterClass;
+      this._characterLineage = lineage;
+      this._characterCulture = culture;
+      this.currentHealth = 0;
+      this.currentStamina = 0;
+      this._maxHealth = 0;
+      this._maxStamina = 0;
+      this._speeds = [{ type: "ground", speed: 30, source: "lineage" }];
+      this._armorName = "None";
+      this._shieldName = "None";
+      this._counter = this._armorValue() - 5;
+      this._baseDamage = 0;
+      this._range = { min: 0, max: 0 };
+      this._items = [];
+      this._actions = [];
+      this._counters = [];
+      this._features = [];
+    }
+    console.log("playerCharacer features", this._features);
   }
 
-  public get level(): number | undefined {
+  public get level(): number {
     return this._level;
   }
-  public set level(level: number) {
-    this._level = level;
-    // TODO: Hanle level up
+  public set level(newLevel: number) {
+    if (this.class) {
+      if (newLevel > this.level) {
+        this.class?.features.forEach((feature) => {
+          if (feature.level > this.level && feature.level <= newLevel) {
+            this.features?.push(
+              new PlayerCharacterFeature(
+                feature.title,
+                "class",
+                [],
+                feature.slug,
+                rule_type.Rule,
+                feature.text,
+                feature.multiSelect,
+                feature.choices,
+                [],
+                feature.chooseNum,
+                feature.shortText,
+                feature.level
+              )
+            );
+          }
+        });
+      } else if (newLevel < this.level) {
+        const updatedFeatures: GenericFeature[] = [];
+        for (const feature of this.class?.features) {
+          if (feature.level <= newLevel) {
+            updatedFeatures.push(feature);
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    this._level = newLevel;
   }
   public get class(): CharacterClassData | undefined {
     return this._characterClass;
   }
+
   public set class(characterClass: CharacterClassData) {
     this._characterClass = characterClass;
-    // TODO: update the rest of the characters info based on the current class.
+    const updatedFeatures = updateFeatures("class", characterClass, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
+    this._range = characterClass.range;
   }
   public get culture(): CharacterCulture | undefined {
     return this._characterCulture;
   }
   public set culture(characterCulture: CharacterCulture) {
     this._characterCulture = characterCulture;
-    // TODO: update the rest of the characters info based on the current class.
+
+    const updatedFeatures = updateFeatures("culture", characterCulture, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
   }
   public get lineage(): CharacterLineage | undefined {
     return this._characterLineage;
   }
   public set lineage(characterLineage: CharacterLineage) {
     this._characterLineage = characterLineage;
-    // TODO: update the rest of the characters info based on the current class.
+
+    const updatedFeatures = updateFeatures("lineage", characterLineage, this);
+    this._actions = updatedFeatures.actions;
+    this._counters = updatedFeatures.counters;
+    this._features = updatedFeatures.features;
+    this._speeds = characterLineage.speeds;
   }
-  public get stats(): Stats | undefined {
+  public get stats(): Stats {
     return this._stats;
   }
   public set stats(stats: Stats) {
     this._stats = stats;
-    // TODO: Handle stats updating
   }
-  public get currentStamina(): number | undefined {
-    return this._currentStamina;
+  public get currentStamina(): number {
+    return this._currentStamina || 0;
   }
   public set currentStamina(stamina: number) {
     this._currentStamina = stamina;
   }
-  public get currentHealth(): number | undefined {
-    return this._currentHealth;
+  public get currentHealth(): number {
+    return this._currentHealth || 0;
   }
   public set currentHealth(health: number) {
     this._currentHealth = health;
   }
 
-  // Dirived Values
+  public get armorName(): string {
+    return this._armorName;
+  }
+  public set armorName(name: string) {
+    this._armorName = name;
+  }
+  public get shieldName(): string {
+    return this._shieldName;
+  }
+  public set shieldName(name: string) {
+    this._shieldName = name;
+  }
 
+  // Dirived Values
+  public get armor(): number {
+    return this._armorValue();
+  }
   public get speeds() {
+    if (this.lineage?.slug === "FAERY") {
+      return [
+        ...this._speeds,
+        { type: "flying", speed: 20, source: "lineage" },
+      ];
+    }
     return this._speeds;
   }
+
   public get maxHealth() {
-    return this._maxHealth;
-    // if(this._characterClass && this._level)
-    //     return (this._characterClass?.health + (this._level-1)*this._characterClass?.lvlHealth);
-    // else
-    //     return 0;
+    if (this._characterClass && this._level)
+      return (
+        this._characterClass?.health +
+        (this._level - 1) * this._characterClass?.healthOnLevel
+      );
+    else return 0;
   }
-  public get maxStamina() {
-    return this._maxStamina;
-    // let staminaStat = 0;
-    // if(this._stats && this._characterClass && this._level){
-    //     switch(this._characterClass?.staminaStat){
-    //         case stat_options.mettle:
-    //             staminaStat = this._stats.mettle;
-    //             break;
-    //         case stat_options.agility:
-    //             staminaStat = this._stats.agility;
-    //             break;
-    //         case stat_options.heart:
-    //             staminaStat = this._stats.heart;
-    //             break;
-    //         case stat_options.int:
-    //             staminaStat = this._stats.intellect;
-    //             break;
-    //     }
-    //     return this._characterClass?.stamina + (this._level-1)*this._characterClass?.lvlStamina + this._level*staminaStat
-    // }
-  }
-  public get armor() {
-    return this._armor;
+
+  public get maxStamina(): number {
+    let staminaStat = 0;
+    if (this._stats && this._characterClass && this._level) {
+      switch (this._characterClass?.staminaStat.toLowerCase()) {
+        case stat_options.mettle.toLowerCase():
+          staminaStat = this._stats.mettle;
+          break;
+        case stat_options.agility.toLowerCase():
+          staminaStat = this._stats.agility;
+          break;
+        case stat_options.heart.toLowerCase():
+          staminaStat = this._stats.heart;
+          break;
+        case stat_options.int.toLowerCase():
+          staminaStat = this._stats.intellect;
+          break;
+      }
+      this._maxStamina =
+        this._characterClass?.stamina +
+        (this._level - 1) * this._characterClass?.staminaOnLevel +
+        this._level * staminaStat;
+      return this._characterClass
+        ? this._characterClass?.stamina +
+            (this._level - 1) * this._characterClass?.staminaOnLevel +
+            this._level * staminaStat
+        : 0;
+    }
+    return 0;
   }
   public get counter(): number | undefined {
-    return this._counter;
+    return this._armorValue() - 5;
   }
   public get baseDamage() {
-    return this._baseDamage;
+    if (this.shieldName && this.shieldName != "None") {
+      if (this._characterClass)
+        return downgradeBaseDamage(this._characterClass?.damage);
+    }
+    return this._characterClass?.damage;
   }
   public get range() {
+    if (this.class && this._range) {
+      if (
+        this.class.slug === "BRAWLER" &&
+        this.stats.agility > this.stats.mettle
+      ) {
+        let tempRange = { ...this._range };
+        tempRange.max = this._range.max * 2;
+        return tempRange;
+      }
+    }
     return this._range;
   }
   public get items() {

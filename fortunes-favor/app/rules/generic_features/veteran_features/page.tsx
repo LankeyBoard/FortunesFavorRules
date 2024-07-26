@@ -5,17 +5,48 @@ import { Suspense } from "react";
 
 const query = gql`
   query VeteranFeatures {
-    genericFeatures(featureType: VETERAN) {
+    universalFeatures(featureType: VETERAN) {
+      actionType
+      simpleChoices: choices {
+        ... on RuleText {
+          type
+          options
+          text
+        }
+      }
+      complexChoices: choices {
+        ... on FeatureWithoutChoices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
+            options
+            text
+            type
+          }
+        }
+      }
+      costsFortunesFavor
+      href
       multiSelect
-      options
       ruleType
       shortText
+      shortTitle
       slug
+      staminaCost
+      title
       text {
+        options
         text
         type
       }
-      title
     }
   }
 `;
@@ -31,7 +62,7 @@ async function VeteranFeaturesPage() {
           Veteran Features
         </div>
         <Suspense>
-          <GenericFeatures generic_feature_data={data.genericFeatures} />
+          <GenericFeatures generic_feature_data={data.universalFeatures} />
         </Suspense>
       </div>
     </div>

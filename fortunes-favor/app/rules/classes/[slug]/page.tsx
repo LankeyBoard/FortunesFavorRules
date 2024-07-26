@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { Suspense } from "react";
 
 const query = gql`
-  query GetClass3($slug: String) {
+  query GetClass($slug: String) {
     characterClasses(slug: $slug) {
       attackStat
       complexity
@@ -12,7 +12,9 @@ const query = gql`
         count
         dice
         stat
+        type
       }
+      description
       extra {
         forms {
           armor {
@@ -39,31 +41,52 @@ const query = gql`
       }
       features {
         actionType
-        choices {
-          multiSelect
-          options
-          ruleType
-          slug
-          title
-          text {
-            text
+        simpleChoices: choices {
+          ... on RuleText {
             type
+            options
+            text
           }
         }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+        }
+        href
         costsFortunesFavor
         level
+        multiSelect
         ruleType
-        rules {
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        text {
+          options
           text
           type
         }
-        slug
-        staminaCost
         title
       }
-      description
       health
       healthOnLevel
+      href
+      shortTitle
       range {
         max
         min
@@ -79,7 +102,6 @@ const query = gql`
           options
           pick
         }
-        shields
         weapons {
           melee {
             options
@@ -90,10 +112,11 @@ const query = gql`
             pick
           }
           special {
-            pick
             options
+            pick
           }
         }
+        shields
       }
     }
   }

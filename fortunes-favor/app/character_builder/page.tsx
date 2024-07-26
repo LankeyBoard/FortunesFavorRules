@@ -1,12 +1,63 @@
-"use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import BasicInfoBuilder from "./basic_info/builder";
 import LineageSelectBuilder from "./lineage/builder";
 import CultureSelectBuilder from "./culture/builder";
 import ClassSelectBuilder from "./class/builder";
 import QuestionsBuilder from "./questions/builder";
 import PlayerCharacter from "../utils/PlayerCharacter";
-
+import { gql } from "@apollo/client";
+import { getClient } from "../utils/graphQLclient";
+const query = gql`
+  query AllCultures {
+    cultures {
+      description
+      href
+      languages
+      shortTitle
+      slug
+      stat
+      title
+      traits {
+        list
+        ruleType
+        rules {
+          list
+          rules {
+            list
+            ruleType
+            shortText
+            shortTitle
+            slug
+            title
+            text {
+              options
+              text
+              type
+            }
+          }
+          ruleType
+          shortText
+          shortTitle
+          text {
+            options
+            text
+            type
+          }
+          slug
+          title
+        }
+        shortText
+        shortTitle
+        slug
+        title
+        text {
+          options
+          text
+          type
+        }
+      }
+    }
+  }
+`;
 const tabs = [
   {
     name: "Basic Info",
@@ -39,14 +90,6 @@ const tabs = [
     isEnabled: false,
   },
 ];
-
-type tabProps = {
-  name: string;
-  setCurrentTab: Dispatch<SetStateAction<string>>;
-  isComplete?: boolean;
-  isCurrent: boolean;
-  isEnabled?: boolean;
-};
 
 const COMPLETE_CURRENT = "bg-emerald-600";
 const CURRENT = "bg-amber-800";
@@ -88,85 +131,18 @@ const Tab = ({
   }
 };
 
-function CharacterInner(
-  title: string,
-  createdCharacter: PlayerCharacter,
-  setCreatedCharacter: Dispatch<SetStateAction<PlayerCharacter>>
-) {
-  switch (title) {
-    case "Basic Info":
-      return (
-        <BasicInfoBuilder
-          currentCharacter={createdCharacter}
-          updateCharacter={setCreatedCharacter}
-        />
-      );
-    case "Lineage":
-      return (
-        <LineageSelectBuilder
-          currentCharacter={createdCharacter}
-          updateCharacter={setCreatedCharacter}
-        />
-      );
-    case "Culture":
-      return (
-        <CultureSelectBuilder
-          currentCharacter={createdCharacter}
-          updateCharacter={setCreatedCharacter}
-        />
-      );
-    case "Class":
-      return (
-        <ClassSelectBuilder
-          currentCharacter={createdCharacter}
-          updateCharacter={setCreatedCharacter}
-        />
-      );
-    case "Questions":
-      return (
-        <QuestionsBuilder
-          currentCharacter={createdCharacter}
-          updateCharacter={setCreatedCharacter}
-        />
-      );
-  }
-}
-
-function CharacterBuilder() {
-  const [currentTab, setCurrentTab] = useState(tabs[0].name);
-  const [createdCharacter, setCreatedCharacter] = useState(
-    new PlayerCharacter()
-  );
-
-  const isTabCompleted = (tabName: string) => {
-    switch (tabName) {
-      case "Culture":
-        return createdCharacter.culture != undefined;
-      case "Lineage":
-        return createdCharacter.lineage != undefined;
-      case "Class":
-        return createdCharacter.class != undefined;
-    }
-  };
+async function CharacterBuilder() {
+  const client = getClient();
+  const { data } = await client.query({
+    query,
+  });
 
   return (
     <div className="w-full">
-      <div className={"flex flex-row mt-4"}>
-        {tabs.map((tab) => {
-          return (
-            <Tab
-              key={tab.href}
-              name={tab.name}
-              setCurrentTab={setCurrentTab}
-              isCurrent={currentTab === tab.name}
-              isComplete={isTabCompleted(tab.name)}
-              isEnabled={tab.isEnabled}
-            />
-          );
-        })}
-      </div>
       <div className="">
-        {CharacterInner(currentTab, createdCharacter, setCreatedCharacter)}
+        {data.cultures.map((culture: any) => {
+          return <div key={culture.slug}>{culture.title}</div>;
+        })}
       </div>
     </div>
   );

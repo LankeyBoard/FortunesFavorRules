@@ -1,15 +1,14 @@
 import { size_options, findEnum } from "../enums";
 import { CharacterTrait } from "./CharacterTrait";
-import RuleData from "./GenericRuleData";
 
 export default class CharacterLineage {
   title: string;
   slug: string;
   desc: string;
   size: size_options | size_options[];
-  speed: number;
+  speeds: [{ type: string; speed: number; source: string }];
   stat: string;
-  traits: [CharacterTrait];
+  features: [CharacterTrait];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
@@ -30,17 +29,10 @@ export default class CharacterLineage {
       });
       this.size = sizeList;
     }
-    this.speed = json.speed;
+    this.speeds = json.speeds;
     this.stat = json.stat;
-    this.traits = json.traits.map((t: any) => {
-      return new RuleData(
-        t.title,
-        t.slug,
-        t.ruleType || "RULE",
-        t.text,
-        t.rules,
-        t.list
-      );
+    this.features = json.traits.map((t: any) => {
+      return new CharacterTrait(t);
     });
   }
 }

@@ -2,10 +2,11 @@ import { rule_type, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
-import CharacterClassData, { TrainingOptions } from "../utils/CharacterClass";
+import { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
+import CharacterClass from "../utils/CharacterClass";
 
 type fieldProps = {
   field: RuleText;
@@ -37,7 +38,7 @@ type featureProps = {
   feature: CharacterFeature;
 };
 const FeatureDisplay = ({ feature }: featureProps) => {
-  console.info(feature);
+  console.log("feature", feature);
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
@@ -66,17 +67,42 @@ const FeatureDisplay = ({ feature }: featureProps) => {
           </div>
         )}
         <div className="space-y-2">
-          {feature.fields.map((f) => (
+          {feature.text.map((f) => (
             <FieldDisplay field={f} key={f.text} />
           ))}
         </div>
-        {feature.choices && (
-          <div className="mt-2 grid grid-cols-1">
-            {feature.choices.map((c) => (
-              <ChoiceDisplay choice={c} key={c.slug} />
-            ))}
-          </div>
-        )}
+        <div className="m-4 ">
+          {feature.choices &&
+            feature.choices.length > 0 &&
+            feature.choices.map((choice) => {
+              if (typeof choice.text === "string") {
+                return <p key={choice.text}>{choice.text}</p>;
+              } else if ("slug" in choice) {
+                return (
+                  <div
+                    key={choice.slug}
+                    id={choice.slug}
+                    className="odd:bg-slate-300 dark:odd:bg-slate-700 p-2"
+                  >
+                    <h3 className="text-lg font-semibold">{choice.title}</h3>
+                    {choice.staminaCost > 0 && (
+                      <>
+                        <span className="font-semibold">Costs:</span>{" "}
+                        <span>{choice.staminaCost} Stamina</span>
+                      </>
+                    )}
+                    {choice.text.map((t) => {
+                      return (
+                        <p key={t.text} className="mx-2 font-light">
+                          {t.text}
+                        </p>
+                      );
+                    })}
+                  </div>
+                );
+              }
+            })}
+        </div>
       </div>
     </div>
   );
@@ -90,7 +116,9 @@ const ExtrasDisplay = ({ extras }: extrasDisplayProps) => {
   if (extras.forms) {
     return (
       <div>
-        <h1 className="my-4 mx-2 text-2xl tracking-wide">Forms</h1>
+        <h1 className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
+          Forms
+        </h1>
         {extras.forms.map((form: Form) => (
           <FormDisplay form={form} key={form.slug} />
         ))}
@@ -184,7 +212,7 @@ const Tag = ({ text, style }: tagProps) => {
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
-  c: CharacterClassData;
+  c: CharacterClass;
 };
 
 const ClassTags = ({ c }: classTagsProps) => {
@@ -223,7 +251,7 @@ type classProps = {
   data: any;
 };
 const ClassRule = ({ data }: classProps) => {
-  const class_rules: CharacterClassData = new CharacterClassData(data);
+  const class_rules: CharacterClass = new CharacterClass(data);
   let rangeString = "";
   if (class_rules.range.min === 0) {
     if (class_rules.range.max === 0) {
@@ -341,7 +369,9 @@ const ClassRule = ({ data }: classProps) => {
         </div>
       </div>
       <div id="features">
-        <div className="my-4 mx-2 text-2xl tracking-wide">Features</div>
+        <div className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
+          Features
+        </div>
         <div className="px-10">
           {class_rules.features.map((f) => (
             <FeatureDisplay feature={f} key={f.slug} />

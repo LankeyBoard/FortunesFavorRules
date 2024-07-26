@@ -18,8 +18,8 @@ export default class CharacterClassData implements CharacterClass {
   stamina: number;
   staminaOnLevel: number;
   training: {
-    armor: [string];
-    shields: [string];
+    armor: string[];
+    shields: string[];
     weapons: {
       melee: TrainingOptions;
       ranged: TrainingOptions;
@@ -77,6 +77,13 @@ export default class CharacterClassData implements CharacterClass {
       },
       magic: data.training.magic,
     };
+    if (this.training.armor === null) this.training.armor = ["None"];
+    else if (!this.training.armor.includes("None"))
+      this.training.armor = ["None"].concat([...this.training.armor]);
+    if (this.training.shields === null) this.training.shields = ["None"];
+    else if (!this.training.shields.includes("None"))
+      this.training.shields = ["None"].concat([...this.training.shields]);
+    console.log("training", this.title, this.training);
     const as = new Array();
     if (Array.isArray(data.attackStat)) {
       data.attackStat.forEach((stat: string) => {

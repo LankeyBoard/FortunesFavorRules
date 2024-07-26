@@ -18,7 +18,7 @@ export default function RootLayout({
       <head></head>
       <body className="">
         <Suspense>
-          <div className="fixed top-0 w-full h-20">
+          <div className="fixed top-0 w-full h-20 bg-slate-700 z-50">
             <TopNav />
           </div>
         </Suspense>
