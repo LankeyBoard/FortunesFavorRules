@@ -8,22 +8,48 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
           <span key={t.text}>{t.text}</span>
         ))}
       </span>
-      {t.rules && (
-        <table className="ml-4 my-2 space-y-2">
-          {t.rules?.map((rule) => {
-            return (
-              <tr
-                key={rule.slug}
-                className="odd:bg-slate-300 even:bg-slate-200 dark:odd:bg-slate-950 dark:even:bg-slate-700"
-              >
-                <div className="p-2">
-                  <Trait t={rule} />
-                </div>
-              </tr>
-            );
-          })}
-        </table>
-      )}
+      <div className="">
+        {t.choices && t.choices.length > 0 && (
+          <div>
+            {t.choices.map((choice) => {
+              if (typeof choice.text === "string") {
+                return (
+                  <p
+                    key={choice.text}
+                    className="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
+                  >
+                    {choice.text}
+                  </p>
+                );
+              } else if ("slug" in choice) {
+                return (
+                  <div
+                    key={choice.slug}
+                    className="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
+                  >
+                    <h3 className="font-semibold">{choice.title}</h3>
+                    {choice.staminaCost > 0 && (
+                      <span id="StaminaCost" className="font-light mx-2">
+                        Stamina: {choice.staminaCost}
+                      </span>
+                    )}
+                    {choice.costsFortunesFavor && (
+                      <span id="FortuneCost">Fortune&apos;s Favor</span>
+                    )}
+                    {choice.text.map((t) => {
+                      return (
+                        <p key={t.text} className="mx-2 font-light">
+                          {t.text}
+                        </p>
+                      );
+                    })}
+                  </div>
+                );
+              }
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
