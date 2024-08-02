@@ -452,7 +452,8 @@ const PlayerCharacterSheet = ({
             {character.speeds?.map((s) => {
               return (
                 <span key={s.type} className="capitalize mr-2">
-                  {s.type}: <span className="font-light">{s.speed} ft.</span>
+                  {s.type}:{" "}
+                  <span className="font-light normal-case">{s.speed} ft.</span>
                 </span>
               );
             })}

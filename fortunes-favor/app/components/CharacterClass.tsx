@@ -43,8 +43,12 @@ const FeatureDisplay = ({ feature }: featureProps) => {
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
         {feature.title}
-        <div className="text-slate-700 dark:text-slate-200 text-sm ordinal float-right">
-          {feature.level + getOrdinal(feature.level)} level
+        <div className="text-slate-700 dark:text-slate-200 float-right text-base ordinal">
+          {feature.level}
+          <span className="underline text-xs align-text-top">
+            {getOrdinal(feature.level)}
+          </span>{" "}
+          level
         </div>
       </div>
       <div className="px-4 py-2">

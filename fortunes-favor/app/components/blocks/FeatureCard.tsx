@@ -1,5 +1,6 @@
 import { PlayerCharacterFeature } from "@/app/utils/PlayerCharacter";
 import { useEffect, useState } from "react";
+import TextBlock from "./TextBlock";
 
 type FeatureCardProps = {
   feature: PlayerCharacterFeature;
@@ -88,15 +89,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
           <h3 className="float-right">{resultType}</h3>
         </div>
         <div className="clear-both">
-          {cardFeature.text &&
-            cardFeature.text.length > 0 &&
-            cardFeature.text.map((t) => {
-              return (
-                <p key={t.text} className={"pl-4 pr-3 pt-3"}>
-                  {t.text}
-                </p>
-              );
-            })}
+          <TextBlock text={cardFeature.text} style="px-4" />
           <div className="m-4 ">
             {cardFeature.choices && cardFeature.choices.length > 0 && (
               <div>
@@ -147,13 +140,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                         {choice.costsFortunesFavor && (
                           <span id="FortuneCost">Fortune&apos;s Favor</span>
                         )}
-                        {choice.text.map((t) => {
-                          return (
-                            <p key={t.text} className="mx-2 font-light">
-                              {t.text}
-                            </p>
-                          );
-                        })}
+                        <TextBlock text={choice.text} style="mx-2 font-light" />
                       </div>
                     );
                   }
