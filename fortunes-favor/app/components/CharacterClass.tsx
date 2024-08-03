@@ -1,4 +1,4 @@
-import { rule_type, complexity_options } from "../enums";
+import { rule_type, complexity_options, stat_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
@@ -6,7 +6,7 @@ import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
-import { GraphCharacterClass } from "../types.generated";
+import { CharacterClass as ClassGraphType } from "../types.generated";
 import TextBlock from "./blocks/TextBlock";
 
 type fieldProps = {
@@ -207,43 +207,54 @@ const Tag = ({ text, style }: tagProps) => {
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
-  c: CharacterClass;
+  c: {
+    complexity?: string;
+    attackStat?: stat_options[];
+    damage?: { stat?: stat_options };
+    staminaStat?: stat_options;
+  };
 };
 
-const ClassTags = ({ c }: classTagsProps) => {
+export const ClassTags = ({ c }: classTagsProps) => {
   let tags: ReactElement[] = new Array();
   let tagNames: string[] = new Array();
   let tagStyle;
-  switch (c.complexity) {
-    case complexity_options.simple:
-      tagStyle = "bg-green-800";
-      break;
-    case complexity_options.std:
-      tagStyle = "bg-amber-800";
-      break;
-    case complexity_options.complex:
-      tagStyle = "bg-blue-800";
-      break;
-    default:
-      tagStyle = "bg-rose-500";
+  if ("complexity" in c && c.complexity) {
+    switch (c.complexity.toLocaleLowerCase()) {
+      case complexity_options.simple:
+        tagStyle = "bg-green-800";
+        break;
+      case complexity_options.std:
+        tagStyle = "bg-amber-800";
+        break;
+      case complexity_options.complex:
+        tagStyle = "bg-blue-800";
+        break;
+      default:
+        tagStyle = "bg-rose-500";
+    }
+    tags.push(<Tag style={tagStyle} text={c.complexity.toLocaleLowerCase()} />);
   }
-  tags.push(<Tag style={tagStyle} text={c.complexity} />);
-  c.attackStat.forEach((stat) => {
-    tags.push(<Tag text={stat} />);
-    tagNames.push(stat);
-  });
-  if (!tagNames.includes(c.damage.stat)) {
-    tags.push(<Tag text={c.damage.stat} />);
+  if ("attackStat" in c && c.attackStat) {
+    c.attackStat.forEach((stat) => {
+      tags.push(<Tag text={stat.toLocaleLowerCase()} />);
+      tagNames.push(stat);
+    });
   }
-
-  if (!tagNames.includes(c.staminaStat)) {
-    tags.push(<Tag text={c.staminaStat} />);
+  if ("damage" in c && c.damage && "stat" in c.damage && c.damage.stat)
+    if (!tagNames.includes(c.damage.stat)) {
+      tags.push(<Tag text={c.damage.stat.toLocaleLowerCase()} />);
+    }
+  if ("staminaStat" in c && c.staminaStat) {
+    if (!tagNames.includes(c.staminaStat)) {
+      tags.push(<Tag text={c.staminaStat.toLocaleLowerCase()} />);
+    }
   }
   return <div>{tags}</div>;
 };
 
 type classProps = {
-  data: GraphCharacterClass;
+  data: ClassGraphType;
 };
 const ClassRule = ({ data }: classProps) => {
   const class_rules: CharacterClass = new CharacterClass(data);

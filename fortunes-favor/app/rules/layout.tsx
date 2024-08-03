@@ -13,6 +13,7 @@ type nav_section = {
   title: string;
   shortTitle?: string;
   basePath: string;
+  href?: string;
   subroutes?: {
     title: string;
     shortTitle?: string;
@@ -84,6 +85,7 @@ export default async function RulesLayout({
   };
   const characterClassesSection: nav_section = {
     title: "Classes",
+    href: "/rules/classes",
     basePath: "/rules/classes",
     subroutes: data.characterClasses,
   };
