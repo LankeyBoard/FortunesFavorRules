@@ -10,7 +10,7 @@ const titleStyler = (depth: number) => {
     case 2:
       return "mt-3 mb-1 text-2xl px-2 tracking-wide";
     case 3:
-      return "text-lg p-2 px-2 font-light";
+      return "text-lg p-2 font-light text-lg";
   }
 };
 
