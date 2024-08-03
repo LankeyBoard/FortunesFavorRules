@@ -3,6 +3,7 @@ import { rule_type, findEnum } from "../enums";
 export class TextField {
   type: rule_type;
   text: string;
+  choices: string[];
   constructor(json_field: any) {
     this.type = rule_type.error;
     const t = findEnum(json_field.type, rule_type);
@@ -16,6 +17,7 @@ export class TextField {
       );
     }
     this.text = json_field.text;
+    this.choices = json_field.choices;
   }
 }
 
