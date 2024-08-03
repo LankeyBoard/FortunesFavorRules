@@ -14,13 +14,13 @@ const query = gql`
       shortTitle
       slug
       title
-      subRules {
+      rules {
         href
         list
         ruleType
         shortText
         shortTitle
-        subRules {
+        rules {
           href
           list
           ruleType
@@ -33,21 +33,7 @@ const query = gql`
             options
           }
           title
-        }
-        slug
-        text {
-          options
-          text
-          type
-        }
-        title
-        subRules {
-          href
-          list
-          ruleType
-          shortText
-          shortTitle
-          subRules {
+          rules {
             href
             list
             ruleType
@@ -61,14 +47,14 @@ const query = gql`
             }
             title
           }
-          slug
-          text {
-            options
-            text
-            type
-          }
-          title
         }
+        slug
+        text {
+          options
+          text
+          type
+        }
+        title
       }
       text {
         options
@@ -92,7 +78,7 @@ async function GeneralRule() {
         rule.slug,
         rule.ruleType,
         rule.text,
-        rule.subRules,
+        rule.rules,
         rule.list
       )
     );
