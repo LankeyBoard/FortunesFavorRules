@@ -7,6 +7,7 @@ import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
 import CharacterClass from "../utils/CharacterClass";
+import TextBlock from "./blocks/TextBlock";
 
 type fieldProps = {
   field: RuleText;
@@ -70,11 +71,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
             )}
           </div>
         )}
-        <div className="space-y-2">
-          {feature.text.map((f) => (
-            <FieldDisplay field={f} key={f.text} />
-          ))}
-        </div>
+        <TextBlock text={feature.text} />
         <div className="m-4 ">
           {feature.choices &&
             feature.choices.length > 0 &&
@@ -95,13 +92,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
                         <span>{choice.staminaCost} Stamina</span>
                       </>
                     )}
-                    {choice.text.map((t) => {
-                      return (
-                        <p key={t.text} className="mx-2 font-light">
-                          {t.text}
-                        </p>
-                      );
-                    })}
+                    <TextBlock text={choice.text} style="mx-2 font-light" />
                   </div>
                 );
               }

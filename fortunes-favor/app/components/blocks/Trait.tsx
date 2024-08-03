@@ -1,13 +1,10 @@
 import { CharacterTrait } from "@/app/utils/CharacterTrait";
+import TextBlock from "./TextBlock";
 const Trait = ({ t }: { t: CharacterTrait }) => {
   return (
     <div key={t.title + "trait"} className="">
-      <span className="font-light text-lg">{t.title}: &nbsp;</span>
-      <span className="">
-        {t.text.map((t) => (
-          <span key={t.text}>{t.text}</span>
-        ))}
-      </span>
+      <span className="font-light text-lg inline-block">{t.title}: &nbsp;</span>
+      <TextBlock text={t.text} inline={true} />
       <div className="">
         {t.choices && t.choices.length > 0 && (
           <div>
@@ -36,13 +33,7 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
                     {choice.costsFortunesFavor && (
                       <span id="FortuneCost">Fortune&apos;s Favor</span>
                     )}
-                    {choice.text.map((t) => {
-                      return (
-                        <p key={t.text} className="mx-2 font-light">
-                          {t.text}
-                        </p>
-                      );
-                    })}
+                    <TextBlock text={choice.text} style="mx-2 inline-block" />
                   </div>
                 );
               }

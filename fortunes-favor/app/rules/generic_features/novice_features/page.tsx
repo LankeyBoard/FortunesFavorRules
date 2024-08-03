@@ -5,48 +5,23 @@ import { Suspense } from "react";
 
 const query = gql`
   query NoviceFeatures {
-    universalFeatures(featureType: NOVICE) {
+    genericFeatures(featureType: NOVICE) {
       actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          options
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            options
-            text
-            type
-          }
-        }
-      }
       costsFortunesFavor
       href
       multiSelect
       ruleType
+      choices
       shortText
-      shortTitle
       slug
+      shortTitle
       staminaCost
-      title
       text {
         options
-        text
         type
+        text
       }
+      title
     }
   }
 `;
@@ -62,7 +37,7 @@ async function NoviceFeaturesPage() {
           Novice Features
         </div>
         <Suspense>
-          <GenericFeatures generic_feature_data={data.universalFeatures} />
+          <GenericFeatures generic_feature_data={data.genericFeatures} />
         </Suspense>
       </div>
     </div>
