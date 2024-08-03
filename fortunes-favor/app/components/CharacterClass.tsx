@@ -276,11 +276,13 @@ const ClassRule = ({ data }: classProps) => {
   return (
     <div id={class_rules.slug}>
       <div className="w-full">
-        <div className="text-3xl tracking-wide font-bold py-4 px-3 bg-teal-300 dark:bg-teal-700 ">
-          {class_rules.title}
+        <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700">
+          <span className="float-left py-4 px-3">{class_rules.title}</span>{" "}
+          <span className="float-right text-base font-normal">
+            <ClassTags c={class_rules} />
+          </span>
         </div>
       </div>
-      <ClassTags c={class_rules} />
       <div className="clear-both">
         <div className="mx-3">
           <p className="italic">{class_rules.description}</p>
