@@ -25,6 +25,7 @@ const TextBlock = ({
   style?: string;
   inline?: boolean;
 }) => {
+  if (!text) return;
   if (inline) {
     return (
       <span className={style}>

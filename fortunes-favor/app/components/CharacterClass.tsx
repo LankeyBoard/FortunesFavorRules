@@ -2,11 +2,11 @@ import { rule_type, complexity_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
-import { TrainingOptions } from "../utils/CharacterClass";
+import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
-import CharacterClass from "../utils/CharacterClass";
+import { GraphCharacterClass } from "../types.generated";
 import TextBlock from "./blocks/TextBlock";
 
 type fieldProps = {
@@ -243,7 +243,7 @@ const ClassTags = ({ c }: classTagsProps) => {
 };
 
 type classProps = {
-  data: any;
+  data: GraphCharacterClass;
 };
 const ClassRule = ({ data }: classProps) => {
   const class_rules: CharacterClass = new CharacterClass(data);

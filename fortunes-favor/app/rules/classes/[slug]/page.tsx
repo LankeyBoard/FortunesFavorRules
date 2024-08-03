@@ -41,47 +41,36 @@ const query = gql`
       }
       features {
         actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
+        complexChoices: choices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
             options
             text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              options
-              text
-              type
-            }
+            type
           }
         }
         href
         costsFortunesFavor
         level
-        multiSelect
         ruleType
-        shortText
         shortTitle
         slug
         staminaCost
-        text {
-          options
+        title
+        rules {
           text
           type
+          options
         }
-        title
       }
       health
       healthOnLevel
