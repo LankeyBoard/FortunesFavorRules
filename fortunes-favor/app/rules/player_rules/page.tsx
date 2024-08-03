@@ -30,23 +30,9 @@ const query = gql`
           text {
             text
             type
-            options
+            choices
           }
           title
-        }
-        slug
-        text {
-          options
-          text
-          type
-        }
-        title
-        subRules {
-          href
-          list
-          ruleType
-          shortText
-          shortTitle
           subRules {
             href
             list
@@ -57,21 +43,21 @@ const query = gql`
             text {
               text
               type
-              options
+              choices
             }
             title
           }
-          slug
-          text {
-            options
-            text
-            type
-          }
-          title
         }
+        slug
+        text {
+          choices
+          text
+          type
+        }
+        title
       }
       text {
-        options
+        choices
         text
         type
       }

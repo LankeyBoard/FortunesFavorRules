@@ -1,6 +1,7 @@
 import { rule_type } from "../enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
+import TextBlock from "./blocks/TextBlock";
 
 const titleStyler = (depth: number) => {
   switch (depth) {
@@ -9,7 +10,7 @@ const titleStyler = (depth: number) => {
     case 2:
       return "mt-3 mb-1 text-2xl px-2 tracking-wide";
     case 3:
-      return "text-lg p-2 px-2 font-light";
+      return "text-lg p-2 font-light text-lg";
   }
 };
 
@@ -53,17 +54,11 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
         )}
         {field.text != undefined && typeof field.text !== "string" && (
           <div className="mb-2 space-y-3 pl-4">
-            {field.text.map((row) => {
-              return (
-                <div className={depth === 1 ? "mt-3" : ""} key={row.text}>
-                  <SlugLinker text={row.text} />
-                </div>
-              );
-            })}
+            <TextBlock text={field.text} style={depth === 1 ? "mt-3" : ""} />
           </div>
         )}
         {field.list && field.list.length > 0 && (
-          <ul className="pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
+          <ul className="ml-4 pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
             {field.list.map((text) => {
               return (
                 <li key={text}>

@@ -229,32 +229,23 @@ export default async function CharacterSheetPage() {
           }
         }
       }
-      universalFeatures {
+      genericFeatures {
         actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
+        complexChoices: choices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
             options
             text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              options
-              text
-              type
-            }
+            type
           }
         }
         chooseNum

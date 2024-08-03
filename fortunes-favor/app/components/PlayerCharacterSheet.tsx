@@ -452,7 +452,8 @@ const PlayerCharacterSheet = ({
             {character.speeds?.map((s) => {
               return (
                 <span key={s.type} className="capitalize mr-2">
-                  {s.type}: <span className="font-light">{s.speed} ft.</span>
+                  {s.type}:{" "}
+                  <span className="font-light normal-case">{s.speed} ft.</span>
                 </span>
               );
             })}
@@ -462,15 +463,17 @@ const PlayerCharacterSheet = ({
       {character.actions && character.actions?.length > 0 && (
         <div>
           <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">Actions</h3>
-          {character.actions?.map((action) => {
-            return (
-              <FeatureCard
-                key={action.title}
-                feature={action}
-                source={action.source.toString()}
-              />
-            );
-          })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {character.actions?.map((action) => {
+              return (
+                <FeatureCard
+                  key={action.title}
+                  feature={action}
+                  source={action.source.toString()}
+                />
+              );
+            })}
+          </div>
         </div>
       )}
       {character.counters && character.counters?.length > 0 && (
@@ -478,9 +481,11 @@ const PlayerCharacterSheet = ({
           <h3 className="p-1 bg-purple-300 dark:bg-purple-900 mb-3">
             Counters
           </h3>
-          {character.counters?.map((counter) => {
-            return <div key={counter.title}>{counter.title}</div>;
-          })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {character.counters?.map((counter) => {
+              return <div key={counter.title}>{counter.title}</div>;
+            })}
+          </div>
         </div>
       )}
       <div>

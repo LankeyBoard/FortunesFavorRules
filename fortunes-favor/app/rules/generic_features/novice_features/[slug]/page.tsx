@@ -4,19 +4,51 @@ import { gql } from "@apollo/client";
 import { Suspense } from "react";
 
 const query = gql`
-  query SearchFeatures($slug: String) {
-    genericFeatures(featureType: NOVICE, slug: $slug) {
-      multiSelect
-      options
+  query SearchNoviceFeatures($slug: String) {
+    universalFeatures(featureType: NOVICE, slug: $slug) {
+      actionType
+      simpleChoices: choices {
+        ... on RuleText {
+          type
+          choices
+          text
+        }
+      }
+      complexChoices: choices {
+        ... on FeatureWithoutChoices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
+            choices
+            text
+            type
+          }
+        }
+      }
+      chooseNum
+      featureType
+      costsFortunesFavor
+      href
       ruleType
+      multiSelect
       shortText
       shortTitle
+      slug
+      staminaCost
+      title
       text {
+        choices
         text
         type
       }
-      slug
-      title
     }
   }
 `;
@@ -29,7 +61,7 @@ async function NoviceFeature({ params }: { params: { slug: string } }) {
   });
   return (
     <Suspense>
-      <FeatureLi feature={data.genericFeatures[0]} />
+      <FeatureLi feature={data.universalFeatures[0]} />
     </Suspense>
   );
 }

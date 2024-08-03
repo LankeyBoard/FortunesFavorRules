@@ -4,13 +4,13 @@ import GenericFeatures from "@/app/components/GenericFeatures";
 import { Suspense } from "react";
 
 const query = gql`
-  query VeteranFeatures {
+  query GetVeteranFeatures {
     universalFeatures(featureType: VETERAN) {
       actionType
       simpleChoices: choices {
         ... on RuleText {
           type
-          options
+          choices
           text
         }
       }
@@ -27,23 +27,25 @@ const query = gql`
           staminaCost
           title
           text {
-            options
+            choices
             text
             type
           }
         }
       }
+      chooseNum
+      featureType
       costsFortunesFavor
       href
-      multiSelect
       ruleType
+      multiSelect
       shortText
       shortTitle
       slug
       staminaCost
       title
       text {
-        options
+        choices
         text
         type
       }

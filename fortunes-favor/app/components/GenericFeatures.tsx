@@ -1,7 +1,6 @@
 import { TextField } from "../utils/FieldTypes";
-import { FeatureWithoutChoices } from "../utils/graphQLtypes";
 import GenericFeatureData from "../utils/GenericFeatureData";
-import SlugLinker from "./blocks/SlugLinker";
+import TextBlock from "./blocks/TextBlock";
 
 export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
   return (
@@ -11,10 +10,7 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
     >
       <span className="font-semibold">{feature.title}</span>
       <span>
-        &nbsp;-{" "}
-        {feature.text?.map((text) => (
-          <SlugLinker key={text.text} text={text.text} />
-        ))}
+        &nbsp;- <TextBlock text={feature.text} inline={true} />
       </span>
       {feature.choices && (
         <>
@@ -28,9 +24,18 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
                       {choice.text}
                     </li>
                   );
+                } else if (typeof choice === "string") {
+                  return (
+                    <li key={choice}>
+                      <span className="text-amber-600">- </span>
+                      {choice}
+                    </li>
+                  );
                 } else if ("slug" in choice) {
                   return (
-                    <li key={choice.slug}>{choice.text.toLocaleString()}</li>
+                    <li key={choice.slug}>
+                      <TextBlock text={choice.text} inline={true} />
+                    </li>
                   );
                 }
               })}

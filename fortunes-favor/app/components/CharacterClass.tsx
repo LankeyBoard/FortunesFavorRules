@@ -1,12 +1,13 @@
-import { rule_type, complexity_options } from "../enums";
+import { rule_type, complexity_options, stat_options } from "../enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
-import { TrainingOptions } from "../utils/CharacterClass";
+import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { GenericFeature, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
-import CharacterClass from "../utils/CharacterClass";
+import { CharacterClass as ClassGraphType } from "../types.generated";
+import TextBlock from "./blocks/TextBlock";
 
 type fieldProps = {
   field: RuleText;
@@ -43,8 +44,12 @@ const FeatureDisplay = ({ feature }: featureProps) => {
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
         {feature.title}
-        <div className="text-slate-700 dark:text-slate-200 text-sm ordinal float-right">
-          {feature.level + getOrdinal(feature.level)} level
+        <div className="text-slate-700 dark:text-slate-200 float-right text-base ordinal">
+          {feature.level}
+          <span className="underline text-xs align-text-top">
+            {getOrdinal(feature.level)}
+          </span>{" "}
+          level
         </div>
       </div>
       <div className="px-4 py-2">
@@ -66,11 +71,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
             )}
           </div>
         )}
-        <div className="space-y-2">
-          {feature.text.map((f) => (
-            <FieldDisplay field={f} key={f.text} />
-          ))}
-        </div>
+        <TextBlock text={feature.text} />
         <div className="m-4 ">
           {feature.choices &&
             feature.choices.length > 0 &&
@@ -91,13 +92,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
                         <span>{choice.staminaCost} Stamina</span>
                       </>
                     )}
-                    {choice.text.map((t) => {
-                      return (
-                        <p key={t.text} className="mx-2 font-light">
-                          {t.text}
-                        </p>
-                      );
-                    })}
+                    <TextBlock text={choice.text} style="mx-2 font-light" />
                   </div>
                 );
               }
@@ -212,43 +207,54 @@ const Tag = ({ text, style }: tagProps) => {
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
-  c: CharacterClass;
+  c: {
+    complexity?: string;
+    attackStat?: stat_options[];
+    damage?: { stat?: stat_options };
+    staminaStat?: stat_options;
+  };
 };
 
-const ClassTags = ({ c }: classTagsProps) => {
+export const ClassTags = ({ c }: classTagsProps) => {
   let tags: ReactElement[] = new Array();
   let tagNames: string[] = new Array();
   let tagStyle;
-  switch (c.complexity) {
-    case complexity_options.simple:
-      tagStyle = "bg-green-800";
-      break;
-    case complexity_options.std:
-      tagStyle = "bg-amber-800";
-      break;
-    case complexity_options.complex:
-      tagStyle = "bg-blue-800";
-      break;
-    default:
-      tagStyle = "bg-rose-500";
+  if ("complexity" in c && c.complexity) {
+    switch (c.complexity.toLocaleLowerCase()) {
+      case complexity_options.simple:
+        tagStyle = "bg-green-800";
+        break;
+      case complexity_options.std:
+        tagStyle = "bg-amber-800";
+        break;
+      case complexity_options.complex:
+        tagStyle = "bg-blue-800";
+        break;
+      default:
+        tagStyle = "bg-rose-500";
+    }
+    tags.push(<Tag style={tagStyle} text={c.complexity.toLocaleLowerCase()} />);
   }
-  tags.push(<Tag style={tagStyle} text={c.complexity} />);
-  c.attackStat.forEach((stat) => {
-    tags.push(<Tag text={stat} />);
-    tagNames.push(stat);
-  });
-  if (!tagNames.includes(c.damage.stat)) {
-    tags.push(<Tag text={c.damage.stat} />);
+  if ("attackStat" in c && c.attackStat) {
+    c.attackStat.forEach((stat) => {
+      tags.push(<Tag text={stat.toLocaleLowerCase()} />);
+      tagNames.push(stat);
+    });
   }
-
-  if (!tagNames.includes(c.staminaStat)) {
-    tags.push(<Tag text={c.staminaStat} />);
+  if ("damage" in c && c.damage && "stat" in c.damage && c.damage.stat)
+    if (!tagNames.includes(c.damage.stat)) {
+      tags.push(<Tag text={c.damage.stat.toLocaleLowerCase()} />);
+    }
+  if ("staminaStat" in c && c.staminaStat) {
+    if (!tagNames.includes(c.staminaStat)) {
+      tags.push(<Tag text={c.staminaStat.toLocaleLowerCase()} />);
+    }
   }
   return <div>{tags}</div>;
 };
 
 type classProps = {
-  data: any;
+  data: ClassGraphType;
 };
 const ClassRule = ({ data }: classProps) => {
   const class_rules: CharacterClass = new CharacterClass(data);
@@ -270,11 +276,13 @@ const ClassRule = ({ data }: classProps) => {
   return (
     <div id={class_rules.slug}>
       <div className="w-full">
-        <div className="text-3xl tracking-wide font-bold py-4 px-3 bg-teal-300 dark:bg-teal-700 ">
-          {class_rules.title}
+        <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700">
+          <span className="float-left py-4 px-3">{class_rules.title}</span>{" "}
+          <span className="float-right text-base font-normal">
+            <ClassTags c={class_rules} />
+          </span>
         </div>
       </div>
-      <ClassTags c={class_rules} />
       <div className="clear-both">
         <div className="mx-3">
           <p className="italic">{class_rules.description}</p>

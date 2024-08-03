@@ -10,11 +10,56 @@ const query = gql`
       complexity
       damage {
         count
-        dice
         stat
+        dice
         type
       }
       description
+      features {
+        actionType
+        simpleChoices: choices {
+          ... on RuleText {
+            type
+            choices
+            text
+          }
+        }
+        complexChoices: choices {
+          ... on FeatureWithoutChoices {
+            href
+            shortTitle
+            actionType
+            costsFortunesFavor
+            multiSelect
+            ruleType
+            shortText
+            slug
+            staminaCost
+            title
+            text {
+              choices
+              text
+              type
+            }
+          }
+        }
+        chooseNum
+        costsFortunesFavor
+        href
+        level
+        multiSelect
+        ruleType
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        text {
+          choices
+          text
+          type
+        }
+        title
+      }
       extra {
         forms {
           armor {
@@ -39,58 +84,14 @@ const query = gql`
           title
         }
       }
-      features {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            options
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              options
-              text
-              type
-            }
-          }
-        }
-        href
-        costsFortunesFavor
-        level
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        text {
-          options
-          text
-          type
-        }
-        title
-      }
       health
       healthOnLevel
       href
-      shortTitle
       range {
         max
         min
       }
+      shortTitle
       slug
       stamina
       staminaOnLevel
@@ -102,6 +103,7 @@ const query = gql`
           options
           pick
         }
+        shields
         weapons {
           melee {
             options
@@ -116,7 +118,6 @@ const query = gql`
             pick
           }
         }
-        shields
       }
     }
   }
