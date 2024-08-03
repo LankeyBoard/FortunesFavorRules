@@ -56,7 +56,7 @@ export default async function CharacterSheetPage() {
           simpleChoices: choices {
             ... on RuleText {
               type
-              options
+              choices
               text
             }
           }
@@ -73,7 +73,7 @@ export default async function CharacterSheetPage() {
               staminaCost
               title
               text {
-                options
+                choices
                 text
                 type
               }
@@ -90,7 +90,7 @@ export default async function CharacterSheetPage() {
           staminaCost
           title
           text {
-            options
+            choices
             text
             type
           }
@@ -131,7 +131,7 @@ export default async function CharacterSheetPage() {
           simpleChoices: choices {
             ... on RuleText {
               type
-              options
+              choices
               text
             }
           }
@@ -148,7 +148,7 @@ export default async function CharacterSheetPage() {
               staminaCost
               title
               text {
-                options
+                choices
                 text
                 type
               }
@@ -164,7 +164,7 @@ export default async function CharacterSheetPage() {
           slug
           staminaCost
           text {
-            options
+            choices
             type
             text
           }
@@ -189,7 +189,7 @@ export default async function CharacterSheetPage() {
           simpleChoices: choices {
             ... on RuleText {
               type
-              options
+              choices
               text
             }
           }
@@ -206,7 +206,7 @@ export default async function CharacterSheetPage() {
               staminaCost
               title
               text {
-                options
+                choices
                 text
                 type
               }
@@ -223,47 +223,11 @@ export default async function CharacterSheetPage() {
           staminaCost
           title
           text {
-            options
+            choices
             text
             type
           }
         }
-      }
-      genericFeatures {
-        actionType
-        complexChoices: choices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            options
-            text
-            type
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        title
-        text {
-          options
-          text
-          type
-        }
-        featureType
       }
     }
   `;
