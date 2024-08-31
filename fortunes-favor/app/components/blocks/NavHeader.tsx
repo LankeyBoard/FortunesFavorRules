@@ -14,6 +14,11 @@ const NavHeader = () => {
       setMenuVisible(false);
     }
   }, [width]);
+  const closeMenuIfOpen = () => {
+    if (isSmallWindow(width)) {
+      setMenuVisible(false);
+    }
+  };
   return (
     <div
       className="items-center justify-between w-full md:flex md:w-auto order-1"
@@ -29,20 +34,14 @@ const NavHeader = () => {
         }}
       >
         <span className="sr-only">Open main menu</span>
-        <svg
-          className="w-5 h-5"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 17 14"
-        >
+        <svg width="24" height="24" fill="none" aria-hidden="true">
           <path
+            d="M12 6v.01M12 12v.01M12 18v.01M12 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
             stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M1 1h15M1 7h15M1 13h15"
-          />
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
         </svg>
       </button>
       {menuVisible && (
@@ -53,6 +52,9 @@ const NavHeader = () => {
                 href="/"
                 className="block py-2 px-3 text-amber-700 dark:text-white rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-700 md:hover:bg-transparent"
                 aria-current="page"
+                onClick={() => {
+                  closeMenuIfOpen();
+                }}
               >
                 Home
               </Link>
@@ -60,6 +62,9 @@ const NavHeader = () => {
             <li>
               <Link
                 href="/rules"
+                onClick={() => {
+                  closeMenuIfOpen();
+                }}
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Rules
@@ -70,6 +75,9 @@ const NavHeader = () => {
                 href="https://drive.google.com/file/d/1vFeswq_OIrhHdF2WNfe-ErR9bygaBsgt/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  closeMenuIfOpen();
+                }}
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Character Sheet
