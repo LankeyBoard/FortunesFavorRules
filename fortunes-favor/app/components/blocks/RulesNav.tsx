@@ -117,7 +117,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       {menuVisible && (
         <aside
           id="sidebar-multi-level-sidebar"
-          className="z-40 w-64 bg-slate-200 dark:bg-slate-950 p-4 overflow-auto md:h-full "
+          className="z-40 w-64 bg-slate-200 dark:bg-slate-950 p-4 md:h-full sticky overflow-y-auto h-[calc(100vh-120px)]"
           aria-label="Sidebar"
         >
           <div className="flex-col my-5">
