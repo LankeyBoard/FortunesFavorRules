@@ -34,7 +34,6 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
             href={navEl.href}
             className="font-light text-lg hover:tracking-wide whitespace-nowrap"
             onClick={() => {
-              console.log("click");
               closeMenuIfOpen();
             }}
           >
@@ -89,14 +88,12 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     }
   }, [width]);
   const closeMenuIfOpen = () => {
-    console.log("here");
     if (isSmallWindow(width)) {
-      console.log("close menu");
       setMenuVisible(false);
     }
   };
   return (
-    <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen backdrop-blur-sm bg-black/30 p-2">
+    <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen backdrop-blur-sm md:backdrop-blur-none bg-black/30 border-b-2 border-b-teal-400/50 md:bg-transparent">
       <button
         type="button"
         className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100/70 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600"
@@ -120,7 +117,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       {menuVisible && (
         <aside
           id="sidebar-multi-level-sidebar"
-          className="z-40 w-64 bg-slate-200 dark:bg-slate-950 p-4 overflow-auto h-full "
+          className="z-40 w-64 bg-slate-200 dark:bg-slate-950 p-4 overflow-auto md:h-full "
           aria-label="Sidebar"
         >
           <div className="flex-col my-5">
@@ -147,7 +144,7 @@ const RulesNav = ({ navMap }: { navMap: nav[] }) => {
     if (!isSmallWindow(width)) {
       setMenuStyle("flex h-screen");
     } else {
-      setMenuStyle("fixed flex items-start h-screen");
+      setMenuStyle("fixed flex items-start");
     }
   }, [width]);
 

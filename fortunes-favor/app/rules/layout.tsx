@@ -112,7 +112,7 @@ export default async function RulesLayout({
         />
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">
         <div className="flex-1 overflow-auto">
           <RuleDisplay>{children}</RuleDisplay>
         </div>
