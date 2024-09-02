@@ -14,7 +14,7 @@ export default function RuleDisplay({
   );
   useEffect(() => {
     if (!isSmallWindow(window.innerWidth)) {
-      setRuleStyle("mx-20 my-10 max-w-4xl xl:mx-auto");
+      setRuleStyle("ml-72 mr-5 my-10 max-w-4xl xxl:mx-auto");
     } else {
       setRuleStyle("m-5");
     }
