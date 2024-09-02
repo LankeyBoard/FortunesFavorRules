@@ -50,7 +50,7 @@ const linkMaker = (text: string) => {
   return (
     <Link
       href={text.substring(i + 2, text.length)}
-      className="text-teal-600 underline hover:text-teal-400 visited:text-purple-500"
+      className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200"
     >
       {text.substring(0, i)}
     </Link>
