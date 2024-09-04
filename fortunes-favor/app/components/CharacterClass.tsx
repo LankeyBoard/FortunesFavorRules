@@ -52,7 +52,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
           level
         </div>
       </div>
-      <div className="px-4 py-2">
+      <div className="px-2 md:px-4 py-2">
         {(feature.staminaCost || feature.costsFortunesFavor) && (
           <div className="mb-2" id="FeatureCosts">
             <span className="font-semibold">Costs: </span>
@@ -72,7 +72,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
           </div>
         )}
         <TextBlock text={feature.text} />
-        <div className="m-4 ">
+        <div className="md:m-4 my-4 ">
           {feature.choices &&
             feature.choices.length > 0 &&
             feature.choices.map((choice) => {
@@ -380,7 +380,7 @@ const ClassRule = ({ data }: classProps) => {
         <div className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
           Features
         </div>
-        <div className="px-10">
+        <div className="md:px-10">
           {class_rules.features.map((f) => (
             <FeatureDisplay feature={f} key={f.slug} />
           ))}
