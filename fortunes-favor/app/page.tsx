@@ -39,7 +39,7 @@ export default async function Home() {
                   </ul>
                 </td>
               </tr>
-              <tr className="">
+              <tr className="border-slate-500 border mb-2">
                 <td className="border-spacing-x-3 align-baseline">
                   3/24/2024{" "}
                 </td>
@@ -62,7 +62,7 @@ export default async function Home() {
                   </ul>
                 </td>
               </tr>
-              <tr className="">
+              <tr className="border-slate-500 border mb-2">
                 <td className="border-spacing-x-3 align-baseline">
                   3/26/2024{" "}
                 </td>
@@ -72,6 +72,34 @@ export default async function Home() {
                       <SlugLinker
                         text={
                           "Updated rules to clarify Counter calculation and the benefits of R&R."
+                        }
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <tr className="border-slate-500 border mb-2">
+                <td className="border-spacing-x-3 align-baseline">9/04/2024</td>
+                <td>
+                  <ul>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Updates to [Resting](/rules/player_rules#REST) to expand Night's Rest. Added healing when you finish a Night's Rest."
+                        }
+                      />
+                    </li>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "A full spell check and general cleanup of the rules."
+                        }
+                      />
+                    </li>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Improved mobile layout and reduced the dead space."
                         }
                       />
                     </li>

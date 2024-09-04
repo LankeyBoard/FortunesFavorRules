@@ -16,7 +16,7 @@ export default function RuleDisplay({
     if (!isSmallWindow(window.innerWidth)) {
       setRuleStyle("ml-72 mr-5 my-10 max-w-4xl xxl:mx-auto");
     } else {
-      setRuleStyle("m-5");
+      setRuleStyle("my-5 md:m-5");
     }
   }, [width]);
   return <div className={ruleStyle}>{children}</div>;
