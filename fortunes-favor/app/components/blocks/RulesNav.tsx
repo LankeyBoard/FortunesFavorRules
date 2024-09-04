@@ -32,14 +32,14 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
         >
           <Link
             href={navEl.href}
-            className="font-light text-lg hover:tracking-wide whitespace-nowrap"
+            className=""
             onClick={() => {
               closeMenuIfOpen();
             }}
           >
             <div
               className={
-                "font-light text-lg text-slate-800 dark:text-slate-200 hover:tracking-wide hover:text-amber-700 dark:hover:text-amber-100 whitespace-nowrap ml-3"
+                "font-light text-lg text-slate-800 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-100 ml-3 mr-3 text-balance hover:font-normal hover:mr-0"
               }
             >
               {navEl.title}
