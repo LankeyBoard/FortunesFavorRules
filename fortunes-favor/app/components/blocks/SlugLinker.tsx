@@ -21,8 +21,6 @@ const parseLinksFromString = (text: string) => {
   // TODO: slug should change the link href to the location of the slug
   const splitText = text.split(split);
   const links = Array.from(text.matchAll(split));
-  console.log("splitText", splitText);
-  console.log("links", [...links]);
   const display: JSX.Element[] = [];
   let l = 0;
   let t = 0;

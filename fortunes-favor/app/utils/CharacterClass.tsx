@@ -83,7 +83,6 @@ export default class CharacterClassData implements CharacterClass {
     if (this.training.shields === null) this.training.shields = ["None"];
     else if (!this.training.shields.includes("None"))
       this.training.shields = ["None"].concat([...this.training.shields]);
-    console.log("training", this.title, this.training);
     const as = new Array();
     if (Array.isArray(data.attackStat)) {
       data.attackStat.forEach((stat: string) => {

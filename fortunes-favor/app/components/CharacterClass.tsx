@@ -39,7 +39,6 @@ type featureProps = {
   feature: CharacterFeature;
 };
 const FeatureDisplay = ({ feature }: featureProps) => {
-  console.log("feature", feature);
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
@@ -146,7 +145,6 @@ type trainingProps = {
 };
 
 const Training = ({ training_type, training_list }: trainingProps) => {
-  console.log("training", training_list);
   let training;
   if (
     !training_list ||

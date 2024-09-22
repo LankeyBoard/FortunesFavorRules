@@ -29,6 +29,5 @@ export default class GenericFeatureData implements GenericFeature {
     this.multiSelect = multiSelect;
     this.choices = choices;
     this.chooseNum = chooseNum;
-    console.log("genericFeature choice", title, chooseNum, choices);
   }
 }

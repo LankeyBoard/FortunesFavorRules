@@ -6,7 +6,6 @@ import {
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 
 export const { getClient } = registerApolloClient(() => {
-  console.log("Graphql url: ",process.env.GRAPHQL_URL)
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link: new HttpLink({

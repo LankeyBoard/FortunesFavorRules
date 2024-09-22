@@ -32,7 +32,6 @@ export class CharacterTrait implements GenericFeature {
     });
     data.complexChoices?.forEach((choice: FeatureWithoutChoices) => {
       if (choice.title != null) {
-        console.log("complex choice", choice.title);
         this.choices.push(choice);
       }
     });
