@@ -36,7 +36,7 @@ enum Rarity {
 const downgradeBaseDamage = (damage: {
   dice: number;
   count: number;
-  stat: stat_options;
+  stat: stat_options[];
 }) => {
   console.log("initial damage", damage);
   let updatedDamage = { ...damage };
