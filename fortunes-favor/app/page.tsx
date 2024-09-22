@@ -106,6 +106,32 @@ export default async function Home() {
                   </ul>
                 </td>
               </tr>
+              <tr className="border-slate-500 border mb-2">
+                <td className="border-spacing-x-3 align-baseline">9/12/2024</td>
+                <td>
+                  <ul>
+                    <li>
+                      <SlugLinker
+                        text={"Updates [starting rules page](/rules)."}
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <tr className="border-slate-500 border mb-2">
+                <td className="border-spacing-x-3 align-baseline">9/21/2024</td>
+                <td>
+                  <ul>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Added the [Spellsword](/rules/classes/SPELLSWORD)."
+                        }
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

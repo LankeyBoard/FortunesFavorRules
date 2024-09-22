@@ -210,7 +210,7 @@ type classTagsProps = {
   c: {
     complexity?: string;
     attackStat?: stat_options[];
-    damage?: { stat?: stat_options };
+    damage?: { stat?: stat_options[] };
     staminaStat?: stat_options;
   };
 };
@@ -242,9 +242,11 @@ export const ClassTags = ({ c }: classTagsProps) => {
     });
   }
   if ("damage" in c && c.damage && "stat" in c.damage && c.damage.stat)
-    if (!tagNames.includes(c.damage.stat)) {
-      tags.push(<Tag text={c.damage.stat.toLocaleLowerCase()} />);
-    }
+    c.damage.stat.forEach((stat) => {
+      if (!tagNames.includes(stat)) {
+        tags.push(<Tag text={stat.toLocaleLowerCase()} />);
+      }
+    });
   if ("staminaStat" in c && c.staminaStat) {
     if (!tagNames.includes(c.staminaStat)) {
       tags.push(<Tag text={c.staminaStat.toLocaleLowerCase()} />);
@@ -272,7 +274,7 @@ const ClassRule = ({ data }: classProps) => {
     "d" +
     class_rules.damage.dice +
     " + " +
-    class_rules.damage.stat;
+    class_rules.damage.stat.join(", ").replace(/, ((?:.(?!, ))+)$/, " or $1");
   return (
     <div id={class_rules.slug}>
       <div className="w-full">
@@ -350,19 +352,9 @@ const ClassRule = ({ data }: classProps) => {
 
               <span className="">
                 :{" "}
-                {class_rules.attackStat.map((stat, i) => {
-                  if (i < class_rules.attackStat.length - 2) {
-                    return <span key={stat}>{stat}, </span>;
-                  } else if (i === class_rules.attackStat.length - 2) {
-                    return (
-                      <span key={stat}>
-                        {stat}, <span className="lowercase">or</span>{" "}
-                      </span>
-                    );
-                  } else {
-                    return <span key={stat}>{stat}</span>;
-                  }
-                })}
+                {class_rules.attackStat
+                  .join(", ")
+                  .replace(/, ((?:.(?!, ))+)$/, " or $1")}
               </span>
             </p>
             <p>

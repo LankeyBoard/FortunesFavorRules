@@ -88,7 +88,7 @@ export type Range = {
 export type Damage = {
   dice: number;
   count: number;
-  stat: stat_options;
+  stat: stat_options[];
 };
 
 export type FeatureChoices = RuleText | FeatureWithoutChoices;

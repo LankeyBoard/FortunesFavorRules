@@ -35,7 +35,7 @@ export default class CharacterClassData implements CharacterClass {
   damage: {
     dice: number;
     count: number;
-    stat: stat_options;
+    stat: stat_options[];
   };
   features: CharacterFeature[];
   extra: any;
@@ -103,13 +103,18 @@ export default class CharacterClassData implements CharacterClass {
       min: data.range.min,
       max: data.range.max,
     };
-    const ds = findEnum(data.damage.stat, stat_options);
-    let dmgStat: stat_options = stat_options.error;
+    const ds = new Array();
+    if (Array.isArray(data.damage.stat)) {
+      data.damage.stat.forEach((stat: string) => {
+        ds.push(findEnum(stat, stat_options));
+      });
+    }
+    let dmgStat = [stat_options.error];
     if (ds) {
       dmgStat = ds;
     } else {
       console.error(
-        "Error matching attack dmg stat %s in data file",
+        "Error matching attack stat %s in data file",
         data.damage.stat
       );
     }
