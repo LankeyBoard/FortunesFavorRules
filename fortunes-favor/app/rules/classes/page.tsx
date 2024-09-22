@@ -32,7 +32,7 @@ type characterClassData = {
   href: string;
   attackStat: stat_options[];
   damage: {
-    stat: stat_options;
+    stat: stat_options[];
   };
   staminaStat: stat_options;
 };
