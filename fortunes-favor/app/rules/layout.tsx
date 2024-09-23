@@ -76,6 +76,7 @@ export default async function RulesLayout({
   const rulesSection: nav_section = {
     title: "General Rules",
     basePath: "/rules/player_rules",
+    href: "/rules/player_rules",
     subroutes: data.genericRules,
   };
   const culturesSection: nav_section = {

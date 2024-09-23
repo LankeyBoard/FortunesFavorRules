@@ -45,7 +45,9 @@ type fieldProps = {
 const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
     <div id={field.slug} className="z-0 scroll-mt-20">
-      <div className={titleStyler(depth)}>{field.title}</div>
+      <div className={titleStyler(depth)}>
+        <label className="">{field.title}</label>
+      </div>
       <div className={field.ruleType != rule_type.List ? "pb-2" : "pb-2 mx-2"}>
         {field.text != undefined && typeof field.text === "string" && (
           <div className="mt-2">
