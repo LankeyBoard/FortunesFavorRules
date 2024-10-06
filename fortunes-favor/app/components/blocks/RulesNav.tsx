@@ -67,7 +67,7 @@ export const NavElem = ({
           <div
             className={
               isCurrent
-                ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis whitespace-nowrap ml-3"
+                ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis ml-3"
                 : "font-medium text-xl dark:text-white text-ellipsis whitespace-nowrap"
             }
           >
