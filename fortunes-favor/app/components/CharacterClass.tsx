@@ -39,7 +39,6 @@ type featureProps = {
   feature: CharacterFeature;
 };
 const FeatureDisplay = ({ feature }: featureProps) => {
-  console.log("feature", feature);
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
@@ -146,7 +145,6 @@ type trainingProps = {
 };
 
 const Training = ({ training_type, training_list }: trainingProps) => {
-  console.log("training", training_list);
   let training;
   if (
     !training_list ||
@@ -203,7 +201,7 @@ const Tag = ({ text, style }: tagProps) => {
   const s = style ? style : "bg-teal-900";
   const tagStyle =
     s +
-    " capitalize float-left rounded-lg py-2 px-4 mr-3 my-4 text-sm text-white";
+    " capitalize float-left rounded-lg py-1 px-2 mr-2 my-2 text-sm text-white";
   return <div className={tagStyle}>{text}</div>;
 };
 type classTagsProps = {
@@ -252,7 +250,24 @@ export const ClassTags = ({ c }: classTagsProps) => {
       tags.push(<Tag text={c.staminaStat.toLocaleLowerCase()} />);
     }
   }
-  return <div>{tags}</div>;
+  return <div className="mt-1">{tags}</div>;
+};
+
+type ClassTitleAndTagsProps = {
+  classRules: CharacterClass;
+};
+
+export const ClassTitleAndTags = ({ classRules }: ClassTitleAndTagsProps) => {
+  return (
+    <div className="w-full h-fit bg-teal-300 dark:bg-teal-700">
+      <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700 flex justify-between">
+        <span className="py-4 px-3">{classRules.title}</span>{" "}
+        <span className="text-base font-normal overflow-auto">
+          <ClassTags c={classRules} />
+        </span>
+      </div>
+    </div>
+  );
 };
 
 type classProps = {
@@ -277,14 +292,7 @@ const ClassRule = ({ data }: classProps) => {
     class_rules.damage.stat.join(", ").replace(/, ((?:.(?!, ))+)$/, " or $1");
   return (
     <div id={class_rules.slug}>
-      <div className="w-full">
-        <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700">
-          <span className="float-left py-4 px-3">{class_rules.title}</span>{" "}
-          <span className="float-right text-base font-normal">
-            <ClassTags c={class_rules} />
-          </span>
-        </div>
-      </div>
+      <ClassTitleAndTags classRules={class_rules} />
       <div className="clear-both">
         <div className="mx-3">
           <p className="italic">{class_rules.description}</p>

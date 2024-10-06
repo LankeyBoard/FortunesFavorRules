@@ -10,7 +10,7 @@ export type Form = {
     {
       count: number;
       dice: number;
-      stat?: stat_options;
+      stat?: stat_options[];
       type: [string];
     },
   ];
@@ -37,10 +37,11 @@ const DamageTypes = ({ damageArr }: damageTypesProps) => {
   if (damageArr.length < 1) {
     return;
   } else if (damageArr.length === 1) {
-    return <span>{damageArr}</span>;
+    return <span>({damageArr})</span>;
   } else {
     return (
       <span>
+        (
         {damageArr.map((dmg, i) => {
           if (i < damageArr.length - 2) {
             return <span key={dmg}>{dmg}, </span>;
@@ -54,6 +55,7 @@ const DamageTypes = ({ damageArr }: damageTypesProps) => {
             return <span key={dmg}>{dmg}</span>;
           }
         })}
+        )
       </span>
     );
   }
@@ -90,7 +92,12 @@ const FormDisplay = ({ form }: formProps) => {
                 className="capitalize"
               >
                 {damage.count}d{damage.dice}{" "}
-                {damage.stat && "+ " + damage.stat.toLocaleLowerCase()}{" "}
+                {damage.stat &&
+                  "+ " +
+                    damage.stat
+                      .join(", ")
+                      .replace(/, ((?:.(?!, ))+)$/, " or $1")
+                      .toLocaleLowerCase()}{" "}
                 <span className="italic">
                   <DamageTypes damageArr={damage.type} />
                   {form.damage.length > 1 &&

@@ -1,25 +1,38 @@
 "use client";
 import Link from "next/link";
 import { nav } from "@/app/rules/layout";
-import { usePathname } from "next/navigation";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import useWindowDimensions from "@/app/utils/useWindowDimensions";
 import { isSmallWindow } from "@/app/utils/isSmallWindow";
-import Tooltip from "./Tooltip";
 
 type navProps = {
   navEl: nav;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
+  path: string;
+  setPath: Dispatch<SetStateAction<string>>;
 };
 
-export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
-  const path = usePathname();
+export const NavElem = ({
+  navEl,
+  isSub,
+  closeMenuIfOpen,
+  path,
+  setPath,
+}: navProps) => {
   let isCurrent = false;
   if (path === navEl.href) {
     isCurrent = true;
   }
+  useEffect(() => {
+    // Check if we are in a client-side environment
+    if (typeof window !== "undefined") {
+      // Access the path using window.location.hash
+      const path = window.location.hash;
+      console.log("path:", path);
+    }
+  }, [path]);
   return (
     <div key={navEl.title} className="">
       {navEl.href && !isCurrent ? (
@@ -34,6 +47,7 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
             href={navEl.href}
             className=""
             onClick={() => {
+              setPath(navEl.href || "");
               closeMenuIfOpen();
             }}
           >
@@ -69,6 +83,8 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
               isSub={true}
               key={r.title}
               closeMenuIfOpen={closeMenuIfOpen}
+              path={path}
+              setPath={setPath}
             />
           );
         })}
@@ -80,6 +96,7 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
+  const [path, setPath] = useState(window ? window.Location.toString() : "");
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuVisible(true);
@@ -127,6 +144,8 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   navEl={n}
                   key={n.title}
                   closeMenuIfOpen={closeMenuIfOpen}
+                  path={path}
+                  setPath={setPath}
                 />
               );
             })}
@@ -140,6 +159,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
 const RulesNav = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuStyle, setMenuStyle] = useState("flex");
+
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuStyle("flex h-screen");

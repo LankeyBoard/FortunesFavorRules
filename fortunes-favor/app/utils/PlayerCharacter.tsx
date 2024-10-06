@@ -38,7 +38,6 @@ const downgradeBaseDamage = (damage: {
   count: number;
   stat: stat_options[];
 }) => {
-  console.log("initial damage", damage);
   let updatedDamage = { ...damage };
   if (damage.dice === 6 && damage.count > 1) {
     updatedDamage.dice = 12;
@@ -48,7 +47,6 @@ const downgradeBaseDamage = (damage: {
       updatedDamage.dice -= 2;
     }
   }
-  console.log("downgraded damage", updatedDamage);
   return updatedDamage;
 };
 class Input {
@@ -103,7 +101,6 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     this.effects = effects;
     this._chosen = chosen;
     this._level = level || 0;
-    console.log("PlayerCharacterFeature", this);
   }
   public get chosen() {
     return this._chosen;
@@ -166,7 +163,6 @@ const updateFeatures = (
     }
   });
   source.features.forEach((feature) => {
-    console.log("feature updates", feature);
     if (feature instanceof CharacterFeatureData) {
       if (feature.level <= currentCharacter.level) {
         if (feature.actionType === action_type.action) {
@@ -362,7 +358,6 @@ export default class PlayerCharacter {
       this._counters = [];
       this._features = [];
     }
-    console.log("playerCharacer features", this._features);
   }
 
   public get level(): number {

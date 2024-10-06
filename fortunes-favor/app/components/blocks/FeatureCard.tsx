@@ -33,7 +33,6 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
       });
       setFeature(newFeature);
     }
-    console.log("useEffect", newFeature, showAllChoices);
   }, [feature, showAllChoices]);
   let titleStyle = "flex p-2";
   let resultType = "";
@@ -65,9 +64,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
     default:
       titleStyle += " bg-red-500";
   }
-  console.log("feature card choices", feature);
-  if (cardFeature.chosen.length > 0 && cardFeature.choices.length > 0)
-    console.log("here", cardFeature.chosen[0] in cardFeature.choices[0]);
+
   const choiceStyle =
     "p-2 odd:bg-slate-300 dark:odd:bg-slate-700 cursor-pointer hover:border-2 hover:border-amber-300 hover:dark:border-amber-700 hover:bg-slate-200 hover:dark:bg-slate-800";
   const selectedChoiceStyle = choiceStyle + " border-2 border-amber-500";

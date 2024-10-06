@@ -26,7 +26,11 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
   const navRoutes: nav[] = [];
   sections.forEach((section) => {
     if (section.subroutes) {
-      let route: nav = { title: section.title, subroutes: [] };
+      let route: nav = {
+        title: section.title,
+        href: section.href,
+        subroutes: [],
+      };
       section.subroutes.forEach((subRoute) => {
         const sub: nav = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
@@ -68,11 +72,11 @@ export default async function RulesLayout({
   const { data } = await client.query({
     query,
   });
-  console.log(data);
 
   const rulesSection: nav_section = {
     title: "General Rules",
     basePath: "/rules/player_rules",
+    href: "/rules/player_rules",
     subroutes: data.genericRules,
   };
   const culturesSection: nav_section = {

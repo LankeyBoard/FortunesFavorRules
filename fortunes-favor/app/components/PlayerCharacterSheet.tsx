@@ -80,12 +80,6 @@ const PlayerCharacterSheet = ({
         veteranFeatures.push(new CharacterTrait(feature));
     });
   }
-  console.log(
-    "characterOptions",
-    characterOptions,
-    noviceFeatures,
-    veteranFeatures
-  );
   let armorOptions = [{ title: "None" }];
 
   return (
@@ -126,7 +120,6 @@ const PlayerCharacterSheet = ({
                 options={cultures}
                 unselectedOption={!character.culture}
                 onChange={(e) => {
-                  console.log(e);
                   const slug = e.target.value;
                   const updatedCulture = cultures.find((c) => c.slug === slug);
                   if (updatedCulture) {
@@ -152,7 +145,6 @@ const PlayerCharacterSheet = ({
                   options={lineages}
                   unselectedOption={!character.lineage}
                   onChange={(e) => {
-                    console.log(e);
                     const slug = e.target.value;
                     const updatedLineage = lineages.find(
                       (l) => l.slug === slug
@@ -184,12 +176,10 @@ const PlayerCharacterSheet = ({
                 options={characterClasses}
                 unselectedOption={!character.class}
                 onChange={(e) => {
-                  console.log(e);
                   const slug = e.target.value;
                   const updatedClass = characterClasses.find(
                     (c) => c.slug === slug
                   );
-                  console.log("class found: ", updatedClass);
                   if (updatedClass) {
                     if (!character) {
                       const newCharacter = new PlayerCharacter(
@@ -226,7 +216,6 @@ const PlayerCharacterSheet = ({
                     type="number"
                     defaultValue={character.stats.mettle}
                     onChange={(e) => {
-                      console.log(e.target.value);
                       const updatedCharacter = new PlayerCharacter(
                         undefined,
                         undefined,
@@ -240,7 +229,6 @@ const PlayerCharacterSheet = ({
                         intellect: character.stats.intellect,
                       };
                       setCharacter(updatedCharacter);
-                      console.log(updatedCharacter);
                     }}
                   />
                 </div>
@@ -251,7 +239,6 @@ const PlayerCharacterSheet = ({
                     type="number"
                     defaultValue={character.stats.agility}
                     onChange={(e) => {
-                      console.log(e.target.value);
                       const updatedCharacter = new PlayerCharacter(
                         undefined,
                         undefined,
@@ -265,7 +252,6 @@ const PlayerCharacterSheet = ({
                         intellect: character.stats.intellect,
                       };
                       setCharacter(updatedCharacter);
-                      console.log(updatedCharacter);
                     }}
                   />
                 </div>
@@ -276,7 +262,6 @@ const PlayerCharacterSheet = ({
                     type="number"
                     defaultValue={character.stats.heart}
                     onChange={(e) => {
-                      console.log(e.target.value);
                       const updatedCharacter = new PlayerCharacter(
                         undefined,
                         undefined,
@@ -341,7 +326,6 @@ const PlayerCharacterSheet = ({
                 }
                 unselectedOption={!character.class}
                 onChange={(e) => {
-                  console.log(e);
                   const updatedCharacter = new PlayerCharacter(
                     undefined,
                     undefined,
@@ -351,7 +335,6 @@ const PlayerCharacterSheet = ({
 
                   updatedCharacter.armorName = e.target.value;
                   setCharacter(updatedCharacter);
-                  console.log(updatedCharacter);
                 }}
               />
             </div>
@@ -366,7 +349,6 @@ const PlayerCharacterSheet = ({
                 }
                 unselectedOption={!character.class}
                 onChange={(e) => {
-                  console.log(e);
                   const updatedCharacter = new PlayerCharacter(
                     undefined,
                     undefined,
@@ -376,7 +358,6 @@ const PlayerCharacterSheet = ({
 
                   updatedCharacter.shieldName = e.target.value;
                   setCharacter(updatedCharacter);
-                  console.log(updatedCharacter);
                 }}
               />
             </div>

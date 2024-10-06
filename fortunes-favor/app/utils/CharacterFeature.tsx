@@ -31,7 +31,6 @@ export default class CharacterFeatureData
     this.costsFortunesFavor = feature_data.costsFortunesFavor;
     this.actionType = undefined;
     if (feature_data.actionType !== null) {
-      console.log(feature_data.actionType, feature_data.actionType !== null);
       const at = findEnum(feature_data.actionType, action_type);
       if (at) {
         this.actionType = at;
