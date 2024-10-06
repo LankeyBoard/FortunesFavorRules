@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import RuleDisplay from "../components/blocks/RuleDisplay";
 import RulesNav from "../components/blocks/RulesNav";
 import { getClient } from "../utils/graphQLclient";
+import Dropdown from "../components/blocks/Dropdown";
 
 export type nav = {
   title: string;
@@ -120,6 +121,9 @@ export default async function RulesLayout({
         <div className="flex-1 overflow-auto">
           <RuleDisplay>{children}</RuleDisplay>
         </div>
+      </div>
+      <div className="fixed bottom-0 right-0">
+        <Dropdown />
       </div>
     </div>
   );

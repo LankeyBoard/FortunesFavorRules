@@ -39,10 +39,12 @@ export default class CharacterClassData implements CharacterClass {
   };
   features: CharacterFeature[];
   extra: any;
+  href: string;
   constructor(data: any) {
     this.title = data.title;
     this.slug = data.slug;
     this.description = data.description;
+    this.href = data.href;
     const c = findEnum(data.complexity, complexity_options);
     this.complexity = complexity_options.error;
     if (c) {
