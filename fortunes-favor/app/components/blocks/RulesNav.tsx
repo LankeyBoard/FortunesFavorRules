@@ -25,14 +25,6 @@ export const NavElem = ({
   if (path === navEl.href) {
     isCurrent = true;
   }
-  useEffect(() => {
-    // Check if we are in a client-side environment
-    if (typeof window !== "undefined") {
-      // Access the path using window.location.hash
-      const path = window.location.hash;
-      console.log("path:", path);
-    }
-  }, [path]);
   return (
     <div key={navEl.title} className="">
       {navEl.href && !isCurrent ? (
@@ -96,7 +88,9 @@ export const NavElem = ({
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
-  const [path, setPath] = useState(window ? window.Location.toString() : "");
+  const [path, setPath] = useState(
+    typeof window !== "undefined" ? window.Location.toString() : ""
+  );
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuVisible(true);
