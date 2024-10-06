@@ -13,11 +13,12 @@ export default function RuleDisplay({
     "mx-20 my-10 max-w-4xl xl:mx-auto"
   );
   useEffect(() => {
-    if (!isSmallWindow(window.innerWidth)) {
-      setRuleStyle("ml-72 mr-5 my-10 max-w-4xl xxl:mx-auto");
-    } else {
-      setRuleStyle("my-5 md:m-5");
-    }
+    if (typeof window !== "undefined")
+      if (!isSmallWindow(window.innerWidth)) {
+        setRuleStyle("ml-72 mr-5 my-10 max-w-4xl xxl:mx-auto");
+      } else {
+        setRuleStyle("my-5 md:m-5");
+      }
   }, [width]);
   return <div className={ruleStyle}>{children}</div>;
 }
