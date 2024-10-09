@@ -47,10 +47,10 @@ const TextBlock = ({
           <p key={t.text} className={textStyler(t.type)}>
             {t.type == "EG" && <span>Eg: </span>}
             <SlugLinker text={t.text} />
-            {t.options && (
+            {t.choices && (
               <ul>
-                {t.options.map((o) => (
-                  <li key={o}>o</li>
+                {t.choices.map((choice) => (
+                  <li key={choice}> - {choice}</li>
                 ))}
               </ul>
             )}
