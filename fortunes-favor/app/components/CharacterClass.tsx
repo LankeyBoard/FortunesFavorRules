@@ -120,24 +120,6 @@ const ExtrasDisplay = ({ extras }: extrasDisplayProps) => {
     );
   }
 };
-type choiceProps = {
-  choice: GenericFeature;
-};
-const ChoiceDisplay = ({ choice }: choiceProps) => {
-  return (
-    <div
-      className="p-2 dark:odd:bg-slate-600 odd:bg-slate-300"
-      id={choice.slug}
-    >
-      <b className="inline">{choice.title}</b> -{" "}
-      {choice.text?.map((t) => (
-        <div key={t.text} className="inline">
-          <FieldDisplay field={t} />
-        </div>
-      ))}
-    </div>
-  );
-};
 
 type trainingProps = {
   training_type: string;

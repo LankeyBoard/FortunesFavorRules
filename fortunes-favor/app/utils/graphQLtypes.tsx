@@ -15,7 +15,7 @@ export type SearchResult = {
 export type RuleText = {
   text: string;
   type?: string;
-  options?: string[];
+  choices?: string[];
 };
 
 export type GenericRule = {
