@@ -4,7 +4,7 @@ import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
 import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
-import { GenericFeature, RuleText } from "../utils/graphQLtypes";
+import { Deflect, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
 import { CharacterClass as ClassGraphType } from "../types.generated";
 import TextBlock from "./blocks/TextBlock";
@@ -252,6 +252,21 @@ export const ClassTitleAndTags = ({ classRules }: ClassTitleAndTagsProps) => {
   );
 };
 
+type ClassDeflectProps = {
+  classDeflect: Deflect;
+}
+
+const ClassDeflect = ({classDeflect}: ClassDeflectProps) => {
+  return(
+    <div className="mb-3">
+      <span className="font-semibold clear-left">Deflect</span>:
+      <span> {classDeflect.count}d{classDeflect.dice}</span> {classDeflect.flat > 0 &&<span> + {classDeflect.flat}</span>}
+    </div>
+  )
+  
+  
+}
+
 type classProps = {
   data: ClassGraphType;
 };
@@ -355,9 +370,11 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold clear-left">Damage</span>
               <span>: {dmgString}</span>
             </p>
+            <ClassDeflect classDeflect={class_rules.deflect}/>
           </div>
         </div>
       </div>
+      
       <div id="features">
         <div className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
           Features

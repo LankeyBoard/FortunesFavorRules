@@ -91,6 +91,12 @@ export type Damage = {
   stat: stat_options[];
 };
 
+export type Deflect = {
+  dice: number;
+  count: number;
+  flat: number;
+}
+
 export type FeatureChoices = RuleText | FeatureWithoutChoices;
 
 export type FeatureWithoutChoices = {
@@ -137,5 +143,6 @@ export type CharacterClass = {
   attackStat: stat_options[];
   range: Range;
   damage: Damage;
+  deflect: Deflect;
   features: CharacterClassFeature[];
 };

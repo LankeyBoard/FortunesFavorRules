@@ -37,6 +37,11 @@ export default class CharacterClassData implements CharacterClass {
     count: number;
     stat: stat_options[];
   };
+  deflect: {
+    dice: number;
+    count: number;
+    flat: number;
+  }
   features: CharacterFeature[];
   extra: any;
   href: string;
@@ -124,6 +129,7 @@ export default class CharacterClassData implements CharacterClass {
       count: data.damage.count,
       stat: dmgStat,
     };
+    this.deflect = data.deflect
     this.features = data.features.map(
       (feature_data: any) => new CharacterFeature(feature_data)
     );
