@@ -213,7 +213,7 @@ export const ClassTags = ({ c }: classTagsProps) => {
       default:
         tagStyle = "bg-rose-500";
     }
-    tags.push(<Tag style={tagStyle} text={c.complexity.toLocaleLowerCase()} />);
+    tags.push(<Tag key={c.complexity} style={tagStyle} text={c.complexity.toLocaleLowerCase()} />);
   }
   if ("attackStat" in c && c.attackStat) {
     c.attackStat.forEach((stat) => {
