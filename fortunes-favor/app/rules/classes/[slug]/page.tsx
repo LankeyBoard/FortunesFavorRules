@@ -14,6 +14,11 @@ const query = gql`
         dice
         type
       }
+      deflect {
+        count
+        dice
+        flat
+      }
       description
       features {
         actionType
