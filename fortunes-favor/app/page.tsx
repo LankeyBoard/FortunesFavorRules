@@ -132,6 +132,27 @@ export default async function Home() {
                   </ul>
                 </td>
               </tr>
+              <tr className="border-slate-500 border mb-2">
+                <td className="border-spacing-x-3 align-baseline">12/1/2024</td>
+                <td>
+                  <ul>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Added Deflect dice and updated shields."
+                        }
+                      />
+                    </li>
+                    <li>
+                      <SlugLinker
+                        text={
+                          "Updated the character sheet."
+                        }
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
