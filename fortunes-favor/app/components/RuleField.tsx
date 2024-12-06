@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { rule_type } from "../enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
 import TextBlock from "./blocks/TextBlock";
-
+import CopyLink from "./CopyLink";
 const titleStyler = (depth: number) => {
   switch (depth) {
     case 1:
@@ -10,7 +11,7 @@ const titleStyler = (depth: number) => {
     case 2:
       return "mt-3 mb-1 text-2xl px-2 tracking-wide";
     case 3:
-      return "text-lg p-2 font-light text-lg";
+      return "text-lg p-2 font-light";
   }
 };
 
@@ -46,7 +47,7 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
     <div id={field.slug} className="z-0 scroll-mt-20">
       <div className={titleStyler(depth)}>
-        <label className="">{field.title}</label>
+        <label className="display-flex">{field.title} {field.slug && depth < 3 && <CopyLink target={field.slug}/>}</label>
       </div>
       <div className={field.ruleType != rule_type.List ? "pb-2" : "pb-2 mx-2"}>
         {field.text != undefined && typeof field.text === "string" && (
