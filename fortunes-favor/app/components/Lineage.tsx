@@ -65,7 +65,7 @@ const Lineage = ({ data, isList = false }: LineageProps) => {
           <span className="font-semibold">Stat - </span>
           {l.stat}
         </div>
-        <Traits title="Traits" traits={l.features} />
+        <Traits title="Features" traits={l.features} />
       </div>
     </div>
   );
