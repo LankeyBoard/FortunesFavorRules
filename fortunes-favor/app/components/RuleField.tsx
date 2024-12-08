@@ -7,7 +7,7 @@ import CopyLink from "./CopyLink";
 const titleStyler = (depth: number) => {
   switch (depth) {
     case 1:
-      return "text-3xl tracking-wide font-bold py-4 px-2 bg-purple-300 dark:bg-purple-800";
+      return "text-3xl tracking-wider font-extralight py-4 px-3 bg-purple-300 dark:bg-purple-800";
     case 2:
       return "mt-3 mb-1 text-2xl px-2 tracking-wide";
     case 3:
