@@ -91,8 +91,9 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const [path, setPath] = useState(
     typeof window !== "undefined" ? window.Location.toString() : ""
   );
-  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100/70 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
-  const buttonDownStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100/70 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600 rotate-180";
+  
+  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
+  const buttonDownStyle = buttonUpStyle + " rotate-180";
   
   const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
   
@@ -112,7 +113,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   return (
     <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen md:w-auto backdrop-blur-sm md:backdrop-blur-none ">
       {isSmallWindow(width) && 
-        <div className="flex flex-row justify-center items-center bg-black/30 border-t-2 border-b-2 border-teal-400/50 md:bg-transparent">
+        <div className="flex flex-row justify-center items-center bg-black/50 border-t-2 border-b-2 border-teal-400/50 md:bg-transparent">
           <button
             type="button"
             className={buttonStyle}
@@ -124,7 +125,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
             }}
           >
             <span className="sr-only">Open main menu</span>
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.657 11.2929L16.2428 12.7071L12.0002 8.46444L7.75748 12.7071L6.34326 11.2929L12.0001 5.63605L17.657 11.2929Z" className="fill-amber-400"></path> <path d="M17.657 16.9497L16.2428 18.3639L12.0002 14.1213L7.75748 18.364L6.34326 16.9498L12.0001 11.2929L17.657 16.9497Z" className="fill-amber-200"></path> </g></svg>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="hover:-translate-y-1"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.657 11.2929L16.2428 12.7071L12.0002 8.46444L7.75748 12.7071L6.34326 11.2929L12.0001 5.63605L17.657 11.2929Z" className="fill-amber-400"></path> <path d="M17.657 16.9497L16.2428 18.3639L12.0002 14.1213L7.75748 18.364L6.34326 16.9498L12.0001 11.2929L17.657 16.9497Z" className="fill-amber-200"></path> </g></svg>
           </button>
         </div>
       }
