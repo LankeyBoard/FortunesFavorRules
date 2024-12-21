@@ -53,7 +53,8 @@ const query = gql`
   }
 `;
 
-async function VeteranFeature({ params }: { params: { slug: string } }) {
+async function VeteranFeature(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const client = getClient();
   const { data } = await client.query({
     query,

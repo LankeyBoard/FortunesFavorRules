@@ -53,7 +53,8 @@ const query = gql`
   }
 `;
 
-async function NoviceFeature({ params }: { params: { slug: string } }) {
+async function NoviceFeature(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const client = getClient();
   const { data } = await client.query({
     query,
