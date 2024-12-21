@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { rule_type } from "../enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";

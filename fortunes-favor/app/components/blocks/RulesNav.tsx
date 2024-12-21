@@ -12,6 +12,7 @@ type navProps = {
   closeMenuIfOpen: () => void;
   path: string;
   setPath: Dispatch<SetStateAction<string>>;
+  closestId?: string;
 };
 
 export const NavElem = ({
@@ -20,11 +21,16 @@ export const NavElem = ({
   closeMenuIfOpen,
   path,
   setPath,
+  closestId
 }: navProps) => {
-  let isCurrent = false;
+  let isCurrent = navEl.href === closestId;
   if (path === navEl.href) {
     isCurrent = true;
   }
+  if(isCurrent && closestId){
+    window.history.replaceState({}, '', closestId);
+  }
+
   return (
     <div key={navEl.title} className="">
       {navEl.href && !isCurrent ? (
@@ -77,6 +83,7 @@ export const NavElem = ({
               closeMenuIfOpen={closeMenuIfOpen}
               path={path}
               setPath={setPath}
+              closestId={closestId}
             />
           );
         })}
@@ -91,7 +98,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const [path, setPath] = useState(
     typeof window !== "undefined" ? window.Location.toString() : ""
   );
-  
+  const [currentId, setCurrentId] = useState<string | undefined>()
   const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
   const buttonDownStyle = buttonUpStyle + " rotate-180";
   
@@ -104,6 +111,69 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       setMenuVisible(false);
     }
   }, [width]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
+  // build a dict of hrefs, their id if they have them, and the location of the element.
+  const navComparison: {[key: string]: {id: string, loc: number}} = {}
+
+  const navMapper = (map: nav[]) => {
+    let navIdMap: {[key: string]: {id: string, loc: number}} = {}
+    map.forEach(navEl => {
+      if(navEl.subroutes){
+        const idMap = navMapper(navEl.subroutes);
+        const keys = Object.keys(idMap);
+        keys.forEach(key => {
+          navIdMap[key] = {id: idMap[key].id, loc: idMap[key].loc}
+        })
+      }
+        
+      if(navEl.href && navEl.href.includes("#")){
+        if(typeof document === "undefined")
+          return;
+        const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
+        const element = document.getElementById(elemId);
+        if(elemId && element)
+          navIdMap[navEl.href] = {
+          id: elemId,
+          loc: element.getBoundingClientRect().top
+        }
+    }})
+    return navIdMap;
+  }
+  
+  const navIdMap = navMapper(navMap);
+
+  function findClosestHref() {
+
+    //update id locations
+    for (const [key, elem] of Object.entries(navIdMap)) {
+      const element = document.getElementById(elem.id);
+      if(element)
+        navIdMap[key].loc = element.getBoundingClientRect().top
+    }
+    let closestHref = undefined;
+    //find the id with the lowest negative current top
+    for (const [key, elem] of Object.entries(navIdMap)) {
+      if(!window.location.toString().includes(key.slice(0,key.indexOf('#')))){
+        console.log("wrong page", window.location.toString(), key.slice(0,key.indexOf('#')));
+        break;
+      }
+      if(!closestHref)
+        closestHref = key;
+      if(elem.loc < 300 && elem.loc > navIdMap[closestHref].loc )
+        closestHref = key;
+      
+    }
+    return (
+      closestHref
+    );
+  }
+  const handleScroll = () => {
+    setCurrentId(findClosestHref());
+  }
   const closeMenuIfOpen = () => {
     if (isSmallWindow(width)) {
       setMenuVisible(false);
@@ -112,7 +182,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   };
   return (
     <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen md:w-auto backdrop-blur-sm md:backdrop-blur-none ">
-      {isSmallWindow(width) && 
+      {!isSmallWindow(width)? <></> :
         <div className="flex flex-row justify-center items-center bg-black/50 border-t-2 border-b-2 border-teal-400/50 md:bg-transparent">
           <button
             type="button"
@@ -125,7 +195,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
             }}
           >
             <span className="sr-only">Open main menu</span>
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="hover:-translate-y-1"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.657 11.2929L16.2428 12.7071L12.0002 8.46444L7.75748 12.7071L6.34326 11.2929L12.0001 5.63605L17.657 11.2929Z" className="fill-amber-400"></path> <path d="M17.657 16.9497L16.2428 18.3639L12.0002 14.1213L7.75748 18.364L6.34326 16.9498L12.0001 11.2929L17.657 16.9497Z" className="fill-amber-200"></path> </g></svg>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="hover:-translate-y-1"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.657 11.2929L16.2428 12.7071L12.0002 8.46444L7.75748 12.7071L6.34326 11.2929L12.0001 5.63605L17.657 11.2929Z" className="fill-amber-400"></path> <path d="M17.657 16.9497L16.2428 18.3639L12.0002 14.1213L7.75748 18.364L6.34326 16.9498L12.0001 11.2929L17.657 16.9497Z" className="fill-amber-200"></path> </g></svg>
           </button>
         </div>
       }
@@ -144,6 +214,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   closeMenuIfOpen={closeMenuIfOpen}
                   path={path}
                   setPath={setPath}
+                  closestId={currentId}
                 />
               );
             })}
