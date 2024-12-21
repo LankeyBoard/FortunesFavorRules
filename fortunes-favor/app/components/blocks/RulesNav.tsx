@@ -27,9 +27,12 @@ export const NavElem = ({
   if (path === navEl.href) {
     isCurrent = true;
   }
-  if(isCurrent && closestId){
-    window.history.replaceState({}, '', closestId);
-  }
+  useEffect(() => {
+    if(isCurrent && closestId){
+      setPath(closestId)
+    }
+  })
+  
 
   return (
     <div key={navEl.title} className="">
@@ -96,14 +99,14 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
   const [path, setPath] = useState(
-    typeof window !== "undefined" ? window.Location.toString() : ""
+    typeof window !== "undefined" ? window.location.pathname : ""
   );
   const [currentId, setCurrentId] = useState<string | undefined>()
   const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
   const buttonDownStyle = buttonUpStyle + " rotate-180";
   
   const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
-  
+
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuVisible(true);
@@ -158,7 +161,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     //find the id with the lowest negative current top
     for (const [key, elem] of Object.entries(navIdMap)) {
       if(!window.location.toString().includes(key.slice(0,key.indexOf('#')))){
-        console.log("wrong page", window.location.toString(), key.slice(0,key.indexOf('#')));
         break;
       }
       if(!closestHref)
@@ -180,6 +182,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       setButtonStyle(buttonUpStyle);
     }
   };
+
   return (
     <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen md:w-auto backdrop-blur-sm md:backdrop-blur-none ">
       {!isSmallWindow(width)? <></> :
