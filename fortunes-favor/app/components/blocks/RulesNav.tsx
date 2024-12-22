@@ -5,6 +5,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import useWindowDimensions from "@/app/utils/useWindowDimensions";
 import { isSmallWindow } from "@/app/utils/isSmallWindow";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type navProps = {
   navEl: nav;
@@ -12,7 +14,6 @@ type navProps = {
   closeMenuIfOpen: () => void;
   path: string;
   setPath: Dispatch<SetStateAction<string>>;
-  closestId?: string;
 };
 
 export const NavElem = ({
@@ -20,18 +21,12 @@ export const NavElem = ({
   isSub,
   closeMenuIfOpen,
   path,
-  setPath,
-  closestId
+  setPath
 }: navProps) => {
-  let isCurrent = navEl.href === closestId;
+  let isCurrent =false;
   if (path === navEl.href) {
     isCurrent = true;
   }
-  useEffect(() => {
-    if(isCurrent && closestId){
-      setPath(closestId)
-    }
-  })
   
 
   return (
@@ -86,7 +81,6 @@ export const NavElem = ({
               closeMenuIfOpen={closeMenuIfOpen}
               path={path}
               setPath={setPath}
-              closestId={closestId}
             />
           );
         })}
@@ -99,29 +93,8 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
   const [path, setPath] = useState(
-    typeof window !== "undefined" ? window.location.pathname : ""
+    ""
   );
-  const [currentId, setCurrentId] = useState<string | undefined>()
-  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
-  const buttonDownStyle = buttonUpStyle + " rotate-180";
-  
-  const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
-
-  useEffect(() => {
-    if (!isSmallWindow(width)) {
-      setMenuVisible(true);
-    } else {
-      setMenuVisible(false);
-    }
-  }, [width]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  });
-  // build a dict of hrefs, their id if they have them, and the location of the element.
-  const navComparison: {[key: string]: {id: string, loc: number}} = {}
-
   const navMapper = (map: nav[]) => {
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
     map.forEach(navEl => {
@@ -146,11 +119,32 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     }})
     return navIdMap;
   }
+  console.log(path)
+  const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
+  const router = useRouter();
+
+  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
+  const buttonDownStyle = buttonUpStyle + " rotate-180";
   
-  const navIdMap = navMapper(navMap);
+  const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
+
+  useEffect(() => {
+    if (!isSmallWindow(width)) {
+      setMenuVisible(true);
+    } else {
+      setMenuVisible(false);
+    }
+  }, [width]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    console.log(window.location.pathname + window.location.hash);
+    if(path === "")
+      setPath(window.location.pathname + window.location.hash)
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
 
   function findClosestHref() {
-
     //update id locations
     for (const [key, elem] of Object.entries(navIdMap)) {
       const element = document.getElementById(elem.id);
@@ -174,7 +168,12 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     );
   }
   const handleScroll = () => {
-    setCurrentId(findClosestHref());
+    const closestHref = findClosestHref()
+    if(closestHref !== path && closestHref){
+      console.log("scroll replacing route")
+      setPath(closestHref);
+      router.replace(closestHref, {scroll: false})
+    }
   }
   const closeMenuIfOpen = () => {
     if (isSmallWindow(width)) {
@@ -217,7 +216,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   closeMenuIfOpen={closeMenuIfOpen}
                   path={path}
                   setPath={setPath}
-                  closestId={currentId}
                 />
               );
             })}
