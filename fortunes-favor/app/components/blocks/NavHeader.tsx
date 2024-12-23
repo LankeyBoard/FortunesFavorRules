@@ -61,7 +61,7 @@ const NavHeader = () => {
             </li>
             <li>
               <Link
-                href="/rules"
+                href="/rules/player_rules"
                 onClick={() => {
                   closeMenuIfOpen();
                 }}

@@ -91,6 +91,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
   const [path, setPath] = useState("");
+  const pathCheck = usePathname()
   const navMapper = (map: nav[]) => {
     console.debug("navMapper map: ", map, typeof document)
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
@@ -104,12 +105,10 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       }
         
       if(navEl.href && navEl.href.includes("#")){
-        console.debug("href includes ID")
         if(typeof document === "undefined")
           return;
         const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
         const element = document.getElementById(elemId);
-        console.debug("element ID and element:", elemId, element)
         if(elemId && element){
             navIdMap[navEl.href] = {
             id: elemId,
@@ -128,7 +127,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const buttonDownStyle = buttonUpStyle + " rotate-180";
   
   const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
-  console.debug(navIdMap)
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuVisible(true);
@@ -148,6 +146,11 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       setPath(window.location.pathname + window.location.hash)
     return () => window.removeEventListener('scroll', handleScroll);
   });
+
+  useEffect(()=>{
+    console.log("update map when path changes");
+    setNavIdMap(navMapper(navMap));
+  }, [pathCheck])
 
   function findClosestHref() {
     //update id locations
@@ -174,7 +177,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   }
   const handleScroll = () => {
     const closestHref = findClosestHref()
-    console.debug("scroll", closestHref, path)
     if(closestHref !== path && closestHref){
       console.info("scroll replacing route")
       setPath(closestHref);
