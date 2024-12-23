@@ -122,7 +122,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const buttonDownStyle = buttonUpStyle + " rotate-180";
   
   const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
-
+  console.debug(navIdMap)
   useEffect(() => {
     if (!isSmallWindow(width)) {
       setMenuVisible(true);
@@ -134,6 +134,10 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     console.log(window.location.pathname + window.location.hash);
+    if(!navIdMap){
+      console.debug("no valid navIdMap", navIdMap);
+      setNavIdMap(navMapper(navMap))
+    }
     if(path === "")
       setPath(window.location.pathname + window.location.hash)
     return () => window.removeEventListener('scroll', handleScroll);
@@ -166,7 +170,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     const closestHref = findClosestHref()
     console.debug("scroll", closestHref, path)
     if(closestHref !== path && closestHref){
-      console.log("scroll replacing route")
+      console.info("scroll replacing route")
       setPath(closestHref);
       router.replace(closestHref, {scroll: false})
     }
