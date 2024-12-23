@@ -92,6 +92,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const [menuVisible, setMenuVisible] = useState(true);
   const [path, setPath] = useState("");
   const navMapper = (map: nav[]) => {
+    console.debug("navMapper map: ", map, typeof document)
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
     map.forEach(navEl => {
       if(navEl.subroutes){
@@ -107,6 +108,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
           return;
         const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
         const element = document.getElementById(elemId);
+        console.debug(elemId, element)
         if(elemId && element)
           navIdMap[navEl.href] = {
           id: elemId,
