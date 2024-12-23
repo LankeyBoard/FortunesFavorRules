@@ -90,9 +90,7 @@ export const NavElem = ({
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
-  const [path, setPath] = useState(
-    ""
-  );
+  const [path, setPath] = useState("");
   const navMapper = (map: nav[]) => {
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
     map.forEach(navEl => {
@@ -117,7 +115,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     }})
     return navIdMap;
   }
-  console.log(path)
   const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
   const router = useRouter();
 

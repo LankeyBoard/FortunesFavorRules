@@ -88,7 +88,7 @@ const FormDisplay = ({ form }: formProps) => {
           {form.damage.map((damage, index) => {
             return (
               <span
-                key={damage.count + "-" + damage.dice}
+                key={`${damage.count + damage.dice} ${damage.stat? damage.stat?.toLocaleString() : ""} ${damage.type.toLocaleString()}`}
                 className="capitalize"
               >
                 {damage.count}d{damage.dice}{" "}
