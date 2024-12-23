@@ -25,14 +25,16 @@ export const NavElem = ({
   path,
   setPath
 }: navProps) => {
-
+  console.log(navEl.title, isCurrent, navEl.href ? path.includes(navEl.href) : "no href")
+  if(navEl.href && path.includes(navEl.href))
+    isCurrent = true;
   return (
     <div key={navEl.title} className="">
-      {navEl.href && !isCurrent ? (
+      {navEl.href && 
         <div
           className={
             isSub
-              ? "border-l-amber-700 border-l hover:border-l-amber-400 dark:hover:border-l-amber-500"
+              ?  isCurrent? "border-l-amber-400 border-l hover:border-l-amber-700 dark:hover:border-l-amber-200": "border-l-amber-700 border-l hover:border-l-amber-400 dark:hover:border-l-amber-500"
               : ""
           }
         >
@@ -46,28 +48,16 @@ export const NavElem = ({
           >
             <div
               className={
-                "font-light text-lg text-slate-800 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-100 ml-3 mr-3 text-balance hover:font-normal hover:mr-0"
+                isCurrent
+                ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis ml-3 hover:text-amber-700 dark:hover:text-amber-100 hover:mr-0" 
+                : "font-light text-lg text-slate-800 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-100 ml-3 mr-3 text-balance hover:font-normal hover:mr-0"
               }
             >
               {navEl.title}
             </div>
           </Link>
         </div>
-      ) : (
-        <div
-          className={isCurrent && isSub ? "border-l-amber-400 border-l" : ""}
-        >
-          <div
-            className={
-              isCurrent
-                ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis ml-3"
-                : "font-medium text-xl dark:text-white text-ellipsis whitespace-nowrap"
-            }
-          >
-            {navEl.title}
-          </div>
-        </div>
-      )}
+      }
       <div className="mx-2">
         {navEl.subroutes?.map((r) => {
           return (
@@ -136,15 +126,18 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   }, [width]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash);
-    if(!navIdMap){
-      console.debug("no valid navIdMap", navIdMap);
-      setNavIdMap(navMapper(navMap))
+    if(typeof window !== undefined){
+        window.addEventListener('scroll', handleScroll);
+        console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash, navIdMap);
+        if(Object.keys(navIdMap).length === 0){
+          console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.hash);
+          setPath(window.location.pathname + window.location.hash)
+          // setNavIdMap(navMapper(navMap))
+        }
+        if(path === "")
+          setPath(window.location.pathname + window.location.hash)
+        return () => window.removeEventListener('scroll', handleScroll);
     }
-    if(path === "")
-      setPath(window.location.pathname + window.location.hash)
-    return () => window.removeEventListener('scroll', handleScroll);
   });
 
   useEffect(()=>{
@@ -222,7 +215,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   navEl={n}
                   key={n.title}
                   closeMenuIfOpen={closeMenuIfOpen}
-                  isCurrent={path===n.href}
+                  isCurrent={n.href ? path.includes(n.href): false}
                   path={path}
                   setPath={setPath}
                 />
