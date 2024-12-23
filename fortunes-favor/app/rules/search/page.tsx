@@ -1,14 +1,15 @@
 import { Suspense } from "react";
 import SearchResuls from "../../components/SearchResults";
 
-const SearchPage = ({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-  };
-}) => {
+const SearchPage = async (
+  props: {
+    searchParams?: Promise<{
+      query?: string;
+      page?: string;
+    }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   return (
     <Suspense>
       <SearchResuls searchParams={searchParams} />

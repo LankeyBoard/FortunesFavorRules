@@ -60,7 +60,8 @@ const query = gql`
     }
   }
 `;
-async function SingleCulturePage({ params }: { params: { slug: string } }) {
+async function SingleCulturePage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const client = getClient();
   const { data } = await client.query({
     query,

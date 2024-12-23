@@ -44,7 +44,7 @@ const TextBlock = ({
     <div className={style}>
       {text.map((t) => {
         return (
-          <p key={t.text} className={textStyler(t.type)}>
+          <div key={t.text} className={textStyler(t.type)}>
             {t.type == "EG" && <span>Eg: </span>}
             <SlugLinker text={t.text} />
             {t.choices && (
@@ -54,7 +54,7 @@ const TextBlock = ({
                 ))}
               </ul>
             )}
-          </p>
+          </div>
         );
       })}
     </div>

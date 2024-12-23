@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import Link from "next/link";
 
 var split: RegExp = new RegExp(`\\[.*?\\)`, "g");
@@ -8,6 +9,7 @@ const linkMaker = (text: string) => {
   if (href[0] !== "/") href = "/" + href;
   return (
     <Link
+      key={href+randomInt(1000)}
       href={href}
       className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200"
     >

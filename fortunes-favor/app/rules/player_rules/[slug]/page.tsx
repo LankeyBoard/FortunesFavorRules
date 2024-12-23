@@ -79,7 +79,8 @@ const query = gql`
   }
 `;
 
-async function GeneralRule({ params }: { params: { slug: string } }) {
+async function GeneralRule(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const client = getClient();
   const { data } = await client.query({
     query,
