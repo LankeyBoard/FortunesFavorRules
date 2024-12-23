@@ -116,6 +116,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
           loc: element.getBoundingClientRect().top
         }
     }})
+    console.debug("navId at end of navMapper", navIdMap)
     return navIdMap;
   }
   const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
