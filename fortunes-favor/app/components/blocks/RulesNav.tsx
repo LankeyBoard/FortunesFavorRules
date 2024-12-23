@@ -163,8 +163,8 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     );
   }
   const handleScroll = () => {
-    console.log("scroll")
     const closestHref = findClosestHref()
+    console.debug("scroll", closestHref, path)
     if(closestHref !== path && closestHref){
       console.log("scroll replacing route")
       setPath(closestHref);
