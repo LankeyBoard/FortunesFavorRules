@@ -1,13 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SearchBar = () => {
   const [term, setTerm] = useState<string>();
   const router = useRouter();
-  const url = new URL(window.location.toString())
 
   const handleSearch = (searchTerm: string) => {
+    const url = getUrl();
+    if(!url) return;
     if (searchTerm) {
       url.searchParams.set("query", searchTerm);
       setTerm(searchTerm);
@@ -18,9 +19,27 @@ const SearchBar = () => {
     router.replace(url.toString());
   };
   const submitSearch = (query: string) => {
-    console.info("Submit", query);
+    const url = getUrl();
+    if(!url) return;
+    console.info("Submit", query, url.searchParams);
+    url.searchParams.delete("query")
+    url.searchParams.set("query", query);
+    url.pathname = 'rules/search'
+    console.log(url)
     router.push(url.toString());
   };
+
+  const getUrl = () => {
+    if(!window)
+      return;
+    return new URL(window.location.toString());
+  }
+
+  useEffect(()=>{
+    const url = getUrl();
+    if(url)
+      setTerm(url.searchParams.get("query")?.toString())
+  })
 
   return (
     <>
@@ -49,7 +68,7 @@ const SearchBar = () => {
           id="search-navbar"
           className="block w-full p-2 ps-10 text-sm text-gray-900 border border-slate-300 rounded-lg bg-gray-50 dark:bg-slate-950 dark:border-slate-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="Search..."
-          defaultValue={url.searchParams.get("query")?.toString()}
+          defaultValue={term}
           onChange={(e) => {
             handleSearch(e.target.value);
           }}

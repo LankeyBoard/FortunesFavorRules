@@ -126,16 +126,18 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   }, [width]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash, navIdMap);
-    if(Object.keys(navIdMap).length === 0){
-      console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.hash);
-      setPath(window.location.pathname + window.location.hash)
-      // setNavIdMap(navMapper(navMap))
+    if(typeof window !== undefined){
+        window.addEventListener('scroll', handleScroll);
+        console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash, navIdMap);
+        if(Object.keys(navIdMap).length === 0){
+          console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.hash);
+          setPath(window.location.pathname + window.location.hash)
+          // setNavIdMap(navMapper(navMap))
+        }
+        if(path === "")
+          setPath(window.location.pathname + window.location.hash)
+        return () => window.removeEventListener('scroll', handleScroll);
     }
-    if(path === "")
-      setPath(window.location.pathname + window.location.hash)
-    return () => window.removeEventListener('scroll', handleScroll);
   });
 
   useEffect(()=>{
