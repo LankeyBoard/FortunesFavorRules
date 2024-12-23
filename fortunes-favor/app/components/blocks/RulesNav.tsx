@@ -110,10 +110,12 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
         const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
         const element = document.getElementById(elemId);
         console.debug("element ID and element:", elemId, element)
-        if(elemId && element)
-          navIdMap[navEl.href] = {
-          id: elemId,
-          loc: element.getBoundingClientRect().top
+        if(elemId && element){
+            navIdMap[navEl.href] = {
+            id: elemId,
+            loc: element.getBoundingClientRect().top
+          }
+          console.debug("added ", elemId, navIdMap[navEl.href])
         }
     }})
     console.debug("navId at end of navMapper", navIdMap)
