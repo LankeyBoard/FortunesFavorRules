@@ -12,6 +12,7 @@ type navProps = {
   navEl: nav;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
+  isCurrent: boolean;
   path: string;
   setPath: Dispatch<SetStateAction<string>>;
 };
@@ -20,14 +21,10 @@ export const NavElem = ({
   navEl,
   isSub,
   closeMenuIfOpen,
+  isCurrent,
   path,
   setPath
 }: navProps) => {
-  let isCurrent =false;
-  if (path === navEl.href) {
-    isCurrent = true;
-  }
-  
 
   return (
     <div key={navEl.title} className="">
@@ -79,6 +76,7 @@ export const NavElem = ({
               isSub={true}
               key={r.title}
               closeMenuIfOpen={closeMenuIfOpen}
+              isCurrent={r.href === path}
               path={path}
               setPath={setPath}
             />
@@ -214,6 +212,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   navEl={n}
                   key={n.title}
                   closeMenuIfOpen={closeMenuIfOpen}
+                  isCurrent={path===n.href}
                   path={path}
                   setPath={setPath}
                 />
