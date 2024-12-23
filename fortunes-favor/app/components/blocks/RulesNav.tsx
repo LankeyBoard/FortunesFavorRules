@@ -104,11 +104,12 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
       }
         
       if(navEl.href && navEl.href.includes("#")){
+        console.debug("href includes ID")
         if(typeof document === "undefined")
           return;
         const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
         const element = document.getElementById(elemId);
-        console.debug(elemId, element)
+        console.debug("element ID and element:", elemId, element)
         if(elemId && element)
           navIdMap[navEl.href] = {
           id: elemId,
@@ -135,7 +136,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    console.log(window.location.pathname + window.location.hash);
+    console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash);
     if(!navIdMap){
       console.debug("no valid navIdMap", navIdMap);
       setNavIdMap(navMapper(navMap))
