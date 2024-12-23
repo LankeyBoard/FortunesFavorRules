@@ -1,27 +1,25 @@
 "use client";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SearchBar = () => {
   const [term, setTerm] = useState<string>();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
   const router = useRouter();
+  const url = new URL(window.location.toString())
+
   const handleSearch = (searchTerm: string) => {
-    const params = new URLSearchParams(searchParams);
     if (searchTerm) {
-      params.set("query", searchTerm);
+      url.searchParams.set("query", searchTerm);
       setTerm(searchTerm);
     } else {
-      params.delete("query");
+      url.searchParams.delete("query");
       setTerm(undefined);
     }
-    replace(`${pathname}?${params.toString()}`);
+    router.replace(url.toString());
   };
   const submitSearch = (query: string) => {
     console.info("Submit", query);
-    router.push("/rules/search?query=" + query);
+    router.push(url.toString());
   };
 
   return (
@@ -51,7 +49,7 @@ const SearchBar = () => {
           id="search-navbar"
           className="block w-full p-2 ps-10 text-sm text-gray-900 border border-slate-300 rounded-lg bg-gray-50 dark:bg-slate-950 dark:border-slate-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="Search..."
-          defaultValue={searchParams.get("query")?.toString()}
+          defaultValue={url.searchParams.get("query")?.toString()}
           onChange={(e) => {
             handleSearch(e.target.value);
           }}

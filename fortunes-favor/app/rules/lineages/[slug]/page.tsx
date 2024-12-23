@@ -22,7 +22,7 @@ const query = gql`
         simpleChoices: choices {
           ... on RuleText {
             type
-            options
+            choices
             text
           }
         }
@@ -39,7 +39,7 @@ const query = gql`
             staminaCost
             title
             text {
-              options
+              choices
               text
               type
             }
@@ -56,7 +56,7 @@ const query = gql`
         staminaCost
         title
         text {
-          options
+          choices
           text
           type
         }
