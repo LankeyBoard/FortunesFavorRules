@@ -1,7 +1,7 @@
-import ClassRule from "@/app/components/CharacterClass";
-import SelectFromCards from "@/app/components/SelectFromCards";
-import { option_type } from "@/app/enums";
-import PlayerCharacter from "@/app/utils/PlayerCharacter";
+import ClassRule from "@/components/CharacterClass";
+import SelectFromCards from "@/components/SelectFromCards";
+import { option_type } from "@/utils/enums";
+import PlayerCharacter from "@/utils/PlayerCharacter";
 import class_list_json from "@/public/rules_json/classes/AllClasses.json";
 import { Dispatch, SetStateAction } from "react";
 

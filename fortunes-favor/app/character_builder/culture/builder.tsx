@@ -1,8 +1,8 @@
-import Culture from "@/app/components/Culture";
-import SelectFromCards from "@/app/components/SelectFromCards";
-import { option_type } from "@/app/enums";
-import { characterCultureListBuilder } from "@/app/utils/CharacterCulture";
-import PlayerCharacter from "@/app/utils/PlayerCharacter";
+import Culture from "@/components/Culture";
+import SelectFromCards from "@/components/SelectFromCards";
+import { option_type } from "@/utils/enums";
+import { characterCultureListBuilder } from "@/utils/CharacterCulture";
+import PlayerCharacter from "@/utils/PlayerCharacter";
 import cultures_json from "@/public/rules_json/cultures/cultures.json";
 import { Dispatch, SetStateAction } from "react";
 

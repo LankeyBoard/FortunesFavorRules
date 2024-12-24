@@ -1,4 +1,4 @@
-import { complexity_options, findEnum, stat_options } from "../enums";
+import { complexity_options, findEnum, stat_options } from "./enums";
 import CharacterFeature from "./CharacterFeature";
 import { CharacterClass } from "./graphQLtypes";
 

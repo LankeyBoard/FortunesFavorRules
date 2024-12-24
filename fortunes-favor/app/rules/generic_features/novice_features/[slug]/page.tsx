@@ -1,5 +1,5 @@
-import { FeatureLi } from "@/app/components/GenericFeatures";
-import { getClient } from "@/app/utils/graphQLclient";
+import { FeatureLi } from "@/components/GenericFeatures";
+import { getClient } from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import { Suspense } from "react";
 

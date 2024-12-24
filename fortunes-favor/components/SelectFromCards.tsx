@@ -2,7 +2,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import Card from "./blocks/Card";
 import OptionPopout from "./blocks/OptionPopout";
 import PlayerCharacter from "../utils/PlayerCharacter";
-import { option_type } from "../enums";
+import { option_type } from "../utils/enums";
 
 const getSelectedSlug = (optionType: option_type, currentCharacter: PlayerCharacter) => {
     switch(optionType){

@@ -1,4 +1,4 @@
-import { LANGUAGES, action_type, rule_type, stat_options } from "../enums";
+import { LANGUAGES, action_type, rule_type, stat_options } from "./enums";
 import CharacterClassData from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";

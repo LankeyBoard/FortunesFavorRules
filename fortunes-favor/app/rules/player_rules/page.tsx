@@ -1,7 +1,7 @@
-import RuleField from "@/app/components/RuleField";
-import RuleData from "@/app/utils/GenericRuleData";
-import { getClient } from "@/app/utils/graphQLclient";
-import { GenericRule } from "@/app/utils/graphQLtypes";
+import RuleField from "@/components/RuleField";
+import RuleData from "@/utils/GenericRuleData";
+import { getClient } from "@/utils/graphQLclient";
+import { GenericRule } from "@/utils/graphQLtypes";
 import { gql } from "@apollo/client";
 
 const query = gql`

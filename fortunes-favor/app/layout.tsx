@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import TopNav from "./components/TopNav";
+import TopNav from "../components/TopNav";
 import { Suspense } from "react";
-import { AlertProvider } from "./contexts/AlertContext";
-import AlertPopup from './components/AlertPopup';
+import { AlertProvider } from "../contexts/AlertContext";
+import AlertPopup from '../components/AlertPopup';
 export const metadata: Metadata = {
   title: "Fortune's Favor",
   description: "Rules for the worlds okayest roleplaying game",

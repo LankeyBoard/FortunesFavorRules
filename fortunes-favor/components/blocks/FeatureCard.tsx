@@ -1,4 +1,4 @@
-import { PlayerCharacterFeature } from "@/app/utils/PlayerCharacter";
+import { PlayerCharacterFeature } from "@/utils/PlayerCharacter";
 import { useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
 

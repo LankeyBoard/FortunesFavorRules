@@ -3,8 +3,8 @@ import Link from "next/link";
 import { nav } from "@/app/rules/layout";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import useWindowDimensions from "@/app/utils/useWindowDimensions";
-import { isSmallWindow } from "@/app/utils/isSmallWindow";
+import useWindowDimensions from "@/utils/useWindowDimensions";
+import { isSmallWindow } from "@/utils/isSmallWindow";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 

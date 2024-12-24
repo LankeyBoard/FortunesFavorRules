@@ -1,4 +1,4 @@
-import PlayerCharacter from "@/app/utils/PlayerCharacter";
+import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction } from "react";
 
 type questionProps = {

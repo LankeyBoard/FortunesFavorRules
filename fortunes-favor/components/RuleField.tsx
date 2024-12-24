@@ -1,4 +1,4 @@
-import { rule_type } from "../enums";
+import { rule_type } from "../utils/enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
 import TextBlock from "./blocks/TextBlock";

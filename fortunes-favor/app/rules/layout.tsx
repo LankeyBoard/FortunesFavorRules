@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import RuleDisplay from "../components/blocks/RuleDisplay";
-import RulesNav from "../components/blocks/RulesNav";
-import { getClient } from "../utils/graphQLclient";
-import AlertPopup from "../components/AlertPopup";
+import RuleDisplay from "../../components/blocks/RuleDisplay";
+import RulesNav from "../../components/blocks/RulesNav";
+import { getClient } from "../../utils/graphQLclient";
+import AlertPopup from "../../components/AlertPopup";
 
 export type nav = {
   title: string;

@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
-import { getClient } from "@/app/utils/graphQLclient";
+import { getClient } from "@/utils/graphQLclient";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ClassTitleAndTags } from "@/app/components/CharacterClass";
-import { stat_options } from "@/app/enums";
-import CharacterClass from "../../utils/CharacterClass";
+import { ClassTitleAndTags } from "@/components/CharacterClass";
+import { stat_options } from "@/utils/enums";
+import CharacterClass from "../../../utils/CharacterClass";
 const query = gql`
   query GetAllClasses {
     characterClasses {

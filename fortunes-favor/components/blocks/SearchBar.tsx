@@ -24,7 +24,7 @@ const SearchBar = () => {
     console.info("Submit", query, url.searchParams);
     url.searchParams.delete("query")
     url.searchParams.set("query", query);
-    url.pathname = 'rules/search'
+    url.pathname = '/searchResults'
     console.log(url)
     router.push(url.toString());
   };

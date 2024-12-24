@@ -1,7 +1,7 @@
-import Culture from "@/app/components/Culture";
+import Culture from "@/components/Culture";
 import { gql } from "@apollo/client";
-import { getClient } from "@/app/utils/graphQLclient";
-import { graphQLCulture } from "@/app/utils/graphQLtypes";
+import { getClient } from "@/utils/graphQLclient";
+import { graphQLCulture } from "@/utils/graphQLtypes";
 import { Suspense } from "react";
 
 const query = gql`

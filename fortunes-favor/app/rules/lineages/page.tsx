@@ -1,7 +1,7 @@
-import { getClient } from "@/app/utils/graphQLclient";
+import { getClient } from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
-import Lineage from "@/app/components/Lineage";
-import { graphQLLineage } from "@/app/utils/graphQLtypes";
+import Lineage from "@/components/Lineage";
+import { graphQLLineage } from "@/utils/graphQLtypes";
 
 const query = gql`
   query GetAllLineages {
