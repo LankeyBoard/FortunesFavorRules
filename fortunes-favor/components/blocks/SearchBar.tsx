@@ -1,39 +1,39 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+const getUrl = () => {
+  if(typeof window === "undefined"){
+    return;
+  }
+  return new URL(window.location.toString());
+}
 
 const SearchBar = () => {
-  const [term, setTerm] = useState<string>();
+  const [term, setTerm] = useState<string | null | undefined>(getUrl()?.searchParams.get("query"));
   const router = useRouter();
 
   const handleSearch = (searchTerm: string) => {
     const url = getUrl();
     if(!url) return;
     if (searchTerm) {
-      url.searchParams.set("query", searchTerm);
       setTerm(searchTerm);
+      url.searchParams.set("query", searchTerm);
     } else {
-      url.searchParams.delete("query");
       setTerm(undefined);
+      url.searchParams.delete("query");
     }
     router.replace(url.toString());
   };
-  const submitSearch = (query: string) => {
+  const submitSearch = () => {
     const url = getUrl();
     if(!url) return;
-    console.info("Submit", query, url.searchParams);
+    console.info("Submit", term, url.searchParams);
     url.searchParams.delete("query")
-    url.searchParams.set("query", query);
+    url.searchParams.set("query", term || '');
     url.pathname = '/searchResults'
     console.log(url)
     router.push(url.toString());
   };
-
-  const getUrl = () => {
-    if(!window)
-      return;
-    return new URL(window.location.toString());
-  }
 
   useEffect(()=>{
     const url = getUrl();
@@ -68,13 +68,13 @@ const SearchBar = () => {
           id="search-navbar"
           className="block w-full p-2 ps-10 text-sm text-gray-900 border border-slate-300 rounded-lg bg-gray-50 dark:bg-slate-950 dark:border-slate-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="Search..."
-          defaultValue={term}
+          defaultValue={term || undefined}
           onChange={(e) => {
             handleSearch(e.target.value);
           }}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
-              submitSearch(e.currentTarget.value);
+              submitSearch();
             }
           }}
         />
@@ -82,9 +82,8 @@ const SearchBar = () => {
         <div className="absolute inset-y-0 end-3 flex items-center ps-3">
           <button
             className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-300 disabled:text-slate-700"
-            disabled={!term}
             onClick={() => {
-              if (term) submitSearch(term);
+              if (term) submitSearch();
               else console.error("Cannot search for [" + term + "]");
             }}
           >

@@ -36,7 +36,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
         const sub: nav = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
           href: subRoute.href.includes("#")
-            ? "/rules/" + subRoute.href
+            ? subRoute.href
             : section.basePath + "/" + subRoute.slug,
         };
         if (!route.subroutes) route.subroutes = [sub];
@@ -49,7 +49,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
 };
 
 const query = gql`
-  query GetNavSlugs2 {
+  query GetNavSlugs {
     genericRules {
       slug
       title
@@ -102,6 +102,7 @@ export default async function RulesLayout({
     title: "Veteran Features",
     basePath: "/rules/generic_features/veteran_features",
   };
+  console.log("rulesSection", rulesSection)
   return (
     <div className="flex flex-row flex-grow">
       <div className="fixed">

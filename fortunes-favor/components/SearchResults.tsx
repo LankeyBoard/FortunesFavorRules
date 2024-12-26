@@ -71,18 +71,25 @@ export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
   const highlightSearchResult = (searchTerm: string, text: string) => {
       // Split on highlight term and include term into parts, ignore case
       const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
-      console.log(parts)
       return <span> { parts.map((part, i) => 
           <span key={i} className={part.toLowerCase() === searchTerm.toLowerCase() ? "underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin" : "" }>
               { part }
           </span>)
       } </span>;
   }
+  const partialUrl = result.href.split('#')
+  console.log(partialUrl, partialUrl[0])
+  let builtHref = partialUrl[0]
+  if(searchTerm)
+    builtHref += `?query=${searchTerm}`;
+  if(partialUrl[1])
+    builtHref += `#${partialUrl[1]}`;
+  console.log(builtHref)
   return (
     <>
       {result.href ? (
         <Link
-          href={result.href}
+          href={`${builtHref}`}
           className="hover:tracking-wide hover:text-slate-600 dark:hover:text-slate-300"
         >
           <div className="pb-3">
