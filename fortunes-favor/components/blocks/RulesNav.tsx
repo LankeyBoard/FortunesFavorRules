@@ -1,16 +1,14 @@
 "use client";
 import Link from "next/link";
 import { nav } from "@/app/rules/layout";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
 import useWindowDimensions from "@/utils/useWindowDimensions";
 import { isSmallWindow } from "@/utils/isSmallWindow";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type partialPath = {
   pathname: string;
-  search?: URLSearchParams;
   hash?: string;
 }
 
@@ -24,47 +22,6 @@ const isHrefInPath = (partialPath: partialPath, navHref: string): boolean => {
   return false;
 }
 
-const partialPathToStr = (partialPath: partialPath | undefined): string => {
-  if(!partialPath) return '';
-  else if(partialPath.search && partialPath.hash){
-    return partialPath.pathname + partialPath.search.toString() + partialPath.hash.includes('#') ? partialPath.hash : '#' + partialPath.hash;
-  }
-  else if(partialPath.hash){
-    return partialPath.pathname + partialPath.hash.includes('#') ? partialPath.hash : '#' + partialPath.hash;
-  }
-  else if(partialPath.search){
-    return partialPath.pathname + partialPath.search.toString();
-  }
-  else{
-    return partialPath.pathname;
-  }
-}
-
-const strToPartialPath = (str: string): partialPath | undefined => {
-  const splitHref = str?.split('#');
-  if(!str) return undefined;
-  const searchStartIndex = splitHref[0].indexOf('?');
-  const pathname = splitHref[0].substring(0,searchStartIndex);
-  const search = new URLSearchParams(splitHref[0].slice(searchStartIndex));
-  if (splitHref.length === 1){
-    return (
-      {
-        pathname: pathname,
-        search: search
-      }
-    );
-  }
-  
-  else return(
-    {
-      pathname: pathname,
-      search: search,
-      hash: '#'+splitHref[1]
-    }
-  )
-
-}
-
 const arePathsEqual = (p1?: partialPath, p2?: partialPath): boolean => {
   if(!p1 || !p2) return false;
   if(p1.pathname === p2.pathname && p1.hash === p2.hash)
@@ -72,13 +29,22 @@ const arePathsEqual = (p1?: partialPath, p2?: partialPath): boolean => {
   return false;
 }
 
+const hrefStrintToPartialPath = (href?: string): partialPath => {
+  if(!href) return {pathname: ''};
+  const splitHref = href.split('#');
+  if(splitHref[0][0] !== '/') splitHref[0] = '/'+splitHref[0];
+  if(splitHref.length > 1)
+    return {pathname: splitHref[0], hash: '#'+splitHref[1]};
+  else return {pathname: splitHref[0]};
+}
+
 type navProps = {
   navEl: nav;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
   isCurrent: boolean;
-  path: partialPath;
-  setPath: Dispatch<SetStateAction<partialPath | undefined>>;
+  path: Location;
+  setPath: Dispatch<SetStateAction<Location | undefined>>;
 };
 
 export const NavElem = ({
@@ -91,6 +57,8 @@ export const NavElem = ({
 }: navProps) => {
   if(navEl.href && isHrefInPath(path, navEl.href))
     isCurrent = true;
+  const partialPath = hrefStrintToPartialPath(navEl.href);
+  const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || ''};
   return (
     <div key={navEl.title} className="">
       {navEl.href && 
@@ -102,10 +70,10 @@ export const NavElem = ({
           }
         >
           <Link
-            href={navEl.href}
+            href={`${href.pathname}${href.search.toString()}${href.hash}`}
             className=""
             onClick={() => {
-              setPath(strToPartialPath(navEl.href || ""));
+              setPath(href);
               closeMenuIfOpen();
             }}
           >
@@ -123,13 +91,15 @@ export const NavElem = ({
       }
       <div className="mx-2">
         {navEl.subroutes?.map((r) => {
+          const partialPath = hrefStrintToPartialPath(r.href);
+          const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || ''};
           return (
             <NavElem
               navEl={r}
               isSub={true}
               key={r.title}
               closeMenuIfOpen={closeMenuIfOpen}
-              isCurrent={arePathsEqual(strToPartialPath(r.href || ''), path)}
+              isCurrent={arePathsEqual(href, path)}
               path={path}
               setPath={setPath}
             />
@@ -143,10 +113,10 @@ export const NavElem = ({
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
-  const [path, setPath] = useState<partialPath>();
-  const pathCheck = usePathname()
+  const [path, setPath] = useState<Location | undefined>(typeof window !== "undefined" ? window.location : undefined);
+  const [timeoutID, setTimeoutId] = useState<NodeJS.Timeout>();
+  const pathname = usePathname();
   const navMapper = (map: nav[]) => {
-    console.debug("navMapper map: ", map, typeof document)
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
     map.forEach(navEl => {
       if(navEl.subroutes){
@@ -168,47 +138,11 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
             id: elemId,
             loc: element.getBoundingClientRect().top
           }
-          console.debug("added ", elemId, navIdMap[navEl.href])
         }
       }})
       console.debug("navId at end of navMapper", navIdMap)
       return navIdMap;
-    }
-  const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
-  const router = useRouter();
-
-  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
-  const buttonDownStyle = buttonUpStyle + " rotate-180";
-  
-  const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
-  useEffect(() => {
-    if (!isSmallWindow(width)) {
-      setMenuVisible(true);
-    } else {
-      setMenuVisible(false);
-    }
-  }, [width]);
-
-  useEffect(() => {
-    if(typeof window !== undefined){
-        window.addEventListener('scroll', handleScroll);
-        console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.search + window.location.hash, navIdMap);
-        if(Object.keys(navIdMap).length === 0){
-          console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.search + window.location.hash);
-          setPath({pathname: window.location.pathname, search: new URLSearchParams(window.location.search), hash: window.location.hash})
-          setNavIdMap(navMapper(navMap))
-        }
-        if(path === undefined)
-          setPath({pathname: window.location.pathname, hash: window.location.hash});
-        return () => window.removeEventListener('scroll', handleScroll);
-    }
-  });
-
-  useEffect(()=>{
-    console.debug("update map when path changes");
-    setNavIdMap(navMapper(navMap));
-  }, [pathCheck])
-
+  };
   function findClosestHref(): partialPath | undefined {
     //update id locations
     for (const [key, elem] of Object.entries(navIdMap)) {
@@ -243,22 +177,60 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     )
   }
   const handleScroll = () => {
-    const closestHref = findClosestHref()
+    console.log("scrolling");
+    if(!path) return;
+    const closestHref = findClosestHref();
+    console.log("closestHref", closestHref);
     if(closestHref !== path && closestHref){
       console.info("scroll replacing route", closestHref);
-      const newPath: partialPath = {...closestHref, search: path?.search};
-      const newPathStr: string = partialPathToStr(newPath);
-      console.log(newPath, newPathStr)
+      const newPath: Location = {...path, pathname: closestHref.pathname[0] === '/' ? closestHref.pathname : '/'+closestHref.pathname, hash: closestHref.hash || '', href: path.origin + closestHref.pathname + path.search + closestHref.hash || ''};
       setPath(newPath);
-      router.replace(newPathStr, {scroll: false})
+      if(typeof timeoutID === "number"){
+        clearTimeout(timeoutID);
+      }
+      const id = setTimeout(
+        (path)=> {
+            console.log("replacing path with ", path);
+            router.replace(`${path.pathname}${path.search.toString()}${path.hash}`, {scroll: false});
+      }, 1000, newPath);
+      setTimeoutId(id)
     }
   }
   const closeMenuIfOpen = () => {
     if (isSmallWindow(width)) {
-      setMenuVisible(false);
+      setMenuVisible(false);  
       setButtonStyle(buttonUpStyle);
     }
   };
+  const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
+  const router = useRouter();
+
+  const buttonUpStyle = "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
+  const buttonDownStyle = buttonUpStyle + " rotate-180";
+  
+  const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
+  useEffect(() => {
+    if (!isSmallWindow(width)) {
+      setMenuVisible(true);
+    } else {
+      setMenuVisible(false);
+    }
+  }, [width]);
+
+  useEffect(() => {
+    console.log("path changed to ", pathname);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll);
+      console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.search + window.location.hash, navIdMap);
+      if (Object.keys(navIdMap).length === 0) {
+        console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.search + window.location.hash);
+        setPath(window.location);
+        setNavIdMap(navMapper(navMap));
+      }
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [pathname]);
+
   console.debug("path at render: ", path)
   if(typeof window === undefined || path === undefined) return;
   return (
@@ -288,7 +260,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
         >
           <div className="flex-col my-5">
             {navMap.map((n) => {
-              console.debug(n.href)
               return (
                 <NavElem
                   navEl={n}
