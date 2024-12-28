@@ -12,34 +12,38 @@ const SearchBar = () => {
   const [term, setTerm] = useState<string | null | undefined>(getUrl()?.searchParams.get("query"));
   const router = useRouter();
 
-  const handleSearch = (searchTerm: string) => {
-    const url = getUrl();
-    if(!url) return;
+  const handleSearchUpdate = (searchTerm: string) => {
+    console.log("Search update", searchTerm);
     if (searchTerm) {
       setTerm(searchTerm);
-      url.searchParams.set("query", searchTerm);
     } else {
       setTerm(undefined);
-      url.searchParams.delete("query");
     }
-    router.replace(url.toString());
   };
-  const submitSearch = () => {
+  const submitSearch = (searchTerm: string) => {
     const url = getUrl();
     if(!url) return;
-    console.info("Submit", term, url.searchParams);
+    console.info("Submit", searchTerm);
     url.searchParams.delete("query")
-    url.searchParams.set("query", term || '');
+    url.searchParams.set("query", searchTerm || '');
     url.pathname = '/searchResults'
     console.log(url)
     router.push(url.toString());
   };
 
   useEffect(()=>{
+    console.log('term changed to', term)
     const url = getUrl();
-    if(url)
-      setTerm(url.searchParams.get("query")?.toString())
-  })
+      if(!url) return;
+    if(term){
+      url.searchParams.set("query", term);
+    }
+    else{
+      url.searchParams.delete("query");
+    }
+    console.log('url', url.toString())
+    router.replace(url.toString());
+  }, [term])
 
   return (
     <>
@@ -70,11 +74,12 @@ const SearchBar = () => {
           placeholder="Search..."
           defaultValue={term || undefined}
           onChange={(e) => {
-            handleSearch(e.target.value);
+            handleSearchUpdate(e.target.value);
           }}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
-              submitSearch();
+              console.log("enter event",term)
+              submitSearch(term || '');
             }
           }}
         />
@@ -83,7 +88,7 @@ const SearchBar = () => {
           <button
             className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-300 disabled:text-slate-700"
             onClick={() => {
-              if (term) submitSearch();
+              if (term) submitSearch(term);
               else console.error("Cannot search for [" + term + "]");
             }}
           >

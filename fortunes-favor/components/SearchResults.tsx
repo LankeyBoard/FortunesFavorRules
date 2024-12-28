@@ -78,13 +78,11 @@ export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
       } </span>;
   }
   const partialUrl = result.href.split('#')
-  console.log(partialUrl, partialUrl[0])
   let builtHref = partialUrl[0]
   if(searchTerm)
     builtHref += `?query=${searchTerm}`;
   if(partialUrl[1])
     builtHref += `#${partialUrl[1]}`;
-  console.log(builtHref)
   return (
     <>
       {result.href ? (
@@ -166,24 +164,30 @@ const SearchResults = async ({
   const searchQuery = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const client = getClient();
-  const { data } = await client.query({
+  const { data, loading, error } = await client.query({
     query,
     variables: { search: searchQuery },
   });
+  if(error)
+    console.error("SearchResults", data, loading, error);
+  if(loading)
+    return <div>Loading...</div>
   return (
-    <>
+    <div className="pt-10 px-4">
       <Suspense key={searchQuery + currentPage} fallback={<>Searching...</>}>
         {data.searchAll && data.searchAll.length > 0 ? (
           <SearchResultsTable searchTerm={searchQuery} results={data} />
         ) : (
-          <div>
-            <line>
-              Failed to turn anything up for the search: {searchQuery}
-            </line>
+          <div className="h-[calc(100vh-120px)] grid grid-cols-1 gap-4 place-content-center">
+            <div className="text-center">
+              <span>Our goblins couldn&apos;t dig up anything for </span>
+              <span className="underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin">{searchQuery}</span>
+              <span> maybe try searching for something else.</span> 
+            </div>
           </div>
         )}
       </Suspense>
-    </>
+    </div>
   );
 };
 

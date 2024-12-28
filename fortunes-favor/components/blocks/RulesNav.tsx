@@ -15,17 +15,10 @@ type partialPath = {
 const isHrefInPath = (partialPath: partialPath, navHref: string): boolean => {
   const splitHref = navHref.split('#');
   if(splitHref.length > 1 && partialPath.hash){
-    if(partialPath.pathname===splitHref[0] && partialPath.hash.includes(splitHref[1])) return true;
+    if(partialPath.pathname.includes(splitHref[0]) && partialPath.hash.includes(splitHref[1])) return true;
     else return false;
   }
-  else if(partialPath.pathname === splitHref[0] && !partialPath.hash && splitHref.length === 1) return true;
-  return false;
-}
-
-const arePathsEqual = (p1?: partialPath, p2?: partialPath): boolean => {
-  if(!p1 || !p2) return false;
-  if(p1.pathname === p2.pathname && p1.hash === p2.hash)
-    return true;
+  else if(partialPath.pathname.includes(splitHref[0]) && !partialPath.hash && splitHref.length === 1) return true;
   return false;
 }
 
@@ -42,7 +35,6 @@ type navProps = {
   navEl: nav;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
-  isCurrent: boolean;
   path: Location;
   setPath: Dispatch<SetStateAction<Location | undefined>>;
 };
@@ -51,14 +43,13 @@ export const NavElem = ({
   navEl,
   isSub,
   closeMenuIfOpen,
-  isCurrent,
   path,
-  setPath,
+  setPath
 }: navProps) => {
-  if(navEl.href && isHrefInPath(path, navEl.href))
-    isCurrent = true;
+  const isCurrent = navEl.href ? isHrefInPath(path, navEl.href) : false;
   const partialPath = hrefStrintToPartialPath(navEl.href);
-  const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || ''};
+  const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || '', href: `${path.origin}${path.pathname}${path.search.toString()}${path.hash}`};
+
   return (
     <div key={navEl.title} className="">
       {navEl.href && 
@@ -91,15 +82,12 @@ export const NavElem = ({
       }
       <div className="mx-2">
         {navEl.subroutes?.map((r) => {
-          const partialPath = hrefStrintToPartialPath(r.href);
-          const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || ''};
           return (
             <NavElem
               navEl={r}
               isSub={true}
               key={r.title}
               closeMenuIfOpen={closeMenuIfOpen}
-              isCurrent={arePathsEqual(href, path)}
               path={path}
               setPath={setPath}
             />
@@ -219,6 +207,8 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
 
   useEffect(()=>{
     console.log("pathname changed", pathname);
+    handleScroll();
+    setPath(window.location);
     if (Object.keys(navIdMap).length === 0) {
       const updatedNavIdMap = navMapper(navMap);
       console.log("setting navIdMap", updatedNavIdMap);
@@ -239,7 +229,7 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     setTimeoutId(id)
   },[path]);
 
-  console.log("navIdMap", navIdMap);
+  console.log("path at render", path?.pathname);
   if(typeof window === undefined || path === undefined) return;
   return (
     <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen md:w-auto backdrop-blur-sm md:backdrop-blur-none ">
@@ -273,7 +263,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   navEl={n}
                   key={n.title}
                   closeMenuIfOpen={closeMenuIfOpen}
-                  isCurrent={n.href ? isHrefInPath(path, n.href) : false}
                   path={path}
                   setPath={setPath}
                 />
