@@ -1,4 +1,4 @@
-import { rule_type, findEnum } from "../enums";
+import { rule_type, findEnum } from "./enums";
 
 export class TextField {
   type: rule_type;

@@ -1,4 +1,4 @@
-import { RuleText } from "@/app/utils/graphQLtypes";
+import { RuleText } from "@/utils/graphQLtypes";
 import SlugLinker from "./SlugLinker";
 
 const textStyler = (textType?: string) => {

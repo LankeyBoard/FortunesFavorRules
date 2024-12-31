@@ -1,4 +1,4 @@
-import { findEnum, action_type } from "../enums";
+import { findEnum, action_type } from "./enums";
 import {
   CharacterClassFeature,
   FeatureWithoutChoices,

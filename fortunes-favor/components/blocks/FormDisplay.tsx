@@ -1,4 +1,4 @@
-import { size_options, stat_options } from "@/app/enums";
+import { size_options, stat_options } from "@/utils/enums";
 
 export type Form = {
   armor: {

@@ -1,33 +1,55 @@
 "use client";
 import Link from "next/link";
 import { nav } from "@/app/rules/layout";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
-import useWindowDimensions from "@/app/utils/useWindowDimensions";
-import { isSmallWindow } from "@/app/utils/isSmallWindow";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import useWindowDimensions from "@/utils/useWindowDimensions";
+import { isSmallWindow } from "@/utils/isSmallWindow";
+import { usePathname, useRouter } from "next/navigation";
+
+type partialPath = {
+  pathname: string;
+  hash?: string;
+}
+
+const isHrefInPath = (partialPath: partialPath, navHref: string): boolean => {
+  const splitHref = navHref.split('#');
+  if(splitHref.length > 1 && partialPath.hash){
+    if(partialPath.pathname.includes(splitHref[0]) && partialPath.hash.includes(splitHref[1])) return true;
+    else return false;
+  }
+  else if(partialPath.pathname.includes(splitHref[0]) && !partialPath.hash && splitHref.length === 1) return true;
+  return false;
+}
+
+const hrefStrintToPartialPath = (href?: string): partialPath => {
+  if(!href) return {pathname: ''};
+  const splitHref = href.split('#');
+  if(splitHref[0][0] !== '/') splitHref[0] = '/'+splitHref[0];
+  if(splitHref.length > 1)
+    return {pathname: splitHref[0], hash: '#'+splitHref[1]};
+  else return {pathname: splitHref[0]};
+}
 
 type navProps = {
   navEl: nav;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
-  isCurrent: boolean;
-  path: string;
-  setPath: Dispatch<SetStateAction<string>>;
+  path: Location;
+  setPath: Dispatch<SetStateAction<Location | undefined>>;
 };
 
 export const NavElem = ({
   navEl,
   isSub,
   closeMenuIfOpen,
-  isCurrent,
   path,
   setPath
 }: navProps) => {
-  console.log(navEl.title, isCurrent, navEl.href ? path.includes(navEl.href) : "no href")
-  if(navEl.href && path.includes(navEl.href))
-    isCurrent = true;
+  const isCurrent = navEl.href ? isHrefInPath(path, navEl.href) : false;
+  const partialPath = hrefStrintToPartialPath(navEl.href);
+  const href = {...path, pathname: partialPath.pathname, hash: partialPath.hash || '', href: `${path.origin}${path.pathname}${path.search.toString()}${path.hash}`};
+
   return (
     <div key={navEl.title} className="">
       {navEl.href && 
@@ -39,10 +61,10 @@ export const NavElem = ({
           }
         >
           <Link
-            href={navEl.href}
+            href={`${href.pathname}${href.search.toString()}${href.hash}`}
             className=""
             onClick={() => {
-              setPath(navEl.href || "");
+              setPath(href);
               closeMenuIfOpen();
             }}
           >
@@ -66,7 +88,6 @@ export const NavElem = ({
               isSub={true}
               key={r.title}
               closeMenuIfOpen={closeMenuIfOpen}
-              isCurrent={r.href === path}
               path={path}
               setPath={setPath}
             />
@@ -77,13 +98,47 @@ export const NavElem = ({
   );
 };
 
+function findClosestHref(navIdMap: {[key: string]: {id: string, loc: number}}): partialPath | undefined {
+  //update id locations
+  for (const [key, elem] of Object.entries(navIdMap)) {
+    const element = document.getElementById(elem.id);
+    if(element)
+      navIdMap[key].loc = element.getBoundingClientRect().top
+  }
+  let closestHref = undefined;
+  //find the id with the lowest negative current top
+  for (const [key, elem] of Object.entries(navIdMap)) {
+    if(!window.location.toString().includes(key.slice(0,key.indexOf('#')))){
+      console.warn("key not on screen");
+      break;
+    }
+    if(!closestHref)
+      closestHref = key;
+    if(elem.loc < 300 && elem.loc > navIdMap[closestHref].loc )
+      closestHref = key;
+    
+  }
+  const splitHref = closestHref?.split('#');
+  if(!splitHref) return undefined;
+  else if (splitHref.length === 1)
+  return (
+    {pathname: splitHref[0]}
+  );
+  else return(
+    {
+      pathname: splitHref[0],
+      hash: '#'+splitHref[1]
+    }
+  )
+}
+
 const NavMenu = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(true);
-  const [path, setPath] = useState("");
-  const pathCheck = usePathname()
+  const [path, setPath] = useState<Location | undefined>(typeof window !== "undefined" ? window.location : undefined);
+  const [timeoutID, setTimeoutId] = useState<NodeJS.Timeout>();
+  const pathname = usePathname();
   const navMapper = (map: nav[]) => {
-    console.debug("navMapper map: ", map, typeof document)
     let navIdMap: {[key: string]: {id: string, loc: number}} = {}
     map.forEach(navEl => {
       if(navEl.subroutes){
@@ -99,17 +154,34 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
           return;
         const elemId = navEl.href.slice(navEl.href.indexOf("#")+1);
         const element = document.getElementById(elemId);
+
         if(elemId && element){
             navIdMap[navEl.href] = {
             id: elemId,
             loc: element.getBoundingClientRect().top
           }
-          console.debug("added ", elemId, navIdMap[navEl.href])
         }
-    }})
-    console.debug("navId at end of navMapper", navIdMap)
-    return navIdMap;
+      }})
+      return navIdMap;
+  };
+  
+  const handleScroll = () => {
+    if(!path) return;
+    const closestHref = findClosestHref(navIdMap);
+    console.log("closestHref", closestHref);
+    if(closestHref !== path && closestHref){
+      console.info("scroll replacing route", closestHref);
+      const newPath: Location = {...path, pathname: closestHref.pathname[0] === '/' ? closestHref.pathname : '/'+closestHref.pathname, hash: closestHref.hash || '', href: path.origin + closestHref.pathname + path.search + closestHref.hash || ''};
+      setPath(newPath);
+    }
   }
+  const closeMenuIfOpen = () => {
+    if (isSmallWindow(width)) {
+      setMenuVisible(false);  
+      setButtonStyle(buttonUpStyle);
+    }
+  };
+
   const [navIdMap, setNavIdMap] = useState(navMapper(navMap));
   const router = useRouter();
 
@@ -125,64 +197,40 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
     }
   }, [width]);
 
+
   useEffect(() => {
-    if(typeof window !== undefined){
-        window.addEventListener('scroll', handleScroll);
-        console.debug("current href from NavMenu useEffect:", window.location.pathname + window.location.hash, navIdMap);
-        if(Object.keys(navIdMap).length === 0){
-          console.debug("no valid navIdMap, setting path to ", window.location.pathname + window.location.hash);
-          setPath(window.location.pathname + window.location.hash)
-          // setNavIdMap(navMapper(navMap))
-        }
-        if(path === "")
-          setPath(window.location.pathname + window.location.hash)
-        return () => window.removeEventListener('scroll', handleScroll);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
     }
-  });
+  }, [pathname]);
 
   useEffect(()=>{
-    console.log("update map when path changes");
-    setNavIdMap(navMapper(navMap));
-  }, [pathCheck])
+    console.log("pathname changed", pathname);
+    handleScroll();
+    setPath(window.location);
+    if (Object.keys(navIdMap).length === 0) {
+      const updatedNavIdMap = navMapper(navMap);
+      console.log("setting navIdMap", updatedNavIdMap);
+      setNavIdMap(updatedNavIdMap);
+    }
+  }, [pathname])
 
-  function findClosestHref() {
-    //update id locations
-    for (const [key, elem] of Object.entries(navIdMap)) {
-      const element = document.getElementById(elem.id);
-      if(element)
-        navIdMap[key].loc = element.getBoundingClientRect().top
+  useEffect(() => {
+    if(typeof timeoutID === "number"){
+      clearTimeout(timeoutID);
     }
-    let closestHref = undefined;
-    //find the id with the lowest negative current top
-    for (const [key, elem] of Object.entries(navIdMap)) {
-      if(!window.location.toString().includes(key.slice(0,key.indexOf('#')))){
-        break;
-      }
-      if(!closestHref)
-        closestHref = key;
-      if(elem.loc < 300 && elem.loc > navIdMap[closestHref].loc )
-        closestHref = key;
-      
-    }
-    return (
-      closestHref
-    );
-  }
-  const handleScroll = () => {
-    const closestHref = findClosestHref()
-    if(closestHref !== path && closestHref){
-      console.info("scroll replacing route")
-      setPath(closestHref);
-      router.replace(closestHref, {scroll: false})
-    }
-  }
-  const closeMenuIfOpen = () => {
-    if (isSmallWindow(width)) {
-      setMenuVisible(false);
-      setButtonStyle(buttonUpStyle);
-    }
-  };
+    const id = setTimeout(
+      (path)=> {
+          if(!path || path.pathname !== pathname) return;
+          console.log("replacing path with ", path);
+          router.replace(`${path.pathname}${path.search.toString()}${path.hash}`, {scroll: false});
+    }, 500, path);
+    setTimeoutId(id)
+  },[path]);
 
+  console.log("path at render", path?.pathname);
+  if(typeof window === undefined || path === undefined) return;
   return (
     <div className="flex-left flex-grow overflow-auto md:h-[calc(100vh-72px)] h-auto w-screen md:w-auto backdrop-blur-sm md:backdrop-blur-none ">
       {!isSmallWindow(width)? <></> :
@@ -215,7 +263,6 @@ const NavMenu = ({ navMap }: { navMap: nav[] }) => {
                   navEl={n}
                   key={n.title}
                   closeMenuIfOpen={closeMenuIfOpen}
-                  isCurrent={n.href ? path.includes(n.href): false}
                   path={path}
                   setPath={setPath}
                 />

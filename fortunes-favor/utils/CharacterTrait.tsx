@@ -1,4 +1,4 @@
-import { rule_type } from "../enums";
+import { rule_type } from "./enums";
 import { TextField } from "./FieldTypes";
 import {
   FeatureChoices,

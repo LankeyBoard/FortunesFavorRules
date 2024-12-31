@@ -1,5 +1,5 @@
-import PlayerCharacterSheet from "@/app/components/PlayerCharacterSheet";
-import { getClient } from "@/app/utils/graphQLclient";
+import PlayerCharacterSheet from "@/components/PlayerCharacterSheet";
+import { getClient } from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 export default async function CharacterSheetPage() {
   const query = gql`

@@ -1,4 +1,4 @@
-import { size_options, findEnum } from "../enums";
+import { size_options, findEnum } from "./enums";
 import { CharacterTrait } from "./CharacterTrait";
 
 export default class CharacterLineage {

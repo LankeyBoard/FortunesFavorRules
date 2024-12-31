@@ -1,4 +1,4 @@
-import { rule_type } from "../enums";
+import { rule_type } from "./enums";
 import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
 
 export default class GenericFeatureData implements GenericFeature {

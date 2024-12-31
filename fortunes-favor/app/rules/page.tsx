@@ -1,6 +1,6 @@
-import RuleField from "../components/RuleField";
-import { rule_type } from "../enums";
-import { GenericRule } from "../utils/graphQLtypes";
+import RuleField from "../../components/RuleField";
+import { rule_type } from "../../utils/enums";
+import { GenericRule } from "../../utils/graphQLtypes";
 
 const rulesPageText: GenericRule[] = [
   {

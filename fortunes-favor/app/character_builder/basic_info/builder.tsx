@@ -1,6 +1,6 @@
-import InputArea from "@/app/components/blocks/InputArea";
-import InputField from "@/app/components/blocks/InputField";
-import PlayerCharacter from "@/app/utils/PlayerCharacter";
+import InputArea from "@/components/blocks/InputArea";
+import InputField from "@/components/blocks/InputField";
+import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction } from "react";
 
 type basicInfoProps = {

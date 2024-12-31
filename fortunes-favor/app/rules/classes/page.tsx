@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
-import { getClient } from "@/app/utils/graphQLclient";
+import { getClient } from "@/utils/graphQLclient";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ClassTitleAndTags } from "@/app/components/CharacterClass";
-import { stat_options } from "@/app/enums";
-import CharacterClass from "../../utils/CharacterClass";
+import { ClassTitleAndTags } from "@/components/CharacterClass";
+import { stat_options } from "@/utils/enums";
+import CharacterClass from "../../../utils/CharacterClass";
 const query = gql`
   query GetAllClasses {
     characterClasses {
@@ -46,7 +46,7 @@ async function ClassesPage() {
         {data.characterClasses.map((characterClass: CharacterClass) => {
           return (
             <Link
-              href={characterClass?.href || "?"}
+              href={characterClass?.href || ""}
               key={characterClass.slug}
               className="transition ease-in-out hover:-translate-y-1 hover:scale-105 hover:drop-shadow-sm duration-100"
             >

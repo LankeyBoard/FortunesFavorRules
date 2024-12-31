@@ -1,13 +1,16 @@
 import { gql } from "@apollo/client";
-import RuleDisplay from "../components/blocks/RuleDisplay";
-import RulesNav from "../components/blocks/RulesNav";
-import { getClient } from "../utils/graphQLclient";
-import AlertPopup from "../components/AlertPopup";
-
+import RuleDisplay from "../../components/blocks/RuleDisplay";
+import { getClient } from "../../utils/graphQLclient";
+import AlertPopup from "../../components/AlertPopup";
+import dynamic from "next/dynamic";
+const NavSidebar = dynamic(() => import("@/components/blocks/NavSidebar"), {
+  ssr: false,
+});
 export type nav = {
   title: string;
   href?: string;
   subroutes?: nav[];
+  isCurrent?: boolean;
 };
 
 type nav_section = {
@@ -36,7 +39,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
         const sub: nav = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
           href: subRoute.href.includes("#")
-            ? "/rules/" + subRoute.href
+            ? subRoute.href
             : section.basePath + "/" + subRoute.slug,
         };
         if (!route.subroutes) route.subroutes = [sub];
@@ -49,7 +52,7 @@ const NavBuilder = (sections: nav_section[]): nav[] => {
 };
 
 const query = gql`
-  query GetNavSlugs2 {
+  query GetNavSlugs {
     genericRules {
       slug
       title
@@ -102,10 +105,16 @@ export default async function RulesLayout({
     title: "Veteran Features",
     basePath: "/rules/generic_features/veteran_features",
   };
+  console.log("rulesSection", rulesSection);
   return (
     <div className="flex flex-row flex-grow">
+      <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">
+        <div className="flex-1 overflow-auto">
+          <RuleDisplay>{children}</RuleDisplay>
+        </div>
+      </div>
       <div className="fixed">
-        <RulesNav
+        <NavSidebar
           navMap={NavBuilder([
             rulesSection,
             culturesSection,
@@ -116,13 +125,7 @@ export default async function RulesLayout({
           ])}
         />
       </div>
-
-      <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">
-        <div className="flex-1 overflow-auto">
-          <RuleDisplay>{children}</RuleDisplay>
-        </div>
-      </div>
-      <AlertPopup/>
+      <AlertPopup />
     </div>
   );
 }

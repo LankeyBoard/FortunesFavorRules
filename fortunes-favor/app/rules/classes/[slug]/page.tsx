@@ -1,5 +1,5 @@
-import ClassRule from "@/app/components/CharacterClass";
-import { getClient } from "@/app/utils/graphQLclient";
+import ClassRule from "@/components/CharacterClass";
+import { getClient } from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import { Suspense } from "react";
 

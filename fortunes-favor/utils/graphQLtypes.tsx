@@ -4,7 +4,7 @@ import {
   rule_type,
   size_options,
   stat_options,
-} from "../enums";
+} from "./enums";
 
 export type SearchResult = {
   title: string;

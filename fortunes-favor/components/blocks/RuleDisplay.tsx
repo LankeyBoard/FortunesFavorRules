@@ -1,6 +1,6 @@
 "use client";
-import { isSmallWindow } from "@/app/utils/isSmallWindow";
-import useWindowDimensions from "@/app/utils/useWindowDimensions";
+import { isSmallWindow } from "@/utils/isSmallWindow";
+import useWindowDimensions from "@/utils/useWindowDimensions";
 import { useEffect, useState } from "react";
 
 export default function RuleDisplay({

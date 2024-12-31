@@ -1,4 +1,4 @@
-import { rule_type, complexity_options, stat_options } from "../enums";
+import { rule_type, complexity_options, stat_options } from "../utils/enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
@@ -6,7 +6,7 @@ import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import SlugLinker from "./blocks/SlugLinker";
 import { Deflect, RuleText } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
-import { CharacterClass as ClassGraphType } from "../types.generated";
+import { CharacterClass as ClassGraphType } from "../app/types.generated";
 import TextBlock from "./blocks/TextBlock";
 
 type fieldProps = {

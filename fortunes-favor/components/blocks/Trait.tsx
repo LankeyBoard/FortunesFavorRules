@@ -1,4 +1,4 @@
-import { CharacterTrait } from "@/app/utils/CharacterTrait";
+import { CharacterTrait } from "@/utils/CharacterTrait";
 import TextBlock from "./TextBlock";
 const Trait = ({ t }: { t: CharacterTrait }) => {
   return (

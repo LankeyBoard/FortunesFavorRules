@@ -31,10 +31,11 @@ type SearchQueryResult = {
 };
 
 type SearchResultProps = {
+  searchTerm: string;
   result: SearchQueryResult;
 };
 
-export const SearchResult = ({ result }: SearchResultProps) => {
+export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
   let titleStyle = "flex p-2";
   let resultType = "";
   switch (result.type) {
@@ -66,24 +67,40 @@ export const SearchResult = ({ result }: SearchResultProps) => {
       titleStyle += " bg-red-500";
   }
   const isSub = result.title !== result.page;
+
+  const highlightSearchResult = (searchTerm: string, text: string) => {
+      // Split on highlight term and include term into parts, ignore case
+      const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
+      return <span> { parts.map((part, i) => 
+          <span key={i} className={part.toLowerCase() === searchTerm.toLowerCase() ? "underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin" : "" }>
+              { part }
+          </span>)
+      } </span>;
+  }
+  const partialUrl = result.href.split('#')
+  let builtHref = partialUrl[0]
+  if(searchTerm)
+    builtHref += `?query=${searchTerm}`;
+  if(partialUrl[1])
+    builtHref += `#${partialUrl[1]}`;
   return (
     <>
       {result.href ? (
         <Link
-          href={result.href}
-          className="hover:tracking-wide hover:text-slate-300"
+          href={`${builtHref}`}
+          className="hover:tracking-wide hover:text-slate-600 dark:hover:text-slate-300"
         >
           <div className="pb-3">
             <div className={titleStyle}>
               <h1 className="text-lg font-semibold float-left grow">
-                {!isSub ? result.title : result.page}
+                {highlightSearchResult(searchTerm, !isSub ? result.title : result.page)}
               </h1>
               <h3 className="float-right">{resultType}</h3>
             </div>
             <div className="clear-both">
               {isSub && (
                 <h3 className="px-2 pt-3 text-base font-semibold">
-                  {result.title}
+                  {highlightSearchResult(searchTerm,result.title)}
                 </h3>
               )}
               {result.text && result.text.length > 0 ? (
@@ -97,7 +114,7 @@ export const SearchResult = ({ result }: SearchResultProps) => {
                           : "line-clamp-3 px-3 pt-3"
                       }
                     >
-                      {t.text}
+                      {highlightSearchResult(searchTerm,t.text)}
                     </p>
                   );
                 })
@@ -115,10 +132,11 @@ export const SearchResult = ({ result }: SearchResultProps) => {
 };
 
 type SearchResultsTableProps = {
+  searchTerm: string;
   results: any;
 };
 
-const SearchResultsTable = ({ results }: SearchResultsTableProps) => {
+const SearchResultsTable = ({ searchTerm, results }: SearchResultsTableProps) => {
   return (
     <div id="SearchResults" className="border-spacing-3 flex flex-col">
       {results.searchAll.map((result: any) => {
@@ -127,7 +145,7 @@ const SearchResultsTable = ({ results }: SearchResultsTableProps) => {
             key={result.slug}
             className="bg-slate-200 dark:bg-slate-800 min-h-5 mb-3 hover:scale-105"
           >
-            <SearchResult result={result} />
+            <SearchResult searchTerm={searchTerm} result={result} />
           </div>
         );
       })}
@@ -146,24 +164,30 @@ const SearchResults = async ({
   const searchQuery = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const client = getClient();
-  const { data } = await client.query({
+  const { data, loading, error } = await client.query({
     query,
     variables: { search: searchQuery },
   });
+  if(error)
+    console.error("SearchResults", data, loading, error);
+  if(loading)
+    return <div>Loading...</div>
   return (
-    <>
+    <div className="pt-10 px-4">
       <Suspense key={searchQuery + currentPage} fallback={<>Searching...</>}>
         {data.searchAll && data.searchAll.length > 0 ? (
-          <SearchResultsTable results={data} />
+          <SearchResultsTable searchTerm={searchQuery} results={data} />
         ) : (
-          <div>
-            <line>
-              Failed to turn anything up for the search: {searchQuery}
-            </line>
+          <div className="h-[calc(100vh-120px)] grid grid-cols-1 gap-4 place-content-center">
+            <div className="text-center">
+              <span>Our goblins couldn&apos;t dig up anything for </span>
+              <span className="underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin">{searchQuery}</span>
+              <span> maybe try searching for something else.</span> 
+            </div>
           </div>
         )}
       </Suspense>
-    </>
+    </div>
   );
 };
 

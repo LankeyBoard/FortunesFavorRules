@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import { getClient } from "@/app/utils/graphQLclient";
-import GenericFeatures from "@/app/components/GenericFeatures";
+import { getClient } from "@/utils/graphQLclient";
+import GenericFeatures from "@/components/GenericFeatures";
 import { Suspense } from "react";
 
 const query = gql`
