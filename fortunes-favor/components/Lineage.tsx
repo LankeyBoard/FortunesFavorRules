@@ -15,7 +15,7 @@ const Lineage = ({ data, isList = false }: LineageProps) => {
       <div className="py-4 px-2 text-2xl tracking-wide bg-sky-300 dark:bg-sky-800 flex flex-row">
         <h1 className="flex-grow">{l.title}</h1>
         {isList && (
-          <div className="flex items-center ps-3 z-10 mr-4">
+          <div className="flex items-center ps-3 mr-4">
             <Link
               className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-400 disabled:text-slate-700"
               href={"/rules/lineages/" + l.slug}

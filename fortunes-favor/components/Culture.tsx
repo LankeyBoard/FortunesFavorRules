@@ -15,7 +15,7 @@ const Culture = ({ data, isList = false }: CultureProps) => {
       <div className="py-4 px-2 text-2xl tracking-wide bg-blue-300 dark:bg-blue-800 flex flex-row">
         <h1 className="flex-grow">{c.title}</h1>
         {isList && (
-          <div className="flex items-center ps-3 z-10 mr-4">
+          <div className="flex items-center ps-3 mr-4">
             <Link
               className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-400 disabled:text-slate-700"
               href={"/rules/cultures/" + c.slug}

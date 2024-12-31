@@ -205,6 +205,7 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
       setMenuStyle("flex h-screen");
     } else {
       setMenuStyle("fixed flex items-start bottom-0");
+      setMenuVisible(false);
     }
   }, [width]);
 

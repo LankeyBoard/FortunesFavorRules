@@ -108,6 +108,11 @@ export default async function RulesLayout({
   console.log("rulesSection", rulesSection);
   return (
     <div className="flex flex-row flex-grow">
+      <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">
+        <div className="flex-1 overflow-auto">
+          <RuleDisplay>{children}</RuleDisplay>
+        </div>
+      </div>
       <div className="fixed">
         <NavSidebar
           navMap={NavBuilder([
@@ -119,12 +124,6 @@ export default async function RulesLayout({
             veteranFeaturesSection,
           ])}
         />
-      </div>
-
-      <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">
-        <div className="flex-1 overflow-auto">
-          <RuleDisplay>{children}</RuleDisplay>
-        </div>
       </div>
       <AlertPopup />
     </div>
