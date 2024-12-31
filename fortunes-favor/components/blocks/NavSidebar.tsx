@@ -4,7 +4,7 @@ import { nav } from "@/app/rules/layout";
 import { isSmallWindow } from "@/utils/isSmallWindow";
 import useWindowDimensions from "@/utils/useWindowDimensions";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 
@@ -182,6 +182,8 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
 const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
   const { height, width } = useWindowDimensions();
   const pathname = usePathname();
+  const router = useRouter();
+
   const navPaths = mapNavToPartialPaths(navMap);
   const [menuStyle, setMenuStyle] = useState("flex");
   const [menuVisible, setMenuVisible] = useState(true);
@@ -194,6 +196,7 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
   const [currentNavMap, setCurrentNavMap] = useState(
     updateNavMap(navMap, currentPath),
   );
+  const [timeoutID, setTimeoutId] = useState<NodeJS.Timeout>();
 
   const handleScroll = () => {
     const closestPath = findCurrentPathOnScroll(navPaths, document);
@@ -229,7 +232,25 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
       return () => window.removeEventListener("scroll", handleScroll);
     }
   });
-
+  useEffect(() => {
+    console.log("currentPath in useEffect: ", currentPath);
+    if (typeof timeoutID === "number") {
+      clearTimeout(timeoutID);
+    }
+    const id = setTimeout(
+      (path) => {
+        if (!path || path.pathname !== pathname) return;
+        console.log("replacing path with ", path);
+        router.replace(
+          `${path.pathname}${window.location.search}${path.hash ? "#" + path.hash : ""}`,
+          { scroll: false },
+        );
+      },
+      500,
+      currentPath,
+    );
+    setTimeoutId(id);
+  }, [currentPath]);
   if (!currentNavMap) return;
   console.log("pathname: ", pathname);
 
