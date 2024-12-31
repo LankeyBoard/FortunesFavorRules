@@ -1,13 +1,16 @@
 import { gql } from "@apollo/client";
 import RuleDisplay from "../../components/blocks/RuleDisplay";
-import RulesNav from "../../components/blocks/RulesNav";
 import { getClient } from "../../utils/graphQLclient";
 import AlertPopup from "../../components/AlertPopup";
-
+import dynamic from "next/dynamic";
+const NavSidebar = dynamic(() => import("@/components/blocks/NavSidebar"), {
+  ssr: false,
+});
 export type nav = {
   title: string;
   href?: string;
   subroutes?: nav[];
+  isCurrent?: boolean;
 };
 
 type nav_section = {
@@ -102,11 +105,11 @@ export default async function RulesLayout({
     title: "Veteran Features",
     basePath: "/rules/generic_features/veteran_features",
   };
-  console.log("rulesSection", rulesSection)
+  console.log("rulesSection", rulesSection);
   return (
     <div className="flex flex-row flex-grow">
       <div className="fixed">
-        <RulesNav
+        <NavSidebar
           navMap={NavBuilder([
             rulesSection,
             culturesSection,
@@ -123,7 +126,7 @@ export default async function RulesLayout({
           <RuleDisplay>{children}</RuleDisplay>
         </div>
       </div>
-      <AlertPopup/>
+      <AlertPopup />
     </div>
   );
 }
