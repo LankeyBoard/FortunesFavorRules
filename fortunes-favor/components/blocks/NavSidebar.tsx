@@ -93,6 +93,12 @@ const findCurrentPathOnScroll = (
       }
     }
   });
+  // if a closestPath hasn't been found, look for a matching pathname and return that
+  if (!closestPath) {
+    closestPath = partialPaths.find(
+      (p) => p.pathname === window.location.pathname,
+    );
+  }
   return closestPath;
 };
 
@@ -211,7 +217,10 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
 
   // when the path changes, find the current path.
   useEffect(() => {
-    setCurrentPath(findCurrentPath(navPaths, window.location));
+    let path = findCurrentPath(navPaths, window.location);
+    if (!path) path = findCurrentPathOnScroll(navPaths, document);
+    if (path) setCurrentPath(path);
+    // setCurrentPath(findCurrentPath(navPaths, window.location));
   }, [pathname]);
 
   useEffect(() => {
