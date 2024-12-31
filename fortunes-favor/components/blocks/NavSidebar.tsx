@@ -44,7 +44,6 @@ const mapNavToPartialPaths = (navMap: nav[]): partialPath[] => {
     }
     mappedPaths.push(...partialPaths);
   });
-  console.log("mappedPaths: ", mappedPaths);
   return mappedPaths;
 };
 
@@ -53,24 +52,19 @@ const findCurrentPath = (
   partialPaths: partialPath[],
   currentLocation: Location,
 ) => {
-  console.log("currentLocation: ", currentLocation);
-  console.log("partialPaths: ", partialPaths);
   if (currentLocation.hash) {
     const path = partialPaths.find(
       (p) =>
         p.pathname === currentLocation.pathname &&
         p.hash === currentLocation.hash,
     );
-    console.log("path with hash: ", path);
     if (path) return path;
   } else {
     const path = partialPaths.find(
       (p) => p.pathname === currentLocation.pathname && !p.hash,
     );
-    console.log("path without hash: ", path);
     if (path) return path;
   }
-  console.warn("No current path found.");
   return undefined;
 };
 
@@ -81,8 +75,7 @@ const findCurrentPathOnScroll = (
 ) => {
   let closestPath: partialPath | undefined;
   let closestLocation: number | undefined;
-  console.log("partialPaths: ", partialPaths);
-  console.log("document: ", document);
+
   partialPaths.forEach((path) => {
     if (!path.hash) return;
     const element = document.getElementById(path.hash);
@@ -100,7 +93,6 @@ const findCurrentPathOnScroll = (
       }
     }
   });
-  console.log("closestPath: ", closestPath);
   return closestPath;
 };
 
@@ -122,7 +114,6 @@ const updateNavMap = (
       }),
     };
   });
-  console.log("updatedNavMap: ", updatedNavMap);
   return updatedNavMap;
 };
 
@@ -233,14 +224,12 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
     }
   });
   useEffect(() => {
-    console.log("currentPath in useEffect: ", currentPath);
     if (typeof timeoutID === "number") {
       clearTimeout(timeoutID);
     }
     const id = setTimeout(
       (path) => {
         if (!path || path.pathname !== pathname) return;
-        console.log("replacing path with ", path);
         router.replace(
           `${path.pathname}${window.location.search}${path.hash ? "#" + path.hash : ""}`,
           { scroll: false },
@@ -251,8 +240,8 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
     );
     setTimeoutId(id);
   }, [currentPath]);
+
   if (!currentNavMap) return;
-  console.log("pathname: ", pathname);
 
   return (
     <div className={menuStyle}>
