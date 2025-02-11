@@ -58,6 +58,12 @@ const ShopBuilderPage: React.FC = () => {
     setShop(updatedShop);
   };
 
+  const revisitShop = () => {
+    const updatedShop = new ItemShop(shop.encodeShop());
+    updatedShop.updateShopContents(15);
+    setShop(updatedShop);
+  };
+
   return (
     <div className="pb-6">
       <h1 className="text-4xl mt-8 font-light text-center tracking-wider p-6">
@@ -97,6 +103,12 @@ const ShopBuilderPage: React.FC = () => {
           className="p-2 bg-purple-500 text-white rounded"
         >
           Randomize Discounts
+        </button>
+        <button
+          onClick={revisitShop}
+          className="p-2 bg-pink-500 text-white rounded"
+        >
+          Revisit Shop
         </button>
       </div>
       <ul className="m-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
