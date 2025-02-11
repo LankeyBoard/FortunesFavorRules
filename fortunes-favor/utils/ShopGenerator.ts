@@ -187,5 +187,141 @@ const defaultShop = {
       inStock: true,
       discounted: false,
     },
+    {
+      name: "Hunting Trap",
+      description:
+        "A mechanical trap with jagged teeth. When hidden properly, it clamps onto anything that steps into it. Test Agility (13/8) to avoid. On failure, takes 2d6 damage and is immobilized until freed.",
+      cost: 1,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Tanglewire Net",
+      description:
+        "A reinforced net lined with barbed wire. Can be thrown (10ft range). A caught target must Test Mettle (13/8) to break free, breaking free on a Success or a Mixed, and taking 1d6 Slashing Damage on a Mixed or a Fail.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Verminbane Powder (3 uses)",
+      description:
+        "A pungent alchemical powder that repels small creatures like rats, insects, and spiders within a 30ft radius for 10 minutes.",
+      cost: 1,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Ironwood Stakes (3x)",
+      description:
+        "Sturdy, rune-carved stakes useful for disabling undead or anchoring magical barriers. Can be driven into soft surfaces or bodies.",
+      cost: 1,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Thunderstick",
+      description:
+        "A single-use alchemical rod that, when cracked, emits a deafening boom and bright flash. All creatures within 15ft must Test Mettle (13/8) or be stunned for one round.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Lantern of False Flame",
+      description:
+        "An oil lantern that produces cold, illusory fire. Provides light, but does not burn objects or flesh.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Whisperglass Earring",
+      description:
+        "A small earring that allows the wearer to hear faint whispers of creatures nearby, even through walls (up to 30ft).",
+      cost: 3,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Echoing Dagger",
+      description:
+        "A thin-bladed dagger that, when thrown, reappears in the wielder’s hand after 6 seconds.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Soulbrand Cuffs",
+      description:
+        "Iron shackles enchanted to prevent spellcasting and resist being broken. Requires a Mettle Test (22) to break.",
+      cost: 4,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Leeching Bandages",
+      description:
+        "Bloodstained bandages that accelerate healing but feed on the user’s vitality. Use when catching your breath, Heals 1d8 Health but reduces Stamina by 2.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Flametongue Oil",
+      description:
+        "A thick, highly flammable oil that can coat a weapon for 10 minutes. The weapon deals an extra 1d6 fire damage on hit.",
+      cost: 3,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Gravedigger’s Spade",
+      description:
+        "A heavy spade that grants Fortune’s Favor on digging-related Tests and ignores difficult terrain when moving through loose earth.",
+      cost: 3,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Called Coin",
+      description:
+        "A coin that, when flipped, lands on heads or tails based on the user's true intent.",
+      cost: 5,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Sablefang Cloak",
+      description:
+        "A fur-lined cloak that dulls the wearer’s scent, making them harder to track by scent-based creatures. +3 on Stealth Tests vs. beasts and others that rely on scent to track.",
+      cost: 2,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Eclipsed Lens",
+      description:
+        "A small monocle that, when looked through, reveals hidden doors and secret markings within 10ft.",
+      cost: 6,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Nightmare Tonic",
+      description:
+        "Drinking this dark brew lets the user stay awake for 24 hours without fatigue, but they suffer horrific hallucinations for the following week.",
+      cost: 3,
+      inStock: true,
+      discounted: false,
+    },
+    {
+      name: "Shadewoven Gloves",
+      description:
+        "Enchanted gloves that muffle sounds made by the wearer's hands. +3 on Stealth Tests involving manual actions.",
+      cost: 5,
+      inStock: true,
+      discounted: false,
+    },
   ],
 };
