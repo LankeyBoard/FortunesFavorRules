@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ItemShop, ShopItem } from "@/utils/ShopGenerator";
+import Link from "next/link";
 
 const ShopBuilderPage: React.FC = () => {
   const [shop, setShop] = useState<ItemShop>(new ItemShop());
@@ -70,7 +71,6 @@ const ShopBuilderPage: React.FC = () => {
         Shop Builder
       </h1>
       <div className="m-4">
-        <p>{shop.encodeShop()}</p>
         <label className="block text-lg font-semibold mb-2">Shop Name:</label>
         <input
           type="text"
@@ -79,34 +79,49 @@ const ShopBuilderPage: React.FC = () => {
           className="w-full p-2 border border-gray-300 rounded dark:text-black"
         />
       </div>
-      <div className="m-4 flex justify-between">
+      <Link
+        href={"/shop/" + shop.encodeShop()}
+        onClick={(e) => {
+          if (!shop.shopName) {
+            e.preventDefault();
+          }
+        }}
+        style={{
+          pointerEvents: shop.shopName ? "auto" : "none",
+          opacity: shop.shopName ? 1 : 0.5,
+        }}
+        className="m-4 p-2 bg-amber-500 text-white rounded"
+      >
+        Visit shop
+      </Link>
+      <div className="m-4 flex flex-wrap">
         <button
           onClick={markAllAvailable}
-          className="p-2 bg-green-500 text-white rounded"
+          className="p-2 bg-green-500 text-white rounded mr-2"
         >
           Mark All Available
         </button>
         <button
           onClick={markAllFullPrice}
-          className="p-2 bg-gray-500 text-white rounded"
+          className="p-2 bg-gray-500 text-white rounded mx-2"
         >
           Mark All Full Price
         </button>
         <button
           onClick={randomizeAvailability}
-          className="p-2 bg-blue-500 text-white rounded"
+          className="p-2 bg-blue-500 text-white rounded mx-2"
         >
           Randomize Availability
         </button>
         <button
           onClick={randomizeDiscounts}
-          className="p-2 bg-purple-500 text-white rounded"
+          className="p-2 bg-purple-500 text-white rounded mx-2"
         >
           Randomize Discounts
         </button>
         <button
           onClick={revisitShop}
-          className="p-2 bg-pink-500 text-white rounded"
+          className="p-2 bg-pink-500 text-white rounded ml-2"
         >
           Revisit Shop
         </button>
