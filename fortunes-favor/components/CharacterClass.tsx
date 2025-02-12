@@ -1,40 +1,13 @@
-import { rule_type, complexity_options, stat_options } from "../utils/enums";
+import { complexity_options, stat_options } from "../utils/enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
 import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
-import SlugLinker from "./blocks/SlugLinker";
-import { Deflect, RuleText } from "../utils/graphQLtypes";
+import { Deflect } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
 import { CharacterClass as ClassGraphType } from "../app/types.generated";
 import TextBlock from "./blocks/TextBlock";
 
-type fieldProps = {
-  field: RuleText;
-};
-const FieldDisplay = ({ field }: fieldProps) => {
-  const displayVariants = {
-    reg: "inline",
-    flavor: "inline italic",
-    eg: "inline italic text-slate-700 dark:text-slate-300",
-  };
-  let fieldDisplayStyle = displayVariants.reg;
-  switch (field.type) {
-    case rule_type.Flavor:
-      fieldDisplayStyle = displayVariants.flavor;
-      break;
-    case rule_type.Eg:
-      fieldDisplayStyle = displayVariants.eg;
-      break;
-  }
-  return (
-    <div className={fieldDisplayStyle}>
-      {field.type === rule_type.Eg && <span>Eg. </span>}
-      <SlugLinker text={field.text} />
-      <span className="block" />
-    </div>
-  );
-};
 type featureProps = {
   feature: CharacterFeature;
 };
@@ -213,7 +186,13 @@ export const ClassTags = ({ c }: classTagsProps) => {
       default:
         tagStyle = "bg-rose-500";
     }
-    tags.push(<Tag key={c.complexity} style={tagStyle} text={c.complexity.toLocaleLowerCase()} />);
+    tags.push(
+      <Tag
+        key={c.complexity}
+        style={tagStyle}
+        text={c.complexity.toLocaleLowerCase()}
+      />,
+    );
   }
   if ("attackStat" in c && c.attackStat) {
     c.attackStat.forEach((stat) => {
@@ -254,18 +233,20 @@ export const ClassTitleAndTags = ({ classRules }: ClassTitleAndTagsProps) => {
 
 type ClassDeflectProps = {
   classDeflect: Deflect;
-}
+};
 
-const ClassDeflect = ({classDeflect}: ClassDeflectProps) => {
-  return(
+const ClassDeflect = ({ classDeflect }: ClassDeflectProps) => {
+  return (
     <div className="mb-3">
       <span className="font-semibold clear-left">Deflect</span>:
-      <span> {classDeflect.count}d{classDeflect.dice}</span> {classDeflect.flat > 0 &&<span> + {classDeflect.flat}</span>}
+      <span>
+        {" "}
+        {classDeflect.count}d{classDeflect.dice}
+      </span>{" "}
+      {classDeflect.flat > 0 && <span> + {classDeflect.flat}</span>}
     </div>
-  )
-  
-  
-}
+  );
+};
 
 type classProps = {
   data: ClassGraphType;
@@ -370,11 +351,11 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold clear-left">Damage</span>
               <span>: {dmgString}</span>
             </p>
-            <ClassDeflect classDeflect={class_rules.deflect}/>
+            <ClassDeflect classDeflect={class_rules.deflect} />
           </div>
         </div>
       </div>
-      
+
       <div id="features">
         <div className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
           Features
