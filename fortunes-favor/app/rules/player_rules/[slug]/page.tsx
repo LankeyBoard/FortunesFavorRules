@@ -1,6 +1,6 @@
 import RuleField from "@/components/RuleField";
 import RuleData from "@/utils/GenericRuleData";
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { GenericRule } from "@/utils/graphQLtypes";
 import { gql } from "@apollo/client";
 
@@ -81,7 +81,6 @@ const query = gql`
 
 async function GeneralRule(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const client = getClient();
   const { data } = await client.query({
     query,
     variables: { slug: params.slug },
@@ -95,8 +94,8 @@ async function GeneralRule(props: { params: Promise<{ slug: string }> }) {
         rule.ruleType,
         rule.text,
         rule.subRules,
-        rule.list
-      )
+        rule.list,
+      ),
     );
   });
   return (

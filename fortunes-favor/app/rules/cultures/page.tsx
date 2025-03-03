@@ -1,6 +1,6 @@
 import Culture from "@/components/Culture";
 import { gql } from "@apollo/client";
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { graphQLCulture } from "@/utils/graphQLtypes";
 import { Suspense } from "react";
 
@@ -61,7 +61,6 @@ const query = gql`
   }
 `;
 async function CulturePage() {
-  const client = getClient();
   const { data } = await client.query({
     query,
   });

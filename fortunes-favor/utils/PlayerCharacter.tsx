@@ -15,20 +15,13 @@ type Stats = {
 
 type Effect = {
   target: string;
-  type: EffectTypes;
   calculation: (args: any) => string | number;
 };
-
-enum EffectTypes {
-  add = "ADD",
-  replace = "REPLACE",
-}
 
 enum Rarity {
   common = "Common",
   uncommon = "Uncommon",
   rare = "Rare",
-  ultraRare = "Ultra Rare",
   legendary = "Legendary",
   unique = "Unique",
 }
@@ -85,7 +78,7 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     chosen: string[],
     chooseNum: number,
     shortText?: string | undefined,
-    level?: number
+    level?: number,
   ) {
     super(
       title,
@@ -95,7 +88,7 @@ export class PlayerCharacterFeature extends GenericFeatureData {
       multiSelect,
       choices,
       chooseNum,
-      shortText
+      shortText,
     );
     this.source = source;
     this.effects = effects;
@@ -130,7 +123,7 @@ class Item extends Feature {
     text: [RuleText],
     effects: Effect[],
     isMagicItem: boolean,
-    rarity: Rarity
+    rarity: Rarity,
   ) {
     super(title, text, effects);
     this.isMagicItem = isMagicItem;
@@ -141,7 +134,7 @@ class Item extends Feature {
 const updateFeatures = (
   sourceType: string,
   source: CharacterCulture | CharacterClassData | CharacterLineage,
-  currentCharacter: PlayerCharacter
+  currentCharacter: PlayerCharacter,
 ) => {
   // Remove actions from old source
   const updatedActions: PlayerCharacterFeature[] | undefined = [];
@@ -179,8 +172,8 @@ const updateFeatures = (
               [],
               feature.chooseNum,
               feature.shortText,
-              feature.level
-            )
+              feature.level,
+            ),
           );
         } else if (feature.actionType === action_type.counter) {
           updatedActions.push(
@@ -196,8 +189,8 @@ const updateFeatures = (
               [],
               feature.chooseNum,
               feature.shortText,
-              feature.level
-            )
+              feature.level,
+            ),
           );
         } else {
           updatedFeatures.push(
@@ -213,8 +206,8 @@ const updateFeatures = (
               [],
               feature.chooseNum,
               feature.shortText,
-              feature.level
-            )
+              feature.level,
+            ),
           );
         }
       }
@@ -230,8 +223,8 @@ const updateFeatures = (
           feature.multiSelect,
           feature.choices,
           [],
-          feature.chooseNum
-        )
+          feature.chooseNum,
+        ),
       );
     }
   });
@@ -312,7 +305,7 @@ export default class PlayerCharacter {
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
     characterClass?: CharacterClassData,
-    startingCharacter?: PlayerCharacter
+    startingCharacter?: PlayerCharacter,
   ) {
     if (startingCharacter) {
       this._level = startingCharacter.level;
@@ -381,8 +374,8 @@ export default class PlayerCharacter {
                 [],
                 feature.chooseNum,
                 feature.shortText,
-                feature.level
-              )
+                feature.level,
+              ),
             );
           }
         });

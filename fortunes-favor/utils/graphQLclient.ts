@@ -1,15 +1,32 @@
 import { HttpLink } from "@apollo/client";
-import {
-  NextSSRInMemoryCache,
-  NextSSRApolloClient,
-} from "@apollo/experimental-nextjs-app-support/ssr";
-import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 
-export const { getClient } = registerApolloClient(() => {
-  return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache(),
-    link: new HttpLink({
-      uri: process.env.GRAPHQL_URL || "http://localhost:4000/graphql",
-    }),
-  });
+import { setContext } from "@apollo/client/link/context";
+import {
+  ApolloClient,
+  InMemoryCache,
+} from "@apollo/experimental-nextjs-app-support";
+
+const httpLink = new HttpLink({
+  uri: process.env.GRAPHQL_URL || "http://localhost:4000/graphql",
+  credentials: "include",
 });
+
+const authLink = setContext((_, { headers }) => {
+  // Retrieve token from localStorage or any other storage mechanism
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
+export default client;

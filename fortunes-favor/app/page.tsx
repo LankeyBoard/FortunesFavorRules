@@ -11,11 +11,11 @@ const rulesPageText: GenericRule[] = [
     text: [
       {
         text: "Welcome to Fortune's Favor, a tabletop roleplaying game for a fast & fun fantasy adventures whether it's your first or five hundredth roleplaying game.",
-        type: "RULE"
-      }
+        type: "RULE",
+      },
     ],
     subRules: [],
-    list: []
+    list: [],
   },
   {
     title: "The Basics",
@@ -88,7 +88,7 @@ const rulesPageText: GenericRule[] = [
 export const revalidate = 30;
 export default async function Home() {
   return (
-    <main className="flex flex-col items-center justify-between p-24">
+    <main className="flex flex-col items-center justify-between md:p-24">
       <div className="max-w-2xl" id="">
         {rulesPageText.map((rule) => {
           return <RuleField field={rule} depth={1} key={rule.slug} />;
@@ -105,9 +105,7 @@ export default async function Home() {
           </thead>
           <tbody className="">
             <tr className="border-slate-500 border mb-2">
-              <td className="border-spacing-x-3 align-baseline">
-                3/16/2024{" "}
-              </td>
+              <td className="border-spacing-x-3 align-baseline">3/16/2024 </td>
               <td>
                 <ul>
                   <li>
@@ -121,16 +119,12 @@ export default async function Home() {
               </td>
             </tr>
             <tr className="border-slate-500 border mb-2">
-              <td className="border-spacing-x-3 align-baseline">
-                3/24/2024{" "}
-              </td>
+              <td className="border-spacing-x-3 align-baseline">3/24/2024 </td>
               <td>
                 <ul>
                   <li>
                     <SlugLinker
-                      text={
-                        "Added the [shapeshifter](/rules/classes/shifter)."
-                      }
+                      text={"Added the [shapeshifter](/rules/classes/shifter)."}
                     />
                   </li>
                   <li>
@@ -144,9 +138,7 @@ export default async function Home() {
               </td>
             </tr>
             <tr className="border-slate-500 border mb-2">
-              <td className="border-spacing-x-3 align-baseline">
-                3/26/2024{" "}
-              </td>
+              <td className="border-spacing-x-3 align-baseline">3/26/2024 </td>
               <td>
                 <ul>
                   <li>
@@ -219,17 +211,11 @@ export default async function Home() {
                 <ul>
                   <li>
                     <SlugLinker
-                      text={
-                        "Added Deflect dice and updated shields."
-                      }
+                      text={"Added Deflect dice and updated shields."}
                     />
                   </li>
                   <li>
-                    <SlugLinker
-                      text={
-                        "Updated the character sheet."
-                      }
-                    />
+                    <SlugLinker text={"Updated the character sheet."} />
                   </li>
                 </ul>
               </td>

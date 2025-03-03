@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { Suspense } from "react";
 import Link from "next/link";
 import { ClassTitleAndTags } from "@/components/CharacterClass";
@@ -36,7 +36,6 @@ export type characterClassData = {
 };
 
 async function ClassesPage() {
-  const client = getClient();
   const { data } = await client.query({
     query,
   });

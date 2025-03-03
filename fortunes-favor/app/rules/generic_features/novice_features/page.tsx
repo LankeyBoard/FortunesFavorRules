@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import GenericFeatures from "@/components/GenericFeatures";
 import { Suspense } from "react";
 
@@ -53,7 +53,6 @@ const query = gql`
   }
 `;
 async function NoviceFeaturesPage() {
-  const client = getClient();
   const { data } = await client.query({
     query,
   });

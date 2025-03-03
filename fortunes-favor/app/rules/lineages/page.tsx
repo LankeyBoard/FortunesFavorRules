@@ -1,4 +1,4 @@
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import Lineage from "@/components/Lineage";
 import { graphQLLineage } from "@/utils/graphQLtypes";
@@ -66,7 +66,6 @@ const query = gql`
 `;
 
 async function LineagePage() {
-  const client = getClient();
   const { data } = await client.query({
     query,
   });
