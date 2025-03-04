@@ -2,6 +2,7 @@
 
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { useUser } from "../UserContext";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -23,6 +24,7 @@ const LoginForm = ({
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+  const userContext = useUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -31,12 +33,12 @@ const LoginForm = ({
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
-    console.log(email, password, localStorage.getItem("token"));
     try {
       const { data } = await login({ variables: { email, password } });
 
       if (data?.login?.token) {
-        localStorage.setItem("token", data.login.token); // Store token in localStorage
+        userContext.updateJwt(data.login.token); // Update token in context
+        localStorage.setItem("token", data.login.token); // Save token to local storage
         setIsOpen(false);
         setIsAuthenticated(true);
       }

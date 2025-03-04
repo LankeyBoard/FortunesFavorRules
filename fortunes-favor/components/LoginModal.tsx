@@ -5,15 +5,13 @@ import LoginForm from "./blocks/LoginForm";
 const LoginModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("token") === null,
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem("token") === null
+      : false,
   );
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
-  };
-  const handLeLogin = () => {
-    setIsAuthenticated(true);
-    setIsOpen(false);
   };
   if (!isAuthenticated)
     return (

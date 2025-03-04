@@ -8,6 +8,72 @@ import CharacterClass from "../utils/CharacterClass";
 import { FeatureCard } from "./blocks/FeatureCard";
 import { GenericFeature } from "../utils/graphQLtypes";
 import { CharacterTrait } from "../utils/CharacterTrait";
+import { useUser } from "./UserContext";
+import { useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
+
+const CREATE_CHARACTER_MUTATION = gql`
+  mutation CreateCharacter($characterInputs: CharacterInput!) {
+    createCharacter(input: $characterInputs) {
+      name
+      items {
+        id
+        title
+      }
+      level
+      mettle
+      agility
+      heart
+      intellect
+      coin
+      languages
+      characterClass {
+        title
+      }
+      characterLineage {
+        title
+      }
+      characterCulture {
+        title
+      }
+      currentHealth
+      currentStamina
+      maxHealth
+      maxStamina
+      armorName
+      shieldName
+      counter
+      baseDamage
+      rangeMin
+      rangeMax
+      featureChoiceSlugs
+    }
+  }
+`;
+
+const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
+  return {
+    name: character.character_name,
+    level: character.level,
+    mettle: character.stats.mettle,
+    agility: character.stats.agility,
+    heart: character.stats.heart,
+    intellect: character.stats.intellect,
+    coin: character.coin,
+    languages: character.languages,
+    characterClass: character.class?.slug || "",
+    characterLineage: character.lineage?.slug || "",
+    characterCulture: character.culture?.slug || "",
+    maxHealth: character.maxHealth,
+    maxStamina: character.maxStamina,
+    armorName: character.armorName,
+    shieldName: character.shieldName,
+    counter: character.counter,
+    baseDamage: character.baseDamage?.count || 0,
+    rangeMin: character.range?.min || 0,
+    rangeMax: character.range?.max || 0,
+  };
+};
 
 type ArmorInfoProps = { currentCharacter?: PlayerCharacter };
 const ArmorInfo = ({ currentCharacter }: ArmorInfoProps) => {
@@ -50,7 +116,7 @@ const PlayerCharacterSheet = ({
   characterOptions,
 }: CharacterSheetProps) => {
   const [character, setCharacter] = useState(
-    currentCharacter ? currentCharacter : new PlayerCharacter()
+    currentCharacter ? currentCharacter : new PlayerCharacter(),
   );
   let cultures: CharacterCulture[] = [];
   let lineages: CharacterLineage[] = [];
@@ -81,6 +147,33 @@ const PlayerCharacterSheet = ({
     });
   }
   let armorOptions = [{ title: "None" }];
+  const userContext = useUser();
+  const [createCharacter, { data, loading, error }] = useMutation(
+    CREATE_CHARACTER_MUTATION,
+  );
+  const saveCharacter = async () => {
+    console.log(localStorage);
+    if (
+      character.character_name === undefined ||
+      character.character_name === ""
+    ) {
+      alert("Character name is required");
+      return;
+    }
+    console.log(
+      "converted character from",
+      character,
+      "to",
+      convertPlayerCharacterToGraphInput(character),
+      userContext.jwt,
+    );
+    const { data } = await createCharacter({
+      variables: {
+        characterInputs: convertPlayerCharacterToGraphInput(character),
+      },
+    });
+    console.log("Character saved:", character);
+  };
 
   return (
     <div id="character_sheet">
@@ -93,6 +186,17 @@ const PlayerCharacterSheet = ({
                 name="Character Name"
                 isRequired={true}
                 defaultValue={character.character_name}
+                onChange={(e) => {
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  updatedCharacter.character_name = e.target.value;
+                  console.log(updatedCharacter.character_name);
+                  setCharacter(updatedCharacter);
+                }}
               />
               <div className="ml-2 mr-2 w-10">
                 <InputField
@@ -105,7 +209,7 @@ const PlayerCharacterSheet = ({
                       undefined,
                       undefined,
                       undefined,
-                      character
+                      character,
                     );
                     updatedCharacter.level = e.target.valueAsNumber;
                     setCharacter(updatedCharacter);
@@ -131,7 +235,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.culture = updatedCulture;
                       setCharacter(updatedCharacter);
@@ -147,13 +251,13 @@ const PlayerCharacterSheet = ({
                   onChange={(e) => {
                     const slug = e.target.value;
                     const updatedLineage = lineages.find(
-                      (l) => l.slug === slug
+                      (l) => l.slug === slug,
                     );
                     if (updatedLineage) {
                       if (!character) {
                         const newCharacter = new PlayerCharacter(
                           undefined,
-                          updatedLineage
+                          updatedLineage,
                         );
                         setCharacter(newCharacter);
                       } else {
@@ -161,7 +265,7 @@ const PlayerCharacterSheet = ({
                           undefined,
                           undefined,
                           undefined,
-                          character
+                          character,
                         );
                         updatedCharacter.lineage = updatedLineage;
                         setCharacter(updatedCharacter);
@@ -178,14 +282,14 @@ const PlayerCharacterSheet = ({
                 onChange={(e) => {
                   const slug = e.target.value;
                   const updatedClass = characterClasses.find(
-                    (c) => c.slug === slug
+                    (c) => c.slug === slug,
                   );
                   if (updatedClass) {
                     if (!character) {
                       const newCharacter = new PlayerCharacter(
                         undefined,
                         undefined,
-                        updatedClass
+                        updatedClass,
                       );
                       setCharacter(newCharacter);
                     } else {
@@ -193,7 +297,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.class = updatedClass;
                       setCharacter(updatedCharacter);
@@ -220,7 +324,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.stats = {
                         mettle: e.target.valueAsNumber,
@@ -243,7 +347,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.stats = {
                         mettle: character.stats.mettle,
@@ -266,7 +370,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.stats = {
                         mettle: character.stats.mettle,
@@ -289,7 +393,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         undefined,
                         undefined,
-                        character
+                        character,
                       );
                       updatedCharacter.stats = {
                         mettle: character.stats.mettle,
@@ -330,7 +434,7 @@ const PlayerCharacterSheet = ({
                     undefined,
                     undefined,
                     undefined,
-                    character
+                    character,
                   );
 
                   updatedCharacter.armorName = e.target.value;
@@ -353,7 +457,7 @@ const PlayerCharacterSheet = ({
                     undefined,
                     undefined,
                     undefined,
-                    character
+                    character,
                   );
 
                   updatedCharacter.shieldName = e.target.value;
@@ -508,6 +612,14 @@ const PlayerCharacterSheet = ({
             <span>&#8212;</span>
           )}
         </div>
+      </div>
+      <div>
+        <button
+          onClick={saveCharacter}
+          className={`mt-4 p-2 bg-blue-500 text-white rounded`}
+        >
+          Save Character
+        </button>
       </div>
     </div>
   );
