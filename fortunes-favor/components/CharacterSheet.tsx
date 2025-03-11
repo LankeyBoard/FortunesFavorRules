@@ -4,11 +4,37 @@ import client from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import { useState, useEffect } from "react";
 
+import CharacterStaticInfo from "./blocks/CharacterStaticInfo";
+import CharacterCoreInfo from "./blocks/CharacterCoreInfo";
+import PlayerCharacter from "@/utils/PlayerCharacter";
+import CharacterClassData from "@/utils/CharacterClass";
+import CharacterCulture from "@/utils/CharacterCulture";
+import CharacterLineage from "@/utils/CharacterLineage";
+import CharacterFeatures from "./blocks/CharacterFeatures";
+
 const query = gql`
   query getCharacter($id: ID!) {
     character(id: $id) {
-      name
+      agility
+      armorName
+      baseDamage
       coin
+      counter
+      currentHealth
+      currentStamina
+      featureChoiceSlugs
+      heart
+      id
+      intellect
+      languages
+      level
+      maxHealth
+      mettle
+      maxStamina
+      name
+      rangeMax
+      shieldName
+      rangeMin
       characterClass {
         attackStat
         complexity
@@ -17,6 +43,11 @@ const query = gql`
           stat
           dice
           type
+        }
+        deflect {
+          dice
+          count
+          flat
         }
         description
         extra {
@@ -234,14 +265,32 @@ const query = gql`
           }
         }
       }
-      featureChoiceSlugs
     }
   }
 `;
+
 interface Data {
   character: {
-    name: string;
+    agility: number;
+    armorName: string;
+    baseDamage: number;
     coin: number;
+    counter: number;
+    currentHealth: number;
+    currentStamina: number;
+    featureChoiceSlugs: string[];
+    heart: number;
+    id: string;
+    intellect: number;
+    languages: string[];
+    level: number;
+    maxHealth: number;
+    mettle: number;
+    maxStamina: number;
+    name: string;
+    rangeMax: number;
+    shieldName: string;
+    rangeMin: number;
     characterClass: {
       attackStat: string;
       complexity: number;
@@ -455,12 +504,33 @@ interface Data {
         }[];
       }[];
     };
-    featureChoiceSlugs: string[];
   };
 }
+const ConvertToPlayerCharacter = (data: Data): PlayerCharacter => {
+  const character = new PlayerCharacter();
+  character.characterClass = new CharacterClassData(
+    data.character.characterClass,
+  );
+  character.culture = new CharacterCulture(data.character.characterCulture);
+  character.lineage = new CharacterLineage(data.character.characterLineage);
+  character.stats = {
+    mettle: data.character.mettle,
+    agility: data.character.agility,
+    intellect: data.character.intellect,
+    heart: data.character.heart,
+  };
+  character.currentHealth = data.character.currentHealth;
+  character.currentStamina = data.character.currentStamina;
+  character.coin = data.character.coin;
+  character.level = data.character.level;
+  character.name = data.character.name;
+  return character;
+};
 
-const PlayerCharacterSheet = ({ characterId }: { characterId: number }) => {
-  const [data, setData] = useState<Data | undefined>(undefined);
+const CharacterSheet = ({ characterId }: { characterId: number }) => {
+  const [character, setCharacter] = useState<PlayerCharacter | undefined>(
+    undefined,
+  );
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
@@ -470,16 +540,36 @@ const PlayerCharacterSheet = ({ characterId }: { characterId: number }) => {
           query,
           variables: { id: characterId },
         });
-        setData(data);
+        setCharacter(ConvertToPlayerCharacter(data));
       } catch (error) {
         setError(error);
       }
-      console.log("Character: ", data, error);
     };
     fetchData();
-  }, []);
+  }, [characterId]);
 
-  return <div>Character Sheet {data?.character.name}</div>;
+  if (error) {
+    console.error(error);
+    return <div>Error loading character data.</div>;
+  }
+
+  if (!character) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className=" bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md grid grid-cols-3 gap-2 ">
+      <div className="bg-slate-600">
+        <CharacterStaticInfo character={character} />
+      </div>
+      <div>
+        <CharacterCoreInfo character={character} />
+      </div>
+      <div className="bg-slate-600">
+        <CharacterFeatures character={character} />
+      </div>
+    </div>
+  );
 };
 
-export default PlayerCharacterSheet;
+export default CharacterSheet;

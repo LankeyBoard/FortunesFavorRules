@@ -5,6 +5,7 @@ import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
 import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
+import CharacterClass from "./CharacterClass";
 
 type Stats = {
   mettle: number;
@@ -29,7 +30,7 @@ enum Rarity {
 const downgradeBaseDamage = (damage: {
   dice: number;
   count: number;
-  stat: stat_options[];
+  stat: number;
 }) => {
   let updatedDamage = { ...damage };
   if (damage.dice === 6 && damage.count > 1) {
@@ -62,13 +63,13 @@ class Feature extends Input {
 }
 
 export class PlayerCharacterFeature extends GenericFeatureData {
-  readonly source: Object;
+  readonly source: string;
   readonly effects: Effect[];
   private _chosen: string[];
   private _level: number;
   constructor(
     title: string,
-    source: Object,
+    source: string,
     effects: Effect[],
     slug: string,
     ruleType: rule_type,
@@ -237,10 +238,10 @@ const updateFeatures = (
 };
 
 export default class PlayerCharacter {
-  character_name?: string;
+  name?: string;
   player_name?: string;
   private _level: number;
-  private _characterClass?: CharacterClassData;
+  private _characterClass?: CharacterClass;
   private _characterCulture?: CharacterCulture;
   private _stats: Stats;
   private _characterLineage?: CharacterLineage;
@@ -274,7 +275,7 @@ export default class PlayerCharacter {
         break;
       case "none":
         if (
-          this.class?.slug === "BRAWLER" &&
+          this.characterClass?.slug === "BRAWLER" &&
           this.armorName.toLowerCase() === "none"
         ) {
           armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
@@ -312,7 +313,7 @@ export default class PlayerCharacter {
       this._stats = startingCharacter.stats;
       this.coin = startingCharacter.coin;
       this._languages = startingCharacter.languages;
-      this._characterClass = startingCharacter.class;
+      this._characterClass = startingCharacter.characterClass;
       this._characterLineage = startingCharacter.lineage;
       this._characterCulture = startingCharacter.culture;
       this.currentHealth = startingCharacter.currentHealth;
@@ -323,7 +324,7 @@ export default class PlayerCharacter {
       this._armorName = startingCharacter.armorName;
       this._shieldName = startingCharacter.shieldName;
       this._counter = startingCharacter.counter || this._armorValue() - 5;
-      this._range = startingCharacter.class?.range;
+      this._range = startingCharacter.characterClass?.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
       this._counters = startingCharacter.counters;
@@ -357,9 +358,9 @@ export default class PlayerCharacter {
     return this._level;
   }
   public set level(newLevel: number) {
-    if (this.class) {
+    if (this.characterClass) {
       if (newLevel > this.level) {
-        this.class?.features.forEach((feature) => {
+        this.characterClass?.features.forEach((feature) => {
           if (feature.level > this.level && feature.level <= newLevel) {
             this.features?.push(
               new PlayerCharacterFeature(
@@ -381,7 +382,7 @@ export default class PlayerCharacter {
         });
       } else if (newLevel < this.level) {
         const updatedFeatures: GenericFeature[] = [];
-        for (const feature of this.class?.features) {
+        for (const feature of this.characterClass?.features) {
           if (feature.level <= newLevel) {
             updatedFeatures.push(feature);
           } else {
@@ -392,11 +393,13 @@ export default class PlayerCharacter {
     }
     this._level = newLevel;
   }
-  public get class(): CharacterClassData | undefined {
+  public get characterClass(): CharacterClassData {
+    if (!this._characterClass)
+      throw new Error("Character class must be set before accessing");
     return this._characterClass;
   }
 
-  public set class(characterClass: CharacterClassData) {
+  public set characterClass(characterClass: CharacterClassData) {
     this._characterClass = characterClass;
     const updatedFeatures = updateFeatures("class", characterClass, this);
     this._actions = updatedFeatures.actions;
@@ -404,7 +407,9 @@ export default class PlayerCharacter {
     this._features = updatedFeatures.features;
     this._range = characterClass.range;
   }
-  public get culture(): CharacterCulture | undefined {
+  public get culture(): CharacterCulture {
+    if (!this._characterCulture)
+      throw new Error("Culture must be set before accessing");
     return this._characterCulture;
   }
   public set culture(characterCulture: CharacterCulture) {
@@ -415,7 +420,9 @@ export default class PlayerCharacter {
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
   }
-  public get lineage(): CharacterLineage | undefined {
+  public get lineage(): CharacterLineage {
+    if (!this._characterLineage)
+      throw new Error("Lineage must be set before accessing");
     return this._characterLineage;
   }
   public set lineage(characterLineage: CharacterLineage) {
@@ -473,6 +480,12 @@ export default class PlayerCharacter {
     return this._speeds;
   }
 
+  public get deflect() {
+    if (!this.characterClass)
+      throw new Error("Deflect cannot be calculated without a class");
+    return this.characterClass?.deflect;
+  }
+
   public get maxHealth() {
     if (this._characterClass && this._level)
       return (
@@ -511,27 +524,50 @@ export default class PlayerCharacter {
     }
     return 0;
   }
-  public get counter(): number | undefined {
+  public get counter(): number {
     return this._armorValue() - 5;
   }
   public get baseDamage() {
+    if (!this.characterClass)
+      throw new Error("Base damage cannot be calculated without a class");
+
+    let statDmg = Number.MIN_SAFE_INTEGER;
+    this.characterClass?.damage.stat.forEach((stat) => {
+      switch (stat) {
+        case stat_options.mettle:
+          statDmg = Math.max(statDmg, this.stats.mettle);
+          break;
+        case stat_options.agility:
+          statDmg = Math.max(statDmg, this.stats.agility);
+          break;
+        case stat_options.heart:
+          statDmg = Math.max(statDmg, this.stats.heart);
+          break;
+        case stat_options.int:
+          statDmg = Math.max(statDmg, this.stats.intellect);
+          break;
+      }
+    });
+    const baseDmg = { ...this.characterClass?.damage, stat: statDmg };
+
     if (this.shieldName && this.shieldName != "None") {
-      if (this._characterClass)
-        return downgradeBaseDamage(this._characterClass?.damage);
+      if (this._characterClass) return downgradeBaseDamage(baseDmg);
     }
-    return this._characterClass?.damage;
+    return baseDmg;
   }
   public get range() {
-    if (this.class && this._range) {
-      if (
-        this.class.slug === "BRAWLER" &&
-        this.stats.agility > this.stats.mettle
-      ) {
-        let tempRange = { ...this._range };
-        tempRange.max = this._range.max * 2;
-        return tempRange;
-      }
+    if (!this.characterClass || !this._range)
+      throw new Error("Range cannot be calculated without a class or range");
+
+    if (
+      this.characterClass.slug === "BRAWLER" &&
+      this.stats.agility > this.stats.mettle
+    ) {
+      let tempRange = { ...this._range };
+      tempRange.max = this._range.max * 2;
+      return tempRange;
     }
+
     return this._range;
   }
   public get items() {
@@ -548,5 +584,25 @@ export default class PlayerCharacter {
   }
   public get languages() {
     return this._languages;
+  }
+  public get attack() {
+    let attack = Number.MIN_SAFE_INTEGER;
+    this.characterClass?.attackStat.forEach((stat) => {
+      switch (stat) {
+        case stat_options.mettle:
+          attack = Math.max(attack, this.stats.mettle);
+          break;
+        case stat_options.agility:
+          attack = Math.max(attack, this.stats.agility);
+          break;
+        case stat_options.heart:
+          attack = Math.max(attack, this.stats.heart);
+          break;
+        case stat_options.int:
+          attack = Math.max(attack, this.stats.intellect);
+          break;
+      }
+    });
+    return attack;
   }
 }

@@ -53,7 +53,7 @@ const CREATE_CHARACTER_MUTATION = gql`
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
   return {
-    name: character.character_name,
+    name: character.name,
     level: character.level,
     mettle: character.stats.mettle,
     agility: character.stats.agility,
@@ -61,7 +61,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     intellect: character.stats.intellect,
     coin: character.coin,
     languages: character.languages,
-    characterClass: character.class?.slug || "",
+    characterClass: character.characterClass?.slug || "",
     characterLineage: character.lineage?.slug || "",
     characterCulture: character.culture?.slug || "",
     maxHealth: character.maxHealth,
@@ -111,7 +111,7 @@ type CharacterSheetProps = {
   characterOptions?: any;
 };
 
-const PlayerCharacterSheet = ({
+const EditableCharacterSheet = ({
   currentCharacter,
   characterOptions,
 }: CharacterSheetProps) => {
@@ -153,10 +153,7 @@ const PlayerCharacterSheet = ({
   );
   const saveCharacter = async () => {
     console.log(localStorage);
-    if (
-      character.character_name === undefined ||
-      character.character_name === ""
-    ) {
+    if (character.name === undefined || character.name === "") {
       alert("Character name is required");
       return;
     }
@@ -185,7 +182,7 @@ const PlayerCharacterSheet = ({
               <InputField
                 name="Character Name"
                 isRequired={true}
-                defaultValue={character.character_name}
+                defaultValue={character.name}
                 onChange={(e) => {
                   const updatedCharacter = new PlayerCharacter(
                     undefined,
@@ -193,8 +190,8 @@ const PlayerCharacterSheet = ({
                     undefined,
                     character,
                   );
-                  updatedCharacter.character_name = e.target.value;
-                  console.log(updatedCharacter.character_name);
+                  updatedCharacter.name = e.target.value;
+                  console.log(updatedCharacter.name);
                   setCharacter(updatedCharacter);
                 }}
               />
@@ -278,7 +275,7 @@ const PlayerCharacterSheet = ({
               <DropdownField
                 name="class"
                 options={characterClasses}
-                unselectedOption={!character.class}
+                unselectedOption={!character.characterClass}
                 onChange={(e) => {
                   const slug = e.target.value;
                   const updatedClass = characterClasses.find(
@@ -299,7 +296,7 @@ const PlayerCharacterSheet = ({
                         undefined,
                         character,
                       );
-                      updatedCharacter.class = updatedClass;
+                      updatedCharacter.characterClass = updatedClass;
                       setCharacter(updatedCharacter);
                     }
                   }
@@ -424,11 +421,11 @@ const PlayerCharacterSheet = ({
               <DropdownField
                 name=""
                 options={
-                  character.class?.training.armor
-                    ? character.class.training.armor
+                  character.characterClass?.training.armor
+                    ? character.characterClass.training.armor
                     : armorOptions
                 }
-                unselectedOption={!character.class}
+                unselectedOption={!character.characterClass}
                 onChange={(e) => {
                   const updatedCharacter = new PlayerCharacter(
                     undefined,
@@ -447,11 +444,11 @@ const PlayerCharacterSheet = ({
               <DropdownField
                 name=""
                 options={
-                  character.class?.training.shields
-                    ? character.class.training.shields
+                  character.characterClass?.training.shields
+                    ? character.characterClass.training.shields
                     : armorOptions
                 }
-                unselectedOption={!character.class}
+                unselectedOption={!character.characterClass}
                 onChange={(e) => {
                   const updatedCharacter = new PlayerCharacter(
                     undefined,
@@ -625,4 +622,4 @@ const PlayerCharacterSheet = ({
   );
 };
 
-export default PlayerCharacterSheet;
+export default EditableCharacterSheet;

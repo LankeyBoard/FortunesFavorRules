@@ -8,6 +8,7 @@ type FeatureCardProps = {
 };
 
 export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
+  console.log("Source: ", source);
   const [cardFeature, setFeature] = useState(feature);
   const [showAllChoices, setShowAllChoices] = useState(true);
   useEffect(() => {
@@ -23,7 +24,7 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
       feature.chosen,
       feature.chooseNum,
       feature.shortText,
-      feature.level
+      feature.level,
     );
     if (!showAllChoices) {
       newFeature.choices = newFeature.choices.filter((choice) => {
@@ -120,11 +121,11 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                               feature.chosen,
                               feature.chooseNum,
                               feature.shortText,
-                              feature.level
-                            )
+                              feature.level,
+                            ),
                           );
                           setShowAllChoices(
-                            feature.chosen.length < feature.chooseNum
+                            feature.chosen.length < feature.chooseNum,
                           );
                         }}
                       >

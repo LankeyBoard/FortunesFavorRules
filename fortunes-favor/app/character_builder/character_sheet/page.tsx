@@ -1,4 +1,4 @@
-import PlayerCharacterSheet from "@/components/PlayerCharacterSheet";
+import EditableCharacterSheet from "@/components/EditableCharacterSheet";
 import client from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 export default async function CharacterSheetPage() {
@@ -236,5 +236,5 @@ export default async function CharacterSheetPage() {
     query,
   });
 
-  return <PlayerCharacterSheet characterOptions={data} />;
+  return <EditableCharacterSheet characterOptions={data} />;
 }
