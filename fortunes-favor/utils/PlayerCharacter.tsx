@@ -229,6 +229,7 @@ const updateFeatures = (
       );
     }
   });
+  console.log(updateFeatures);
 
   return {
     features: updatedFeatures,
@@ -238,6 +239,7 @@ const updateFeatures = (
 };
 
 export default class PlayerCharacter {
+  id?: string;
   name?: string;
   player_name?: string;
   private _level: number;
@@ -309,6 +311,9 @@ export default class PlayerCharacter {
     startingCharacter?: PlayerCharacter,
   ) {
     if (startingCharacter) {
+      this.id = startingCharacter.id;
+      this.name = startingCharacter.name;
+      this.player_name = startingCharacter.player_name;
       this._level = startingCharacter.level;
       this._stats = startingCharacter.stats;
       this.coin = startingCharacter.coin;
@@ -329,6 +334,7 @@ export default class PlayerCharacter {
       this._actions = startingCharacter.actions;
       this._counters = startingCharacter.counters;
       this._features = startingCharacter.features;
+      this._languages = startingCharacter.languages;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -346,11 +352,29 @@ export default class PlayerCharacter {
       this._shieldName = "None";
       this._counter = this._armorValue() - 5;
       this._baseDamage = 0;
-      this._range = { min: 0, max: 0 };
+      this._range = characterClass ? characterClass.range : { min: 0, max: 0 };
       this._items = [];
       this._actions = [];
       this._counters = [];
       this._features = [];
+      if (characterClass)
+        ({
+          actions: this._actions,
+          counters: this._counters,
+          features: this._features,
+        } = updateFeatures("class", characterClass, this));
+      if (culture)
+        ({
+          actions: this._actions,
+          counters: this._counters,
+          features: this._features,
+        } = updateFeatures("culture", culture, this));
+      if (lineage)
+        ({
+          features: this._features,
+          actions: this._actions,
+          counters: this._counters,
+        } = updateFeatures("lineage", lineage, this));
     }
   }
 
@@ -401,10 +425,11 @@ export default class PlayerCharacter {
 
   public set characterClass(characterClass: CharacterClassData) {
     this._characterClass = characterClass;
-    const updatedFeatures = updateFeatures("class", characterClass, this);
-    this._actions = updatedFeatures.actions;
-    this._counters = updatedFeatures.counters;
-    this._features = updatedFeatures.features;
+    ({
+      actions: this._actions,
+      counters: this._counters,
+      features: this._features,
+    } = updateFeatures("class", characterClass, this));
     this._range = characterClass.range;
   }
   public get culture(): CharacterCulture {
@@ -471,7 +496,10 @@ export default class PlayerCharacter {
     return this._armorValue();
   }
   public get speeds() {
-    if (this.lineage?.slug === "FAERY") {
+    if (
+      this.lineage?.slug === "FAERY" &&
+      !this._speeds.includes({ type: "flying", speed: 20, source: "lineage" })
+    ) {
       return [
         ...this._speeds,
         { type: "flying", speed: 20, source: "lineage" },
@@ -580,6 +608,15 @@ export default class PlayerCharacter {
     return this._counters;
   }
   public get features() {
+    if (this._features) {
+      this._features.sort((a, b) => {
+        const order = { class: 1, culture: 2, lineage: 3 };
+        return (
+          order[a.source as keyof typeof order] -
+          order[b.source as keyof typeof order]
+        );
+      });
+    }
     return this._features;
   }
   public get languages() {
@@ -604,5 +641,68 @@ export default class PlayerCharacter {
       }
     });
     return attack;
+  }
+  public get choices() {
+    let choices: string[] = [];
+    this._features?.forEach((feature) => {
+      if (feature.chosen) choices = choices.concat(feature.chosen);
+    });
+    this._actions?.forEach((feature) => {
+      if (feature.chosen) choices = choices.concat(feature.chosen);
+    });
+    this._counters?.forEach((feature) => {
+      if (feature.chosen) choices = choices.concat(feature.chosen);
+    });
+    return choices;
+  }
+
+  public UpdateChoices(choices: string[]): PlayerCharacter {
+    const updateChosen = (features: PlayerCharacterFeature[]) => {
+      features.forEach((feature) => {
+        if (feature.choices) {
+          const chosen: string[] = feature.choices
+            .filter((choice) => {
+              if (typeof choice.text === "string") {
+                return choices.includes(choice.text);
+              } else if ("slug" in choice) {
+                return choices.includes(choice.slug);
+              }
+            })
+            .map((choice) => {
+              if (typeof choice.text === "string") {
+                return choice.text;
+              } else if ("slug" in choice) {
+                return choice.slug;
+              } else
+                throw new Error(`Choice is of invalid type ${typeof choice}`);
+            });
+          feature.chosen = chosen;
+        }
+      });
+    };
+
+    if (this._features) updateChosen(this._features);
+    if (this._actions) updateChosen(this._actions);
+    if (this._counters) updateChosen(this._counters);
+
+    return this;
+  }
+
+  public updateFeature(updatedFeature: PlayerCharacterFeature) {
+    const updateFeatureList = (
+      features: PlayerCharacterFeature[] | undefined,
+    ) => {
+      if (!features) return;
+      const index = features.findIndex(
+        (feature) => feature.slug === updatedFeature.slug,
+      );
+      if (index !== -1) {
+        features[index] = updatedFeature;
+      }
+    };
+
+    updateFeatureList(this._features);
+    updateFeatureList(this._actions);
+    updateFeatureList(this._counters);
   }
 }

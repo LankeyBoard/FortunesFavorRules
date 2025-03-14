@@ -1,66 +1,190 @@
 import PlayerCharacter from "@/utils/PlayerCharacter";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import TextBlock from "./TextBlock";
+import NumInput from "./Inputs/NumInput";
+import SmallField from "./SmallField";
+import LockableSmallTextInput from "./Inputs/LockableSmallTextInput";
+import DropdownField from "./Inputs/DropdownField";
+import { CharacterClass } from "@/app/types.generated";
+import CharacterCulture from "@/utils/CharacterCulture";
+import CharacterLineage from "@/utils/CharacterLineage";
+import { CharacterOptions } from "../CharacterSheet";
 
-const SmallField = ({ text, label }: { text: string; label: string }) => {
-  return (
-    <div className="grid grid-cols-1 text-center m-2">
-      <span className="text-lg font-light">{text}</span>
-      <span className="text-xs tracking-tighter opacity-80">{label}</span>
-    </div>
-  );
-};
-
-const SpeedDisplay = ({ speeds }: { speeds: PlayerCharacter["speeds"] }) => {
+const LargeField = ({
+  children,
+  label,
+}: {
+  children: React.ReactNode;
+  label: string;
+}) => {
   return (
     <div>
-      <h3 className="text-lg">Speeds</h3>
-      <ul className="px-4">
-        {speeds.map((speed) => {
-          return (
-            <li key={speed.source + speed.type}>
-              {speed.speed} ft. <span className="font-thin">{speed.type}</span>
-            </li>
-          );
-        })}
-      </ul>
+      <h3 className="text-lg">{label}</h3>
+      <ul className="px-4">{children}</ul>
     </div>
   );
 };
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
+  setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
+  isEditable: boolean;
+  characterOptions: CharacterOptions;
 }
 
-const CharacterStaticInfo = ({ character }: CharacterBasicInfoProps) => {
-  console.log("Character: ", character.features);
+const CharacterStaticInfo = ({
+  character,
+  setCharacter,
+  isEditable,
+  characterOptions,
+}: CharacterBasicInfoProps) => {
+  const updateCoin = (newCoin: number) => {
+    const newCharacter = new PlayerCharacter(
+      undefined,
+      undefined,
+      undefined,
+      character,
+    );
+    newCharacter.coin = newCoin;
+    setCharacter(newCharacter);
+  };
+  const updateLevel = (newLevel: number) => {
+    const newCharacter = new PlayerCharacter(
+      undefined,
+      undefined,
+      undefined,
+      character,
+    );
+    newCharacter.level = newLevel;
+    setCharacter(newCharacter);
+  };
   return (
-    <div className="p-4">
-      <div>
-        <h2 className="font-thin text-xl mx-auto text-center">
-          {character.name}
-        </h2>
-        <div className="">
-          <SmallField text={character.level.toString()} label="Level" />
-          <SmallField text={character.characterClass.title} label="Class" />
-          <SmallField text={character.culture.title} label="Culture" />
-          <SmallField text={character.lineage.title} label="Lineage" />
+    <div className="">
+      <div className="p-4">
+        <div className="flex flex-wrap gap-x-2">
+          <LockableSmallTextInput
+            isEditable={isEditable}
+            label="level"
+            value={character.level}
+            updateFunc={(e) => updateLevel(Number(e.target.value))}
+          />
+          {isEditable ? (
+            <DropdownField
+              name="Class"
+              options={characterOptions.characterClasses}
+              unselectedOption={!character.characterClass}
+              onChange={(e) => {
+                const slug = e.target.value;
+                const updatedCharacterClass =
+                  characterOptions.characterClasses.find(
+                    (c) => c.slug === slug,
+                  );
+                if (updatedCharacterClass) {
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  updatedCharacter.characterClass = updatedCharacterClass;
+                  setCharacter(updatedCharacter);
+                }
+              }}
+            />
+          ) : (
+            <SmallField label="Class">
+              {character.characterClass.title}
+            </SmallField>
+          )}
+          {isEditable ? (
+            <DropdownField
+              name="Culture"
+              options={characterOptions.characterCultures}
+              unselectedOption={!character.culture}
+              onChange={(e) => {
+                const slug = e.target.value;
+                const updatedCharacterCulture =
+                  characterOptions.characterCultures.find(
+                    (c) => c.slug === slug,
+                  );
+                if (updatedCharacterCulture) {
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  updatedCharacter.culture = updatedCharacterCulture;
+                  setCharacter(updatedCharacter);
+                }
+              }}
+            />
+          ) : (
+            <SmallField label="Culture">{character.culture.title}</SmallField>
+          )}
+          {isEditable ? (
+            <DropdownField
+              name="Lineage"
+              options={characterOptions.characterLineages}
+              unselectedOption={!character.lineage}
+              onChange={(e) => {
+                const slug = e.target.value;
+                const updatedCharacterLineage =
+                  characterOptions.characterLineages.find(
+                    (c) => c.slug === slug,
+                  );
+                if (updatedCharacterLineage) {
+                  const updatedCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  updatedCharacter.lineage = updatedCharacterLineage;
+                  setCharacter(updatedCharacter);
+                }
+              }}
+            />
+          ) : (
+            <SmallField label="Lineage">{character.lineage.title}</SmallField>
+          )}
         </div>
       </div>
-      <SpeedDisplay speeds={character.speeds} />
-      <div>
-        <div>{character.coin} Coin</div>
-        <div>Items</div>
-        {character.items && character.items.length > 0 ? (
-          character.items.map((item) => (
-            <div key={item.title}>
-              <h4>{item.title}</h4>
-              <TextBlock text={item.text} />
-            </div>
-          ))
-        ) : (
-          <div>No items</div>
-        )}
+      <div className="w-100 bg-teal-950 p-4">
+        <LargeField label="Speeds">
+          {character.speeds.map((speed) => {
+            return (
+              <li key={speed.source + speed.type}>
+                {speed.speed} ft.{" "}
+                <span className="font-thin">{speed.type}</span>
+              </li>
+            );
+          })}
+        </LargeField>
+      </div>
+      <div className="p-4">
+        <LargeField label="Items">
+          {character.items && character.items.length > 0 ? (
+            character.items.map((item) => (
+              <div key={item.title}>
+                <h4>{item.title}</h4>
+                <TextBlock text={item.text} />
+              </div>
+            ))
+          ) : (
+            <div>No items</div>
+          )}
+        </LargeField>
+      </div>
+
+      <div className="flex justify-end items-end h-full">
+        <SmallField label="Coin">
+          <NumInput
+            defaultValue={character.coin}
+            onChange={(e) => updateCoin(Number(e.target.value))}
+            size={String(character.coin).length}
+          />
+        </SmallField>
       </div>
     </div>
   );

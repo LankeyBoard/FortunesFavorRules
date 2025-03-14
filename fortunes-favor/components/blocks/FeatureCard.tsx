@@ -1,16 +1,47 @@
-import { PlayerCharacterFeature } from "@/utils/PlayerCharacter";
-import { useEffect, useState } from "react";
+import PlayerCharacter, {
+  PlayerCharacterFeature,
+} from "@/utils/PlayerCharacter";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
 
 type FeatureCardProps = {
   feature: PlayerCharacterFeature;
   source: string;
+  character?: PlayerCharacter;
+  setCharacter?: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
 };
 
-export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
-  console.log("Source: ", source);
+export const hasInsufficientChoices = (
+  selectedSlugs: string[],
+  choices: PlayerCharacterFeature["choices"],
+  chooseNum: number,
+): boolean => {
+  const matchingChoices = choices.filter(
+    (choice) =>
+      ("slug" in choice && selectedSlugs.includes(choice.slug)) ||
+      ("text" in choice &&
+        typeof choice.text === "string" &&
+        selectedSlugs.includes(choice.text)),
+  );
+  return matchingChoices.length < chooseNum;
+};
+
+export const FeatureCard = ({
+  feature,
+  source,
+  character,
+  setCharacter,
+}: FeatureCardProps) => {
   const [cardFeature, setFeature] = useState(feature);
-  const [showAllChoices, setShowAllChoices] = useState(true);
+  const [showAllChoices, setShowAllChoices] = useState(
+    character
+      ? hasInsufficientChoices(
+          character.choices,
+          feature.choices,
+          feature.chooseNum,
+        )
+      : true,
+  );
   useEffect(() => {
     const newFeature = new PlayerCharacterFeature(
       feature.title,
@@ -127,6 +158,16 @@ export const FeatureCard = ({ feature, source }: FeatureCardProps) => {
                           setShowAllChoices(
                             feature.chosen.length < feature.chooseNum,
                           );
+                          if (setCharacter) {
+                            const newCharacter = new PlayerCharacter(
+                              undefined,
+                              undefined,
+                              undefined,
+                              character,
+                            );
+                            newCharacter.updateFeature(feature);
+                            setCharacter(newCharacter);
+                          }
                         }}
                       >
                         <h3 className="font-semibold">{choice.title}</h3>

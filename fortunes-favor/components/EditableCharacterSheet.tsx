@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import PlayerCharacter from "../utils/PlayerCharacter";
-import InputField, { DropdownField } from "./blocks/InputField";
+import InputField from "./blocks/Inputs/InputField";
 import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
@@ -11,6 +11,7 @@ import { CharacterTrait } from "../utils/CharacterTrait";
 import { useUser } from "./UserContext";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
+import DropdownField from "./blocks/Inputs/DropdownField";
 
 const CREATE_CHARACTER_MUTATION = gql`
   mutation CreateCharacter($characterInputs: CharacterInput!) {

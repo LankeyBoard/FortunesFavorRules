@@ -24,7 +24,7 @@ export default class CharacterFeatureData
       feature_data.list,
       feature_data.shortText,
       feature_data.choices,
-      feature_data.chooseNum
+      feature_data.chooseNum,
     );
     this.level = feature_data.level;
     this.staminaCost = feature_data.staminaCost;
@@ -38,7 +38,7 @@ export default class CharacterFeatureData
         console.error(
           "Error matching feature [%s] type %s in json file",
           feature_data,
-          feature_data.actionType
+          feature_data.actionType,
         );
       }
     }
@@ -70,7 +70,7 @@ export default class CharacterFeatureData
     };
     return new PlayerCharacterFeature(
       this.title,
-      source,
+      source.toString(),
       [],
       this.slug,
       this.ruleType,
@@ -80,7 +80,7 @@ export default class CharacterFeatureData
       [],
       this.chooseNum,
       this.shortText,
-      this.level
+      this.level,
     );
   };
 }

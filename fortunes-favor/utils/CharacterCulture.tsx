@@ -24,7 +24,7 @@ export default class CharacterCulture {
 }
 
 export const characterCultureListBuilder = (
-  cultures_json: Array<any>
+  cultures_json: Array<any>,
 ): CharacterCulture[] => {
   let cultures: CharacterCulture[] = [];
   cultures_json.forEach((culture) => {
