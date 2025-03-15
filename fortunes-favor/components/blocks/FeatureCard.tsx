@@ -9,6 +9,7 @@ type FeatureCardProps = {
   source: string;
   character?: PlayerCharacter;
   setCharacter?: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
+  isExpanded: boolean;
 };
 
 export const hasInsufficientChoices = (
@@ -26,46 +27,13 @@ export const hasInsufficientChoices = (
   return matchingChoices.length < chooseNum;
 };
 
-export const FeatureCard = ({
+export const FeatureCardTitle = ({
   feature,
   source,
-  character,
-  setCharacter,
-}: FeatureCardProps) => {
-  const [cardFeature, setFeature] = useState(feature);
-  const [showAllChoices, setShowAllChoices] = useState(
-    character
-      ? hasInsufficientChoices(
-          character.choices,
-          feature.choices,
-          feature.chooseNum,
-        )
-      : true,
-  );
-  useEffect(() => {
-    const newFeature = new PlayerCharacterFeature(
-      feature.title,
-      feature.source,
-      feature.effects,
-      feature.slug,
-      feature.ruleType,
-      feature.text,
-      feature.multiSelect,
-      feature.choices,
-      feature.chosen,
-      feature.chooseNum,
-      feature.shortText,
-      feature.level,
-    );
-    if (!showAllChoices) {
-      newFeature.choices = newFeature.choices.filter((choice) => {
-        if ("slug" in choice) {
-          return newFeature.chosen.includes(choice.slug);
-        }
-      });
-      setFeature(newFeature);
-    }
-  }, [feature, showAllChoices]);
+}: {
+  feature: PlayerCharacterFeature;
+  source: string;
+}) => {
   let titleStyle = "flex p-2";
   let resultType = "";
   switch (source) {
@@ -96,6 +64,66 @@ export const FeatureCard = ({
     default:
       titleStyle += " bg-red-500";
   }
+  return (
+    <div className={titleStyle}>
+      <h1 className="text-lg font-semibold float-left grow">
+        {feature.title}
+        {feature.level > 0 && (
+          <span className="ml-2 font-light text-base">
+            level {feature.level}
+          </span>
+        )}
+      </h1>
+      <h3 className="float-right">{resultType}</h3>
+    </div>
+  );
+};
+
+const FeatureCard = ({
+  feature,
+  source,
+  character,
+  setCharacter,
+  isExpanded,
+}: FeatureCardProps) => {
+  const [cardFeature, setFeature] = useState(feature);
+  const [showAllChoices, setShowAllChoices] = useState(
+    character
+      ? hasInsufficientChoices(
+          character.choices,
+          feature.choices,
+          feature.chooseNum,
+        )
+      : true,
+  );
+  const [isOpen, setOpen] = useState(isExpanded);
+  useEffect(() => {
+    setOpen(isExpanded);
+  }, [isExpanded]);
+  useEffect(() => {
+    const newFeature = new PlayerCharacterFeature(
+      feature.title,
+      feature.source,
+      feature.effects,
+      feature.slug,
+      feature.ruleType,
+      feature.text,
+      feature.multiSelect,
+      feature.choices,
+      feature.chosen,
+      feature.chooseNum,
+      feature.shortText,
+      feature.level,
+    );
+    if (!showAllChoices) {
+      newFeature.choices = newFeature.choices.filter((choice) => {
+        if ("slug" in choice) {
+          return newFeature.chosen.includes(choice.slug);
+        }
+      });
+      setFeature(newFeature);
+    }
+  }, [feature, showAllChoices]);
 
   const choiceStyle =
     "p-2 odd:bg-slate-300 dark:odd:bg-slate-700 cursor-pointer hover:border-2 hover:border-amber-300 hover:dark:border-amber-700 hover:bg-slate-200 hover:dark:bg-slate-800";
@@ -103,20 +131,25 @@ export const FeatureCard = ({
   const deselectedChoiceStyle =
     choiceStyle +
     " border-2 border-gray-100 dark:border-gray-900 odd:border-slate-300 odd:dark:border-slate-700";
+  if (!isOpen) {
+    return (
+      <div
+        className="pb-3 hover:cursor-pointer"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <FeatureCardTitle feature={feature} source={source} />{" "}
+      </div>
+    );
+  }
   return (
     <>
       <div className="pb-3">
-        <div className={titleStyle}>
-          <h1 className="text-lg font-semibold float-left grow">
-            {cardFeature.title}
-            {cardFeature.level > 0 && (
-              <span className="ml-2 font-light text-base">
-                level {cardFeature.level}
-              </span>
-            )}
-          </h1>
-          <h3 className="float-right">{resultType}</h3>
+        <div onClick={() => setOpen(false)} className="hover:cursor-pointer">
+          <FeatureCardTitle feature={feature} source={source} />
         </div>
+
         <div className="clear-both">
           <TextBlock text={cardFeature.text} style="px-4" />
           <div className="m-4 ">
@@ -192,3 +225,5 @@ export const FeatureCard = ({
     </>
   );
 };
+
+export default FeatureCard;

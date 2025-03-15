@@ -9,7 +9,7 @@ const linkMaker = (text: string) => {
   if (href[0] !== "/") href = "/" + href;
   return (
     <Link
-      key={href + randomInt(1000)}
+      key={href + Math.random() * 1000}
       href={href}
       className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200"
     >

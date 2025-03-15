@@ -4,16 +4,23 @@ import client from "@/utils/graphQLclient";
 import { gql, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 
-import CharacterStaticInfo from "./blocks/CharacterStaticInfo";
-import CharacterCoreInfo from "./blocks/CharacterCoreInfo";
-import PlayerCharacter from "@/utils/PlayerCharacter";
+import CharacterStaticInfo from "./blocks/CharacterSheetComponents/CharacterStaticInfo";
+import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
+import PlayerCharacter, {
+  FeatureSource,
+  PlayerCharacterFeature,
+} from "@/utils/PlayerCharacter";
 import CharacterClassData from "@/utils/CharacterClass";
 import CharacterCulture from "@/utils/CharacterCulture";
 import CharacterLineage from "@/utils/CharacterLineage";
-import CharacterFeatures from "./blocks/CharacterFeatures";
+import CharacterFeatures from "./blocks/CharacterSheetComponents/CharacterFeatures";
 import debounce from "@/utils/debounce";
 import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
+import { action_type, findEnum, rule_type } from "@/utils/enums";
+import GenericFeaturePicker, {
+  GenericCharacterFeatures,
+} from "./blocks/GenericFeaturePicker";
 
 const query = gql`
   query getCharacter($id: ID!) {
@@ -497,6 +504,96 @@ const query = gql`
           text
           type
         }
+      }
+    }
+    noviceFeatures: universalFeatures(featureType: NOVICE) {
+      actionType
+      simpleChoices: choices {
+        ... on RuleText {
+          type
+          choices
+          text
+        }
+      }
+      complexChoices: choices {
+        ... on FeatureWithoutChoices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
+            choices
+            text
+            type
+          }
+        }
+      }
+      chooseNum
+      featureType
+      costsFortunesFavor
+      href
+      ruleType
+      multiSelect
+      shortText
+      shortTitle
+      slug
+      staminaCost
+      title
+      text {
+        choices
+        text
+        type
+      }
+    }
+    veteranFeatures: universalFeatures(featureType: VETERAN) {
+      actionType
+      simpleChoices: choices {
+        ... on RuleText {
+          type
+          choices
+          text
+        }
+      }
+      complexChoices: choices {
+        ... on FeatureWithoutChoices {
+          href
+          shortTitle
+          actionType
+          costsFortunesFavor
+          multiSelect
+          ruleType
+          shortText
+          slug
+          staminaCost
+          title
+          text {
+            choices
+            text
+            type
+          }
+        }
+      }
+      chooseNum
+      featureType
+      costsFortunesFavor
+      href
+      ruleType
+      multiSelect
+      shortText
+      shortTitle
+      slug
+      staminaCost
+      title
+      text {
+        choices
+        text
+        type
       }
     }
   }
@@ -1097,6 +1194,88 @@ interface Data {
       }[];
     }[];
   }[];
+  noviceFeatures: {
+    actionType: string;
+    simpleChoices?: {
+      type: string;
+      choices: string[];
+      text: string;
+    }[];
+    complexChoices?: {
+      href: string;
+      shortTitle: string;
+      actionType: string;
+      costsFortunesFavor: boolean;
+      multiSelect: boolean;
+      ruleType: string;
+      shortText: string;
+      slug: string;
+      staminaCost: number;
+      title: string;
+      text: {
+        choices: string[];
+        text: string;
+        type: string;
+      }[];
+    }[];
+    chooseNum: number;
+    featureType: string;
+    costsFortunesFavor: boolean;
+    href: string;
+    ruleType: string;
+    multiSelect: boolean;
+    shortText: string;
+    shortTitle: string;
+    slug: string;
+    staminaCost: number;
+    title: string;
+    text: {
+      choices: string[];
+      text: string;
+      type: string;
+    }[];
+  }[];
+  veteranFeatures: {
+    actionType: string;
+    simpleChoices?: {
+      type: string;
+      choices: string[];
+      text: string;
+    }[];
+    complexChoices?: {
+      href: string;
+      shortTitle: string;
+      actionType: string;
+      costsFortunesFavor: boolean;
+      multiSelect: boolean;
+      ruleType: string;
+      shortText: string;
+      slug: string;
+      staminaCost: number;
+      title: string;
+      text: {
+        choices: string[];
+        text: string;
+        type: string;
+      }[];
+    }[];
+    chooseNum: number;
+    featureType: string;
+    costsFortunesFavor: boolean;
+    href: string;
+    ruleType: string;
+    multiSelect: boolean;
+    shortText: string;
+    shortTitle: string;
+    slug: string;
+    staminaCost: number;
+    title: string;
+    text: {
+      choices: string[];
+      text: string;
+      type: string;
+    }[];
+  }[];
 }
 const ConvertToPlayerCharacter = (data: Data): PlayerCharacter => {
   const characterClass = new CharacterClassData(data.character.characterClass);
@@ -1121,6 +1300,73 @@ const ConvertToPlayerCharacter = (data: Data): PlayerCharacter => {
   character.name = data.character.name;
   character.id = data.character.id;
   return character;
+};
+
+const extractGenericFeatures = (
+  data: Data,
+): {
+  noviceFeatures: PlayerCharacterFeature[];
+  veteranFeatures: PlayerCharacterFeature[];
+} => {
+  const noviceFeature: PlayerCharacterFeature[] = [];
+  const veteranFeatures: PlayerCharacterFeature[] = [];
+  data.noviceFeatures.forEach((feature) => {
+    const f = new PlayerCharacterFeature(
+      feature.title,
+      FeatureSource.noviceFeature,
+      [],
+      feature.slug,
+      findEnum(feature.ruleType, rule_type),
+      feature.text,
+      feature.multiSelect,
+      feature.complexChoices
+        ? feature.complexChoices.length > 0
+          ? feature.complexChoices?.map((choice) => {
+              return {
+                ...choice,
+                ruleType: findEnum(choice.ruleType, rule_type),
+                actionType: findEnum(choice.actionType, action_type),
+              };
+            })
+          : feature.simpleChoices
+            ? feature.simpleChoices
+            : []
+        : [],
+      [],
+      feature.chooseNum,
+      feature.shortText,
+    );
+    noviceFeature.push(f);
+  });
+  data.veteranFeatures.forEach((feature) => {
+    const f = new PlayerCharacterFeature(
+      feature.title,
+      FeatureSource.noviceFeature,
+      [],
+      feature.slug,
+      findEnum(feature.ruleType, rule_type),
+      feature.text,
+      feature.multiSelect,
+      feature.complexChoices
+        ? feature.complexChoices.length > 0
+          ? feature.complexChoices?.map((choice) => {
+              return {
+                ...choice,
+                ruleType: findEnum(choice.ruleType, rule_type),
+                actionType: findEnum(choice.actionType, action_type),
+              };
+            })
+          : feature.simpleChoices
+            ? feature.simpleChoices
+            : []
+        : [],
+      [],
+      feature.chooseNum,
+      feature.shortText,
+    );
+    veteranFeatures.push(f);
+  });
+  return { noviceFeatures: noviceFeature, veteranFeatures: veteranFeatures };
 };
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
@@ -1155,6 +1401,7 @@ export type CharacterOptions = {
   characterClasses: CharacterClass[];
   characterCultures: CharacterCulture[];
   characterLineages: CharacterLineage[];
+  genericFeatures: GenericCharacterFeatures;
 };
 
 const CharacterSheet = ({ characterId }: { characterId: number }) => {
@@ -1186,14 +1433,16 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
           variables: { id: Number(characterId) },
         });
         setCharacter(
-          ConvertToPlayerCharacter(data).UpdateChoices(
+          ConvertToPlayerCharacter(data).updateChoices(
             data.character.featureChoiceSlugs,
           ),
         );
+        const genericFeatures = extractGenericFeatures(data);
         const charOptions: CharacterOptions = {
           characterClasses: [],
           characterCultures: [],
           characterLineages: [],
+          genericFeatures: genericFeatures,
         };
         if (data.cultures) {
           data.cultures.forEach((culture: any) => {
@@ -1239,10 +1488,6 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
   if (!character || !character.characterClass || !characterOptions) {
     return <div>Loading...</div>;
   }
-
-  const editCharacter = () => {
-    setEditable(true);
-  };
 
   const updateName = (newName: string) => {
     const newCharacter = new PlayerCharacter(
@@ -1292,24 +1537,31 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
           <CharacterFeatures
             character={character}
             setCharacter={setCharacter}
+            features={character.features}
             isEditable={isEditable}
+            label="Features"
           />
         </div>
       </div>
-      {isEditable ? (
+      <div className="mx-auto">
         <button
-          onClick={() => {
-            setEditable(false);
-          }}
           type="button"
+          className="px-2 py-0 mb-2 border-b-2 border-amber-300 dark:border-amber-700 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white hover:border-amber-500 mx-auto block"
+          onClick={() => {
+            setEditable(!isEditable);
+          }}
         >
-          Lock
+          {isEditable ? (
+            <span>Lock Character</span>
+          ) : (
+            <span>Edit Character</span>
+          )}
         </button>
-      ) : (
-        <button onClick={editCharacter} type="button">
-          Edit Character
-        </button>
-      )}
+      </div>
+      <GenericFeaturePicker
+        character={character}
+        genericFeatures={characterOptions.genericFeatures}
+      />
     </>
   );
 };

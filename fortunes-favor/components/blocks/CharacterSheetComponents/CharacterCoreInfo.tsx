@@ -1,9 +1,11 @@
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import React, { Dispatch, SetStateAction } from "react";
-import NumInput from "./Inputs/NumInput";
-import SmallField from "./SmallField";
-import LockableSmallTextInput from "./Inputs/LockableSmallTextInput";
-import { FeatureCard } from "./FeatureCard";
+import NumInput from "../Inputs/NumInput";
+import SmallField from "../SmallField";
+import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
+import FeatureCard from "../FeatureCard";
+import VerticalLabeledBox from "../VerticalLabeledBox";
+import CharacterFeatures from "./CharacterFeatures";
 
 const StatDisplay = ({
   stat,
@@ -137,33 +139,34 @@ const CharacterCoreInfo = ({
 
   return (
     <div className="m-auto">
-      <div className="p-4 grid grid-cols-6 gap-2 justify-center w-max mx-0">
-        <span className="-rotate-90">STATS</span>
-        <LockableSmallTextInput
-          isEditable={isEditable}
-          label="Mettle"
-          value={character.stats.mettle}
-          updateFunc={(e) => updateMettle(Number(e.target.value))}
-        />
-        <LockableSmallTextInput
-          isEditable={isEditable}
-          label="Agility"
-          value={character.stats.agility}
-          updateFunc={(e) => updateAgility(Number(e.target.value))}
-        />
-        <LockableSmallTextInput
-          isEditable={isEditable}
-          label="Heart"
-          value={character.stats.heart}
-          updateFunc={(e) => updateHeart(Number(e.target.value))}
-        />
-        <LockableSmallTextInput
-          isEditable={isEditable}
-          label="Intellect"
-          value={character.stats.intellect}
-          updateFunc={(e) => updateIntellect(Number(e.target.value))}
-        />
-      </div>
+      <VerticalLabeledBox label="stats">
+        <div className="p-4 grid grid-cols-4 gap-2 justify-center w-max mx-auto">
+          <LockableSmallTextInput
+            isEditable={isEditable}
+            label="Mettle"
+            value={character.stats.mettle}
+            updateFunc={(e) => updateMettle(Number(e.target.value))}
+          />
+          <LockableSmallTextInput
+            isEditable={isEditable}
+            label="Agility"
+            value={character.stats.agility}
+            updateFunc={(e) => updateAgility(Number(e.target.value))}
+          />
+          <LockableSmallTextInput
+            isEditable={isEditable}
+            label="Heart"
+            value={character.stats.heart}
+            updateFunc={(e) => updateHeart(Number(e.target.value))}
+          />
+          <LockableSmallTextInput
+            isEditable={isEditable}
+            label="Intellect"
+            value={character.stats.intellect}
+            updateFunc={(e) => updateIntellect(Number(e.target.value))}
+          />
+        </div>
+      </VerticalLabeledBox>
       <div className=" w-100 bg-teal-950">
         <div className=" grid grid-cols-2 gap-4 justify-center mx-auto w-max">
           <ResourceDisplay
@@ -180,67 +183,59 @@ const CharacterCoreInfo = ({
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-0 justify-center mx-auto w-max justify-items-center">
-        <CombatStatDisplay stat={character.attack} label="Attack" />
-        <CombatStatDisplay
-          stat={
-            character.baseDamage.count +
-            "d" +
-            character.baseDamage.dice +
-            (character.baseDamage.stat > 0
-              ? "+" + character.baseDamage.stat
-              : "")
-          }
-          label="Damage"
-        />
-        <CombatStatDisplay
-          stat={
-            character.range?.min === character.range?.max
-              ? character.range.min
-              : character.range?.min + "ft. - " + character.range?.max + "ft."
-          }
-          label="Range"
-        />
+      <VerticalLabeledBox label="Combat">
+        <div className="grid grid-cols-3 gap-0 justify-center mx-auto w-max justify-items-center">
+          <CombatStatDisplay stat={character.attack} label="Attack" />
+          <CombatStatDisplay
+            stat={
+              character.baseDamage.count +
+              "d" +
+              character.baseDamage.dice +
+              (character.baseDamage.stat > 0
+                ? "+" + character.baseDamage.stat
+                : "")
+            }
+            label="Damage"
+          />
+          <CombatStatDisplay
+            stat={
+              character.range?.min === character.range?.max
+                ? character.range.min
+                : character.range?.min + "ft. - " + character.range?.max + "ft."
+            }
+            label="Range"
+          />
 
-        <CombatStatDisplay stat={character.armor} label="Armor" />
-        <CombatStatDisplay stat={character.counter} label="Counter" />
-        <CombatStatDisplay
-          stat={
-            character.deflect.count +
-            "d" +
-            character.deflect.dice +
-            (character.deflect.flat ? "+" + character.deflect.flat : "")
-          }
-          label="Deflect"
+          <CombatStatDisplay stat={character.armor} label="Armor" />
+          <CombatStatDisplay stat={character.counter} label="Counter" />
+          <CombatStatDisplay
+            stat={
+              character.deflect.count +
+              "d" +
+              character.deflect.dice +
+              (character.deflect.flat ? "+" + character.deflect.flat : "")
+            }
+            label="Deflect"
+          />
+        </div>
+      </VerticalLabeledBox>
+      <div>
+        <CharacterFeatures
+          character={character}
+          setCharacter={setCharacter}
+          features={character.actions}
+          isEditable={isEditable}
+          label="Actions"
         />
       </div>
       <div>
-        {character.actions && character.actions.length > 0 && (
-          <div>
-            <h2 className="font-thin text-xl mx-auto text-center pb-6 tracking-widest md:pt-6">
-              Actions
-            </h2>
-            {character.actions.map((action) => (
-              <div key={action.slug}>
-                <FeatureCard feature={action} source={action.source} />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div>
-        {character.counters && character.counters.length > 0 && (
-          <div>
-            <h2 className="font-thin text-xl mx-auto text-center pb-6 tracking-widest md:pt-6">
-              Counters
-            </h2>
-            {character.counters.map((counters) => (
-              <div key={counters.slug}>
-                <FeatureCard feature={counters} source={counters.source} />
-              </div>
-            ))}
-          </div>
-        )}
+        <CharacterFeatures
+          character={character}
+          setCharacter={setCharacter}
+          features={character.counters}
+          isEditable={isEditable}
+          label="Counters"
+        />
       </div>
     </div>
   );
