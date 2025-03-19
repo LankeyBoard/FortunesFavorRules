@@ -5,13 +5,13 @@ import InputField from "./blocks/Inputs/InputField";
 import CharacterCulture from "../utils/CharacterCulture";
 import CharacterLineage from "../utils/CharacterLineage";
 import CharacterClass from "../utils/CharacterClass";
-import { FeatureCard } from "./blocks/FeatureCard";
 import { GenericFeature } from "../utils/graphQLtypes";
 import { CharacterTrait } from "../utils/CharacterTrait";
 import { useUser } from "./UserContext";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import DropdownField from "./blocks/Inputs/DropdownField";
+import FeatureCard from "./blocks/FeatureCard";
 
 const CREATE_CHARACTER_MUTATION = gql`
   mutation CreateCharacter($characterInputs: CharacterInput!) {
@@ -553,6 +553,7 @@ const EditableCharacterSheet = ({
                   key={action.title}
                   feature={action}
                   source={action.source.toString()}
+                  isExpanded={true}
                 />
               );
             })}
@@ -582,6 +583,7 @@ const EditableCharacterSheet = ({
                     key={feature.title}
                     feature={feature}
                     source={feature.source.toString()}
+                    isExpanded={true}
                   />
                 </div>
               );

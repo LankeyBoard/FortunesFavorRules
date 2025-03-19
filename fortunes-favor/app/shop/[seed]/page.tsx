@@ -1,4 +1,4 @@
-import { Shop } from "../page";
+import Shop from "@/components/Shop";
 
 export default async function ShopView(props: {
   params: Promise<{ seed: string }>;
