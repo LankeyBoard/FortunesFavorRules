@@ -1,5 +1,6 @@
 import NavHeader from "./blocks/NavHeader";
 import SearchBar from "./blocks/SearchBar";
+import SignupLoginButtons from "./SignupLoginButtons";
 
 const TopNav = () => {
   return (
@@ -13,6 +14,9 @@ const TopNav = () => {
           </div>
           <div className="md:order-1">
             <NavHeader />
+          </div>
+          <div className="md:order-3">
+            <SignupLoginButtons />
           </div>
         </div>
       </nav>

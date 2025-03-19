@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { getClient } from "../utils/graphQLclient";
+import client from "../utils/graphQLclient";
 import { gql } from "@apollo/client";
 import Link from "next/link";
 import { RuleText } from "../utils/graphQLtypes";
@@ -69,20 +69,30 @@ export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
   const isSub = result.title !== result.page;
 
   const highlightSearchResult = (searchTerm: string, text: string) => {
-      // Split on highlight term and include term into parts, ignore case
-      const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
-      return <span> { parts.map((part, i) => 
-          <span key={i} className={part.toLowerCase() === searchTerm.toLowerCase() ? "underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin" : "" }>
-              { part }
-          </span>)
-      } </span>;
-  }
-  const partialUrl = result.href.split('#')
-  let builtHref = partialUrl[0]
-  if(searchTerm)
-    builtHref += `?query=${searchTerm}`;
-  if(partialUrl[1])
-    builtHref += `#${partialUrl[1]}`;
+    // Split on highlight term and include term into parts, ignore case
+    const parts = text.split(new RegExp(`(${searchTerm})`, "gi"));
+    return (
+      <span>
+        {" "}
+        {parts.map((part, i) => (
+          <span
+            key={i}
+            className={
+              part.toLowerCase() === searchTerm.toLowerCase()
+                ? "underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin"
+                : ""
+            }
+          >
+            {part}
+          </span>
+        ))}{" "}
+      </span>
+    );
+  };
+  const partialUrl = result.href.split("#");
+  let builtHref = partialUrl[0];
+  if (searchTerm) builtHref += `?query=${searchTerm}`;
+  if (partialUrl[1]) builtHref += `#${partialUrl[1]}`;
   return (
     <>
       {result.href ? (
@@ -93,14 +103,17 @@ export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
           <div className="pb-3">
             <div className={titleStyle}>
               <h1 className="text-lg font-semibold float-left grow">
-                {highlightSearchResult(searchTerm, !isSub ? result.title : result.page)}
+                {highlightSearchResult(
+                  searchTerm,
+                  !isSub ? result.title : result.page,
+                )}
               </h1>
               <h3 className="float-right">{resultType}</h3>
             </div>
             <div className="clear-both">
               {isSub && (
                 <h3 className="px-2 pt-3 text-base font-semibold">
-                  {highlightSearchResult(searchTerm,result.title)}
+                  {highlightSearchResult(searchTerm, result.title)}
                 </h3>
               )}
               {result.text && result.text.length > 0 ? (
@@ -114,7 +127,7 @@ export const SearchResult = ({ searchTerm, result }: SearchResultProps) => {
                           : "line-clamp-3 px-3 pt-3"
                       }
                     >
-                      {highlightSearchResult(searchTerm,t.text)}
+                      {highlightSearchResult(searchTerm, t.text)}
                     </p>
                   );
                 })
@@ -136,7 +149,10 @@ type SearchResultsTableProps = {
   results: any;
 };
 
-const SearchResultsTable = ({ searchTerm, results }: SearchResultsTableProps) => {
+const SearchResultsTable = ({
+  searchTerm,
+  results,
+}: SearchResultsTableProps) => {
   return (
     <div id="SearchResults" className="border-spacing-3 flex flex-col">
       {results.searchAll.map((result: any) => {
@@ -163,15 +179,12 @@ const SearchResults = async ({
 }) => {
   const searchQuery = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const client = getClient();
   const { data, loading, error } = await client.query({
     query,
     variables: { search: searchQuery },
   });
-  if(error)
-    console.error("SearchResults", data, loading, error);
-  if(loading)
-    return <div>Loading...</div>
+  if (error) console.error("SearchResults", data, loading, error);
+  if (loading) return <div>Loading...</div>;
   return (
     <div className="pt-10 px-4">
       <Suspense key={searchQuery + currentPage} fallback={<>Searching...</>}>
@@ -181,8 +194,10 @@ const SearchResults = async ({
           <div className="h-[calc(100vh-120px)] grid grid-cols-1 gap-4 place-content-center">
             <div className="text-center">
               <span>Our goblins couldn&apos;t dig up anything for </span>
-              <span className="underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin">{searchQuery}</span>
-              <span> maybe try searching for something else.</span> 
+              <span className="underline decoration-amber-500 text-amber-800 dark:text-amber-300 font-thin">
+                {searchQuery}
+              </span>
+              <span> maybe try searching for something else.</span>
             </div>
           </div>
         )}

@@ -4,9 +4,9 @@ import { getOrdinal } from "@/utils/utils";
 import React, { useState } from "react";
 
 enum SpellType {
-  Arcane = "Arcane",
-  Divine = "Divine",
-  Nature = "Nature",
+  ARCANE = "Arcane",
+  DIVINE = "Divine",
+  NATURE = "Nature",
 }
 
 interface Spell {
@@ -23,7 +23,7 @@ const spells: Spell[] = [
   {
     name: "Quick Heal",
     level: 3,
-    type: [SpellType.Divine, SpellType.Nature],
+    type: [SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Instant",
     duration: "Instant",
     range: "30ft",
@@ -33,7 +33,7 @@ const spells: Spell[] = [
   {
     name: "Bolster Vitality",
     level: 1,
-    type: [SpellType.Divine, SpellType.Nature],
+    type: [SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Action",
     duration: "1 minute",
     range: "30ft",
@@ -43,7 +43,7 @@ const spells: Spell[] = [
   {
     name: "Shield",
     level: 1,
-    type: [SpellType.Divine],
+    type: [SpellType.DIVINE],
     castingTime: "Action",
     duration: "2 rounds",
     range: "Touch",
@@ -53,7 +53,7 @@ const spells: Spell[] = [
   {
     name: "Mote of Health",
     level: 3,
-    type: [SpellType.Divine],
+    type: [SpellType.DIVINE],
     castingTime: "Action",
     duration: "1 minute",
     range: "60ft",
@@ -63,7 +63,7 @@ const spells: Spell[] = [
   {
     name: "Leaching Tether",
     level: 1,
-    type: [SpellType.Nature],
+    type: [SpellType.NATURE],
     castingTime: "Action",
     duration: "1 minute",
     range: "60ft",
@@ -73,7 +73,7 @@ const spells: Spell[] = [
   {
     name: "Enhanced Aid",
     level: 1,
-    type: [SpellType.Arcane, SpellType.Divine, SpellType.Nature],
+    type: [SpellType.ARCANE, SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Instant",
     duration: "Instant",
     range: "Self",
@@ -83,7 +83,7 @@ const spells: Spell[] = [
   {
     name: "Hindering Wall",
     level: 1,
-    type: [SpellType.Arcane, SpellType.Divine, SpellType.Nature],
+    type: [SpellType.ARCANE, SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Action",
     duration: "1 minute",
     range: "30ft",
@@ -93,7 +93,7 @@ const spells: Spell[] = [
   {
     name: "Light",
     level: 0,
-    type: [SpellType.Arcane, SpellType.Divine, SpellType.Nature],
+    type: [SpellType.ARCANE, SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Instant",
     duration: "10 minutes",
     range: "Self",
@@ -103,7 +103,7 @@ const spells: Spell[] = [
   {
     name: "Blip",
     level: 3,
-    type: [SpellType.Arcane],
+    type: [SpellType.ARCANE],
     castingTime: "Action",
     duration: "Instant",
     range: "Self",
@@ -113,7 +113,7 @@ const spells: Spell[] = [
   {
     name: "Power Spike",
     level: 1,
-    type: [SpellType.Arcane, SpellType.Divine, SpellType.Nature],
+    type: [SpellType.ARCANE, SpellType.DIVINE, SpellType.NATURE],
     castingTime: "Action",
     duration: "Instant",
     range: "Base Range",
@@ -123,7 +123,7 @@ const spells: Spell[] = [
   {
     name: "Simple Illusion",
     level: 1,
-    type: [SpellType.Arcane],
+    type: [SpellType.ARCANE],
     castingTime: "Action",
     duration: "Up to 10 minutes",
     range: "30ft",
@@ -133,7 +133,7 @@ const spells: Spell[] = [
   {
     name: "Animated Illusion",
     level: 3,
-    type: [SpellType.Arcane],
+    type: [SpellType.ARCANE],
     castingTime: "Action",
     duration: "Up to 10 minutes",
     range: "30ft",
@@ -143,7 +143,7 @@ const spells: Spell[] = [
   {
     name: "Illusionary Wall",
     level: 5,
-    type: [SpellType.Arcane],
+    type: [SpellType.ARCANE],
     castingTime: "Action",
     duration: "1 minute",
     range: "30ft",
@@ -153,7 +153,7 @@ const spells: Spell[] = [
   {
     name: "Return Home",
     level: 3,
-    type: [SpellType.Arcane, SpellType.Divine],
+    type: [SpellType.ARCANE, SpellType.DIVINE],
     castingTime: "1 minute",
     duration: "Instant",
     range: "10ft",
@@ -191,9 +191,9 @@ const SpellList: React.FC = () => {
             onChange={(e) => setFilterType(e.target.value as SpellType | "All")}
           >
             <option value="All">All</option>
-            <option value={SpellType.Arcane}>Arcane</option>
-            <option value={SpellType.Divine}>Divine</option>
-            <option value={SpellType.Nature}>Nature</option>
+            <option value={SpellType.ARCANE}>Arcane</option>
+            <option value={SpellType.DIVINE}>Divine</option>
+            <option value={SpellType.NATURE}>Nature</option>
           </select>
         </label>
         <label>

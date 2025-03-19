@@ -1,4 +1,4 @@
-import { rule_type } from "./enums";
+import { RuleType } from "./enums";
 import { TextField } from "./FieldTypes";
 import {
   FeatureChoices,
@@ -11,7 +11,7 @@ export class CharacterTrait implements GenericFeature {
   title: string;
   text: TextField[];
   slug: string;
-  ruleType: rule_type;
+  ruleType: RuleType;
   list: string[];
   shortText?: string | undefined;
   multiSelect: boolean;

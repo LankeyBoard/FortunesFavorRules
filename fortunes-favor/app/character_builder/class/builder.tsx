@@ -1,6 +1,6 @@
 import ClassRule from "@/components/CharacterClass";
 import SelectFromCards from "@/components/SelectFromCards";
-import { option_type } from "@/utils/enums";
+import { OptionTypes } from "@/utils/enums";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import class_list_json from "@/public/rules_json/classes/AllClasses.json";
 import { Dispatch, SetStateAction } from "react";
@@ -29,7 +29,7 @@ function ClassSelectBuilder({
       }
     >
       <SelectFromCards
-        optionType={option_type.class}
+        optionType={OptionTypes.CLASS}
         options={classList.list}
         popoutInner={ClassRule}
         optionsDescription={description}

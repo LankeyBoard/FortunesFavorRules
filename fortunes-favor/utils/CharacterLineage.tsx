@@ -1,11 +1,11 @@
-import { size_options, findEnum } from "./enums";
+import { SizeOptions, findEnum } from "./enums";
 import { CharacterTrait } from "./CharacterTrait";
 
 export default class CharacterLineage {
   title: string;
   slug: string;
   desc: string;
-  size: size_options | size_options[];
+  size: SizeOptions | SizeOptions[];
   speeds: [{ type: string; speed: number; source: string }];
   stat: string;
   features: [CharacterTrait];
@@ -14,17 +14,17 @@ export default class CharacterLineage {
     this.slug = json.slug;
     this.desc = json.description;
     if (typeof json.size === "string") {
-      const s = findEnum(json.size, size_options);
-      this.size = size_options.error;
+      const s = findEnum(json.size, SizeOptions);
+      this.size = SizeOptions.ERROR;
       if (s) {
         this.size = s;
       } else {
         console.error("Error matching size %s in json file", json.size);
       }
     } else {
-      let sizeList: size_options[] = [];
+      let sizeList: SizeOptions[] = [];
       json.size.forEach((sizeOpt: string) => {
-        const s = findEnum(sizeOpt, size_options);
+        const s = findEnum(sizeOpt, SizeOptions);
         sizeList.push(s);
       });
       this.size = sizeList;
@@ -38,7 +38,7 @@ export default class CharacterLineage {
 }
 
 export const characterLineageListBuilder = (
-  lineages_json: Array<any>
+  lineages_json: Array<any>,
 ): CharacterLineage[] => {
   let lineages: CharacterLineage[] = [];
   lineages_json.forEach((lineage) => {

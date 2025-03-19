@@ -9,7 +9,7 @@ const linkMaker = (text: string) => {
   if (href[0] !== "/") href = "/" + href;
   return (
     <Link
-      key={href+randomInt(1000)}
+      key={href + Math.random() * 1000}
       href={href}
       className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200"
     >
@@ -46,7 +46,9 @@ const parseLinksFromString = (text: string) => {
       display.push(linkMaker(links[l].toLocaleString()));
       l++;
     } else {
-      display.push(<span>{splitText[t]}</span>);
+      display.push(
+        <span key={splitText[t] + Math.random() * 100}>{splitText[t]}</span>,
+      );
       t++;
     }
   }

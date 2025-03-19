@@ -1,11 +1,8 @@
 import { gql } from "@apollo/client";
 import RuleDisplay from "../../components/blocks/RuleDisplay";
-import { getClient } from "../../utils/graphQLclient";
 import AlertPopup from "../../components/AlertPopup";
-import dynamic from "next/dynamic";
-const NavSidebar = dynamic(() => import("@/components/blocks/NavSidebar"), {
-  ssr: false,
-});
+import client from "@/utils/graphQLclient";
+import NavSidebar from "@/components/blocks/NavSidebar";
 export type nav = {
   title: string;
   href?: string;
@@ -72,7 +69,6 @@ export default async function RulesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const client = getClient();
   const { data } = await client.query({
     query,
   });

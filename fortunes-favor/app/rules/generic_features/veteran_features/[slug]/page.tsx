@@ -1,5 +1,5 @@
 import { FeatureLi } from "@/components/GenericFeatures";
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import { Suspense } from "react";
 
@@ -55,7 +55,6 @@ const query = gql`
 
 async function VeteranFeature(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const client = getClient();
   const { data } = await client.query({
     query,
     variables: { slug: params.slug },

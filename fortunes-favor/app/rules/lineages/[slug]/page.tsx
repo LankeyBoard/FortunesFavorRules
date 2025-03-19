@@ -1,4 +1,4 @@
-import { getClient } from "@/utils/graphQLclient";
+import client from "@/utils/graphQLclient";
 import { gql } from "@apollo/client";
 import { graphQLLineage } from "@/utils/graphQLtypes";
 import Lineage from "@/components/Lineage";
@@ -67,7 +67,6 @@ const query = gql`
 
 async function SingleLineagePage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const client = getClient();
   const { data } = await client.query({
     query,
     variables: { slug: params.slug },

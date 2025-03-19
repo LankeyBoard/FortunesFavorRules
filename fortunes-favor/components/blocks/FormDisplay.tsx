@@ -1,16 +1,16 @@
-import { size_options, stat_options } from "@/utils/enums";
+import { SizeOptions, StatOptions } from "@/utils/enums";
 
 export type Form = {
   armor: {
     baseArmor: number;
-    stat?: stat_options;
+    stat?: StatOptions;
   };
-  attackStat: stat_options;
+  attackStat: StatOptions;
   damage: [
     {
       count: number;
       dice: number;
-      stat?: stat_options[];
+      stat?: StatOptions[];
       type: [string];
     },
   ];
@@ -22,7 +22,7 @@ export type Form = {
   ];
   href?: string;
   shortTitle?: string;
-  size: size_options;
+  size: SizeOptions;
   slug: string;
   title: string;
 };
@@ -88,7 +88,7 @@ const FormDisplay = ({ form }: formProps) => {
           {form.damage.map((damage, index) => {
             return (
               <span
-                key={`${damage.count + damage.dice} ${damage.stat? damage.stat?.toLocaleString() : ""} ${damage.type.toLocaleString()}`}
+                key={`${damage.count + damage.dice} ${damage.stat ? damage.stat?.toLocaleString() : ""} ${damage.type.toLocaleString()}`}
                 className="capitalize"
               >
                 {damage.count}d{damage.dice}{" "}

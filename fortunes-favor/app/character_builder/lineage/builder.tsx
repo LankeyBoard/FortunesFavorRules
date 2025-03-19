@@ -1,5 +1,5 @@
 import SelectFromCards from "@/components/SelectFromCards";
-import { option_type } from "@/utils/enums";
+import { OptionTypes } from "@/utils/enums";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import { characterLineageListBuilder } from "@/utils/CharacterLineage";
 import lineages_json from "@/public/rules_json/lineages/lineages.json";
@@ -27,7 +27,7 @@ function LineageSelectBuilder({
       }
     >
       <SelectFromCards
-        optionType={option_type.lineage}
+        optionType={OptionTypes.LINEAGE}
         options={lineages}
         popoutInner={Lineage}
         optionsDescription={description}

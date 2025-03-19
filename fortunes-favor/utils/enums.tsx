@@ -9,61 +9,61 @@ export function findEnum(s: string, e: any): any | undefined {
   });
   return match;
 }
-export enum action_type {
-  action = "ACTION",
-  counter = "COUNTER",
+export enum ActionType {
+  ACTION = "ACTION",
+  COUNTER = "COUNTER",
 }
-export enum rule_type {
-  Rule = "RULE",
-  Flavor = "FLAVOR",
-  Eg = "EG",
-  List = "LIST",
-  CompactList = "LISTCOMPACT",
-  Choice = "CHOICE",
-  Attack = "ATTACK",
+export enum RuleType {
+  RULE = "RULE",
+  FLAVOR = "FLAVOR",
+  EG = "EG",
+  LIST = "LIST",
+  COMPACTLIST = "LISTCOMPACT",
+  CHOICE = "CHOICE",
+  ATTACK = "ATTACK",
+  ERROR = "ERROR",
+}
+
+export enum ComplexityOptions {
+  STD = "standard",
+  SIMPLE = "simple",
+  COMPLEX = "complex",
+  ERROR = "ERROR",
+}
+
+export enum StatOptions {
+  METTLE = "Mettle",
+  AGILITY = "Agility",
+  HEART = "Heart",
+  INT = "Intellect",
   error = "ERROR",
 }
 
-export enum complexity_options {
-  std = "standard",
-  simple = "simple",
-  complex = "complex",
-  error = "ERROR",
+export enum SizeOptions {
+  MINISCULE = "MINISCULE",
+  TINY = "TINY",
+  SMALL = "SMALL",
+  MEDIUM = "MEDIUM",
+  LARGE = "LARGE",
+  GIGANTIC = "GIGANTIC",
+  TITANIC = "TITANIC",
+  COLOSSAL = "COLOSSAL",
+  ERROR = "ERROR",
 }
 
-export enum stat_options {
-  mettle = "Mettle",
-  agility = "Agility",
-  heart = "Heart",
-  int = "Intellect",
-  error = "ERROR",
+export enum OptionTypes {
+  CLASS = "CLASS",
+  LINEAGE = "LINEAGE",
+  CULTURE = "CULTURE",
 }
 
-export enum size_options {
-  Miniscule = "MINISCULE",
-  Tiny = "TINY",
-  Small = "SMALL",
-  Medium = "MEDIUM",
-  Large = "LARGE",
-  Gigantic = "GIGANTIC",
-  Titanic = "TITANIC",
-  Colossal = "COLOSSAL",
-  error = "ERROR",
-}
-
-export enum option_type {
-  class = "CLASS",
-  lineage = "LINEAGE",
-  culture = "CULTURE",
-}
-
-export enum LANGUAGES {
-  allspeak = "AllSpeak",
-  elvish = "Elvish",
-  dwarvish = "Dwarvish",
-  thistletongue = "Thistletongue",
-  starrend = "Starrend",
-  deeproot = "Deeproot",
-  seawhisper = "Seawhisper",
-  voidhowl = "Voidhowl",
+export enum Languages {
+  ALLSPEAK = "AllSpeak",
+  ELVISH = "Elvish",
+  DWARVISH = "Dwarvish",
+  THISTLETONGUE = "Thistletongue",
+  STARREND = "Starrend",
+  DEEPROOT = "Deeproot",
+  SEAWHISPER = "Seawhisper",
+  VOIDHOWL = "Voidhowl",
 }

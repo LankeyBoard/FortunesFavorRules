@@ -1,11 +1,11 @@
-import { rule_type } from "./enums";
+import { RuleType } from "./enums";
 import { TextField } from "./FieldTypes";
 import { GenericRule } from "./graphQLtypes";
 
 export default class RuleData implements GenericRule {
   readonly title: string;
   readonly slug: string;
-  ruleType: rule_type;
+  ruleType: RuleType;
   text: TextField[];
   subRules: RuleData[];
   list: string[];
@@ -14,11 +14,11 @@ export default class RuleData implements GenericRule {
   constructor(
     title: string,
     slug: string,
-    ruleType: rule_type,
+    ruleType: RuleType,
     text: TextField[],
     rules: RuleData[],
     list: string[],
-    shortText?: string
+    shortText?: string,
   ) {
     this.title = title;
     this.slug = slug;
