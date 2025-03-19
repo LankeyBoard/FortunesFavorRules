@@ -153,7 +153,7 @@ const CharacterCoreInfo = ({
           />
         </div>
       </VerticalLabeledBox>
-      <div className=" w-100 bg-teal-950">
+      <div className=" w-100 bg-teal-100 dark:bg-teal-950">
         <div className=" grid grid-cols-2 gap-4 justify-center mx-auto w-max">
           <ResourceDisplay
             current={character.currentHealth}

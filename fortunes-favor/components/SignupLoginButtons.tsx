@@ -40,7 +40,7 @@ const SignupLoginButtons = () => {
           login
         </button>
         <button
-          className="bg-amber-700 font-extralight tracking-tight mx-2 py-2 px-3 rounded hover:bg-amber-600 align-middle"
+          className="bg-amber-400 dark:bg-amber-700 font-extralight tracking-tight mx-2 py-2 px-3 rounded hover:bg-amber-500 hover:dark:bg-amber-600 align-middle"
           onClick={() => {
             setIsOpen(true), setLoginClicked(false);
           }}

@@ -156,7 +156,7 @@ const CharacterStaticInfo = ({
           </div>
         </VerticalLabeledBox>
       </div>
-      <div className="w-100 bg-teal-950 p-4">
+      <div className="w-100 bg-teal-100 dark:bg-teal-950 p-4">
         <LargeField label="Speeds">
           {character.speeds.map((speed) => {
             return (

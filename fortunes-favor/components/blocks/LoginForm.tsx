@@ -83,9 +83,9 @@ const LoginForm = ({
         <div className="form-actions flex justify-end space-x-4">
           <button
             type="submit"
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-amber-700 text-white px-4 py-2 rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
           >
-            OK
+            Login
           </button>
           <button
             type="button"

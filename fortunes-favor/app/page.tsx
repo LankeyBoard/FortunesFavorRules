@@ -220,6 +220,22 @@ export default async function Home() {
                 </ul>
               </td>
             </tr>
+            <tr className="border-slate-500 border mb-2">
+              <td className="border-spacing-x-3 align-baseline">3/18/2025</td>
+              <td>
+                <ul>
+                  <li>
+                    <SlugLinker text={"Added ability to sign up and sign in"} />
+                  </li>
+                  <li>
+                    <SlugLinker text={"profile page"} />
+                  </li>
+                  <li>
+                    <SlugLinker text={"Added digital character sheet"} />
+                  </li>
+                </ul>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
