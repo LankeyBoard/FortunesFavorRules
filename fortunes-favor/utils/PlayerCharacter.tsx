@@ -1,4 +1,4 @@
-import { LANGUAGES, action_type, rule_type, stat_options } from "./enums";
+import { Languages, ActionType, RuleType, StatOptions } from "./enums";
 import CharacterClassData from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
@@ -20,19 +20,19 @@ type Effect = {
 };
 
 enum ItemRarity {
-  common = "Common",
-  uncommon = "Uncommon",
-  rare = "Rare",
-  legendary = "Legendary",
-  unique = "Unique",
+  COMMON = "Common",
+  UNCOMMON = "Uncommon",
+  RARE = "Rare",
+  LEGENDARY = "Legendary",
+  UNIQUE = "Unique",
 }
 
 export enum FeatureSource {
-  class = "class",
-  culture = "culture",
-  lineage = "lineage",
-  noviceFeature = "novice",
-  veteranFeature = "veteran",
+  CLASS = "class",
+  CULTURE = "culture",
+  LINEAGE = "lineage",
+  NOVICE_FEATURE = "noviceFeature",
+  VETERAN_FEATURE = "veteranFeature",
 }
 
 const downgradeBaseDamage = (damage: {
@@ -80,7 +80,7 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     source: FeatureSource,
     effects: Effect[],
     slug: string,
-    ruleType: rule_type,
+    ruleType: RuleType,
     text: RuleText[],
     multiSelect: boolean,
     choices: FeatureChoices[],
@@ -102,7 +102,7 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     this.source = source;
     this.effects = effects;
     this._chosen = chosen;
-    this._level = level || 0;
+    this._level = level || -1;
   }
   public get chosen() {
     return this._chosen;
@@ -166,15 +166,20 @@ const updateFeatures = (
   });
   source.features.forEach((feature) => {
     if (feature instanceof CharacterFeatureData) {
+      console.log(
+        "feature is CharacterFeatureData",
+        feature,
+        feature.constructor.name,
+      );
       if (feature.level <= currentCharacter.level) {
-        if (feature.actionType === action_type.action) {
+        if (feature.actionType === ActionType.ACTION) {
           updatedActions.push(
             new PlayerCharacterFeature(
               feature.title,
               sourceType,
               [],
               feature.slug,
-              rule_type.Rule,
+              RuleType.RULE,
               feature.text,
               feature.multiSelect,
               feature.choices,
@@ -184,14 +189,14 @@ const updateFeatures = (
               feature.level,
             ),
           );
-        } else if (feature.actionType === action_type.counter) {
+        } else if (feature.actionType === ActionType.COUNTER) {
           updatedActions.push(
             new PlayerCharacterFeature(
               feature.title,
               sourceType,
               [],
               feature.slug,
-              rule_type.Rule,
+              RuleType.RULE,
               feature.text,
               feature.multiSelect,
               feature.choices,
@@ -208,7 +213,7 @@ const updateFeatures = (
               sourceType,
               [],
               feature.slug,
-              rule_type.Rule,
+              RuleType.RULE,
               feature.text,
               feature.multiSelect,
               feature.choices,
@@ -221,13 +226,18 @@ const updateFeatures = (
         }
       }
     } else {
+      console.log(
+        "feature is not CharacterFeatureData",
+        feature,
+        feature.constructor.name,
+      );
       updatedFeatures.push(
         new PlayerCharacterFeature(
           feature.title,
           sourceType,
           [],
           feature.slug,
-          rule_type.Rule,
+          RuleType.RULE,
           feature.text,
           feature.multiSelect,
           feature.choices,
@@ -237,7 +247,6 @@ const updateFeatures = (
       );
     }
   });
-  console.log(updateFeatures);
 
   return {
     features: updatedFeatures,
@@ -270,8 +279,7 @@ export default class PlayerCharacter {
   private _actions?: PlayerCharacterFeature[];
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
-  private _languages?: LANGUAGES[];
-  private _genericFeatures: PlayerCharacterFeature[];
+  private _languages?: Languages[];
   private _armorValue = () => {
     let armor = 10 + this.stats.agility;
     switch (this._armorName.toLowerCase()) {
@@ -344,14 +352,11 @@ export default class PlayerCharacter {
       this._counters = startingCharacter.counters;
       this._features = startingCharacter.features;
       this._languages = startingCharacter.languages;
-      this._genericFeatures = startingCharacter.noviceFeatures.concat(
-        startingCharacter.veteranFeatures,
-      );
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
       this.coin = 5;
-      this._languages = [LANGUAGES.allspeak];
+      this._languages = [Languages.ALLSPEAK];
       this._characterClass = characterClass;
       this._characterLineage = lineage;
       this._characterCulture = culture;
@@ -369,25 +374,24 @@ export default class PlayerCharacter {
       this._actions = [];
       this._counters = [];
       this._features = [];
-      this._genericFeatures = [];
       if (characterClass)
         ({
           actions: this._actions,
           counters: this._counters,
           features: this._features,
-        } = updateFeatures(FeatureSource.class, characterClass, this));
+        } = updateFeatures(FeatureSource.CLASS, characterClass, this));
       if (culture)
         ({
           actions: this._actions,
           counters: this._counters,
           features: this._features,
-        } = updateFeatures(FeatureSource.culture, culture, this));
+        } = updateFeatures(FeatureSource.CULTURE, culture, this));
       if (lineage)
         ({
           features: this._features,
           actions: this._actions,
           counters: this._counters,
-        } = updateFeatures(FeatureSource.lineage, lineage, this));
+        } = updateFeatures(FeatureSource.LINEAGE, lineage, this));
     }
   }
 
@@ -395,41 +399,22 @@ export default class PlayerCharacter {
     return this._level;
   }
   public set level(newLevel: number) {
-    if (this.characterClass) {
-      if (newLevel > this.level) {
-        this.characterClass?.features.forEach((feature) => {
-          if (feature.level > this.level && feature.level <= newLevel) {
-            this.features?.push(
-              new PlayerCharacterFeature(
-                feature.title,
-                FeatureSource.class,
-                [],
-                feature.slug,
-                rule_type.Rule,
-                feature.text,
-                feature.multiSelect,
-                feature.choices,
-                [],
-                feature.chooseNum,
-                feature.shortText,
-                feature.level,
-              ),
-            );
-          }
-        });
-      } else if (newLevel < this.level) {
-        const updatedFeatures: GenericFeature[] = [];
-        for (const feature of this.characterClass?.features) {
-          if (feature.level <= newLevel) {
-            updatedFeatures.push(feature);
-          } else {
-            break;
-          }
-        }
-      }
-    }
     this._level = newLevel;
+    if (this.characterClass) {
+      ({
+        actions: this._actions,
+        counters: this._counters,
+        features: this._features,
+      } = updateFeatures(FeatureSource.CLASS, this.characterClass, this));
+    }
+    console.log(this._features);
+    // remove veteran features if the character is less than level 8
+    if (newLevel < 8)
+      this._features = this._features?.filter(
+        (feature) => feature.source !== FeatureSource.VETERAN_FEATURE,
+      );
   }
+
   public get characterClass(): CharacterClassData {
     if (!this._characterClass)
       throw new Error("Character class must be set before accessing");
@@ -442,8 +427,10 @@ export default class PlayerCharacter {
       actions: this._actions,
       counters: this._counters,
       features: this._features,
-    } = updateFeatures(FeatureSource.class, characterClass, this));
+    } = updateFeatures(FeatureSource.CLASS, characterClass, this));
     this._range = characterClass.range;
+    this.sortFeatures();
+    console.log("character after updating class", this);
   }
   public get culture(): CharacterCulture {
     if (!this._characterCulture)
@@ -454,13 +441,14 @@ export default class PlayerCharacter {
     this._characterCulture = characterCulture;
 
     const updatedFeatures = updateFeatures(
-      FeatureSource.culture,
+      FeatureSource.CULTURE,
       characterCulture,
       this,
     );
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
+    this.sortFeatures();
   }
   public get lineage(): CharacterLineage {
     if (!this._characterLineage)
@@ -471,7 +459,7 @@ export default class PlayerCharacter {
     this._characterLineage = characterLineage;
 
     const updatedFeatures = updateFeatures(
-      FeatureSource.lineage,
+      FeatureSource.LINEAGE,
       characterLineage,
       this,
     );
@@ -479,6 +467,7 @@ export default class PlayerCharacter {
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
     this._speeds = characterLineage.speeds;
+    this.sortFeatures();
   }
   public get stats(): Stats {
     return this._stats;
@@ -550,16 +539,16 @@ export default class PlayerCharacter {
     let staminaStat = 0;
     if (this._stats && this._characterClass && this._level) {
       switch (this._characterClass?.staminaStat.toLowerCase()) {
-        case stat_options.mettle.toLowerCase():
+        case StatOptions.METTLE.toLowerCase():
           staminaStat = this._stats.mettle;
           break;
-        case stat_options.agility.toLowerCase():
+        case StatOptions.AGILITY.toLowerCase():
           staminaStat = this._stats.agility;
           break;
-        case stat_options.heart.toLowerCase():
+        case StatOptions.HEART.toLowerCase():
           staminaStat = this._stats.heart;
           break;
-        case stat_options.int.toLowerCase():
+        case StatOptions.INT.toLowerCase():
           staminaStat = this._stats.intellect;
           break;
       }
@@ -585,16 +574,16 @@ export default class PlayerCharacter {
     let statDmg = Number.MIN_SAFE_INTEGER;
     this.characterClass?.damage.stat.forEach((stat) => {
       switch (stat) {
-        case stat_options.mettle:
+        case StatOptions.METTLE:
           statDmg = Math.max(statDmg, this.stats.mettle);
           break;
-        case stat_options.agility:
+        case StatOptions.AGILITY:
           statDmg = Math.max(statDmg, this.stats.agility);
           break;
-        case stat_options.heart:
+        case StatOptions.HEART:
           statDmg = Math.max(statDmg, this.stats.heart);
           break;
-        case stat_options.int:
+        case StatOptions.INT:
           statDmg = Math.max(statDmg, this.stats.intellect);
           break;
       }
@@ -625,21 +614,15 @@ export default class PlayerCharacter {
     return this._items;
   }
   public get actions() {
+    this.sortFeatures();
     return this._actions;
   }
   public get counters() {
+    this.sortFeatures();
     return this._counters;
   }
   public get features() {
-    if (this._features) {
-      this._features.sort((a, b) => {
-        const order = { class: 1, culture: 2, lineage: 3 };
-        return (
-          order[a.source as keyof typeof order] -
-          order[b.source as keyof typeof order]
-        );
-      });
-    }
+    this.sortFeatures();
     return this._features;
   }
   public get languages() {
@@ -649,16 +632,16 @@ export default class PlayerCharacter {
     let attack = Number.MIN_SAFE_INTEGER;
     this.characterClass?.attackStat.forEach((stat) => {
       switch (stat) {
-        case stat_options.mettle:
+        case StatOptions.METTLE:
           attack = Math.max(attack, this.stats.mettle);
           break;
-        case stat_options.agility:
+        case StatOptions.AGILITY:
           attack = Math.max(attack, this.stats.agility);
           break;
-        case stat_options.heart:
+        case StatOptions.HEART:
           attack = Math.max(attack, this.stats.heart);
           break;
-        case stat_options.int:
+        case StatOptions.INT:
           attack = Math.max(attack, this.stats.intellect);
           break;
       }
@@ -669,33 +652,50 @@ export default class PlayerCharacter {
     let choices: string[] = [];
     this._features?.forEach((feature) => {
       if (feature.chosen) choices = choices.concat(feature.chosen);
+      if (
+        feature.source === FeatureSource.NOVICE_FEATURE ||
+        feature.source === FeatureSource.VETERAN_FEATURE
+      )
+        choices.push(feature.slug);
     });
     this._actions?.forEach((feature) => {
       if (feature.chosen) choices = choices.concat(feature.chosen);
+      if (
+        feature.source === FeatureSource.NOVICE_FEATURE ||
+        feature.source === FeatureSource.VETERAN_FEATURE
+      )
+        choices.push(feature.slug);
     });
     this._counters?.forEach((feature) => {
       if (feature.chosen) choices = choices.concat(feature.chosen);
+      if (
+        feature.source === FeatureSource.NOVICE_FEATURE ||
+        feature.source === FeatureSource.VETERAN_FEATURE
+      )
+        choices.push(feature.slug);
     });
     return choices;
   }
 
   public get noviceFeatures(): PlayerCharacterFeature[] {
     return this.allFeatures.filter((feature) => {
-      feature.source === FeatureSource.noviceFeature;
+      feature.source === FeatureSource.NOVICE_FEATURE;
     });
   }
 
   public get veteranFeatures(): PlayerCharacterFeature[] {
     return this.allFeatures.filter((feature) => {
-      feature.source === FeatureSource.veteranFeature;
+      feature.source === FeatureSource.VETERAN_FEATURE;
     });
   }
 
   public get allFeatures() {
     let allFeatures: PlayerCharacterFeature[] = [];
+    this.sortFeatures();
     if (this._features) allFeatures = allFeatures.concat(this._features);
     if (this._actions) allFeatures = allFeatures.concat(this._actions);
     if (this._counters) allFeatures = allFeatures.concat(this._counters);
+
     return allFeatures;
   }
 
@@ -733,6 +733,23 @@ export default class PlayerCharacter {
     return this;
   }
 
+  public extractGenericFeaturesFromChoices(
+    choices: string[],
+    genericFeatures: PlayerCharacterFeature[],
+  ): PlayerCharacter {
+    choices.forEach((choice) => {
+      const matchingFeature = genericFeatures.find(
+        (feature) => feature.slug === choice,
+      );
+      if (matchingFeature) {
+        this._features
+          ? this._features.push(matchingFeature)
+          : (this._features = [matchingFeature]);
+      }
+    });
+    return this;
+  }
+
   public updateFeature(updatedFeature: PlayerCharacterFeature) {
     const updateFeatureList = (
       features: PlayerCharacterFeature[] | undefined,
@@ -749,12 +766,51 @@ export default class PlayerCharacter {
     updateFeatureList(this._features);
     updateFeatureList(this._actions);
     updateFeatureList(this._counters);
+    this.sortFeatures();
   }
-  public addFeature(feature: PlayerCharacterFeature) {
+  public addGenericFeature(feature: PlayerCharacterFeature) {
     if (
-      feature.source === FeatureSource.veteranFeature ||
-      feature.source === FeatureSource.noviceFeature
+      feature.source === FeatureSource.VETERAN_FEATURE ||
+      feature.source === FeatureSource.NOVICE_FEATURE
     )
-      this._genericFeatures.push(feature);
+      this._features
+        ? this._features?.push(feature)
+        : (this._features = [feature]);
+  }
+
+  public removeGenericFeature(slug: string) {
+    if (!this._features) return;
+    const i = this._features.findIndex((feature) => feature.slug === slug);
+    console.log("remove generic feature from ", i, this._features);
+    if (i !== -1) {
+      this._features.splice(i, 1);
+    }
+    console.log("features after removal", this._features);
+  }
+  public finishRestAndRecuperation() {
+    this._currentHealth = this._maxHealth;
+    this._currentStamina = this._maxStamina;
+  }
+
+  private sortFeatures() {
+    const orderFeatures = (
+      a: PlayerCharacterFeature,
+      b: PlayerCharacterFeature,
+    ) => {
+      const order = {
+        class: 1,
+        culture: 2,
+        lineage: 3,
+        noviceFeature: 4,
+        veteranFeature: 5,
+      };
+      return (
+        order[a.source as keyof typeof order] -
+        order[b.source as keyof typeof order]
+      );
+    };
+    if (this._features) this._features.sort((a, b) => orderFeatures(a, b));
+    if (this._actions) this._actions.sort((a, b) => orderFeatures(a, b));
+    if (this._counters) this._counters.sort((a, b) => orderFeatures(a, b));
   }
 }

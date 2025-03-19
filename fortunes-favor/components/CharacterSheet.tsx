@@ -17,1267 +17,16 @@ import CharacterFeatures from "./blocks/CharacterSheetComponents/CharacterFeatur
 import debounce from "@/utils/debounce";
 import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
-import { action_type, findEnum, rule_type } from "@/utils/enums";
-import GenericFeaturePicker, {
-  GenericCharacterFeatures,
-} from "./blocks/GenericFeaturePicker";
+import { ActionType, findEnum, RuleType } from "@/utils/enums";
+import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
+import GET_CHARACTER_INFO, {
+  GetCharacterData,
+} from "@/utils/graphQLQueries/PlayerCharacterQuery";
+import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterMutation";
+import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
+import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 
-const query = gql`
-  query getCharacter($id: ID!) {
-    character(id: $id) {
-      agility
-      armorName
-      baseDamage
-      coin
-      counter
-      currentHealth
-      currentStamina
-      featureChoiceSlugs
-      heart
-      id
-      intellect
-      languages
-      level
-      maxHealth
-      mettle
-      maxStamina
-      name
-      rangeMax
-      shieldName
-      rangeMin
-      characterClass {
-        attackStat
-        complexity
-        damage {
-          count
-          stat
-          dice
-          type
-        }
-        deflect {
-          dice
-          count
-          flat
-        }
-        description
-        extra {
-          forms {
-            armor {
-              baseArmor
-              stat
-            }
-            attackStat
-            damage {
-              dice
-              stat
-              type
-              count
-            }
-            features {
-              text
-              title
-            }
-            href
-            shortTitle
-            size
-            slug
-            title
-          }
-        }
-        health
-        healthOnLevel
-        href
-        shortTitle
-        range {
-          max
-          min
-        }
-        slug
-        stamina
-        staminaOnLevel
-        staminaStat
-        title
-        features {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          level
-          href
-          ruleType
-          multiSelect
-          shortText
-          slug
-          shortTitle
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-          costsFortunesFavor
-        }
-        training {
-          armor
-          magic {
-            options
-            pick
-          }
-          shields
-          weapons {
-            melee {
-              options
-              pick
-            }
-            ranged {
-              options
-              pick
-            }
-            special {
-              options
-              pick
-            }
-          }
-        }
-      }
-      characterCulture {
-        description
-        href
-        languages
-        shortTitle
-        slug
-        stat
-        traits {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          costsFortunesFavor
-          href
-          multiSelect
-          ruleType
-          shortText
-          shortTitle
-          slug
-          staminaCost
-          text {
-            choices
-            type
-            text
-          }
-          title
-        }
-        title
-      }
-      characterLineage {
-        description
-        href
-        shortTitle
-        size
-        slug
-        speeds {
-          type
-          speed
-        }
-        stat
-        title
-        traits {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          costsFortunesFavor
-          href
-          multiSelect
-          ruleType
-          shortText
-          shortTitle
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
-      }
-    }
-    characterClasses {
-      attackStat
-      complexity
-      damage {
-        count
-        stat
-        dice
-        type
-      }
-      deflect {
-        dice
-        count
-        flat
-      }
-      description
-      extra {
-        forms {
-          armor {
-            baseArmor
-            stat
-          }
-          attackStat
-          damage {
-            dice
-            stat
-            type
-            count
-          }
-          features {
-            text
-            title
-          }
-          href
-          shortTitle
-          size
-          slug
-          title
-        }
-      }
-      health
-      healthOnLevel
-      href
-      shortTitle
-      range {
-        max
-        min
-      }
-      slug
-      stamina
-      staminaOnLevel
-      staminaStat
-      title
-      features {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        level
-        href
-        ruleType
-        multiSelect
-        shortText
-        slug
-        shortTitle
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-        costsFortunesFavor
-      }
-      training {
-        armor
-        magic {
-          options
-          pick
-        }
-        shields
-        weapons {
-          melee {
-            options
-            pick
-          }
-          ranged {
-            options
-            pick
-          }
-          special {
-            options
-            pick
-          }
-        }
-      }
-    }
-    cultures {
-      description
-      href
-      languages
-      shortTitle
-      slug
-      stat
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        text {
-          choices
-          type
-          text
-        }
-        title
-      }
-      title
-    }
-    lineages {
-      description
-      href
-      shortTitle
-      size
-      slug
-      speeds {
-        type
-        speed
-      }
-      stat
-      title
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-      }
-    }
-    noviceFeatures: universalFeatures(featureType: NOVICE) {
-      actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
-      }
-      chooseNum
-      featureType
-      costsFortunesFavor
-      href
-      ruleType
-      multiSelect
-      shortText
-      shortTitle
-      slug
-      staminaCost
-      title
-      text {
-        choices
-        text
-        type
-      }
-    }
-    veteranFeatures: universalFeatures(featureType: VETERAN) {
-      actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
-      }
-      chooseNum
-      featureType
-      costsFortunesFavor
-      href
-      ruleType
-      multiSelect
-      shortText
-      shortTitle
-      slug
-      staminaCost
-      title
-      text {
-        choices
-        text
-        type
-      }
-    }
-  }
-`;
-
-const UPDATE_CHARACTER_MUTATION = gql`
-  mutation UpdateCharacter($id: ID!, $characterInputs: CharacterInput!) {
-    updateCharacter(id: $id, input: $characterInputs) {
-      name
-      items {
-        id
-        title
-      }
-      level
-      mettle
-      agility
-      heart
-      intellect
-      coin
-      languages
-      characterClass {
-        title
-      }
-      characterLineage {
-        title
-      }
-      characterCulture {
-        title
-      }
-      currentHealth
-      currentStamina
-      maxHealth
-      maxStamina
-      armorName
-      shieldName
-      counter
-      baseDamage
-      rangeMin
-      rangeMax
-      featureChoiceSlugs
-    }
-  }
-`;
-
-interface Data {
-  character: {
-    agility: number;
-    armorName: string;
-    baseDamage: number;
-    coin: number;
-    counter: number;
-    currentHealth: number;
-    currentStamina: number;
-    featureChoiceSlugs: string[];
-    heart: number;
-    id: string;
-    intellect: number;
-    languages: string[];
-    level: number;
-    maxHealth: number;
-    mettle: number;
-    maxStamina: number;
-    name: string;
-    rangeMax: number;
-    shieldName: string;
-    rangeMin: number;
-    characterClass: {
-      attackStat: string;
-      complexity: number;
-      damage: {
-        count: number;
-        stat: string;
-        dice: string;
-        type: string;
-      }[];
-      deflect: {
-        dice: string;
-        count: number;
-        flat: number;
-      };
-      description: string;
-      extra: {
-        forms: {
-          armor: {
-            baseArmor: number;
-            stat: string;
-          };
-          attackStat: string;
-          damage: {
-            dice: string;
-            stat: string;
-            type: string;
-            count: number;
-          }[];
-          features: {
-            text: string;
-            title: string;
-          }[];
-          href: string;
-          shortTitle: string;
-          size: string;
-          slug: string;
-          title: string;
-        }[];
-      };
-      health: number;
-      healthOnLevel: number;
-      href: string;
-      shortTitle: string;
-      range: {
-        max: number;
-        min: number;
-      };
-      slug: string;
-      stamina: number;
-      staminaOnLevel: number;
-      staminaStat: string;
-      title: string;
-      features: {
-        actionType: string;
-        simpleChoices: {
-          type: string;
-          choices: string[];
-          text: string;
-        }[];
-        complexChoices: {
-          href: string;
-          shortTitle: string;
-          actionType: string;
-          costsFortunesFavor: boolean;
-          multiSelect: boolean;
-          ruleType: string;
-          shortText: string;
-          slug: string;
-          staminaCost: number;
-          title: string;
-          text: {
-            choices: string[];
-            text: string;
-            type: string;
-          }[];
-        }[];
-        chooseNum: number;
-        level: number;
-        href: string;
-        ruleType: string;
-        multiSelect: boolean;
-        shortText: string;
-        slug: string;
-        shortTitle: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-        costsFortunesFavor: boolean;
-      }[];
-      training: {
-        armor: string[];
-        magic: {
-          options: string[];
-          pick: number;
-        };
-        shields: string[];
-        weapons: {
-          melee: {
-            options: string[];
-            pick: number;
-          };
-          ranged: {
-            options: string[];
-            pick: number;
-          };
-          special: {
-            options: string[];
-            pick: number;
-          };
-        };
-      };
-    };
-    characterCulture: {
-      description: string;
-      href: string;
-      languages: string[];
-      shortTitle: string;
-      slug: string;
-      stat: string;
-      traits: {
-        actionType: string;
-        simpleChoices: {
-          type: string;
-          choices: string[];
-          text: string;
-        }[];
-        complexChoices: {
-          href: string;
-          shortTitle: string;
-          actionType: string;
-          costsFortunesFavor: boolean;
-          multiSelect: boolean;
-          ruleType: string;
-          shortText: string;
-          slug: string;
-          staminaCost: number;
-          title: string;
-          text: {
-            choices: string[];
-            text: string;
-            type: string;
-          }[];
-        }[];
-        chooseNum: number;
-        costsFortunesFavor: boolean;
-        href: string;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        shortTitle: string;
-        slug: string;
-        staminaCost: number;
-        text: {
-          choices: string[];
-          type: string;
-          text: string;
-        }[];
-        title: string;
-      }[];
-      title: string;
-    };
-    characterLineage: {
-      description: string;
-      href: string;
-      shortTitle: string;
-      size: string;
-      slug: string;
-      speeds: {
-        type: string;
-        speed: number;
-      }[];
-      stat: string;
-      title: string;
-      traits: {
-        actionType: string;
-        simpleChoices: {
-          type: string;
-          choices: string[];
-          text: string;
-        }[];
-        complexChoices: {
-          href: string;
-          shortTitle: string;
-          actionType: string;
-          costsFortunesFavor: boolean;
-          multiSelect: boolean;
-          ruleType: string;
-          shortText: string;
-          slug: string;
-          staminaCost: number;
-          title: string;
-          text: {
-            choices: string[];
-            text: string;
-            type: string;
-          }[];
-        }[];
-        chooseNum: number;
-        costsFortunesFavor: boolean;
-        href: string;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        shortTitle: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-    };
-  };
-  characterCulture: {
-    description: string;
-    href: string;
-    languages: string[];
-    shortTitle: string;
-    slug: string;
-    stat: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      text: {
-        choices: string[];
-        type: string;
-        text: string;
-      }[];
-      title: string;
-    }[];
-    title: string;
-  };
-  characterLineage: {
-    description: string;
-    href: string;
-    shortTitle: string;
-    size: string;
-    slug: string;
-    speeds: {
-      type: string;
-      speed: number;
-    }[];
-    stat: string;
-    title: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-    }[];
-  };
-  characterClasses: {
-    attackStat: string;
-    complexity: number;
-    damage: {
-      count: number;
-      stat: string;
-      dice: string;
-      type: string;
-    }[];
-    description: string;
-    extra: {
-      forms: {
-        armor: {
-          baseArmor: number;
-          stat: string;
-        };
-        attackStat: string;
-        damage: {
-          dice: string;
-          stat: string;
-          type: string;
-          count: number;
-        }[];
-        features: {
-          text: string;
-          title: string;
-        }[];
-        href: string;
-        shortTitle: string;
-        size: string;
-        slug: string;
-        title: string;
-      }[];
-    };
-    health: number;
-    healthOnLevel: number;
-    href: string;
-    shortTitle: string;
-    range: {
-      max: number;
-      min: number;
-    };
-    slug: string;
-    stamina: number;
-    staminaOnLevel: number;
-    staminaStat: string;
-    title: string;
-    features: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      level: number;
-      href: string;
-      ruleType: string;
-      multiSelect: boolean;
-      shortText: string;
-      slug: string;
-      shortTitle: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-      costsFortunesFavor: boolean;
-    }[];
-    training: {
-      armor: string[];
-      magic: {
-        options: string[];
-        pick: number;
-      };
-      shields: string[];
-      weapons: {
-        melee: {
-          options: string[];
-          pick: number;
-        };
-        ranged: {
-          options: string[];
-          pick: number;
-        };
-        special: {
-          options: string[];
-          pick: number;
-        };
-      };
-    };
-  }[];
-  cultures: {
-    description: string;
-    href: string;
-    languages: string[];
-    shortTitle: string;
-    slug: string;
-    stat: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      text: {
-        choices: string[];
-        type: string;
-        text: string;
-      }[];
-      title: string;
-    }[];
-    title: string;
-  }[];
-  lineages: {
-    description: string;
-    href: string;
-    shortTitle: string;
-    size: string;
-    slug: string;
-    speeds: {
-      type: string;
-      speed: number;
-    }[];
-    stat: string;
-    title: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-    }[];
-  }[];
-  noviceFeatures: {
-    actionType: string;
-    simpleChoices?: {
-      type: string;
-      choices: string[];
-      text: string;
-    }[];
-    complexChoices?: {
-      href: string;
-      shortTitle: string;
-      actionType: string;
-      costsFortunesFavor: boolean;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      slug: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-    }[];
-    chooseNum: number;
-    featureType: string;
-    costsFortunesFavor: boolean;
-    href: string;
-    ruleType: string;
-    multiSelect: boolean;
-    shortText: string;
-    shortTitle: string;
-    slug: string;
-    staminaCost: number;
-    title: string;
-    text: {
-      choices: string[];
-      text: string;
-      type: string;
-    }[];
-  }[];
-  veteranFeatures: {
-    actionType: string;
-    simpleChoices?: {
-      type: string;
-      choices: string[];
-      text: string;
-    }[];
-    complexChoices?: {
-      href: string;
-      shortTitle: string;
-      actionType: string;
-      costsFortunesFavor: boolean;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      slug: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-    }[];
-    chooseNum: number;
-    featureType: string;
-    costsFortunesFavor: boolean;
-    href: string;
-    ruleType: string;
-    multiSelect: boolean;
-    shortText: string;
-    shortTitle: string;
-    slug: string;
-    staminaCost: number;
-    title: string;
-    text: {
-      choices: string[];
-      text: string;
-      type: string;
-    }[];
-  }[];
-}
-const ConvertToPlayerCharacter = (data: Data): PlayerCharacter => {
+const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   const characterClass = new CharacterClassData(data.character.characterClass);
   const culture = new CharacterCulture(data.character.characterCulture);
   const lineage = new CharacterLineage(data.character.characterLineage);
@@ -1303,7 +52,7 @@ const ConvertToPlayerCharacter = (data: Data): PlayerCharacter => {
 };
 
 const extractGenericFeatures = (
-  data: Data,
+  data: GetCharacterData,
 ): {
   noviceFeatures: PlayerCharacterFeature[];
   veteranFeatures: PlayerCharacterFeature[];
@@ -1313,10 +62,10 @@ const extractGenericFeatures = (
   data.noviceFeatures.forEach((feature) => {
     const f = new PlayerCharacterFeature(
       feature.title,
-      FeatureSource.noviceFeature,
+      FeatureSource.NOVICE_FEATURE,
       [],
       feature.slug,
-      findEnum(feature.ruleType, rule_type),
+      findEnum(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
       feature.complexChoices
@@ -1324,8 +73,8 @@ const extractGenericFeatures = (
           ? feature.complexChoices?.map((choice) => {
               return {
                 ...choice,
-                ruleType: findEnum(choice.ruleType, rule_type),
-                actionType: findEnum(choice.actionType, action_type),
+                ruleType: findEnum(choice.ruleType, RuleType),
+                actionType: findEnum(choice.actionType, ActionType),
               };
             })
           : feature.simpleChoices
@@ -1341,10 +90,10 @@ const extractGenericFeatures = (
   data.veteranFeatures.forEach((feature) => {
     const f = new PlayerCharacterFeature(
       feature.title,
-      FeatureSource.noviceFeature,
+      FeatureSource.VETERAN_FEATURE,
       [],
       feature.slug,
-      findEnum(feature.ruleType, rule_type),
+      findEnum(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
       feature.complexChoices
@@ -1352,8 +101,8 @@ const extractGenericFeatures = (
           ? feature.complexChoices?.map((choice) => {
               return {
                 ...choice,
-                ruleType: findEnum(choice.ruleType, rule_type),
-                actionType: findEnum(choice.actionType, action_type),
+                ruleType: findEnum(choice.ruleType, RuleType),
+                actionType: findEnum(choice.actionType, ActionType),
               };
             })
           : feature.simpleChoices
@@ -1404,40 +153,69 @@ export type CharacterOptions = {
   genericFeatures: GenericCharacterFeatures;
 };
 
-const CharacterSheet = ({ characterId }: { characterId: number }) => {
+// If a characterId is provided, the sheet will load that character and edit it. Otherwise a new character will be created.
+const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const [character, setCharacter] = useState<PlayerCharacter | undefined>(
     undefined,
   );
   const [characterOptions, setCharacterOptions] = useState<
     CharacterOptions | undefined
   >(undefined);
-  const [isEditable, setEditable] = useState(false);
+  const [isEditable, setEditable] = useState(characterId === undefined);
   const [loadingError, setLoadingError] = useState<any>(null);
-  const [updateCharacter, { data, loading, error }] = useMutation(
-    UPDATE_CHARACTER_MUTATION,
-  );
+  const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
+  const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
   const saveCharacter = async (character: PlayerCharacter) => {
-    const { data } = await updateCharacter({
-      variables: {
-        id: characterId,
-        characterInputs: convertPlayerCharacterToGraphInput(character),
-      },
-    });
-    return data;
+    console.log("saveCharacter character id", character.id);
+    if (character.id) {
+      const { data } = await updateCharacter({
+        variables: {
+          id: character.id,
+          characterInputs: convertPlayerCharacterToGraphInput(character),
+        },
+      });
+      return data;
+    } else {
+      const { data } = await createCharacter({
+        variables: {
+          characterInputs: convertPlayerCharacterToGraphInput(character),
+        },
+      });
+      console.log(data);
+      if (!data.id) throw new Error("Error creating character");
+      const newCharacter = new PlayerCharacter(
+        undefined,
+        undefined,
+        undefined,
+        character,
+      );
+      newCharacter.id = data.id;
+      setCharacter(newCharacter);
+      return data;
+    }
   };
+  // load character if there is a characterId otherwise only load character options.
   useEffect(() => {
+    console.log("characterId", characterId);
     const fetchData = async () => {
       try {
         const { data } = await client.query({
-          query,
+          query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
-        setCharacter(
-          ConvertToPlayerCharacter(data).updateChoices(
-            data.character.featureChoiceSlugs,
-          ),
-        );
         const genericFeatures = extractGenericFeatures(data);
+        if (characterId) {
+          setCharacter(
+            extractPlayerCharacter(data)
+              .updateChoices(data.character.featureChoiceSlugs)
+              .extractGenericFeaturesFromChoices(
+                data.character.featureChoiceSlugs,
+                genericFeatures.noviceFeatures.concat(
+                  genericFeatures.veteranFeatures,
+                ),
+              ),
+          );
+        }
         const charOptions: CharacterOptions = {
           characterClasses: [],
           characterCultures: [],
@@ -1462,6 +240,15 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
           });
         }
         setCharacterOptions(charOptions);
+        if (!characterId) {
+          setCharacter(
+            new PlayerCharacter(
+              charOptions.characterCultures[0],
+              charOptions.characterLineages[0],
+              charOptions.characterClasses[0],
+            ),
+          );
+        }
       } catch (error) {
         setLoadingError(error);
       }
@@ -1469,10 +256,10 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
     fetchData();
   }, [characterId]);
 
+  // save updates to the backend of an existing character.
   useEffect(() => {
-    if (character) {
+    if (character && character.id) {
       const debouncedSave = debounce(() => {
-        if (!characterId) throw new Error("Cannot update character without ID");
         console.log("Saving character to DB", character);
         saveCharacter(character);
       }, 2000);
@@ -1540,6 +327,7 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
             features={character.features}
             isEditable={isEditable}
             label="Features"
+            characterOptions={characterOptions}
           />
         </div>
       </div>
@@ -1548,20 +336,17 @@ const CharacterSheet = ({ characterId }: { characterId: number }) => {
           type="button"
           className="px-2 py-0 mb-2 border-b-2 border-amber-300 dark:border-amber-700 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white hover:border-amber-500 mx-auto block"
           onClick={() => {
+            if (isEditable) saveCharacter(character);
             setEditable(!isEditable);
           }}
         >
           {isEditable ? (
-            <span>Lock Character</span>
+            <span>Save Character</span>
           ) : (
             <span>Edit Character</span>
           )}
         </button>
       </div>
-      <GenericFeaturePicker
-        character={character}
-        genericFeatures={characterOptions.genericFeatures}
-      />
     </>
   );
 };

@@ -1,9 +1,9 @@
 import {
-  action_type,
-  complexity_options,
-  rule_type,
-  size_options,
-  stat_options,
+  ActionType,
+  ComplexityOptions,
+  RuleType,
+  SizeOptions,
+  StatOptions,
 } from "./enums";
 
 export type SearchResult = {
@@ -21,7 +21,7 @@ export type RuleText = {
 export type GenericRule = {
   title: string;
   slug: string;
-  ruleType: rule_type;
+  ruleType: RuleType;
   text: RuleText[];
   subRules: GenericRule[];
   list: string[];
@@ -41,7 +41,7 @@ export type graphQLLineage = {
   title: string;
   slug: string;
   description: string[];
-  size: size_options[];
+  size: SizeOptions[];
   speed: number;
   stat: string;
   traits: GenericRule[];
@@ -50,7 +50,7 @@ export type graphQLLineage = {
 export type GenericFeature = {
   title: string;
   slug: string;
-  ruleType: rule_type;
+  ruleType: RuleType;
   text: RuleText[];
   shortText?: string;
   multiSelect: boolean;
@@ -88,14 +88,14 @@ export type Range = {
 export type Damage = {
   dice: number;
   count: number;
-  stat: stat_options[];
+  stat: StatOptions[];
 };
 
 export type Deflect = {
   dice: number;
   count: number;
   flat: number;
-}
+};
 
 export type FeatureChoices = RuleText | FeatureWithoutChoices;
 
@@ -106,8 +106,8 @@ export type FeatureWithoutChoices = {
   shortTitle?: string;
   staminaCost: number;
   costsFortunesFavor: boolean;
-  ruleType: rule_type;
-  actionType?: action_type;
+  ruleType: RuleType;
+  actionType?: ActionType;
   text: RuleText[];
   multiSelect: boolean;
   shortText?: string;
@@ -121,8 +121,8 @@ export type CharacterClassFeature = {
   level: number;
   staminaCost: number;
   costsFortunesFavor: boolean;
-  ruleType: rule_type;
-  actionType?: action_type;
+  ruleType: RuleType;
+  actionType?: ActionType;
   text: RuleText[];
   multiSelect: boolean;
   shortText?: string;
@@ -132,15 +132,15 @@ export type CharacterClassFeature = {
 export type CharacterClass = {
   title: string;
   slug: string;
-  complexity?: complexity_options;
+  complexity?: ComplexityOptions;
   description: string[];
   health: number;
   healthOnLevel: number;
   stamina: number;
   staminaOnLevel: number;
-  staminaStat: stat_options;
+  staminaStat: StatOptions;
   training: Training;
-  attackStat: stat_options[];
+  attackStat: StatOptions[];
   range: Range;
   damage: Damage;
   deflect: Deflect;

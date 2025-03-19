@@ -3,23 +3,9 @@ import React, { Dispatch, SetStateAction } from "react";
 import NumInput from "../Inputs/NumInput";
 import SmallField from "../SmallField";
 import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
-import FeatureCard from "../FeatureCard";
 import VerticalLabeledBox from "../VerticalLabeledBox";
 import CharacterFeatures from "./CharacterFeatures";
 
-const StatDisplay = ({
-  stat,
-  label,
-}: {
-  stat: number | string;
-  label: string;
-}) => {
-  return (
-    <SmallField label={label}>
-      <span className="text-xl font-light">{stat}</span>
-    </SmallField>
-  );
-};
 const CombatStatDisplay = ({
   stat,
   label,

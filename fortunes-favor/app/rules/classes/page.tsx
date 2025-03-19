@@ -3,7 +3,7 @@ import client from "@/utils/graphQLclient";
 import { Suspense } from "react";
 import Link from "next/link";
 import { ClassTitleAndTags } from "@/components/CharacterClass";
-import { stat_options } from "@/utils/enums";
+import { StatOptions } from "@/utils/enums";
 import CharacterClass from "../../../utils/CharacterClass";
 const query = gql`
   query GetAllClasses {
@@ -28,11 +28,11 @@ export type characterClassData = {
   title: string;
   slug: string;
   href: string;
-  attackStat: stat_options[];
+  attackStat: StatOptions[];
   damage: {
-    stat: stat_options[];
+    stat: StatOptions[];
   };
-  staminaStat: stat_options;
+  staminaStat: StatOptions;
 };
 
 async function ClassesPage() {

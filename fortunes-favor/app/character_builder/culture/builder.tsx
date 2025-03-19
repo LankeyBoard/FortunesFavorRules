@@ -1,6 +1,6 @@
 import Culture from "@/components/Culture";
 import SelectFromCards from "@/components/SelectFromCards";
-import { option_type } from "@/utils/enums";
+import { OptionTypes } from "@/utils/enums";
 import { characterCultureListBuilder } from "@/utils/CharacterCulture";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import cultures_json from "@/public/rules_json/cultures/cultures.json";
@@ -27,7 +27,7 @@ function CultureSelectBuilder({
       }
     >
       <SelectFromCards
-        optionType={option_type.culture}
+        optionType={OptionTypes.CULTURE}
         options={cultures}
         popoutInner={Culture}
         optionsDescription={description}

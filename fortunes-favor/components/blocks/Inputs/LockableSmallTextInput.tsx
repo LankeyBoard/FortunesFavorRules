@@ -16,11 +16,13 @@ const LockableSmallTextInput = ({
 }: LockableSmallFieldInputs) => {
   if (isEditable) {
     return (
-      <NumInput
-        defaultValue={value}
-        size={String(value).length}
-        onChange={(e) => updateFunc(e)}
-      />
+      <SmallField label={label}>
+        <NumInput
+          defaultValue={value}
+          size={String(value).length}
+          onChange={(e) => updateFunc(e)}
+        />
+      </SmallField>
     );
   }
 

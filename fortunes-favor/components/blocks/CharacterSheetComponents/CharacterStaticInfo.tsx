@@ -74,6 +74,7 @@ const CharacterStaticInfo = ({
               <DropdownField
                 name="Class"
                 options={characterOptions.characterClasses}
+                defaultValue={character.characterClass.slug}
                 unselectedOption={!character.characterClass}
                 onChange={(e) => {
                   const slug = e.target.value;
@@ -103,6 +104,7 @@ const CharacterStaticInfo = ({
                 name="Culture"
                 options={characterOptions.characterCultures}
                 unselectedOption={!character.culture}
+                defaultValue={character.culture.slug}
                 onChange={(e) => {
                   const slug = e.target.value;
                   const updatedCharacterCulture =
@@ -129,6 +131,7 @@ const CharacterStaticInfo = ({
                 name="Lineage"
                 options={characterOptions.characterLineages}
                 unselectedOption={!character.lineage}
+                defaultValue={character.lineage.slug}
                 onChange={(e) => {
                   const slug = e.target.value;
                   const updatedCharacterLineage =

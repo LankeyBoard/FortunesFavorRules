@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import SignupOrLoginModal from "./SignupLoginModal";
+import Link from "next/link";
 
 const SignupLoginButtons = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +56,15 @@ const SignupLoginButtons = () => {
         )}
       </>
     );
-  else return <button onClick={handleLogout}>Logout</button>;
+  else
+    return (
+      <Link
+        href="/profile"
+        className="hover:text-amber-700 hover:dark:text-amber-300"
+      >
+        Profile
+      </Link>
+    );
 };
 
 export default SignupLoginButtons;

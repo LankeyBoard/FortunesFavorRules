@@ -1,4 +1,4 @@
-import { complexity_options, stat_options } from "../utils/enums";
+import { ComplexityOptions, StatOptions } from "../utils/enums";
 import { getOrdinal } from "../utils/utils";
 import { ReactElement } from "react";
 import CharacterFeature from "../utils/CharacterFeature";
@@ -162,9 +162,9 @@ const Tag = ({ text, style }: tagProps) => {
 type classTagsProps = {
   c: {
     complexity?: string;
-    attackStat?: stat_options[];
-    damage?: { stat?: stat_options[] };
-    staminaStat?: stat_options;
+    attackStat?: StatOptions[];
+    damage?: { stat?: StatOptions[] };
+    staminaStat?: StatOptions;
   };
 };
 
@@ -174,13 +174,13 @@ export const ClassTags = ({ c }: classTagsProps) => {
   let tagStyle;
   if ("complexity" in c && c.complexity) {
     switch (c.complexity.toLocaleLowerCase()) {
-      case complexity_options.simple:
+      case ComplexityOptions.SIMPLE:
         tagStyle = "bg-green-800";
         break;
-      case complexity_options.std:
+      case ComplexityOptions.STD:
         tagStyle = "bg-amber-800";
         break;
-      case complexity_options.complex:
+      case ComplexityOptions.COMPLEX:
         tagStyle = "bg-blue-800";
         break;
       default:

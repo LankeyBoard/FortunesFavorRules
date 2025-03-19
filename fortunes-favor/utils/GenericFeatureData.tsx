@@ -1,10 +1,10 @@
-import { rule_type } from "./enums";
+import { RuleType } from "./enums";
 import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
 
 export default class GenericFeatureData implements GenericFeature {
   title: string;
   slug: string;
-  ruleType: rule_type;
+  ruleType: RuleType;
   text: RuleText[];
   shortText?: string;
   multiSelect: boolean;
@@ -14,12 +14,12 @@ export default class GenericFeatureData implements GenericFeature {
   constructor(
     title: string,
     slug: string,
-    ruleType: rule_type,
+    ruleType: RuleType,
     text: RuleText[],
     multiSelect: boolean,
     choices: FeatureChoices[],
     chooseNum: number,
-    shortText?: string
+    shortText?: string,
   ) {
     this.title = title;
     this.slug = slug;

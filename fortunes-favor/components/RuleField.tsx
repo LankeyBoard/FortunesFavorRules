@@ -1,4 +1,4 @@
-import { rule_type } from "../utils/enums";
+import { RuleType } from "../utils/enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
 import TextBlock from "./blocks/TextBlock";
@@ -46,9 +46,12 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
     <div id={field.slug} className="z-0 scroll-mt-20">
       <div className={titleStyler(depth)}>
-        <label className="display-flex">{field.title} {field.slug && depth < 3 && <CopyLink target={field.slug}/>}</label>
+        <label className="display-flex">
+          {field.title}{" "}
+          {field.slug && depth < 3 && <CopyLink target={field.slug} />}
+        </label>
       </div>
-      <div className={field.ruleType != rule_type.List ? "pb-2" : "pb-2 mx-2"}>
+      <div className={field.ruleType != RuleType.LIST ? "pb-2" : "pb-2 mx-2"}>
         {field.text != undefined && typeof field.text === "string" && (
           <div className="mt-2">
             <SlugLinker text={field.text} />
@@ -70,21 +73,21 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
             })}
           </ul>
         )}
-        {field.subRules && field.ruleType === rule_type.CompactList && (
+        {field.subRules && field.ruleType === RuleType.COMPACTLIST && (
           <div className="pl-4">
             {field.subRules.map((rule) => (
               <CompactList key={rule.slug} rule={rule} />
             ))}
           </div>
         )}
-        {field.subRules && field.ruleType === rule_type.List && (
+        {field.subRules && field.ruleType === RuleType.LIST && (
           <div className="pl-4">
             {field.subRules.map((rule) => (
               <CompactList key={rule.slug} rule={rule} />
             ))}
           </div>
         )}
-        {field.subRules && field.ruleType !== rule_type.CompactList && (
+        {field.subRules && field.ruleType !== RuleType.COMPACTLIST && (
           <ul className="">
             {field.subRules.map((f) => (
               <li className={f.title ? "" : "space-y-2"} key={f.slug}>
