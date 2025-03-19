@@ -102,6 +102,18 @@ const ShopBuilderPage: React.FC = () => {
           Mark All Available
         </button>
         <button
+          onClick={() => {
+            const updatedShop = new ItemShop(shop.encodeShop());
+            updatedShop.inventory.forEach((item) => {
+              item.inStock = false;
+            });
+            setShop(updatedShop);
+          }}
+          className="p-2 bg-red-500 text-white rounded mx-2"
+        >
+          Mark All Unavailable
+        </button>
+        <button
           onClick={markAllFullPrice}
           className="p-2 bg-gray-500 text-white rounded mx-2"
         >

@@ -343,6 +343,166 @@ const allPossibleInventory = [
     inStock: true,
     discounted: false,
   },
+  {
+    name: "Gravebond Gauntlet",
+    description:
+      "When you make an attack, you may activate the gauntlet. If you do so, you regain Health equal to the damage done by the attack. You cannot use this effect again until the gauntlet spends a Night’s Rest covered in blood.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Wraithwoven Cloak",
+    description:
+      "Three times per R&R, the wearer can phase through a solid object up to 5 ft. thick, traveling in a straight line and emerging on the other side. If the object is more than 5 ft. thick, the user reemerges where they started and takes 2d6 damage.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Memento Mori Ring",
+    description:
+      "The wearer cannot be raised as undead unwillingly and has resistance to Rot damage.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Ghoul’s Grasp Bracers",
+    description:
+      "The bracers have 3 charges. As an Action, spend a charge to cause skeletal hands to grasp at a point within 30 ft., restraining creatures in a 10 ft. radius. Recharges overnight in a graveyard.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Spectral Gambit Dagger",
+    description:
+      "When an attack critically fails, the dagger lets the wielder reroll, but doing so reduces their Health.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Stockbroker’s Stiletto",
+    description:
+      "A stiletto dagger made from reforged coins. Deals an extra 3d2 damage if the target has at least 10x the wealth of the holder.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Skeleton Key (Literal)",
+    description:
+      "Unlocks any non-magically locked door once but leaves behind a confused, friendly skeleton who just wants to chat.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Price is Fright",
+    description:
+      "A coupon redeemable once for one free resurrection, but the user returns as a skeletal version of themselves. The coupon must be on your person at the time of death and must be redeemed within 10 days to be valid.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Credit Score Shield",
+    description:
+      "A medium shield etched with arcane credit math. As an Action, expend a charge to reduce the next damage taken by the amount of Coin currently on your person. Holds seven charges, recharges after five business days in a bank.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Laughing Chalice",
+    description:
+      "Transforms any liquid poured into it into expensive wine. However, it giggles ominously every time it’s used.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Soulbound Knucklebones",
+    description:
+      "A set of dice made from an unknown creature’s bones. Once per R&R, reroll any Test, but if you roll double ones, you lose half your remaining Health.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Gilded Fang",
+    description:
+      "A golden-capped tooth that, when pressed with the tongue, lets the wearer understand all spoken languages for 10 minutes.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Blood-Letter’s Quill",
+    description:
+      "Writing someone’s name in their own blood on a contract binds them to the terms, magically enforcing the agreed deal.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Black Market Bell",
+    description:
+      "When rung in total darkness, it summons a spectral vendor offering one random stolen item for sale.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Puppeteer’s Strings",
+    description:
+      "Can control a medium or smaller fresh corpse like a marionette for 10 minutes. The corpse has 10 Health and moves at 20 ft. speed, performing only basic actions.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "Haunted Monocle",
+    description:
+      "When worn, grants +4 on Tests to determine deception, but sometimes gasps dramatically when a lie is told.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Gold Standard",
+    description:
+      "A single gold bar worth 3 Coin. If spent in front of a crowd, onlookers believe the buyer is far wealthier than they actually are for one hour.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Door to Nowhere",
+    description:
+      "A small, portable wooden trap door that, when placed on a solid flat surface, creates a random exit (but not necessarily a safe one).",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Skeleton Butler Bell",
+    description:
+      "Ringing it summons a polite skeleton who will serve the user for one hour, but it vanishes if asked to fight.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
+  {
+    name: "The Insatiable Coin",
+    description:
+      "A cursed coin that, if spent, teleports back to the spender’s pocket, whispering 'You owe me' each time.",
+    cost: 0,
+    inStock: true,
+    discounted: false,
+  },
 ];
 
 const livingShop = {
