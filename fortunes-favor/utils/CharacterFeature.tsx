@@ -5,7 +5,7 @@ import {
   RuleText,
 } from "./graphQLtypes";
 import GenericFeatureData from "./GenericFeatureData";
-import { PlayerCharacterFeature } from "./PlayerCharacter";
+import { FeatureSource, PlayerCharacterFeature } from "./PlayerCharacter";
 
 export default class CharacterFeatureData
   extends GenericFeatureData
@@ -70,7 +70,7 @@ export default class CharacterFeatureData
     };
     return new PlayerCharacterFeature(
       this.title,
-      source.toString(),
+      findEnum(source.toString(), FeatureSource),
       [],
       this.slug,
       this.ruleType,

@@ -40,7 +40,7 @@ async function ClassesPage() {
     query,
   });
   return (
-    <Suspense>
+    <Suspense fallback={<>Loading</>}>
       <div className="md:grid md:grid-cols-2 md:gap-2">
         {data.characterClasses.map((characterClass: CharacterClass) => {
           return (

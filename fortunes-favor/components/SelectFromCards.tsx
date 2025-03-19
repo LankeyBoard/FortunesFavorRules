@@ -14,7 +14,7 @@ const getSelectedSlug = (
     case OptionTypes.LINEAGE:
       return currentCharacter.lineage?.slug;
     case OptionTypes.CLASS:
-      return currentCharacter.class?.slug;
+      return currentCharacter.characterClass?.slug;
     default:
       return undefined;
   }
@@ -86,7 +86,7 @@ const SelectFromCards = ({
         } else {
           characterClass = options.find((c) => c.slug === slug);
         }
-        updatedCharacter.class = characterClass;
+        updatedCharacter.characterClass = characterClass;
         break;
       case OptionTypes.LINEAGE:
         let lineage;
