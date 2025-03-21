@@ -7,11 +7,12 @@ import {
 } from "@apollo/experimental-nextjs-app-support";
 
 const httpLink = new HttpLink({
-  uri: process.env.GRAPHQL_URL || "http://localhost:4000/graphql",
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
   credentials: "include",
 });
 
 const authLink = setContext((_, { headers }) => {
+  console.log("graphql url", process.env.NEXT_PUBLIC_GRAPHQL_URL);
   // Retrieve token from localStorage or any other storage mechanism
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
