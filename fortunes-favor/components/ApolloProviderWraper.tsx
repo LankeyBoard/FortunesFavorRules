@@ -9,7 +9,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = new HttpLink({
-  uri: process.env.GRAPHQL_URL || "http://localhost:4000/graphql",
+  uri: process.env.GRAPHQL_URL,
 });
 
 export const ApolloProviderWrapper = ({ children }: PropsWithChildren) => {

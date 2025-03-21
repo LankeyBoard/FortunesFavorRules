@@ -29,8 +29,17 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Local Development with Netlify
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before you begin, make sure you complete the following if you haven’t already:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [Install](https://docs.netlify.com/cli/get-started/#installation) the Netlify CLI.
+- [Authenticate](https://docs.netlify.com/cli/get-started/#authentication) with an access token.
+- Link your local project to a Netlify `siteID`. To do this, set up [continuous deployment](https://docs.netlify.com/cli/get-started/#continuous-deployment) with `netlify init` or [link an existing Netlify site](https://docs.netlify.com/cli/get-started/#link-and-unlink-sites) with `netlify link`.
+  To start a local development server for the build tool you’re using, run the following command from the root of your linked repository:
+
+```bash
+netlify dev
+```
+
+Check the [Netlify docs](https://docs.netlify.com/cli/local-development/) for more info.
