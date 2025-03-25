@@ -52,7 +52,7 @@ const GenericFeaturePicker = ({
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
 }) => {
   return (
-    <>
+    <div>
       <FeatureSection
         label="Novice Features"
         genericFeatures={genericFeatures.noviceFeatures}
@@ -67,7 +67,7 @@ const GenericFeaturePicker = ({
           setCharacter={setCharacter}
         />
       )}
-    </>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  console.log("graphql url", process.env.NEXT_PUBLIC_GRAPHQL_URL);
   // Retrieve token from localStorage or any other storage mechanism
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;

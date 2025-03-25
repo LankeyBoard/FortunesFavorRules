@@ -16,7 +16,6 @@ export const DropdownField = ({
   onChange,
 }: dropdownFieldProps) => {
   if (options.length > 0 && typeof options.at(0) === "string") {
-    console.log("options updated");
     let optionObjs = options.map((option) => {
       return { title: option, slug: name + option };
     });

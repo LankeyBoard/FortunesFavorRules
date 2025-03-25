@@ -5,6 +5,7 @@ import SmallField from "../SmallField";
 import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
 import VerticalLabeledBox from "../VerticalLabeledBox";
 import CharacterFeatures from "./CharacterFeatures";
+import Button, { ButtonType } from "../Inputs/Button";
 
 const CombatStatDisplay = ({
   stat,
@@ -36,7 +37,7 @@ const ResourceDisplay = ({
       <div>
         <span className="w-min text-xl align-text-bottom">
           <NumInput
-            defaultValue={current}
+            value={current}
             size={String(max).length}
             max={max}
             onChange={(e) => update(Number(e.target.value))}
@@ -153,8 +154,8 @@ const CharacterCoreInfo = ({
           />
         </div>
       </VerticalLabeledBox>
-      <div className=" w-100 bg-teal-100 dark:bg-teal-950">
-        <div className=" grid grid-cols-2 gap-4 justify-center mx-auto w-max">
+      <div className="bg-teal-100 dark:bg-teal-950">
+        <div className="grid grid-cols-2 gap-4 justify-center mx-auto w-max">
           <ResourceDisplay
             current={character.currentHealth}
             max={character.maxHealth}
@@ -170,7 +171,7 @@ const CharacterCoreInfo = ({
         </div>
       </div>
       <VerticalLabeledBox label="Combat">
-        <div className="grid grid-cols-3 gap-0 justify-center mx-auto w-max justify-items-center">
+        <div className="grid grid-cols-4 gap-0 justify-center mx-auto w-max justify-items-center">
           <CombatStatDisplay stat={character.attack} label="Attack" />
           <CombatStatDisplay
             stat={
@@ -183,28 +184,92 @@ const CharacterCoreInfo = ({
             }
             label="Damage"
           />
-          <CombatStatDisplay
-            stat={
-              character.range?.min === character.range?.max
-                ? character.range.min
-                : character.range?.min + "ft. - " + character.range?.max + "ft."
-            }
-            label="Range"
-          />
+          <div className="col-span-2">
+            <CombatStatDisplay
+              stat={
+                character.range?.min === character.range?.max
+                  ? character.range.min
+                  : character.range?.min +
+                    "ft. - " +
+                    character.range?.max +
+                    "ft."
+              }
+              label="Range"
+            />
+          </div>
 
           <CombatStatDisplay stat={character.armor} label="Armor" />
           <CombatStatDisplay stat={character.counter} label="Counter" />
-          <CombatStatDisplay
-            stat={
-              character.deflect.count +
-              "d" +
-              character.deflect.dice +
-              (character.deflect.flat ? "+" + character.deflect.flat : "")
-            }
-            label="Deflect"
-          />
+          <div className="col-span-2">
+            <CombatStatDisplay
+              stat={
+                character.deflect.count +
+                "d" +
+                character.deflect.dice +
+                (character.deflect.flat ? "+" + character.deflect.flat : "")
+              }
+              label="Deflect"
+            />
+          </div>
         </div>
       </VerticalLabeledBox>
+      <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950">
+        <div className="mx-auto">
+          <Button
+            color="green"
+            buttonType={ButtonType.simple}
+            onClick={() => {
+              const newCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character,
+              );
+              newCharacter.catchBreath();
+              setCharacter(newCharacter);
+            }}
+          >
+            Catch Your Breath
+          </Button>
+        </div>
+        <div className="mx-auto">
+          <Button
+            color="gray"
+            buttonType={ButtonType.simple}
+            onClick={() => {
+              console.log("click");
+              const newCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character,
+              );
+              newCharacter.nightsRest();
+              setCharacter(newCharacter);
+            }}
+          >
+            Night&#39;s Rest
+          </Button>
+        </div>
+        <div className="mx-auto">
+          <Button
+            color="amber"
+            buttonType={ButtonType.simple}
+            onClick={() => {
+              const newCharacter = new PlayerCharacter(
+                undefined,
+                undefined,
+                undefined,
+                character,
+              );
+              newCharacter.restAndRecuperate();
+              setCharacter(newCharacter);
+            }}
+          >
+            Rest and Recuperate
+          </Button>
+        </div>
+      </div>
       <div>
         <CharacterFeatures
           character={character}

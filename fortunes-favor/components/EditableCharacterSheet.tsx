@@ -153,18 +153,11 @@ const EditableCharacterSheet = ({
     CREATE_CHARACTER_MUTATION,
   );
   const saveCharacter = async () => {
-    console.log(localStorage);
     if (character.name === undefined || character.name === "") {
       alert("Character name is required");
       return;
     }
-    console.log(
-      "converted character from",
-      character,
-      "to",
-      convertPlayerCharacterToGraphInput(character),
-      userContext.jwt,
-    );
+
     const { data } = await createCharacter({
       variables: {
         characterInputs: convertPlayerCharacterToGraphInput(character),

@@ -166,11 +166,6 @@ const updateFeatures = (
   });
   source.features.forEach((feature) => {
     if (feature instanceof CharacterFeatureData) {
-      console.log(
-        "feature is CharacterFeatureData",
-        feature,
-        feature.constructor.name,
-      );
       if (feature.level <= currentCharacter.level) {
         if (feature.actionType === ActionType.ACTION) {
           updatedActions.push(
@@ -226,7 +221,7 @@ const updateFeatures = (
         }
       }
     } else {
-      console.log(
+      console.warn(
         "feature is not CharacterFeatureData",
         feature,
         feature.constructor.name,
@@ -267,13 +262,9 @@ export default class PlayerCharacter {
   private _speeds: { type: string; speed: number }[];
   coin?: number;
   private _currentHealth?: number;
-  private _maxHealth: number;
-  private _maxStamina: number;
   private _currentStamina?: number;
   private _armorName: string;
   private _shieldName: string;
-  private _counter: number;
-  private _baseDamage?: number;
   private _range?: { min: number; max: number };
   private _items?: Item[];
   private _actions?: PlayerCharacterFeature[];
@@ -340,12 +331,9 @@ export default class PlayerCharacter {
       this._characterCulture = startingCharacter.culture;
       this.currentHealth = startingCharacter.currentHealth;
       this.currentStamina = startingCharacter.currentStamina;
-      this._maxHealth = startingCharacter.maxHealth;
-      this._maxStamina = startingCharacter.maxStamina;
       this._speeds = startingCharacter.speeds;
       this._armorName = startingCharacter.armorName;
       this._shieldName = startingCharacter.shieldName;
-      this._counter = startingCharacter.counter || this._armorValue() - 5;
       this._range = startingCharacter.characterClass?.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
@@ -362,13 +350,9 @@ export default class PlayerCharacter {
       this._characterCulture = culture;
       this.currentHealth = 0;
       this.currentStamina = 0;
-      this._maxHealth = 0;
-      this._maxStamina = 0;
       this._speeds = [{ type: "ground", speed: 30 }];
       this._armorName = "None";
       this._shieldName = "None";
-      this._counter = this._armorValue() - 5;
-      this._baseDamage = 0;
       this._range = characterClass ? characterClass.range : { min: 0, max: 0 };
       this._items = [];
       this._actions = [];
@@ -407,7 +391,6 @@ export default class PlayerCharacter {
         features: this._features,
       } = updateFeatures(FeatureSource.CLASS, this.characterClass, this));
     }
-    console.log(this._features);
     // remove veteran features if the character is less than level 8
     if (newLevel < 8)
       this._features = this._features?.filter(
@@ -430,7 +413,6 @@ export default class PlayerCharacter {
     } = updateFeatures(FeatureSource.CLASS, characterClass, this));
     this._range = characterClass.range;
     this.sortFeatures();
-    console.log("character after updating class", this);
   }
   public get culture(): CharacterCulture {
     if (!this._characterCulture)
@@ -479,13 +461,14 @@ export default class PlayerCharacter {
     return this._currentStamina || 0;
   }
   public set currentStamina(stamina: number) {
-    this._currentStamina = stamina;
+    this._currentStamina =
+      stamina > this.maxStamina ? this.maxStamina : stamina;
   }
   public get currentHealth(): number {
     return this._currentHealth || 0;
   }
   public set currentHealth(health: number) {
-    this._currentHealth = health;
+    this._currentHealth = health > this.maxHealth ? this.maxHealth : health;
   }
 
   public get armorName(): string {
@@ -552,10 +535,7 @@ export default class PlayerCharacter {
           staminaStat = this._stats.intellect;
           break;
       }
-      this._maxStamina =
-        this._characterClass?.stamina +
-        (this._level - 1) * this._characterClass?.staminaOnLevel +
-        this._level * staminaStat;
+
       return this._characterClass
         ? this._characterClass?.stamina +
             (this._level - 1) * this._characterClass?.staminaOnLevel +
@@ -781,15 +761,13 @@ export default class PlayerCharacter {
   public removeGenericFeature(slug: string) {
     if (!this._features) return;
     const i = this._features.findIndex((feature) => feature.slug === slug);
-    console.log("remove generic feature from ", i, this._features);
     if (i !== -1) {
       this._features.splice(i, 1);
     }
-    console.log("features after removal", this._features);
   }
   public finishRestAndRecuperation() {
-    this._currentHealth = this._maxHealth;
-    this._currentStamina = this._maxStamina;
+    this._currentHealth = this.maxHealth;
+    this._currentStamina = this.maxStamina;
   }
 
   private sortFeatures() {
@@ -812,5 +790,21 @@ export default class PlayerCharacter {
     if (this._features) this._features.sort((a, b) => orderFeatures(a, b));
     if (this._actions) this._actions.sort((a, b) => orderFeatures(a, b));
     if (this._counters) this._counters.sort((a, b) => orderFeatures(a, b));
+  }
+
+  public catchBreath() {
+    this.currentStamina = this.maxStamina;
+    if (this.currentHealth === 0) this.currentHealth = 1;
+    return this;
+  }
+  public nightsRest() {
+    this.currentStamina = this.maxStamina;
+    this.currentHealth = this.currentHealth + this.level + 1;
+    return this;
+  }
+  public restAndRecuperate() {
+    this.currentStamina = this.maxStamina;
+    this.currentHealth = this.maxHealth;
+    return this;
   }
 }

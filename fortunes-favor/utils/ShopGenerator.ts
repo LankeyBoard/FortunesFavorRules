@@ -20,7 +20,6 @@ export class ItemShop {
     } else {
       this.shop = this.decodeShop(encodedString);
     }
-    console.log(this.encodeShop());
   }
 
   private decodeShop(encodedString: string): Shop {
@@ -49,7 +48,6 @@ export class ItemShop {
     this.shop.inventory.forEach((item) => {
       encoded += `${item.inStock ? "1" : "0"}${item.discounted ? "1" : "0"}`;
     });
-    console.log(encoded);
     return encodeURIComponent(btoa(encoded));
   }
 

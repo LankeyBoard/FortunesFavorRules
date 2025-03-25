@@ -1,9 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  corePlugins: {
-    preflight: true,
-  },
+  // corePlugins removed as it is not a valid property in the Config type
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",

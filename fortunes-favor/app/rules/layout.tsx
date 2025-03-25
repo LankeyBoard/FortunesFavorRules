@@ -101,7 +101,7 @@ export default async function RulesLayout({
     title: "Veteran Features",
     basePath: "/rules/generic_features/veteran_features",
   };
-  console.log("rulesSection", rulesSection);
+
   return (
     <div className="flex flex-row flex-grow">
       <div className="flex-1 flex overflow-hidden mt-6 md:mt-0">

@@ -42,7 +42,7 @@ const SelectableFeatureCard = ({
       <div className="pointer-events-none">
         <FeatureCard
           feature={feature}
-          source="noviceFeature"
+          source={feature.source}
           isExpanded={true}
         />
       </div>

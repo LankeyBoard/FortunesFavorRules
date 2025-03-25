@@ -15,7 +15,6 @@ const CurrentUserProfile: React.FC = () => {
   if (!isClient) {
     return null;
   }
-  console.log(localStorage.getItem("token"));
 
   if (!localStorage.getItem("token")) {
     return (

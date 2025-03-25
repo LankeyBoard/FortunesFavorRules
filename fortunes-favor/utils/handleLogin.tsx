@@ -16,7 +16,6 @@ export const handleLogin = async (event: React.FormEvent) => {
   const email = (form.elements.namedItem("email") as HTMLInputElement).value;
   const password = (form.elements.namedItem("password") as HTMLInputElement)
     .value;
-  console.log("email", email, "password", password);
   try {
     const { data } = await client.mutate({
       mutation: LOGIN_MUTATION,
@@ -24,7 +23,6 @@ export const handleLogin = async (event: React.FormEvent) => {
     });
     const token = data.login.token;
     // Handle the token (e.g., save it to localStorage or context)
-    console.log("Login successful, token:", token);
   } catch (error) {
     console.error("Login failed:", error);
     // Handle error (e.g., show error message to the user)
