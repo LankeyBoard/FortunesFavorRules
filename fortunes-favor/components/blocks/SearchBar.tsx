@@ -15,7 +15,6 @@ const SearchBar = () => {
   const router = useRouter();
 
   const handleSearchUpdate = (searchTerm: string) => {
-    console.log("Search update", searchTerm);
     if (searchTerm) {
       setTerm(searchTerm);
     } else {
@@ -29,12 +28,10 @@ const SearchBar = () => {
     url.searchParams.delete("query");
     url.searchParams.set("query", searchTerm || "");
     url.pathname = "/searchResults";
-    console.log(url);
     router.push(url.toString());
   };
 
   useEffect(() => {
-    console.log("term changed to", term);
     const url = getUrl();
     if (!url) return;
     if (term) {
@@ -42,7 +39,6 @@ const SearchBar = () => {
     } else {
       url.searchParams.delete("query");
     }
-    console.log("url", url.toString());
     router.replace(url.toString(), { scroll: false });
   }, [term]);
 
@@ -60,7 +56,6 @@ const SearchBar = () => {
           }}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
-              console.log("enter event", term);
               submitSearch(term || "");
             }
           }}

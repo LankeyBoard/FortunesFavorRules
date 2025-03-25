@@ -15,9 +15,9 @@ const SignupOrLoginModal = ({
   const [isLogin, setIsLogin] = useState(isLoginClicked);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-99">
       <div
-        className="bg-slate-300 dark:bg-slate-700 rounded shadow-lg"
+        className="bg-slate-300 dark:bg-slate-700 rounded shadow-lg w-min"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between">

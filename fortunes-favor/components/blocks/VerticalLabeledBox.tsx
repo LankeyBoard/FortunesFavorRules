@@ -10,7 +10,7 @@ const VerticalLabeledBox = ({ children, label }: VerticalLabeledBoxProps) => {
         {label}
       </span>
       <div className="flex-initial m-auto basis-full">{children}</div>
-      <span className="-rotate-90 flex-none h-0 w-min pb-6 my-auto mx-0 uppercase font-thin text-sm opacity-80 tracking-wider"></span>
+      {/* <span className="-rotate-90 flex-none h-0 w-min pb-6 my-auto mx-0 uppercase font-thin text-sm opacity-80 tracking-wider"></span> */}
     </div>
   );
 };

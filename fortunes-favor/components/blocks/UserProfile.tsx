@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import VerticalLabeledBox from "./VerticalLabeledBox";
 import { useRouter } from "next/navigation";
+import Button, { ButtonType } from "./Inputs/Button";
 
 interface Character {
   id: string;
@@ -86,12 +87,13 @@ const UserProfile = () => {
       <VerticalLabeledBox label="User">
         <p>Email: {user.email}</p>
       </VerticalLabeledBox>
-      <button
+      <Button
+        color="red"
+        buttonType={ButtonType.default}
         onClick={handleLogout}
-        className="p-2 m-4 dark:bg-red-700 bg-red-400 rounded-md hover:bg-red-500"
       >
         Logout
-      </button>
+      </Button>
       <div>
         <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
           Characters

@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import SlugLinker from "../SlugLinker";
 import { CharacterOptions } from "@/components/CharacterSheet";
 import GenericFeaturePicker from "../GenericFeaturePicker";
+import Button, { ButtonType } from "../Inputs/Button";
 
 const LinkToBasicFeatures = ({ label }: { label: string }) => {
   switch (label.toLowerCase()) {
@@ -56,24 +57,24 @@ const CharacterFeatures = ({
       </h2>
       {characterOptions && isEditable && (
         <>
-          <div className="mx-auto">
-            <button
-              type="button"
-              className="w-fit px-2 py-0 mb-2 border-b-2 border-amber-300 dark:border-amber-700 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white hover:border-amber-500 mr-auto ml-2 block float-left"
+          <div className="mx-auto float-start">
+            <Button
+              buttonType={ButtonType.simple}
+              color="amber"
               onClick={() => {
                 setShowGenericFeaturesModal(true);
               }}
             >
               <span>Pick Novice/Veteran Features</span>
-            </button>
+            </Button>
           </div>
           {showGenericFeaturesModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+            <div className="float-left md:fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-md z-99 rounded-md">
               <div className="w-fit md:fixed mx-auto md:my-30 bg-slate-200 dark:bg-slate-800 md:inset-0 backdrop-blur-sm max-w-4xl overflow-auto md:mt-28 p-4 ">
                 <button
                   type="button"
                   onClick={() => setShowGenericFeaturesModal(false)}
-                  className="float-right"
+                  className="float-right hover:fill-slate-600 hover:dark:fill-slate-400 hover:stroke-slate-600 hover:stroke:fill-slate-400 cursor-pointer"
                 >
                   <span className="w-6 h-6">
                     <svg
@@ -112,10 +113,10 @@ const CharacterFeatures = ({
       )}
       {features && features.length > 0 && (
         <>
-          <div className="mx-auto">
-            <button
-              type="button"
-              className="px-2 py-0 mb-2 border-b-2 border-amber-300 dark:border-amber-700 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white hover:border-amber-500 ml-auto mr-2 block"
+          <div className="flex flex-row-reverse">
+            <Button
+              buttonType={ButtonType.simple}
+              color="amber"
               onClick={() => {
                 setExpanded(!areExpanded);
               }}
@@ -125,7 +126,7 @@ const CharacterFeatures = ({
               ) : (
                 <span>Expand All</span>
               )}
-            </button>
+            </Button>
           </div>
 
           {features?.map((feature) => (

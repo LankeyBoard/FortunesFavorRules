@@ -3,6 +3,8 @@
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useUser } from "../UserContext";
+import TextInput from "./Inputs/TextInput";
+import Button, { ButtonType } from "./Inputs/Button";
 
 const SIGNUP_MUTATION = gql`
   mutation Signup($email: String!, $name: String!, $password: String!) {
@@ -59,7 +61,7 @@ const SignupForm = ({
         >
           Email
         </label>
-        <input
+        <TextInput
           type="email"
           id="signup-email"
           name="email"
@@ -74,7 +76,7 @@ const SignupForm = ({
         >
           Name
         </label>
-        <input
+        <TextInput
           type="text"
           id="signup-name"
           name="name"
@@ -89,29 +91,31 @@ const SignupForm = ({
         >
           Password
         </label>
-        <input
+        <TextInput
           type="password"
           id="signup-password"
           name="password"
           required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
         />
       </div>
       <div className="text-red">{error?.message}</div>
       <div className="form-actions flex justify-end space-x-4">
-        <button
+        <Button
           type="submit"
-          className="bg-amber-700 text-white px-4 py-2 rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+          color="amber"
+          buttonType={ButtonType.default}
+          className="bg-amber-700 text-white px-4 py-2 rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-no-wrap"
         >
           Sign Up
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          color="gray"
+          buttonType={ButtonType.default}
           className="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           onClick={() => setIsOpen(false)}
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

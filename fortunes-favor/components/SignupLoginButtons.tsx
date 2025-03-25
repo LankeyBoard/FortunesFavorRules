@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import SignupOrLoginModal from "./SignupLoginModal";
 import Link from "next/link";
+import Button, { ButtonType } from "./blocks/Inputs/Button";
 
 const SignupLoginButtons = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,12 +12,6 @@ const SignupLoginButtons = () => {
       : false,
   );
   useEffect(() => {
-    console.log(localStorage.getItem("token"));
-    console.log(
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token") !== null
-        : false,
-    );
     setIsAuthenticated(
       typeof localStorage !== "undefined"
         ? localStorage.getItem("token") !== null
@@ -24,29 +19,27 @@ const SignupLoginButtons = () => {
     );
   }, []);
   const [loginClicked, setLoginClicked] = useState(false);
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
-  };
   if (!isAuthenticated)
     return (
-      <>
-        <button
-          className="font-extralight tracking-tight m-2 align-middle hover:underline hover:opacity-75"
+      <div className="flex">
+        <Button
+          color="gray"
+          buttonType={ButtonType.simple}
           onClick={() => {
             setIsOpen(true), setLoginClicked(true);
           }}
         >
           login
-        </button>
-        <button
-          className="bg-amber-400 dark:bg-amber-700 font-extralight tracking-tight mx-2 py-2 px-3 rounded hover:bg-amber-500 hover:dark:bg-amber-600 align-middle"
+        </Button>
+        <Button
+          color="amber"
+          buttonType={ButtonType.default}
           onClick={() => {
             setIsOpen(true), setLoginClicked(false);
           }}
         >
           Sign up
-        </button>
+        </Button>
         {isOpen && (
           <SignupOrLoginModal
             setIsOpen={setIsOpen}
@@ -54,7 +47,7 @@ const SignupLoginButtons = () => {
             isLoginClicked={loginClicked}
           />
         )}
-      </>
+      </div>
     );
   else
     return (

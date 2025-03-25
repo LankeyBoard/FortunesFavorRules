@@ -25,6 +25,7 @@ import GET_CHARACTER_INFO, {
 import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterMutation";
 import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
+import Button, { ButtonType } from "./blocks/Inputs/Button";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   const characterClass = new CharacterClassData(data.character.characterClass);
@@ -36,6 +37,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
     characterClass,
     undefined,
   );
+  character.level = data.character.level;
   character.stats = {
     mettle: data.character.mettle,
     agility: data.character.agility,
@@ -45,7 +47,6 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.currentHealth = data.character.currentHealth;
   character.currentStamina = data.character.currentStamina;
   character.coin = data.character.coin;
-  character.level = data.character.level;
   character.name = data.character.name;
   character.id = data.character.id;
   return character;
@@ -119,7 +120,6 @@ const extractGenericFeatures = (
 };
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
-  console.log("Choices", character.choices);
   return {
     name: character.name,
     level: character.level,
@@ -181,7 +181,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           characterInputs: convertPlayerCharacterToGraphInput(character),
         },
       });
-      console.log(data);
+      console.log("character created", data);
       if (!data.id) throw new Error("Error creating character");
       const newCharacter = new PlayerCharacter(
         undefined,
@@ -196,7 +196,6 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   };
   // load character if there is a characterId otherwise only load character options.
   useEffect(() => {
-    console.log("characterId", characterId);
     const fetchData = async () => {
       try {
         const { data } = await client.query({
@@ -331,10 +330,10 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           />
         </div>
       </div>
-      <div className="mx-auto">
-        <button
-          type="button"
-          className="px-2 py-0 mb-2 border-b-2 border-amber-300 dark:border-amber-700 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white hover:border-amber-500 mx-auto block"
+      <div className="mx-auto w-fit">
+        <Button
+          buttonType={ButtonType.simple}
+          color="amber"
           onClick={() => {
             if (isEditable) saveCharacter(character);
             setEditable(!isEditable);
@@ -345,7 +344,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           ) : (
             <span>Edit Character</span>
           )}
-        </button>
+        </Button>
       </div>
     </>
   );
