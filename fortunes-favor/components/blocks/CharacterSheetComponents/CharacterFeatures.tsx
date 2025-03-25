@@ -74,7 +74,7 @@ const CharacterFeatures = ({
                 <button
                   type="button"
                   onClick={() => setShowGenericFeaturesModal(false)}
-                  className="float-right"
+                  className="float-right hover:fill-slate-600 hover:dark:fill-slate-400 hover:stroke-slate-600 hover:stroke:fill-slate-400 cursor-pointer"
                 >
                   <span className="w-6 h-6">
                     <svg

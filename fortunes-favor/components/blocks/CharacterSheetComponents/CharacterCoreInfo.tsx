@@ -200,7 +200,7 @@ const CharacterCoreInfo = ({
 
           <CombatStatDisplay stat={character.armor} label="Armor" />
           <CombatStatDisplay stat={character.counter} label="Counter" />
-          <div className="col-span-2">
+          <div className="">
             <CombatStatDisplay
               stat={
                 character.deflect.count +
@@ -211,6 +211,7 @@ const CharacterCoreInfo = ({
               label="Deflect"
             />
           </div>
+          <CombatStatDisplay stat={character.level} label="Deflect Dice" />
         </div>
       </VerticalLabeledBox>
       <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950">

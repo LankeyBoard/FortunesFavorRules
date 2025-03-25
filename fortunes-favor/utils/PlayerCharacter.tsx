@@ -329,8 +329,8 @@ export default class PlayerCharacter {
       this._characterClass = startingCharacter.characterClass;
       this._characterLineage = startingCharacter.lineage;
       this._characterCulture = startingCharacter.culture;
-      this.currentHealth = startingCharacter.currentHealth;
-      this.currentStamina = startingCharacter.currentStamina;
+      this._currentHealth = startingCharacter.currentHealth;
+      this._currentStamina = startingCharacter.currentStamina;
       this._speeds = startingCharacter.speeds;
       this._armorName = startingCharacter.armorName;
       this._shieldName = startingCharacter.shieldName;

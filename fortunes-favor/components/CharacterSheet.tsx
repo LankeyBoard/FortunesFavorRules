@@ -37,6 +37,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
     characterClass,
     undefined,
   );
+  character.level = data.character.level;
   character.stats = {
     mettle: data.character.mettle,
     agility: data.character.agility,
@@ -46,7 +47,6 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.currentHealth = data.character.currentHealth;
   character.currentStamina = data.character.currentStamina;
   character.coin = data.character.coin;
-  character.level = data.character.level;
   character.name = data.character.name;
   character.id = data.character.id;
   return character;
