@@ -259,7 +259,6 @@ export default class PlayerCharacter {
   private _characterCulture?: CharacterCulture;
   private _stats: Stats;
   private _characterLineage?: CharacterLineage;
-  private _speeds: { type: string; speed: number }[];
   coin?: number;
   private _currentHealth?: number;
   private _currentStamina?: number;
@@ -331,7 +330,6 @@ export default class PlayerCharacter {
       this._characterCulture = startingCharacter.culture;
       this._currentHealth = startingCharacter.currentHealth;
       this._currentStamina = startingCharacter.currentStamina;
-      this._speeds = startingCharacter.speeds;
       this._armorName = startingCharacter.armorName;
       this._shieldName = startingCharacter.shieldName;
       this._range = startingCharacter.characterClass?.range;
@@ -350,7 +348,6 @@ export default class PlayerCharacter {
       this._characterCulture = culture;
       this.currentHealth = 0;
       this.currentStamina = 0;
-      this._speeds = [{ type: "ground", speed: 30 }];
       this._armorName = "None";
       this._shieldName = "None";
       this._range = characterClass ? characterClass.range : { min: 0, max: 0 };
@@ -448,7 +445,6 @@ export default class PlayerCharacter {
     this._actions = updatedFeatures.actions;
     this._counters = updatedFeatures.counters;
     this._features = updatedFeatures.features;
-    this._speeds = characterLineage.speeds;
     this.sortFeatures();
   }
   public get stats(): Stats {
@@ -489,18 +485,7 @@ export default class PlayerCharacter {
     return this._armorValue();
   }
   public get speeds() {
-    if (
-      this.lineage?.slug === "FAERY" &&
-      !this._speeds.some(
-        (speed) => speed.type === "flying" && speed.speed === 20,
-      )
-    ) {
-      return [
-        ...this._speeds,
-        { type: "flying", speed: 20, source: "lineage" },
-      ];
-    }
-    return this._speeds;
+    return this.lineage?.speeds;
   }
 
   public get deflect() {
