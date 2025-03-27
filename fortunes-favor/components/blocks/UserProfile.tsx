@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import VerticalLabeledBox from "./VerticalLabeledBox";
 import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
+import Trash from "../icons/Trash";
+import CharacterCard from "./CharacterCard";
 
 interface Character {
   id: string;
@@ -98,46 +100,70 @@ const UserProfile = () => {
         <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
           Characters
         </h2>
-        <ul className="flex flex-auto flex-wrap">
-          <Link
-            href={"/characters/create_character"}
-            className="flex-none hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 w-56 block"
+        <div className="flex justify-center my-4">
+          <label htmlFor="sort" className="mr-2">
+            Sort by:
+          </label>
+          <select
+            id="sort"
+            className="border rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 text-white"
+            onChange={(e) => {
+              const sortKey = e.target.value;
+              const sortedCharacters = [...characters].sort((a, b) => {
+                if (sortKey === "name") {
+                  return a.name.localeCompare(b.name);
+                } else if (sortKey === "characterClass") {
+                  return a.characterClass.title.localeCompare(
+                    b.characterClass.title,
+                  );
+                } else if (sortKey === "characterCulture") {
+                  return a.characterCulture.title.localeCompare(
+                    b.characterCulture.title,
+                  );
+                } else if (sortKey === "characterLineage") {
+                  return a.characterLineage.title.localeCompare(
+                    b.characterLineage.title,
+                  );
+                }
+                return 0;
+              });
+              setData((prevData) => {
+                if (!prevData) return prevData;
+                return {
+                  ...prevData,
+                  me: {
+                    ...prevData.me,
+                    characters: sortedCharacters,
+                  },
+                };
+              });
+            }}
           >
-            <div className="text-4xl flex items-center justify-center h-full">
-              +
-            </div>
-          </Link>
-          {characters.map((character: Character) => (
+            <option value="name">Name</option>
+            <option value="characterClass">Class</option>
+            <option value="characterCulture">Culture</option>
+            <option value="characterLineage">Lineage</option>
+          </select>
+        </div>
+        <div className="">
+          <ul className="flex flex-auto flex-wrap justify-center md:justify-start">
             <Link
-              href={`/characters/${character.id}`}
-              key={character.id}
-              className="flex-none hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 w-56 block"
+              href={"/characters/create_character"}
+              className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 w-11/12 max-w-11/12 md:w-56 block"
             >
-              <li key={character.id}>
-                <header className="bg-purple-300 dark:bg-purple-700 p-2">
-                  <span className="font-bold text-lg overflow-hidden">
-                    {character.name}
-                  </span>
-                  <span className="float-right">{character.level}</span>
-                </header>
-                <div className="mx-4 my-2">
-                  <p>
-                    <span className="font-light">Class: </span>
-                    {character.characterClass.title}
-                  </p>
-                  <p>
-                    <span className="font-light">Culture: </span>
-                    {character.characterCulture.title}
-                  </p>
-                  <p>
-                    <span className="font-light">Lineage: </span>
-                    {character.characterLineage.title}
-                  </p>
-                </div>
-              </li>
+              <div className="text-4xl flex items-center justify-center h-full">
+                +
+              </div>
             </Link>
-          ))}
-        </ul>
+            {characters.map((character: Character) => (
+              <CharacterCard
+                key={character.id}
+                character={character}
+                setData={setData}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "cross-env NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4000/graphql next dev",
     "build": "npm install && next build",
     "start": "next start",
     "lint": "next lint"
@@ -28,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
     "autoprefixer": "^10.0.1",
+    "cross-env": "^7.0.3",
     "cross-spawn": "^7.0.6",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.0.4",
