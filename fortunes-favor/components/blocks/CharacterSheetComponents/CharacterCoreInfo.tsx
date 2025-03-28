@@ -211,7 +211,10 @@ const CharacterCoreInfo = ({
               label="Deflect"
             />
           </div>
-          <CombatStatDisplay stat={character.level} label="Deflect Dice" />
+          <CombatStatDisplay
+            stat={character.deflectDice}
+            label="Deflect Dice"
+          />
         </div>
       </VerticalLabeledBox>
       <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950">
