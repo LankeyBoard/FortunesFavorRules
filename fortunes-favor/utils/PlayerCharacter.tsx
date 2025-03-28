@@ -664,6 +664,9 @@ export default class PlayerCharacter {
     return allFeatures;
   }
 
+  public get deflectDice() {
+    return 1 + Math.floor(this.level / 2);
+  }
   // Helper Functions
 
   public updateChoices(choices: string[]): PlayerCharacter {
