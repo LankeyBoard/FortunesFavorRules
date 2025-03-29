@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect } from "react";
 import { RuleType } from "../utils/enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
@@ -43,8 +46,28 @@ type fieldProps = {
   depth?: number;
 };
 const RuleField = ({ field, depth = 3 }: fieldProps) => {
+  useEffect(() => {
+    if (window.top !== null) {
+      const path = window.location.hash;
+      if (path && path.includes("#")) {
+        setTimeout(() => {
+          const id = path.replace("#", "");
+          const el = window.document.getElementById(id);
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          if (!window.top) return;
+          const remInPixels =
+            parseFloat(getComputedStyle(document.documentElement).fontSize) * 5;
+          window.top.scroll({
+            top: pageYOffset + r.top - remInPixels,
+            behavior: "smooth",
+          });
+        }, 600);
+      }
+    }
+  }, [field.slug]);
   return (
-    <div id={field.slug} className="z-0 -scroll-mt-[-10rem] md:scroll-mt-20">
+    <div id={field.slug} className="z-0 scroll-mt-20">
       <div className={titleStyler(depth)}>
         <label className="display-flex">
           {field.title}{" "}
