@@ -8,7 +8,10 @@ const query = gql`
   query GetGenericRules {
     genericRules {
       href
-      list
+      lists {
+        label
+        items
+      }
       ruleType
       shortText
       shortTitle
@@ -16,13 +19,19 @@ const query = gql`
       title
       subRules {
         href
-        list
+        lists {
+          label
+          items
+        }
         ruleType
         shortText
         shortTitle
         subRules {
           href
-          list
+          lists {
+            label
+            items
+          }
           ruleType
           shortText
           shortTitle
@@ -35,7 +44,10 @@ const query = gql`
           title
           subRules {
             href
-            list
+            lists {
+              label
+              items
+            }
             ruleType
             shortText
             shortTitle
@@ -78,7 +90,7 @@ async function GeneralRule() {
         rule.ruleType,
         rule.text,
         rule.subRules,
-        rule.list,
+        rule.lists,
       ),
     );
   });

@@ -8,7 +8,10 @@ const query = gql`
   query GetGenericRule($slug: String) {
     genericRules(slug: $slug) {
       href
-      list
+      lists {
+        label
+        items
+      }
       ruleType
       shortText
       shortTitle
@@ -16,13 +19,19 @@ const query = gql`
       title
       subRules {
         href
-        list
+        lists {
+          label
+          items
+        }
         ruleType
         shortText
         shortTitle
         subRules {
           href
-          list
+          lists {
+            label
+            items
+          }
           ruleType
           shortText
           shortTitle
@@ -30,26 +39,15 @@ const query = gql`
           text {
             text
             type
-            options
+            choices
           }
           title
-        }
-        slug
-        text {
-          options
-          text
-          type
-        }
-        title
-        subRules {
-          href
-          list
-          ruleType
-          shortText
-          shortTitle
           subRules {
             href
-            list
+            lists {
+              label
+              items
+            }
             ruleType
             shortText
             shortTitle
@@ -57,21 +55,21 @@ const query = gql`
             text {
               text
               type
-              options
+              choices
             }
             title
           }
-          slug
-          text {
-            options
-            text
-            type
-          }
-          title
         }
+        slug
+        text {
+          choices
+          text
+          type
+        }
+        title
       }
       text {
-        options
+        choices
         text
         type
       }
@@ -94,7 +92,7 @@ async function GeneralRule(props: { params: Promise<{ slug: string }> }) {
         rule.ruleType,
         rule.text,
         rule.subRules,
-        rule.list,
+        rule.lists,
       ),
     );
   });
