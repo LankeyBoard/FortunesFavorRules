@@ -15,7 +15,7 @@ const rulesPageText: GenericRule[] = [
       },
     ],
     subRules: [],
-    list: [],
+    lists: [],
   },
   {
     title: "The Basics",
@@ -28,7 +28,7 @@ const rulesPageText: GenericRule[] = [
       },
     ],
     subRules: [],
-    list: [],
+    lists: [],
   },
   {
     title: "What to Read",
@@ -52,7 +52,7 @@ const rulesPageText: GenericRule[] = [
           },
         ],
         subRules: [],
-        list: [],
+        lists: [],
       },
       {
         title: "A Solid Understanding",
@@ -65,7 +65,7 @@ const rulesPageText: GenericRule[] = [
           },
         ],
         subRules: [],
-        list: [],
+        lists: [],
       },
       {
         title: "Running a Game",
@@ -78,10 +78,10 @@ const rulesPageText: GenericRule[] = [
           },
         ],
         subRules: [],
-        list: [],
+        lists: [],
       },
     ],
-    list: [],
+    lists: [],
   },
 ];
 
