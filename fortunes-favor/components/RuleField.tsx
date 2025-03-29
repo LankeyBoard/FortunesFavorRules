@@ -44,7 +44,7 @@ type fieldProps = {
 };
 const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
-    <div id={field.slug} className="z-0 scroll-mt-20">
+    <div id={field.slug} className="z-0 -scroll-mt-[-10rem] md:scroll-mt-20">
       <div className={titleStyler(depth)}>
         <label className="display-flex">
           {field.title}{" "}
@@ -62,17 +62,29 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
             <TextBlock text={field.text} style={depth === 1 ? "mt-3" : ""} />
           </div>
         )}
-        {field.list && field.list.length > 0 && (
-          <ul className="ml-4 pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
-            {field.list.map((text) => {
-              return (
-                <li key={text}>
-                  <SlugLinker text={text} />
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {field.lists &&
+          field.lists.length > 0 &&
+          field.lists.map((list) => {
+            return (
+              <div key={list.label} className="mb-2 mt-2">
+                {list.label && list.label.length > 0 && (
+                  <span className="text-slate-700 dark:text-slate-400 ml-4 font-semibold">
+                    {list.label}
+                  </span>
+                )}
+
+                <ul className="ml-4 pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
+                  {list.items.map((item) => {
+                    return (
+                      <li key={item}>
+                        <SlugLinker text={item} />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         {field.subRules && field.ruleType === RuleType.COMPACTLIST && (
           <div className="pl-4">
             {field.subRules.map((rule) => (
