@@ -28,6 +28,7 @@ import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterM
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
+  console.log("class data", data.character.characterClass);
   const characterClass = new CharacterClassData(data.character.characterClass);
   const culture = new CharacterCulture(data.character.characterCulture);
   const lineage = new CharacterLineage(data.character.characterLineage);
@@ -165,6 +166,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
+
   const saveCharacter = async (character: PlayerCharacter) => {
     console.log("saveCharacter character id", character.id);
     if (character.id) {

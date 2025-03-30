@@ -6,6 +6,7 @@ import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
 import VerticalLabeledBox from "../VerticalLabeledBox";
 import CharacterFeatures from "./CharacterFeatures";
 import Button, { ButtonType } from "../Inputs/Button";
+import FormDisplay, { Form } from "../FormDisplay";
 
 const CombatStatDisplay = ({
   stat,
@@ -274,6 +275,14 @@ const CharacterCoreInfo = ({
           </Button>
         </div>
       </div>
+      {character.characterClass.extra?.forms && (
+        <div>
+          <span>Forms</span>
+          {character.characterClass.extra.forms.map((form: Form) => (
+            <FormDisplay key={form.slug} form={form} />
+          ))}
+        </div>
+      )}
       <div>
         <CharacterFeatures
           character={character}

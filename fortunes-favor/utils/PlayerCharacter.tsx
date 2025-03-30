@@ -4,8 +4,9 @@ import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
-import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
+import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
+import { Form } from "@/components/blocks/FormDisplay";
 
 type Stats = {
   mettle: number;
@@ -270,6 +271,9 @@ export default class PlayerCharacter {
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
   private _languages?: Languages[];
+  private _extras?: {
+    form?: Form;
+  };
   private _armorValue = () => {
     let armor = 10 + this.stats.agility;
     switch (this._armorName.toLowerCase()) {
@@ -697,7 +701,8 @@ export default class PlayerCharacter {
     if (this._features) updateChosen(this._features);
     if (this._actions) updateChosen(this._actions);
     if (this._counters) updateChosen(this._counters);
-
+    if (this._characterClass?.extra?.forms) {
+    }
     return this;
   }
 
