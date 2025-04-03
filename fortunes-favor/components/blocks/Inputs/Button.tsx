@@ -1,6 +1,7 @@
 export enum ButtonType {
   simple,
   default,
+  icon,
 }
 
 const SimpleButtonColor = {
@@ -20,7 +21,7 @@ const DefaultButtonColor = {
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   buttonType: ButtonType;
-  color: keyof typeof DefaultButtonColor;
+  color?: keyof typeof DefaultButtonColor;
 }
 const Button: React.FC<ButtonProps> = ({
   children,
@@ -28,18 +29,20 @@ const Button: React.FC<ButtonProps> = ({
   color,
   ...props
 }) => {
-  let buttonStyle = "";
-  const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
+  let buttonStyle = "w-10 cursor-pointer p-2";
+  if (color) {
+    const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
 
-  const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded  cursor-pointer align-text-top`;
+    const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded  cursor-pointer align-text-top`;
 
-  switch (buttonType) {
-    case ButtonType.simple:
-      buttonStyle = SIMPLE_BUTTON_STYLE;
-      break;
-    case ButtonType.default:
-      buttonStyle = DEFAULT_BUTTON_STYLE;
-      break;
+    switch (buttonType) {
+      case ButtonType.simple:
+        buttonStyle = SIMPLE_BUTTON_STYLE;
+        break;
+      case ButtonType.default:
+        buttonStyle = DEFAULT_BUTTON_STYLE;
+        break;
+    }
   }
   return (
     <button type="button" {...props} className={buttonStyle}>
