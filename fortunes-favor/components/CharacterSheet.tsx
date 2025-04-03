@@ -28,6 +28,7 @@ import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterM
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
 import { RuleText } from "@/utils/graphQLtypes";
+import { useRouter } from "next/navigation";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -212,6 +213,9 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
+
+  const router = useRouter();
+
   const saveCharacter = async (character: PlayerCharacter) => {
     console.log("saveCharacter character id", character.id);
     if (character.id) {
@@ -229,15 +233,16 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         },
       });
       console.log("character created", data);
-      if (!data.id) throw new Error("Error creating character");
+      if (!data.createCharacter.id) throw new Error("Error creating character");
       const newCharacter = new PlayerCharacter(
         undefined,
         undefined,
         undefined,
         character,
       );
-      newCharacter.id = data.id;
+      newCharacter.id = data.createCharacter.id;
       setCharacter(newCharacter);
+      router.replace(`/characters/${data.createCharacter.id}`);
       return data;
     }
   };
