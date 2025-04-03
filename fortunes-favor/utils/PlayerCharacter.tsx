@@ -6,6 +6,7 @@ import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
 import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
+import Item, { RechargeOn } from "./Item";
 
 type Stats = {
   mettle: number;
@@ -51,24 +52,6 @@ const downgradeBaseDamage = (damage: {
   }
   return updatedDamage;
 };
-class Input {
-  readonly title: string;
-  readonly text: RuleText[];
-
-  constructor(title: string, text: [RuleText]) {
-    this.title = title;
-    this.text = text;
-  }
-}
-
-class Feature extends Input {
-  readonly effects?: Effect[];
-
-  constructor(title: string, text: [RuleText], effects: Effect[]) {
-    super(title, text);
-    this.effects = effects;
-  }
-}
 
 export class PlayerCharacterFeature extends GenericFeatureData {
   readonly source: FeatureSource;
@@ -124,20 +107,10 @@ export class PlayerCharacterFeature extends GenericFeatureData {
   }
 }
 
-class Item extends Feature {
-  readonly isMagicItem: boolean;
-  readonly rarity: ItemRarity;
-  constructor(
-    title: string,
-    text: [RuleText],
-    effects: Effect[],
-    isMagicItem: boolean,
-    rarity: ItemRarity,
-  ) {
-    super(title, text, effects);
-    this.isMagicItem = isMagicItem;
-    this.rarity = rarity;
-  }
+const enum RestType {
+  CATCH_BREATH = "catchBreath",
+  NIGHTS_REST = "nightsRest",
+  REST_AND_RECUPERATE = "restAndRecuperate",
 }
 
 const updateFeatures = (
@@ -265,7 +238,7 @@ export default class PlayerCharacter {
   private _armorName: string;
   private _shieldName: string;
   private _range?: { min: number; max: number };
-  private _items?: Item[];
+  private _items: Item[];
   private _actions?: PlayerCharacterFeature[];
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
@@ -338,6 +311,7 @@ export default class PlayerCharacter {
       this._counters = startingCharacter.counters;
       this._features = startingCharacter.features;
       this._languages = startingCharacter.languages;
+      this._items = startingCharacter.items;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -355,6 +329,7 @@ export default class PlayerCharacter {
       this._actions = [];
       this._counters = [];
       this._features = [];
+      this._items = [];
       if (characterClass)
         ({
           actions: this._actions,
@@ -578,6 +553,15 @@ export default class PlayerCharacter {
   public get items() {
     return this._items;
   }
+
+  public set items(items: Item[]) {
+    this._items = items;
+  }
+
+  public addItem(item: Item) {
+    this._items.push(item);
+  }
+
   public get actions() {
     this.sortFeatures();
     return this._actions;
@@ -783,16 +767,34 @@ export default class PlayerCharacter {
   public catchBreath() {
     this.currentStamina = this.maxStamina;
     if (this.currentHealth === 0) this.currentHealth = 1;
+    this._items.forEach((item) => {
+      if (item.uses && item.uses.rechargeOn === RechargeOn.CATCH_BREATH) {
+        item.uses.used = 0;
+      }
+    });
     return this;
   }
   public nightsRest() {
     this.currentStamina = this.maxStamina;
     this.currentHealth = this.currentHealth + this.level + 1;
+    this._items.forEach((item) => {
+      if (item.uses && item.uses.rechargeOn === RechargeOn.NIGHTS_REST) {
+        item.uses.used = 0;
+      }
+    });
     return this;
   }
   public restAndRecuperate() {
     this.currentStamina = this.maxStamina;
     this.currentHealth = this.maxHealth;
+    this._items.forEach((item) => {
+      if (
+        item.uses &&
+        item.uses.rechargeOn === RechargeOn.REST_AND_RECUPERATE
+      ) {
+        item.uses.used = 0;
+      }
+    });
     return this;
   }
 }

@@ -26,8 +26,11 @@ import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterM
 import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
+import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import { RuleText } from "@/utils/graphQLtypes";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
+  console.log(data);
   const characterClass = new CharacterClassData(data.character.characterClass);
   const culture = new CharacterCulture(data.character.characterCulture);
   const lineage = new CharacterLineage(data.character.characterLineage);
@@ -49,6 +52,25 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.coin = data.character.coin;
   character.name = data.character.name;
   character.id = data.character.id;
+  character.items = data.character.items.map((item) => {
+    const itemText: [RuleText] =
+      item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];
+    return new Item(
+      item.title,
+      itemText,
+      item.isMagic,
+      findEnum(item.rarity, ItemRarity),
+      item.uses
+        ? {
+            ...item.uses,
+            rechargeOn:
+              RechargeOn[item.uses.rechargeOn as keyof typeof RechargeOn],
+          }
+        : undefined,
+      Number(item.id),
+    );
+  });
+  console.log(character);
   return character;
 };
 
@@ -120,7 +142,7 @@ const extractGenericFeatures = (
 };
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
-  return {
+  const inputs = {
     name: character.name,
     level: character.level,
     mettle: character.stats.mettle,
@@ -143,7 +165,32 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
     featureChoiceSlugs: character.choices,
+    items: character.items.map((item) => {
+      return {
+        id: item.id,
+        title: item.title,
+        text: item.text.map((text) => {
+          return { text: text.text, type: text.type, choices: text.choices };
+        }),
+        isMagic: item.isMagic,
+        effects: item.effects,
+        rarity: item.rarity?.toUpperCase(),
+        uses: item.uses
+          ? {
+              used: item.uses.used,
+              max: item.uses.max,
+              rechargeOn: Object.keys(RechargeOn).find(
+                (key) =>
+                  RechargeOn[key as keyof typeof RechargeOn] ===
+                  item.uses?.rechargeOn,
+              ),
+            }
+          : undefined,
+      };
+    }),
   };
+  console.log(inputs);
+  return inputs;
 };
 
 export type CharacterOptions = {
