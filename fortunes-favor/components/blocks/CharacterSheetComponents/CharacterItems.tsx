@@ -68,17 +68,18 @@ const CharacterItems = ({
       </LargeField>
       {isEditable && (
         <div>
-          <Button
-            buttonType={ButtonType.default}
-            color="green"
-            onClick={() => setShowItemForm(!showItemForm)}
-          >
-            <div className="w-3 dark:fill-white fill-black">
-              <Plus />
-            </div>
-          </Button>
-          {showItemForm && (
+          {showItemForm ? (
             <CreateItem character={character} setCharacter={setCharacter} />
+          ) : (
+            <Button
+              buttonType={ButtonType.default}
+              color="green"
+              onClick={() => setShowItemForm(!showItemForm)}
+            >
+              <div className="w-3 dark:fill-white fill-black">
+                <Plus />
+              </div>
+            </Button>
           )}
         </div>
       )}

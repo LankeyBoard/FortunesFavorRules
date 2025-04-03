@@ -173,7 +173,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
           return { text: text.text, type: text.type, choices: text.choices };
         }),
         isMagic: item.isMagic,
-        effects: item.effects,
+        effects: item.effects || [],
         rarity: item.rarity?.toUpperCase(),
         uses: item.uses
           ? {
