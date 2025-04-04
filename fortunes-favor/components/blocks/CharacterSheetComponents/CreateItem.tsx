@@ -12,11 +12,12 @@ import { Dispatch, SetStateAction, useState } from "react";
 const CreateItem = ({
   character,
   setCharacter,
+  setShowItemForm,
 }: {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
+  setShowItemForm: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [showItemForm, setShowItemForm] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState("");
   const [newItemText, setNewItemText] = useState("");
   const [isMagicItem, setIsMagicItem] = useState(false);
@@ -31,7 +32,7 @@ const CreateItem = ({
     | undefined
   >(undefined);
   return (
-    <div className="mt-4 p-4 border rounded">
+    <div className="mt-4 p-4 border rounded bg-slate-100 dark:bg-slate-900">
       <form
         onSubmit={(e) => {
           e.preventDefault();

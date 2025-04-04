@@ -474,13 +474,10 @@ export default class PlayerCharacter {
     }
     switch (this._shieldName) {
       case ShieldType.LIGHT:
-        if (this.stats.agility >= 3) {
-          armor += 1;
-        }
         break;
       case ShieldType.MEDIUM:
         if (this.stats.agility >= 1 && this.stats.mettle >= 1) {
-          armor += 2;
+          armor += 1;
         }
         break;
       case ShieldType.HEAVY:

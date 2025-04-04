@@ -1,14 +1,9 @@
 import Plus from "@/components/icons/Plus";
-import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import Item from "@/utils/Item";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction, useState } from "react";
 import Button, { ButtonType } from "../Inputs/Button";
-import LargeField from "../LargeField";
-import TextInput from "../Inputs/TextInput";
-import DropdownField from "../Inputs/DropdownField";
 import ItemCard from "../ItemCard";
-import MultilineTextInput from "../Inputs/MulitlineTextInput";
-import NumInput from "../Inputs/NumInput";
 import CreateItem from "./CreateItem";
 
 const CharacterItems = ({
@@ -50,26 +45,32 @@ const CharacterItems = ({
   };
 
   return (
-    <div className="p-4">
-      <LargeField label="Items">
-        {character.items.length > 0 ? (
-          character.items.map((item, i) => (
-            <ItemCard
-              key={item.title + item.id}
-              item={item}
-              isExpanded={false}
-              updateItem={updateItemBuilder(i)}
-              deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
-            />
-          ))
-        ) : (
-          <div>No items</div>
-        )}
-      </LargeField>
+    <div className="pt-2">
+      <h2 className="font-thin text-xl mx-auto text-center py-2 tracking-widest">
+        {"Items"}
+      </h2>
+      {character.items.length > 0 ? (
+        character.items.map((item, i) => (
+          <ItemCard
+            key={item.title + item.id}
+            item={item}
+            isExpanded={false}
+            updateItem={updateItemBuilder(i)}
+            deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
+          />
+        ))
+      ) : (
+        <div>No items</div>
+      )}
+
       {isEditable && (
         <div>
           {showItemForm ? (
-            <CreateItem character={character} setCharacter={setCharacter} />
+            <CreateItem
+              character={character}
+              setCharacter={setCharacter}
+              setShowItemForm={setShowItemForm}
+            />
           ) : (
             <Button
               buttonType={ButtonType.default}

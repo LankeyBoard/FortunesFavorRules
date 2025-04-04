@@ -32,7 +32,7 @@ type ItemCardProps = {
 };
 
 const ItemCardTitle = ({ item }: { item: Item }) => {
-  let titleStyle = "flex p-2 ";
+  let titleStyle = "flex p-2 mt-2 ";
   if (!item.isMagic) {
     titleStyle += "bg-slate-300 dark:bg-slate-700";
   } else {

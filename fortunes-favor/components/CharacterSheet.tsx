@@ -4,7 +4,7 @@ import client from "@/utils/graphQLclient";
 import { gql, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 
-import CharacterStaticInfo from "./blocks/CharacterSheetComponents/CharacterStaticInfo";
+import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
 import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
 import PlayerCharacter, {
   ArmorType,
@@ -359,23 +359,23 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           {character.name}
         </h2>
       )}
-      <div className=" dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-3 md:gap-2">
-        <div className="bg-slate-100 dark:bg-slate-900">
-          <CharacterStaticInfo
+      <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-3 md:gap-2">
+        <div className="bg-slate-50 dark:bg-slate-900 order-2 md:order-1">
+          <CharacterOtherInfo
+            character={character}
+            setCharacter={setCharacter}
+            isEditable={isEditable}
+          />
+        </div>
+        <div className="pb-4 bg-slate-50 dark:bg-slate-900 order-1 md:order-2">
+          <CharacterCoreInfo
             character={character}
             setCharacter={setCharacter}
             isEditable={isEditable}
             characterOptions={characterOptions}
           />
         </div>
-        <div className="border-t-2 border-b-2 pb-4 border-amber-700 md:border-y-0 bg-slate-50 dark:bg-slate-900">
-          <CharacterCoreInfo
-            character={character}
-            setCharacter={setCharacter}
-            isEditable={isEditable}
-          />
-        </div>
-        <div className="pt-6 md:pt-0 bg-slate-100 dark:bg-slate-900">
+        <div className="pt-6 md:pt-0 bg-slate-50 dark:bg-slate-900 order-3">
           <CharacterFeatures
             character={character}
             setCharacter={setCharacter}
