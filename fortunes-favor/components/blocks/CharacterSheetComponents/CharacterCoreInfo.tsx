@@ -1,4 +1,7 @@
-import PlayerCharacter from "@/utils/PlayerCharacter";
+import PlayerCharacter, {
+  ArmorType,
+  ShieldType,
+} from "@/utils/PlayerCharacter";
 import React, { Dispatch, SetStateAction } from "react";
 import NumInput from "../Inputs/NumInput";
 import SmallField from "../SmallField";
@@ -6,6 +9,7 @@ import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
 import VerticalLabeledBox from "../VerticalLabeledBox";
 import CharacterFeatures from "./CharacterFeatures";
 import Button, { ButtonType } from "../Inputs/Button";
+import DropdownField from "../Inputs/DropdownField";
 
 const CombatStatDisplay = ({
   stat,
@@ -217,6 +221,55 @@ const CharacterCoreInfo = ({
           />
         </div>
       </VerticalLabeledBox>
+      <div className="flex flex-row gap-4 justify-center mx-auto w-max">
+        <span>
+          {isEditable ? (
+            <DropdownField
+              name="Armor"
+              options={character.characterClass.training.armor.map((a) => {
+                return a.toLowerCase();
+              })}
+              defaultValue={character.armorName}
+              onChange={(e) => {
+                const newCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                newCharacter.armorName = e.target.value as ArmorType;
+                setCharacter(newCharacter);
+              }}
+            />
+          ) : (
+            <div>Armor: {character.armorName}</div>
+          )}
+        </span>
+        <span>
+          {isEditable ? (
+            <DropdownField
+              name="Shield"
+              options={character.characterClass.training.shields.map((s) => {
+                return s.toLowerCase();
+              })}
+              defaultValue={character.shieldName}
+              onChange={(e) => {
+                const newCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                console.log(e.target.value);
+                newCharacter.shieldName = e.target.value as ShieldType;
+                setCharacter(newCharacter);
+              }}
+            />
+          ) : (
+            <div>Shield: {character.shieldName}</div>
+          )}
+        </span>
+      </div>
       <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950">
         <div className="mx-auto">
           <Button

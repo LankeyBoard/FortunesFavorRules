@@ -4,7 +4,7 @@ import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
-import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
+import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
 import Item, { RechargeOn } from "./Item";
 
@@ -20,14 +20,6 @@ type Effect = {
   calculation: (args: any) => string | number;
 };
 
-enum ItemRarity {
-  COMMON = "Common",
-  UNCOMMON = "Uncommon",
-  RARE = "Rare",
-  LEGENDARY = "Legendary",
-  UNIQUE = "Unique",
-}
-
 export enum FeatureSource {
   CLASS = "class",
   CULTURE = "culture",
@@ -36,6 +28,43 @@ export enum FeatureSource {
   VETERAN_FEATURE = "veteranFeature",
 }
 
+export enum ShieldType {
+  NONE = "none",
+  LIGHT = "light",
+  MEDIUM = "medium",
+  HEAVY = "heavy",
+}
+
+export enum ArmorType {
+  NONE = "none",
+  LIGHT = "light",
+  MEDIUM = "medium",
+  HEAVY = "heavy",
+}
+
+const downgradeDice = (dice: number, count: number) => {
+  let updatedDice = { dice, count };
+  if (dice === 6 && count > 1) {
+    updatedDice.dice = 12;
+    updatedDice.count -= 1;
+  } else {
+    if (dice > 4) {
+      updatedDice.dice -= 2;
+    }
+  }
+  return updatedDice;
+};
+
+const upgradeDice = (dice: number, count: number) => {
+  let updatedDice = { dice, count };
+  if (dice === 12) {
+    updatedDice.dice = 6;
+    updatedDice.count += 1;
+  } else {
+    updatedDice.dice += 2;
+  }
+  return updatedDice;
+};
 const downgradeBaseDamage = (damage: {
   dice: number;
   count: number;
@@ -235,54 +264,14 @@ export default class PlayerCharacter {
   coin?: number;
   private _currentHealth?: number;
   private _currentStamina?: number;
-  private _armorName: string;
-  private _shieldName: string;
+  private _armorName: ArmorType;
+  private _shieldName: ShieldType;
   private _range?: { min: number; max: number };
   private _items: Item[];
   private _actions?: PlayerCharacterFeature[];
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
   private _languages?: Languages[];
-  private _armorValue = () => {
-    let armor = 10 + this.stats.agility;
-    switch (this._armorName.toLowerCase()) {
-      case "light":
-        armor = 12 + this.stats.agility;
-        break;
-      case "medium":
-        armor = 14 + Math.min(this.stats.agility, 2);
-        break;
-      case "heavy":
-        armor = 17;
-        break;
-      case "none":
-        if (
-          this.characterClass?.slug === "BRAWLER" &&
-          this.armorName.toLowerCase() === "none"
-        ) {
-          armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
-        }
-        break;
-    }
-    switch (this._shieldName.toLowerCase()) {
-      case "light":
-        if (this.stats.agility >= 3) {
-          armor += 1;
-        }
-        break;
-      case "medium":
-        if (this.stats.agility >= 1 && this.stats.mettle >= 1) {
-          armor += 2;
-        }
-        break;
-      case "heavy":
-        if (this.stats.mettle >= 3) {
-          armor += 2;
-        }
-        break;
-    }
-    return armor;
-  };
 
   constructor(
     culture?: CharacterCulture,
@@ -303,8 +292,14 @@ export default class PlayerCharacter {
       this._characterCulture = startingCharacter.culture;
       this._currentHealth = startingCharacter.currentHealth;
       this._currentStamina = startingCharacter.currentStamina;
-      this._armorName = startingCharacter.armorName;
-      this._shieldName = startingCharacter.shieldName;
+      this._armorName =
+        ArmorType[
+          startingCharacter.armorName.toUpperCase() as keyof typeof ArmorType
+        ] || ArmorType.NONE;
+      this._shieldName =
+        ShieldType[
+          startingCharacter.shieldName.toUpperCase() as keyof typeof ShieldType
+        ] || ShieldType.NONE;
       this._range = startingCharacter.characterClass?.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
@@ -322,8 +317,8 @@ export default class PlayerCharacter {
       this._characterCulture = culture;
       this.currentHealth = 0;
       this.currentStamina = 0;
-      this._armorName = "None";
-      this._shieldName = "None";
+      this._armorName = ArmorType.NONE;
+      this._shieldName = ShieldType.NONE;
       this._range = characterClass ? characterClass.range : { min: 0, max: 0 };
       this._items = [];
       this._actions = [];
@@ -442,30 +437,81 @@ export default class PlayerCharacter {
     this._currentHealth = health > this.maxHealth ? this.maxHealth : health;
   }
 
-  public get armorName(): string {
+  public get armorName(): ArmorType {
     return this._armorName;
   }
-  public set armorName(name: string) {
-    this._armorName = name;
+  public set armorName(name: ArmorType) {
+    this._armorName = name.toLowerCase() as ArmorType;
   }
-  public get shieldName(): string {
+  public get shieldName(): ShieldType {
     return this._shieldName;
   }
-  public set shieldName(name: string) {
-    this._shieldName = name;
+  public set shieldName(name: ShieldType) {
+    this._shieldName = name.toLowerCase() as ShieldType;
   }
 
   // Derived Values
   public get armor(): number {
-    return this._armorValue();
+    let armor = 10 + this.stats.agility;
+    switch (this._armorName) {
+      case ArmorType.LIGHT:
+        armor = 12 + this.stats.agility;
+        break;
+      case ArmorType.MEDIUM:
+        armor = 14 + Math.min(this.stats.agility, 2);
+        break;
+      case ArmorType.HEAVY:
+        armor = 17;
+        break;
+      case ArmorType.NONE:
+        if (
+          this.characterClass?.slug === "BRAWLER" &&
+          this.armorName.toLowerCase() === "none"
+        ) {
+          armor = 10 + this.stats.mettle + Math.min(this.stats.agility, 2);
+        }
+        break;
+    }
+    switch (this._shieldName) {
+      case ShieldType.LIGHT:
+        if (this.stats.agility >= 3) {
+          armor += 1;
+        }
+        break;
+      case ShieldType.MEDIUM:
+        if (this.stats.agility >= 1 && this.stats.mettle >= 1) {
+          armor += 2;
+        }
+        break;
+      case ShieldType.HEAVY:
+        if (this.stats.mettle >= 3) {
+          armor += 2;
+        }
+        break;
+    }
+    return armor;
   }
   public get speeds() {
     return this.lineage?.speeds;
   }
 
-  public get deflect() {
+  public get deflect(): { flat: number; dice: number; count: number } {
     if (!this.characterClass)
       throw new Error("Deflect cannot be calculated without a class");
+    if (this.shieldName === ShieldType.LIGHT) {
+      return {
+        ...this.characterClass?.deflect,
+        ...upgradeDice(
+          this.characterClass?.deflect.dice,
+          this.characterClass?.deflect.count,
+        ),
+      };
+    } else if (this.shieldName === ShieldType.HEAVY) {
+      return {
+        ...this.characterClass?.deflect,
+        flat: this.characterClass?.deflect.flat + 3,
+      };
+    }
     return this.characterClass?.deflect;
   }
 
@@ -505,7 +551,7 @@ export default class PlayerCharacter {
     return 0;
   }
   public get counter(): number {
-    return this._armorValue() - 5;
+    return this.armor - 5;
   }
   public get baseDamage() {
     if (!this.characterClass)
@@ -530,7 +576,7 @@ export default class PlayerCharacter {
     });
     const baseDmg = { ...this.characterClass?.damage, stat: statDmg };
 
-    if (this.shieldName && this.shieldName != "None") {
+    if (this.shieldName && this.shieldName !== "none") {
       if (this._characterClass) return downgradeBaseDamage(baseDmg);
     }
     return baseDmg;

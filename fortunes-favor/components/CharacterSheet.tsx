@@ -7,8 +7,10 @@ import { useState, useEffect } from "react";
 import CharacterStaticInfo from "./blocks/CharacterSheetComponents/CharacterStaticInfo";
 import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
 import PlayerCharacter, {
+  ArmorType,
   FeatureSource,
   PlayerCharacterFeature,
+  ShieldType,
 } from "@/utils/PlayerCharacter";
 import CharacterClassData from "@/utils/CharacterClass";
 import CharacterCulture from "@/utils/CharacterCulture";
@@ -53,6 +55,8 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.coin = data.character.coin;
   character.name = data.character.name;
   character.id = data.character.id;
+  character.armorName = data.character.armorName as ArmorType;
+  character.shieldName = data.character.shieldName as ShieldType;
   character.items = data.character.items.map((item) => {
     const itemText: [RuleText] =
       item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];

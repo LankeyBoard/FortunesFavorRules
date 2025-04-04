@@ -16,11 +16,11 @@ export const DropdownField = ({
   onChange,
 }: dropdownFieldProps) => {
   if (options.length > 0 && typeof options.at(0) === "string") {
-    let optionObjs = options.map((option) => {
-      return { title: option, slug: name + option };
+    options = options.map((option) => {
+      return { title: option, slug: option };
     });
-    options = optionObjs;
   }
+  console.log("DropdownField", name, defaultValue, options);
   return (
     <div>
       <label
@@ -33,7 +33,7 @@ export const DropdownField = ({
         id={name}
         onChange={onChange}
         defaultValue={defaultValue}
-        className="w-fit bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="w-fit bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
       >
         {mayBeDeselected && (
           <option key={"unknown"} value={undefined}>
@@ -43,7 +43,7 @@ export const DropdownField = ({
         {options.map((o) => {
           if (!o.slug) o.slug = name.concat(o.title);
           return (
-            <option key={o.slug} value={o.slug} className="capitalize">
+            <option key={o.slug} value={o.slug} className="">
               {o.title}
             </option>
           );
