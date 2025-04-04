@@ -8,7 +8,10 @@ const query = gql`
   query GetGenericRules {
     genericRules {
       href
-      list
+      lists {
+        label
+        items
+      }
       ruleType
       shortText
       shortTitle
@@ -16,13 +19,19 @@ const query = gql`
       title
       subRules {
         href
-        list
+        lists {
+          label
+          items
+        }
         ruleType
         shortText
         shortTitle
         subRules {
           href
-          list
+          lists {
+            label
+            items
+          }
           ruleType
           shortText
           shortTitle
@@ -35,7 +44,10 @@ const query = gql`
           title
           subRules {
             href
-            list
+            lists {
+              label
+              items
+            }
             ruleType
             shortText
             shortTitle
@@ -66,7 +78,7 @@ const query = gql`
 `;
 
 async function GeneralRule() {
-  const { data } = await client.query({
+  const { data, loading, error } = await client.query({
     query,
   });
   const rules: GenericRule[] = [];
@@ -78,14 +90,28 @@ async function GeneralRule() {
         rule.ruleType,
         rule.text,
         rule.subRules,
-        rule.list,
+        rule.lists,
       ),
     );
   });
+  if (loading || !data) {
+    return <div>Loading...</div>;
+  } else if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <>
       {rules.map((rule) => {
-        return <RuleField field={rule} depth={1} key={rule.slug} />;
+        const plainRule = {
+          title: rule.title,
+          slug: rule.slug,
+          ruleType: rule.ruleType,
+          text: rule.text,
+          subRules: rule.subRules,
+          lists: rule.lists,
+          shortText: rule.shortText,
+        };
+        return <RuleField field={plainRule} depth={1} key={rule.slug} />;
       })}
     </>
   );

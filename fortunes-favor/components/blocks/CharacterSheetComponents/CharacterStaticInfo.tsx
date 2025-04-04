@@ -1,30 +1,13 @@
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import React, { Dispatch, SetStateAction } from "react";
-import TextBlock from "../TextBlock";
 import NumInput from "../Inputs/NumInput";
 import SmallField from "../SmallField";
 import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
 import DropdownField from "../Inputs/DropdownField";
-import { CharacterClass } from "@/app/types.generated";
-import CharacterCulture from "@/utils/CharacterCulture";
-import CharacterLineage from "@/utils/CharacterLineage";
 import { CharacterOptions } from "../../CharacterSheet";
 import VerticalLabeledBox from "../VerticalLabeledBox";
-
-const LargeField = ({
-  children,
-  label,
-}: {
-  children: React.ReactNode;
-  label: string;
-}) => {
-  return (
-    <div>
-      <h3 className="text-lg">{label}</h3>
-      <ul className="px-4">{children}</ul>
-    </div>
-  );
-};
+import LargeField from "../LargeField";
+import CharacterItems from "./CharacterItems";
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
@@ -168,21 +151,11 @@ const CharacterStaticInfo = ({
           })}
         </LargeField>
       </div>
-      <div className="p-4">
-        <LargeField label="Items">
-          {character.items && character.items.length > 0 ? (
-            character.items.map((item) => (
-              <div key={item.title}>
-                <h4>{item.title}</h4>
-                <TextBlock text={item.text} />
-              </div>
-            ))
-          ) : (
-            <div>No items</div>
-          )}
-        </LargeField>
-      </div>
-
+      <CharacterItems
+        character={character}
+        setCharacter={setCharacter}
+        isEditable={isEditable}
+      />
       <div className="flex justify-end items-end h-full">
         <SmallField label="Coin">
           <NumInput
