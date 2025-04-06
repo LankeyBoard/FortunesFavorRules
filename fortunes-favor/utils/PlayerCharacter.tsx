@@ -7,17 +7,13 @@ import GenericFeatureData from "./GenericFeatureData";
 import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
 import Item, { RechargeOn } from "./Item";
+import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 
 type Stats = {
   mettle: number;
   agility: number;
   heart: number;
   intellect: number;
-};
-
-type Effect = {
-  target: string;
-  calculation: (args: any) => string | number;
 };
 
 export enum FeatureSource {
@@ -266,7 +262,6 @@ export default class PlayerCharacter {
   private _currentStamina?: number;
   private _armorName: ArmorType;
   private _shieldName: ShieldType;
-  private _range?: { min: number; max: number };
   private _items: Item[];
   private _actions?: PlayerCharacterFeature[];
   private _counters?: PlayerCharacterFeature[];
@@ -300,7 +295,6 @@ export default class PlayerCharacter {
         ShieldType[
           startingCharacter.shieldName.toUpperCase() as keyof typeof ShieldType
         ] || ShieldType.NONE;
-      this._range = startingCharacter.characterClass?.range;
       this._items = startingCharacter.items;
       this._actions = startingCharacter.actions;
       this._counters = startingCharacter.counters;
@@ -319,7 +313,6 @@ export default class PlayerCharacter {
       this.currentStamina = 0;
       this._armorName = ArmorType.NONE;
       this._shieldName = ShieldType.NONE;
-      this._range = characterClass ? characterClass.range : { min: 0, max: 0 };
       this._items = [];
       this._actions = [];
       this._counters = [];
@@ -378,7 +371,6 @@ export default class PlayerCharacter {
       counters: this._counters,
       features: this._features,
     } = updateFeatures(FeatureSource.CLASS, characterClass, this));
-    this._range = characterClass.range;
     this.sortFeatures();
   }
   public get culture(): CharacterCulture {
@@ -486,7 +478,7 @@ export default class PlayerCharacter {
         }
         break;
     }
-    return armor;
+    return applyConditionalEffects("armor", armor, this);
   }
   public get speeds() {
     return this.lineage?.speeds;
@@ -495,8 +487,9 @@ export default class PlayerCharacter {
   public get deflect(): { flat: number; dice: number; count: number } {
     if (!this.characterClass)
       throw new Error("Deflect cannot be calculated without a class");
+    let deflect = this.characterClass.deflect;
     if (this.shieldName === ShieldType.LIGHT) {
-      return {
+      deflect = {
         ...this.characterClass?.deflect,
         ...upgradeDice(
           this.characterClass?.deflect.dice,
@@ -504,19 +497,25 @@ export default class PlayerCharacter {
         ),
       };
     } else if (this.shieldName === ShieldType.HEAVY) {
-      return {
+      deflect = {
         ...this.characterClass?.deflect,
         flat: this.characterClass?.deflect.flat + 3,
       };
     }
-    return this.characterClass?.deflect;
+    return {
+      dice: applyConditionalEffects("deflect.dice", deflect.dice, this),
+      count: applyConditionalEffects("deflect.count", deflect.count, this),
+      flat: applyConditionalEffects("deflect.flat", deflect.flat, this),
+    };
   }
 
   public get maxHealth() {
     if (this._characterClass && this._level)
-      return (
+      return applyConditionalEffects(
+        "maxHealth",
         this._characterClass?.health +
-        (this._level - 1) * this._characterClass?.healthOnLevel
+          (this._level - 1) * this._characterClass?.healthOnLevel,
+        this,
       );
     else return 0;
   }
@@ -539,16 +538,20 @@ export default class PlayerCharacter {
           break;
       }
 
-      return this._characterClass
-        ? this._characterClass?.stamina +
-            (this._level - 1) * this._characterClass?.staminaOnLevel +
-            this._level * staminaStat
-        : 0;
+      return applyConditionalEffects(
+        "maxStamina",
+        this._characterClass
+          ? this._characterClass?.stamina +
+              (this._level - 1) * this._characterClass?.staminaOnLevel +
+              this._level * staminaStat
+          : 0,
+        this,
+      );
     }
     return 0;
   }
   public get counter(): number {
-    return this.armor - 5;
+    return applyConditionalEffects("counter", this.armor - 5, this);
   }
   public get baseDamage() {
     if (!this.characterClass)
@@ -571,27 +574,32 @@ export default class PlayerCharacter {
           break;
       }
     });
-    const baseDmg = { ...this.characterClass?.damage, stat: statDmg };
+    let baseDmg = { ...this.characterClass?.damage, stat: statDmg };
 
     if (this.shieldName && this.shieldName !== "none") {
-      if (this._characterClass) return downgradeBaseDamage(baseDmg);
+      baseDmg = downgradeBaseDamage(baseDmg);
     }
-    return baseDmg;
+    return {
+      dice: applyConditionalEffects("baseDamage.dice", baseDmg.dice, this),
+      count: applyConditionalEffects("baseDamage.count", baseDmg.count, this),
+      stat: applyConditionalEffects("baseDamage.stat", baseDmg.stat, this),
+    };
   }
   public get range() {
-    if (!this.characterClass || !this._range)
-      throw new Error("Range cannot be calculated without a class or range");
-
+    if (!this.characterClass)
+      throw new Error("Range cannot be calculated without a class");
+    let range = this.characterClass.range;
     if (
       this.characterClass.slug === "BRAWLER" &&
-      this.stats.agility > this.stats.mettle
+      this.stats.agility >= this.stats.mettle
     ) {
-      let tempRange = { ...this._range };
-      tempRange.max = this._range.max * 2;
-      return tempRange;
+      range.max = range.max * 2;
     }
 
-    return this._range;
+    return {
+      min: applyConditionalEffects("range.min", range.min, this),
+      max: applyConditionalEffects("range.max", range.max, this),
+    };
   }
   public get items() {
     return this._items;
@@ -638,7 +646,7 @@ export default class PlayerCharacter {
           break;
       }
     });
-    return attack;
+    return applyConditionalEffects("attack", attack, this);
   }
   public get choices() {
     let choices: string[] = [];
@@ -692,7 +700,11 @@ export default class PlayerCharacter {
   }
 
   public get deflectDice() {
-    return 1 + Math.floor(this.level / 2);
+    return applyConditionalEffects(
+      "deflectDice",
+      1 + Math.floor(this.level / 2),
+      this,
+    );
   }
   // Helper Functions
 

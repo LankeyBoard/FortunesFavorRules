@@ -1,4 +1,4 @@
-import { Effect } from "@/app/types.generated";
+import { Effect } from "./applyConditionalEffects";
 import { RuleText } from "./graphQLtypes";
 import Input from "./Input";
 
