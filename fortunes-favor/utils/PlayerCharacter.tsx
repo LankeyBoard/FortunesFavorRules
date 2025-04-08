@@ -419,14 +419,13 @@ export default class PlayerCharacter {
     return this._currentStamina || 0;
   }
   public set currentStamina(stamina: number) {
-    this._currentStamina =
-      stamina > this.maxStamina ? this.maxStamina : stamina;
+    this._currentStamina = stamina;
   }
   public get currentHealth(): number {
     return this._currentHealth || 0;
   }
   public set currentHealth(health: number) {
-    this._currentHealth = health > this.maxHealth ? this.maxHealth : health;
+    this._currentHealth = health;
   }
 
   public get armorName(): ArmorType {

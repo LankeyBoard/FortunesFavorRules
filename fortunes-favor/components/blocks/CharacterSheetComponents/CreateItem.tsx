@@ -8,6 +8,14 @@ import NumInput from "../Inputs/NumInput";
 import TextInput from "../Inputs/TextInput";
 
 import { Dispatch, SetStateAction, useState } from "react";
+import { Effect } from "@/utils/applyConditionalEffects";
+
+type EffectBuilder = {
+  target?: string;
+  operation?: string;
+  value?: string;
+  condition?: string;
+};
 
 const CreateItem = ({
   character,
@@ -31,6 +39,13 @@ const CreateItem = ({
       }
     | undefined
   >(undefined);
+  const [itemEffects, setItemEffects] = useState<Effect[]>([]);
+  const [newItemEffect, setNewItemEffect] = useState<EffectBuilder>({
+    value: "",
+    target: "",
+    operation: "",
+  });
+  const [showEffectsInput, setShowEffectsInput] = useState(false);
   return (
     <div className="mt-4 p-4 border rounded bg-slate-100 dark:bg-slate-900">
       <form
@@ -136,6 +151,115 @@ const CreateItem = ({
               />
             </div>
           )}
+          <div className="w-auto">
+            <Button
+              buttonType={ButtonType.simple}
+              color="blue"
+              onClick={() => setShowEffectsInput(!showEffectsInput)}
+            >
+              {showEffectsInput ? (
+                <span>Hide Effects Input</span>
+              ) : (
+                <span>Show Effects Input</span>
+              )}
+            </Button>
+            {showEffectsInput && (
+              <div>
+                <h3 className="font-semibold">Effects</h3>
+                <div className="flex gap-2">
+                  {itemEffects.map((effect, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="flex gap-2 bg-slate-200 dark:bg-slate-800 rounded p-2"
+                      >
+                        <span>{effect.target}</span>
+                        <span>{effect.operation}</span>
+                        <span>{effect.value}</span>
+                        <span>{effect.condition}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <h3>Effect</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <DropdownField
+                    name="Effect Target"
+                    onChange={(e) => {
+                      const newEffect = { ...newItemEffect };
+                      newEffect.target = e.target.value;
+                      setNewItemEffect(newEffect);
+                    }}
+                    options={[
+                      "armor",
+                      "deflect.dice",
+                      "deflect.count",
+                      "deflect.flat",
+                      "maxHealth",
+                      "maxStamina",
+                      "counter",
+                      "baseDamage.dice",
+                      "baseDamage.count",
+                      "baseDamage.stat",
+                      "range.min",
+                      "range.max",
+                      "attack",
+                      "deflectDice",
+                    ]}
+                  />
+                  <DropdownField
+                    name="Effect Operation"
+                    onChange={(e) => {
+                      const newEffect = { ...newItemEffect };
+                      newEffect.operation = e.target.value;
+                      setNewItemEffect(newEffect);
+                    }}
+                    options={["add", "subtract", "multiply", "divide", "set"]}
+                  />
+                  <NumInput
+                    placeholder="Effect Value"
+                    value={newItemEffect.value}
+                    pattern="[0-9]*"
+                    onChange={(e) => {
+                      const newEffect = { ...newItemEffect };
+                      newEffect.value = e.target.value;
+                      setNewItemEffect(newEffect);
+                    }}
+                  />
+                </div>
+                <Button
+                  buttonType={ButtonType.default}
+                  color="green"
+                  onClick={() => {
+                    if (
+                      newItemEffect.target &&
+                      newItemEffect.operation &&
+                      newItemEffect.value
+                    ) {
+                      setItemEffects([
+                        ...itemEffects,
+                        {
+                          target: newItemEffect.target,
+                          operation: newItemEffect.operation,
+                          value: Number(newItemEffect.value),
+                          condition: newItemEffect.condition,
+                        },
+                      ]);
+                      setNewItemEffect({
+                        value: "",
+                        target: "",
+                        operation: "",
+                      });
+                    }
+                  }}
+                >
+                  <div className="w-3 dark:fill-white fill-black">
+                    <Plus />
+                  </div>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex justify-end gap-2 mt-2">
           <Button
@@ -159,6 +283,8 @@ const CreateItem = ({
                 isMagicItem,
                 itemRarity as ItemRarity,
                 itemUses,
+                undefined,
+                itemEffects,
               );
               const newCharacter = new PlayerCharacter(
                 undefined,
@@ -175,6 +301,12 @@ const CreateItem = ({
               setItemRarity("Common");
               setItemUses(undefined);
               setHasUses(false);
+              setItemEffects([]);
+              setNewItemEffect({
+                value: "",
+                target: "",
+                operation: "",
+              });
             }}
           >
             Create Item

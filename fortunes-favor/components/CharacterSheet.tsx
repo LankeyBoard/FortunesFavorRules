@@ -73,6 +73,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
           }
         : undefined,
       Number(item.id),
+      item.effects,
     );
   });
   console.log(character);
@@ -178,7 +179,15 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
           return { text: text.text, type: text.type, choices: text.choices };
         }),
         isMagic: item.isMagic,
-        effects: item.effects || [],
+        effects:
+          item.effects?.map((effect) => {
+            return {
+              target: effect.target,
+              operation: effect.operation,
+              value: effect.value,
+              condition: effect.condition,
+            };
+          }) || [],
         rarity: item.rarity?.toUpperCase(),
         uses: item.uses
           ? {
@@ -229,6 +238,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           characterInputs: convertPlayerCharacterToGraphInput(character),
         },
       });
+      console.log("character updated", data);
       return data;
     } else {
       const { data } = await createCharacter({
