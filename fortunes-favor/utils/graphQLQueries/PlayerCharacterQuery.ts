@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { Effect } from "../applyConditionalEffects";
 
 const GET_CHARACTER_INFO = gql`
   query getCharacter($id: ID!) {
@@ -156,6 +157,12 @@ const GET_CHARACTER_INFO = gql`
           max
           used
           rechargeOn
+        }
+        effects {
+          target
+          operation
+          value
+          condition
         }
       }
       characterCulture {
@@ -738,13 +745,14 @@ export type GetCharacterData = {
         text: string;
         type: string;
       }[];
-      isMagic: boolean;
       rarity: string;
       uses: {
         max: number;
         used: number;
         rechargeOn: string;
       };
+      isMagic: boolean;
+      effects: Effect[];
     }[];
     characterCulture: {
       description: string;

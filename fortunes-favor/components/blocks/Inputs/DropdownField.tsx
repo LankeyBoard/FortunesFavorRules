@@ -20,7 +20,6 @@ export const DropdownField = ({
       return { title: option, slug: option };
     });
   }
-  console.log("DropdownField", name, defaultValue, options);
   return (
     <div>
       <label

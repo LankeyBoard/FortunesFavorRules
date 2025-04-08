@@ -7,6 +7,12 @@ const UPDATE_CHARACTER_MUTATION = gql`
       items {
         id
         title
+        effects {
+          target
+          operation
+          value
+          condition
+        }
       }
       level
       mettle
