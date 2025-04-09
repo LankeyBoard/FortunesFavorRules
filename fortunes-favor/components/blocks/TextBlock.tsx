@@ -8,7 +8,7 @@ const textStyler = (textType?: string) => {
       style += "italic";
       break;
     case "EG":
-      style += "font-light";
+      style += "font-light italic";
       break;
     case "CHOICE":
       style += "font-light";
@@ -32,7 +32,9 @@ const TextBlock = ({
         {text.map((t) => {
           return (
             <span key={t.text} className={textStyler(t.type)}>
-              {t.type == "EG" && <span>Eg: </span>}
+              {t.type == "EG" && (
+                <span className={"font-light italic"}>Eg: </span>
+              )}
               <SlugLinker text={t.text} />
             </span>
           );

@@ -1,4 +1,3 @@
-import { randomInt } from "crypto";
 import Link from "next/link";
 
 var split: RegExp = new RegExp(`\\[.*?\\)`, "g");
@@ -51,6 +50,11 @@ const parseLinksFromString = (text: string) => {
       );
       t++;
     }
+  }
+  if (t < splitText.length) {
+    display.push(
+      <span key={splitText[t] + Math.random() * 100}>{splitText[t]}</span>,
+    );
   }
   return <>{display}</>;
 };

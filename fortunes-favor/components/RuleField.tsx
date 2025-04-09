@@ -122,15 +122,17 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
             ))}
           </div>
         )}
-        {field.subRules && field.ruleType !== RuleType.COMPACTLIST && (
-          <ul className="">
-            {field.subRules.map((f) => (
-              <li className={f.title ? "" : "space-y-2"} key={f.slug}>
-                <RuleField field={f} depth={depth + 1}></RuleField>
-              </li>
-            ))}
-          </ul>
-        )}
+        {field.subRules &&
+          field.ruleType !== RuleType.COMPACTLIST &&
+          field.ruleType !== RuleType.LIST && (
+            <ul className="">
+              {field.subRules.map((f) => (
+                <li className={f.title ? "" : "space-y-2"} key={f.slug}>
+                  <RuleField field={f} depth={depth + 1}></RuleField>
+                </li>
+              ))}
+            </ul>
+          )}
       </div>
     </div>
   );
