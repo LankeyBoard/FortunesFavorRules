@@ -161,6 +161,7 @@ const Tag = ({ text, style }: tagProps) => {
 };
 type classTagsProps = {
   c: {
+    title: string;
     complexity?: string;
     attackStat?: StatOptions[];
     damage?: { stat?: StatOptions[] };
@@ -188,7 +189,7 @@ export const ClassTags = ({ c }: classTagsProps) => {
     }
     tags.push(
       <Tag
-        key={c.complexity}
+        key={c.title + c.complexity}
         style={tagStyle}
         text={c.complexity.toLocaleLowerCase()}
       />,
@@ -196,19 +197,31 @@ export const ClassTags = ({ c }: classTagsProps) => {
   }
   if ("attackStat" in c && c.attackStat) {
     c.attackStat.forEach((stat) => {
-      tags.push(<Tag text={stat.toLocaleLowerCase()} />);
+      tags.push(
+        <Tag key={c.title + stat + "attack"} text={stat.toLocaleLowerCase()} />,
+      );
       tagNames.push(stat);
     });
   }
   if ("damage" in c && c.damage && "stat" in c.damage && c.damage.stat)
     c.damage.stat.forEach((stat) => {
       if (!tagNames.includes(stat)) {
-        tags.push(<Tag text={stat.toLocaleLowerCase()} />);
+        tags.push(
+          <Tag
+            key={c.title + stat + "damage"}
+            text={stat.toLocaleLowerCase()}
+          />,
+        );
       }
     });
   if ("staminaStat" in c && c.staminaStat) {
     if (!tagNames.includes(c.staminaStat)) {
-      tags.push(<Tag text={c.staminaStat.toLocaleLowerCase()} />);
+      tags.push(
+        <Tag
+          key={c.title + c.staminaStat + "stamina"}
+          text={c.staminaStat.toLocaleLowerCase()}
+        />,
+      );
     }
   }
   return <div className="mt-1">{tags}</div>;
