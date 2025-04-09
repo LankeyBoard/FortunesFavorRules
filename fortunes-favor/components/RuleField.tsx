@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect } from "react";
 import { RuleType } from "../utils/enums";
 import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
@@ -43,6 +46,26 @@ type fieldProps = {
   depth?: number;
 };
 const RuleField = ({ field, depth = 3 }: fieldProps) => {
+  useEffect(() => {
+    if (window.top !== null) {
+      const path = window.location.hash;
+      if (path && path.includes("#")) {
+        setTimeout(() => {
+          const id = path.replace("#", "");
+          const el = window.document.getElementById(id);
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          if (!window.top) return;
+          const remInPixels =
+            parseFloat(getComputedStyle(document.documentElement).fontSize) * 5;
+          window.top.scroll({
+            top: pageYOffset + r.top - remInPixels,
+            behavior: "smooth",
+          });
+        }, 600);
+      }
+    }
+  }, [field.slug]);
   return (
     <div id={field.slug} className="z-0 scroll-mt-20">
       <div className={titleStyler(depth)}>
@@ -62,17 +85,29 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
             <TextBlock text={field.text} style={depth === 1 ? "mt-3" : ""} />
           </div>
         )}
-        {field.list && field.list.length > 0 && (
-          <ul className="ml-4 pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
-            {field.list.map((text) => {
-              return (
-                <li key={text}>
-                  <SlugLinker text={text} />
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {field.lists &&
+          field.lists.length > 0 &&
+          field.lists.map((list) => {
+            return (
+              <div key={list.label} className="mb-2 mt-2">
+                {list.label && list.label.length > 0 && (
+                  <span className="text-slate-700 dark:text-slate-400 ml-4 font-semibold">
+                    {list.label}
+                  </span>
+                )}
+
+                <ul className="ml-4 pl-4 text-slate-700 dark:text-slate-200 border-l-2 border-amber-800">
+                  {list.items.map((item) => {
+                    return (
+                      <li key={item}>
+                        <SlugLinker text={item} />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         {field.subRules && field.ruleType === RuleType.COMPACTLIST && (
           <div className="pl-4">
             {field.subRules.map((rule) => (

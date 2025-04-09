@@ -24,7 +24,7 @@ export type GenericRule = {
   ruleType: RuleType;
   text: RuleText[];
   subRules: GenericRule[];
-  list: string[];
+  lists: { label?: string; items: string[] }[];
   shortText?: string;
 };
 

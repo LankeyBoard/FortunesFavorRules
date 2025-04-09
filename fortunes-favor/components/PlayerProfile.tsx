@@ -1,7 +1,6 @@
 "use client";
 
 import SignupOrLoginModal from "./SignupLoginModal";
-import { useUser } from "./UserContext";
 import UserProfile from "./blocks/UserProfile";
 import { useEffect, useState } from "react";
 

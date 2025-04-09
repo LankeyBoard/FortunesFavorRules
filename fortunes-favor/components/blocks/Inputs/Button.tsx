@@ -1,6 +1,7 @@
 export enum ButtonType {
   simple,
   default,
+  icon,
 }
 
 const SimpleButtonColor = {
@@ -8,6 +9,7 @@ const SimpleButtonColor = {
   gray: "border-slate-300 dark:border-slate-700 hover:border-slate-500",
   green: "border-emerald-300 dark:border-emerald-700 hover:border-emerald-500",
   red: "border-red-300 dark:border-red-700 hover:border-red-500",
+  blue: "border-blue-300 dark:border-blue-700 hover:border-blue-500",
 };
 const DefaultButtonColor = {
   amber:
@@ -16,11 +18,13 @@ const DefaultButtonColor = {
   green:
     "bg-emerald-400 dark:bg-emerald-700 hover:bg-emerald-500 hover:dark:bg-emerald-600 border-emerald-300 dark:border-emerald-700 hover:border-emerald-500",
   red: "bg-red-400 dark:bg-red-700 hover:bg-red-500 hover:dark:bg-red-600 border-red-300 dark:border-red-700 hover:border-red-500",
+  blue: "bg-blue-400 dark:bg-blue-700 hover:bg-blue-500 hover:dark:bg-blue-600 border-blue-300 dark:border-blue-700 hover:border-blue-500",
 };
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   buttonType: ButtonType;
-  color: keyof typeof DefaultButtonColor;
+  color?: keyof typeof DefaultButtonColor;
 }
 const Button: React.FC<ButtonProps> = ({
   children,
@@ -28,18 +32,23 @@ const Button: React.FC<ButtonProps> = ({
   color,
   ...props
 }) => {
-  let buttonStyle = "";
-  const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
+  let buttonStyle = "cursor-pointer p-2";
+  if (color) {
+    const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
 
-  const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded  cursor-pointer align-text-top`;
+    const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded  cursor-pointer align-text-top`;
 
-  switch (buttonType) {
-    case ButtonType.simple:
-      buttonStyle = SIMPLE_BUTTON_STYLE;
-      break;
-    case ButtonType.default:
-      buttonStyle = DEFAULT_BUTTON_STYLE;
-      break;
+    switch (buttonType) {
+      case ButtonType.simple:
+        buttonStyle = SIMPLE_BUTTON_STYLE;
+        break;
+      case ButtonType.default:
+        buttonStyle = DEFAULT_BUTTON_STYLE;
+        break;
+    }
+  }
+  if (buttonType === ButtonType.icon) {
+    buttonStyle += " w-10";
   }
   return (
     <button type="button" {...props} className={buttonStyle}>

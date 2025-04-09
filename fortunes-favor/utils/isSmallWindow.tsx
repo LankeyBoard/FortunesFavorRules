@@ -1,5 +1,5 @@
 export const isSmallWindow = (windowWidth: number) => {
-  if (typeof window === "undefined") return false;
+  if (typeof window === "undefined") return true;
   const rootFontSize = parseFloat(
     getComputedStyle(document.documentElement).fontSize,
   );

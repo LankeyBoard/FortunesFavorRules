@@ -4,11 +4,13 @@ import client from "@/utils/graphQLclient";
 import { gql, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 
-import CharacterStaticInfo from "./blocks/CharacterSheetComponents/CharacterStaticInfo";
+import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
 import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
 import PlayerCharacter, {
+  ArmorType,
   FeatureSource,
   PlayerCharacterFeature,
+  ShieldType,
 } from "@/utils/PlayerCharacter";
 import CharacterClassData from "@/utils/CharacterClass";
 import CharacterCulture from "@/utils/CharacterCulture";
@@ -26,8 +28,12 @@ import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterM
 import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
+import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import { RuleText } from "@/utils/graphQLtypes";
+import { useRouter } from "next/navigation";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
+  console.log(data);
   const characterClass = new CharacterClassData(data.character.characterClass);
   const culture = new CharacterCulture(data.character.characterCulture);
   const lineage = new CharacterLineage(data.character.characterLineage);
@@ -49,6 +55,28 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.coin = data.character.coin;
   character.name = data.character.name;
   character.id = data.character.id;
+  character.armorName = data.character.armorName as ArmorType;
+  character.shieldName = data.character.shieldName as ShieldType;
+  character.items = data.character.items.map((item) => {
+    const itemText: [RuleText] =
+      item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];
+    return new Item(
+      item.title,
+      itemText,
+      item.isMagic,
+      findEnum(item.rarity, ItemRarity),
+      item.uses
+        ? {
+            ...item.uses,
+            rechargeOn:
+              RechargeOn[item.uses.rechargeOn as keyof typeof RechargeOn],
+          }
+        : undefined,
+      Number(item.id),
+      item.effects,
+    );
+  });
+  console.log(character);
   return character;
 };
 
@@ -120,7 +148,7 @@ const extractGenericFeatures = (
 };
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
-  return {
+  const inputs = {
     name: character.name,
     level: character.level,
     mettle: character.stats.mettle,
@@ -143,7 +171,40 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
     featureChoiceSlugs: character.choices,
+    items: character.items.map((item) => {
+      return {
+        id: item.id,
+        title: item.title,
+        text: item.text.map((text) => {
+          return { text: text.text, type: text.type, choices: text.choices };
+        }),
+        isMagic: item.isMagic,
+        effects:
+          item.effects?.map((effect) => {
+            return {
+              target: effect.target,
+              operation: effect.operation,
+              value: effect.value,
+              condition: effect.condition,
+            };
+          }) || [],
+        rarity: item.rarity?.toUpperCase(),
+        uses: item.uses
+          ? {
+              used: item.uses.used,
+              max: item.uses.max,
+              rechargeOn: Object.keys(RechargeOn).find(
+                (key) =>
+                  RechargeOn[key as keyof typeof RechargeOn] ===
+                  item.uses?.rechargeOn,
+              ),
+            }
+          : undefined,
+      };
+    }),
   };
+  console.log(inputs);
+  return inputs;
 };
 
 export type CharacterOptions = {
@@ -165,6 +226,9 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
+
+  const router = useRouter();
+
   const saveCharacter = async (character: PlayerCharacter) => {
     console.log("saveCharacter character id", character.id);
     if (character.id) {
@@ -174,6 +238,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           characterInputs: convertPlayerCharacterToGraphInput(character),
         },
       });
+      console.log("character updated", data);
       return data;
     } else {
       const { data } = await createCharacter({
@@ -182,15 +247,16 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         },
       });
       console.log("character created", data);
-      if (!data.id) throw new Error("Error creating character");
+      if (!data.createCharacter.id) throw new Error("Error creating character");
       const newCharacter = new PlayerCharacter(
         undefined,
         undefined,
         undefined,
         character,
       );
-      newCharacter.id = data.id;
+      newCharacter.id = data.createCharacter.id;
       setCharacter(newCharacter);
+      router.replace(`/characters/${data.createCharacter.id}`);
       return data;
     }
   };
@@ -303,23 +369,23 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           {character.name}
         </h2>
       )}
-      <div className=" dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-3 md:gap-2">
-        <div className="bg-slate-100 dark:bg-slate-900">
-          <CharacterStaticInfo
+      <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-3 md:gap-2">
+        <div className="bg-slate-50 dark:bg-slate-900 order-2 md:order-1">
+          <CharacterOtherInfo
+            character={character}
+            setCharacter={setCharacter}
+            isEditable={isEditable}
+          />
+        </div>
+        <div className="pb-4 bg-slate-50 dark:bg-slate-900 order-1 md:order-2">
+          <CharacterCoreInfo
             character={character}
             setCharacter={setCharacter}
             isEditable={isEditable}
             characterOptions={characterOptions}
           />
         </div>
-        <div className="border-t-2 border-b-2 pb-4 border-amber-700 md:border-y-0 bg-slate-50 dark:bg-slate-900">
-          <CharacterCoreInfo
-            character={character}
-            setCharacter={setCharacter}
-            isEditable={isEditable}
-          />
-        </div>
-        <div className="pt-6 md:pt-0 bg-slate-100 dark:bg-slate-900">
+        <div className="pt-6 md:pt-0 bg-slate-50 dark:bg-slate-900 order-3">
           <CharacterFeatures
             character={character}
             setCharacter={setCharacter}

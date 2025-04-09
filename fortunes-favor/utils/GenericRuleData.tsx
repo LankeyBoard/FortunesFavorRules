@@ -8,7 +8,7 @@ export default class RuleData implements GenericRule {
   ruleType: RuleType;
   text: TextField[];
   subRules: RuleData[];
-  list: string[];
+  lists: { label?: string; items: string[] }[];
   shortText?: string;
 
   constructor(
@@ -17,7 +17,7 @@ export default class RuleData implements GenericRule {
     ruleType: RuleType,
     text: TextField[],
     rules: RuleData[],
-    list: string[],
+    lists: { label?: string; items: string[] }[],
     shortText?: string,
   ) {
     this.title = title;
@@ -25,7 +25,7 @@ export default class RuleData implements GenericRule {
     this.ruleType = ruleType;
     this.text = text;
     this.subRules = rules;
-    this.list = list;
+    this.lists = lists;
     this.shortText = shortText;
   }
 }

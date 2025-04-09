@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { Effect } from "../applyConditionalEffects";
 
 const GET_CHARACTER_INFO = gql`
   query getCharacter($id: ID!) {
@@ -141,6 +142,27 @@ const GET_CHARACTER_INFO = gql`
               pick
             }
           }
+        }
+      }
+      items {
+        id
+        title
+        text {
+          text
+          type
+        }
+        isMagic
+        rarity
+        uses {
+          max
+          used
+          rechargeOn
+        }
+        effects {
+          target
+          operation
+          value
+          condition
         }
       }
       characterCulture {
@@ -374,6 +396,7 @@ const GET_CHARACTER_INFO = gql`
         }
       }
     }
+
     cultures {
       description
       href
@@ -715,6 +738,22 @@ export type GetCharacterData = {
         };
       };
     };
+    items: {
+      id: string;
+      title: string;
+      text: {
+        text: string;
+        type: string;
+      }[];
+      rarity: string;
+      uses: {
+        max: number;
+        used: number;
+        rechargeOn: string;
+      };
+      isMagic: boolean;
+      effects: Effect[];
+    }[];
     characterCulture: {
       description: string;
       href: string;
@@ -818,108 +857,6 @@ export type GetCharacterData = {
       }[];
     };
   };
-  characterCulture: {
-    description: string;
-    href: string;
-    languages: string[];
-    shortTitle: string;
-    slug: string;
-    stat: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      text: {
-        choices: string[];
-        type: string;
-        text: string;
-      }[];
-      title: string;
-    }[];
-    title: string;
-  };
-  characterLineage: {
-    description: string;
-    href: string;
-    shortTitle: string;
-    size: string;
-    slug: string;
-    speeds: {
-      type: string;
-      speed: number;
-    }[];
-    stat: string;
-    title: string;
-    traits: {
-      actionType: string;
-      simpleChoices: {
-        type: string;
-        choices: string[];
-        text: string;
-      }[];
-      complexChoices: {
-        href: string;
-        shortTitle: string;
-        actionType: string;
-        costsFortunesFavor: boolean;
-        multiSelect: boolean;
-        ruleType: string;
-        shortText: string;
-        slug: string;
-        staminaCost: number;
-        title: string;
-        text: {
-          choices: string[];
-          text: string;
-          type: string;
-        }[];
-      }[];
-      chooseNum: number;
-      costsFortunesFavor: boolean;
-      href: string;
-      multiSelect: boolean;
-      ruleType: string;
-      shortText: string;
-      shortTitle: string;
-      slug: string;
-      staminaCost: number;
-      title: string;
-      text: {
-        choices: string[];
-        text: string;
-        type: string;
-      }[];
-    }[];
-  };
   characterClasses: {
     attackStat: string;
     complexity: number;
@@ -929,6 +866,11 @@ export type GetCharacterData = {
       dice: string;
       type: string;
     }[];
+    deflect: {
+      dice: string;
+      count: number;
+      flat: number;
+    };
     description: string;
     extra: {
       forms: {
