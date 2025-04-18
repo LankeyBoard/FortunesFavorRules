@@ -389,6 +389,22 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           <CharacterFeatures
             character={character}
             setCharacter={setCharacter}
+            features={character.actions}
+            isEditable={isEditable}
+            label="Actions"
+          />
+
+          <CharacterFeatures
+            character={character}
+            setCharacter={setCharacter}
+            features={character.counters}
+            isEditable={isEditable}
+            label="Counters"
+          />
+
+          <CharacterFeatures
+            character={character}
+            setCharacter={setCharacter}
             features={character.features}
             isEditable={isEditable}
             label="Features"

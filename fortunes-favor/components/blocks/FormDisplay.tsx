@@ -33,7 +33,7 @@ type formProps = {
 type damageTypesProps = {
   damageArr: string[];
 };
-const DamageTypes = ({ damageArr }: damageTypesProps) => {
+export const DamageTypes = ({ damageArr }: damageTypesProps) => {
   if (damageArr.length < 1) {
     return;
   } else if (damageArr.length === 1) {
@@ -63,7 +63,7 @@ const DamageTypes = ({ damageArr }: damageTypesProps) => {
 
 const FormDisplay = ({ form }: formProps) => {
   return (
-    <div className="md:mx-10 bg-slate-200 dark:bg-slate-800 my-5">
+    <div className="bg-slate-200 dark:bg-slate-800 my-5">
       <h1 className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
         {form.title}
       </h1>

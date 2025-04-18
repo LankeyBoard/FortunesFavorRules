@@ -38,6 +38,7 @@ const ResourceDisplay = ({
 }) => {
   return (
     <div className="grid grid-cols-1 justify-items-center p-4">
+      <p className="text-xs tracking-tighter opacity-80">{label}</p>
       <div>
         <span className="w-min text-xl align-text-bottom">
           <NumInput
@@ -51,7 +52,6 @@ const ResourceDisplay = ({
         <span className="font-extralight"> / </span>
         <span className="font-extralight align-text-top">{max}</span>
       </div>
-      <p className="text-xs tracking-tighter opacity-80">{label}</p>
     </div>
   );
 };
@@ -236,9 +236,9 @@ const CharacterCoreInfo = ({
           )}
         </div>
       </VerticalLabeledBox>
-      <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
+      <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800 pb-4">
         <VerticalLabeledBox label="stats">
-          <div className="p-4 grid grid-cols-4 gap-2 justify-center w-max mx-auto">
+          <div className="p-4 pb-0 grid grid-cols-4 gap-2 justify-center w-max mx-auto">
             <LockableSmallTextInput
               isEditable={isEditable}
               label="Mettle"
@@ -265,6 +265,19 @@ const CharacterCoreInfo = ({
             />
           </div>
         </VerticalLabeledBox>
+        {isEditable && (
+          <>
+            <p className="text-sm font-extralight mx-auto text-center">
+              Starter Stats: 3, 2, 0, -2
+            </p>
+            <p className="text-sm font-extralight mx-auto text-center">
+              {character.culture.title}: {character.culture.stat}
+            </p>
+            <p className="text-sm font-extralight mx-auto text-center">
+              {character.lineage.title}: {character.lineage.stat}
+            </p>
+          </>
+        )}
       </div>
       <div className="">
         <div className="grid grid-cols-2 gap-4 justify-center mx-auto w-max">
@@ -301,7 +314,7 @@ const CharacterCoreInfo = ({
               <CombatStatDisplay
                 stat={
                   character.range?.min === character.range?.max
-                    ? character.range.min
+                    ? character.range.min + " ft."
                     : character.range?.min +
                       "ft. - " +
                       character.range?.max +
@@ -335,57 +348,56 @@ const CharacterCoreInfo = ({
       <div className="flex flex-row gap-4 justify-center mx-auto w-max mb-2">
         <span>
           {isEditable ? (
-            <DropdownField
-              name="Armor"
-              options={character.characterClass.training.armor.map((a) => {
-                return a.toLowerCase();
-              })}
-              defaultValue={character.armorName}
-              onChange={(e) => {
-                const newCharacter = new PlayerCharacter(
-                  undefined,
-                  undefined,
-                  undefined,
-                  character,
-                );
-                newCharacter.armorName = e.target.value as ArmorType;
-                setCharacter(newCharacter);
-              }}
-            />
+            <div className="pt-2 flex flex-row gap-4 justify-center mx-auto w-max">
+              <DropdownField
+                name="Armor"
+                options={character.characterClass.training.armor.map((a) => {
+                  return a.toLowerCase();
+                })}
+                defaultValue={character.armorName}
+                onChange={(e) => {
+                  const newCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  newCharacter.armorName = e.target.value as ArmorType;
+                  setCharacter(newCharacter);
+                }}
+              />
+              <DropdownField
+                name="Shield"
+                options={character.characterClass.training.shields.map((s) => {
+                  return s.toLowerCase();
+                })}
+                defaultValue={character.shieldName}
+                onChange={(e) => {
+                  const newCharacter = new PlayerCharacter(
+                    undefined,
+                    undefined,
+                    undefined,
+                    character,
+                  );
+                  console.log(e.target.value);
+                  newCharacter.shieldName = e.target.value as ShieldType;
+                  setCharacter(newCharacter);
+                }}
+              />
+            </div>
           ) : (
-            <SmallField label="Armor">
-              <span className="text-lg font-light capitalize">
-                {character.armorName}
-              </span>
-            </SmallField>
-          )}
-        </span>
-        <span>
-          {isEditable ? (
-            <DropdownField
-              name="Shield"
-              options={character.characterClass.training.shields.map((s) => {
-                return s.toLowerCase();
-              })}
-              defaultValue={character.shieldName}
-              onChange={(e) => {
-                const newCharacter = new PlayerCharacter(
-                  undefined,
-                  undefined,
-                  undefined,
-                  character,
-                );
-                console.log(e.target.value);
-                newCharacter.shieldName = e.target.value as ShieldType;
-                setCharacter(newCharacter);
-              }}
-            />
-          ) : (
-            <SmallField label="Shield">
-              <span className="text-lg font-light capitalize">
-                {character.shieldName}
-              </span>
-            </SmallField>
+            <div className="pt-2 flex flex-row gap-4 justify-center mx-auto w-max">
+              <SmallField label="Armor">
+                <span className="text-lg font-light capitalize">
+                  {character.armorName}
+                </span>
+              </SmallField>
+              <SmallField label="Shield">
+                <span className="text-lg font-light capitalize">
+                  {character.shieldName}
+                </span>
+              </SmallField>
+            </div>
           )}
         </span>
       </div>

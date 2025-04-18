@@ -1,10 +1,53 @@
 import { ComplexityOptions, findEnum, StatOptions } from "./enums";
 import CharacterFeature from "./CharacterFeature";
 import { CharacterClass } from "./graphQLtypes";
+import { Form } from "@/components/blocks/FormDisplay";
 
 export type TrainingOptions = {
   pick?: number;
   options: [string];
+};
+export type BeastMasterBeasts = {
+  title: string;
+  slug: string;
+  description: string;
+  beasts: [BeastMasterBeast];
+};
+
+export type BeastMasterBeast = {
+  abilities: {
+    text: string;
+    title: string;
+    type: string;
+  }[];
+  damage: {
+    count: number;
+    dice: string;
+    stat: [string];
+    type: [string];
+  };
+  health: {
+    base: number;
+    perLevel: number;
+  };
+  size: string;
+  slug: string;
+  speed: {
+    speed: number;
+    type: string;
+  }[];
+  stats: {
+    agility: number;
+    heart: number;
+    intellect: number;
+    mettle: number;
+  };
+  title: string;
+};
+
+export type Extra = {
+  beastMasterPet?: BeastMasterBeasts;
+  forms?: Form[];
 };
 
 export default class CharacterClassData implements CharacterClass {
@@ -43,7 +86,7 @@ export default class CharacterClassData implements CharacterClass {
     flat: number;
   };
   features: CharacterFeature[];
-  extra: any;
+  extra: Extra;
   href: string;
   constructor(data: any) {
     this.title = data.title;

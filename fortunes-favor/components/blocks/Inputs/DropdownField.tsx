@@ -24,7 +24,7 @@ export const DropdownField = ({
     <div>
       <label
         htmlFor={name}
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize"
+        className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"
       >
         {name}
       </label>

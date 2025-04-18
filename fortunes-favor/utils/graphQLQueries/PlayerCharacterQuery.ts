@@ -40,17 +40,52 @@ const GET_CHARACTER_INFO = gql`
         }
         description
         extra {
+          beastMasterPet {
+            title
+            slug
+            description
+            beasts {
+              abilities {
+                text
+                title
+                type
+              }
+              damage {
+                count
+                dice
+                stat
+                type
+              }
+              health {
+                base
+                perLevel
+              }
+              size
+              slug
+              speed {
+                speed
+                type
+              }
+              stats {
+                agility
+                heart
+                intellect
+                mettle
+              }
+              title
+            }
+          }
           forms {
             armor {
-              baseArmor
               stat
+              baseArmor
             }
             attackStat
             damage {
+              count
               dice
               stat
               type
-              count
             }
             features {
               text
@@ -59,8 +94,8 @@ const GET_CHARACTER_INFO = gql`
             href
             shortTitle
             size
-            slug
             title
+            slug
           }
         }
         health
@@ -292,17 +327,52 @@ const GET_CHARACTER_INFO = gql`
       }
       description
       extra {
+        beastMasterPet {
+          title
+          slug
+          description
+          beasts {
+            abilities {
+              text
+              title
+              type
+            }
+            damage {
+              count
+              dice
+              stat
+              type
+            }
+            health {
+              base
+              perLevel
+            }
+            size
+            slug
+            speed {
+              speed
+              type
+            }
+            stats {
+              agility
+              heart
+              intellect
+              mettle
+            }
+            title
+          }
+        }
         forms {
           armor {
-            baseArmor
             stat
+            baseArmor
           }
           attackStat
           damage {
+            count
             dice
             stat
             type
-            count
           }
           features {
             text
@@ -311,8 +381,8 @@ const GET_CHARACTER_INFO = gql`
           href
           shortTitle
           size
-          slug
           title
+          slug
         }
       }
       health
