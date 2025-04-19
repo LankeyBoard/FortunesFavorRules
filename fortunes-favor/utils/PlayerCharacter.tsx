@@ -1,5 +1,11 @@
-import { Languages, ActionType, RuleType, StatOptions } from "./enums";
-import CharacterClassData from "./CharacterClass";
+import {
+  Languages,
+  ActionType,
+  RuleType,
+  StatOptions,
+  SizeOptions,
+} from "./enums";
+import CharacterClassData, { BeastMasterBeast } from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
@@ -8,6 +14,7 @@ import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
 import Item, { RechargeOn } from "./Item";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
+import { Form } from "@/components/blocks/FormDisplay";
 
 type Stats = {
   mettle: number;
@@ -66,16 +73,12 @@ const downgradeBaseDamage = (damage: {
   count: number;
   stat: number;
 }) => {
-  let updatedDamage = { ...damage };
-  if (damage.dice === 6 && damage.count > 1) {
-    updatedDamage.dice = 12;
-    updatedDamage.count -= 1;
-  } else {
-    if (damage.dice > 4) {
-      updatedDamage.dice -= 2;
-    }
-  }
-  return updatedDamage;
+  let updatedDamage = downgradeDice(damage.dice, damage.count);
+  return {
+    dice: updatedDamage.dice,
+    count: updatedDamage.count,
+    stat: damage.stat,
+  };
 };
 
 export class PlayerCharacterFeature extends GenericFeatureData {
@@ -268,6 +271,10 @@ export default class PlayerCharacter {
   private _features?: PlayerCharacterFeature[];
   private _languages?: Languages[];
 
+  private _form?: Form;
+  private _isInForm: boolean = false;
+
+  private _beast?: BeastMasterBeast;
   constructor(
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
@@ -301,6 +308,9 @@ export default class PlayerCharacter {
       this._features = startingCharacter.features;
       this._languages = startingCharacter.languages;
       this._items = startingCharacter.items;
+      this._form = startingCharacter.form;
+      this._isInForm = startingCharacter.isInForm;
+      this._beast = startingCharacter.beast;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -441,6 +451,71 @@ export default class PlayerCharacter {
     this._shieldName = name.toLowerCase() as ShieldType;
   }
 
+  public get form(): Form | undefined {
+    return this._form;
+  }
+  public setFormSlug(formSlug: string) {
+    if (!this.characterClass)
+      throw new Error("Class must be set before setting form");
+    else if (this.characterClass.extra.forms) {
+      this._form = this.characterClass.extra.forms.find(
+        (form: Form) => form.slug === formSlug,
+      );
+    }
+    if (!this._form) {
+      throw new Error(
+        `Form ${formSlug} not found in class ${this.characterClass.title}`,
+      );
+    }
+  }
+
+  public clearForm() {
+    this._form = undefined;
+  }
+
+  public get isInForm() {
+    return this._isInForm;
+  }
+
+  public set isInForm(isInForm: boolean) {
+    this._isInForm = isInForm;
+    if (this.form?.slug === "SHIFTER-BIG-FORM") {
+      if (isInForm) {
+        this.currentHealth += 4 * this.level;
+      } else {
+        if (this.currentHealth > this.maxHealth)
+          this.currentHealth = this.maxHealth;
+      }
+    }
+  }
+
+  public setBeastSlug(formSlug: string) {
+    if (!this.characterClass)
+      throw new Error("Class must be set before setting form");
+    else if (this.characterClass.extra.beastMasterPet) {
+      this._beast = this.characterClass.extra.beastMasterPet.beasts.find(
+        (beast: BeastMasterBeast) => beast.slug === formSlug,
+      );
+    }
+    if (!this._beast) {
+      throw new Error(
+        `Beast ${formSlug} not found in class ${this.characterClass.title}`,
+      );
+    }
+  }
+
+  public set beast(beast: BeastMasterBeast) {
+    this._beast = beast;
+  }
+
+  public get beast(): BeastMasterBeast | undefined {
+    return this._beast;
+  }
+
+  public clearBeastmasterBeast() {
+    this._beast = undefined;
+  }
+
   // Derived Values
   public get armor(): number {
     let armor = 10 + this.stats.agility;
@@ -477,10 +552,22 @@ export default class PlayerCharacter {
         }
         break;
     }
+    if (this.isInForm && this.form?.armor) {
+      armor =
+        this.form.armor.baseArmor +
+        (this.form.armor.stat
+          ? this.stats[this.form.armor.stat.toLowerCase() as keyof Stats]
+          : 0);
+    }
     return applyConditionalEffects("armor", armor, this);
   }
   public get speeds() {
-    return this.lineage?.speeds;
+    let speeds = [...this.lineage?.speeds];
+    if (this.isInForm && this.form?.slug === "SHIFTER-MID-FORM")
+      speeds[0] = { ...speeds[0], speed: speeds[0].speed + 10 };
+    if (this.isInForm && this.form?.slug === "SHIFTER-SMALL-FORM")
+      speeds[0] = { ...speeds[0], speed: speeds[0].speed - 10 };
+    return speeds;
   }
 
   public get deflect(): { flat: number; dice: number; count: number } {
@@ -509,14 +596,14 @@ export default class PlayerCharacter {
   }
 
   public get maxHealth() {
+    let maxHealth = 0;
     if (this._characterClass && this._level)
-      return applyConditionalEffects(
-        "maxHealth",
+      maxHealth =
         this._characterClass?.health +
-          (this._level - 1) * this._characterClass?.healthOnLevel,
-        this,
-      );
-    else return 0;
+        (this._level - 1) * this._characterClass?.healthOnLevel;
+    if (this.isInForm && this.form?.slug === "SHIFTER-BIG-FORM")
+      maxHealth += 4 * this.level;
+    return applyConditionalEffects("maxHealth", maxHealth, this);
   }
 
   public get maxStamina(): number {
@@ -557,6 +644,26 @@ export default class PlayerCharacter {
       throw new Error("Base damage cannot be calculated without a class");
 
     let statDmg = Number.MIN_SAFE_INTEGER;
+    if (this.isInForm && this.form?.damage) {
+      this.form.damage.forEach((damage) => {
+        damage.stat?.forEach((stat) => {
+          switch (stat) {
+            case StatOptions.METTLE:
+              statDmg = Math.max(statDmg, this.stats.mettle);
+              break;
+            case StatOptions.AGILITY:
+              statDmg = Math.max(statDmg, this.stats.agility);
+              break;
+            case StatOptions.HEART:
+              statDmg = Math.max(statDmg, this.stats.heart);
+              break;
+            case StatOptions.INT:
+              statDmg = Math.max(statDmg, this.stats.intellect);
+              break;
+          }
+        });
+      });
+    }
     this.characterClass?.damage.stat.forEach((stat) => {
       switch (stat) {
         case StatOptions.METTLE:
@@ -574,9 +681,15 @@ export default class PlayerCharacter {
       }
     });
     let baseDmg = { ...this.characterClass?.damage, stat: statDmg };
-
-    if (this.shieldName && this.shieldName !== "none") {
-      baseDmg = downgradeBaseDamage(baseDmg);
+    if (this.isInForm && this.form?.damage) {
+      this.form.damage.forEach((damage) => {
+        baseDmg = { ...damage, stat: statDmg };
+      });
+    }
+    if (!this.isInForm) {
+      if (this.shieldName && this.shieldName !== "none") {
+        baseDmg = downgradeBaseDamage(baseDmg);
+      }
     }
     return {
       dice: applyConditionalEffects("baseDamage.dice", baseDmg.dice, this),
@@ -588,6 +701,7 @@ export default class PlayerCharacter {
     if (!this.characterClass)
       throw new Error("Range cannot be calculated without a class");
     let range = this.characterClass.range;
+    if (this.isInForm) range = { min: 0, max: 0 };
     if (
       this.characterClass.slug === "BRAWLER" &&
       this.stats.agility >= this.stats.mettle
@@ -627,6 +741,16 @@ export default class PlayerCharacter {
   public get languages() {
     return this._languages;
   }
+  public get size(): SizeOptions {
+    let size = SizeOptions.MEDIUM;
+    if (typeof this.lineage.size === "string") size = this.lineage.size;
+    else size = this.lineage.size[0];
+    if (this.isInForm && this.form?.size) {
+      size = this.form.size;
+    }
+
+    return size;
+  }
   public get attack() {
     let attack = Number.MIN_SAFE_INTEGER;
     this.characterClass?.attackStat.forEach((stat) => {
@@ -645,6 +769,9 @@ export default class PlayerCharacter {
           break;
       }
     });
+    if (this.isInForm && this.form?.attackStat) {
+      attack = Math.max(attack, this.stats.heart);
+    }
     return applyConditionalEffects("attack", attack, this);
   }
   public get choices() {
@@ -673,6 +800,8 @@ export default class PlayerCharacter {
       )
         choices.push(feature.slug);
     });
+    if (this._form) choices.push(this._form.slug);
+    if (this._beast) choices.push(this._beast.slug);
     return choices;
   }
 
@@ -708,7 +837,7 @@ export default class PlayerCharacter {
   // Helper Functions
 
   public updateChoices(choices: string[]): PlayerCharacter {
-    const updateChosen = (features: PlayerCharacterFeature[]) => {
+    const updateChosenFeatures = (features: PlayerCharacterFeature[]) => {
       features.forEach((feature) => {
         if (feature.choices) {
           const chosen: string[] = feature.choices
@@ -732,9 +861,31 @@ export default class PlayerCharacter {
       });
     };
 
-    if (this._features) updateChosen(this._features);
-    if (this._actions) updateChosen(this._actions);
-    if (this._counters) updateChosen(this._counters);
+    if (this._features) updateChosenFeatures(this._features);
+    if (this._actions) updateChosenFeatures(this._actions);
+    if (this._counters) updateChosenFeatures(this._counters);
+
+    // Check if the form slug is in the choices and set the form to that if it exists.
+    choices.forEach((choice) => {
+      if (
+        this.characterClass?.extra?.forms?.some(
+          (form: Form) => form.slug === choice,
+        )
+      ) {
+        this.setFormSlug(choice);
+      }
+    });
+
+    // Check if the form slug is in the choices and set the form to that if it exists.
+    choices.forEach((choice) => {
+      if (
+        this.characterClass?.extra?.beastMasterPet?.beasts?.some(
+          (beast: BeastMasterBeast) => beast.slug === choice,
+        )
+      ) {
+        this.setBeastSlug(choice);
+      }
+    });
 
     return this;
   }
@@ -790,10 +941,6 @@ export default class PlayerCharacter {
     if (i !== -1) {
       this._features.splice(i, 1);
     }
-  }
-  public finishRestAndRecuperation() {
-    this._currentHealth = this.maxHealth;
-    this._currentStamina = this.maxStamina;
   }
 
   private sortFeatures() {

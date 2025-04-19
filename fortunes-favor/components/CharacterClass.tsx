@@ -7,6 +7,7 @@ import { Deflect } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
 import { CharacterClass as ClassGraphType } from "../app/types.generated";
 import TextBlock from "./blocks/TextBlock";
+import BeastDisplay from "./blocks/BeastmasterBeastDisplay";
 
 type featureProps = {
   feature: CharacterFeature;
@@ -80,18 +81,27 @@ type extrasDisplayProps = {
 };
 
 const ExtrasDisplay = ({ extras }: extrasDisplayProps) => {
-  if (extras.forms) {
-    return (
-      <div>
-        <h1 className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
-          Forms
-        </h1>
-        {extras.forms.map((form: Form) => (
-          <FormDisplay form={form} key={form.slug} />
-        ))}
-      </div>
-    );
-  }
+  return (
+    <>
+      {extras.forms && (
+        <div>
+          <h1 className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">
+            Forms
+          </h1>
+          {extras.forms.map((form: Form) => (
+            <div className="md:mx-10" key={form.slug}>
+              <FormDisplay form={form} />
+            </div>
+          ))}
+        </div>
+      )}
+      {extras.beastMasterPet && (
+        <div>
+          <BeastDisplay beastMasterPet={extras.beastMasterPet} />
+        </div>
+      )}
+    </>
+  );
 };
 
 type trainingProps = {
