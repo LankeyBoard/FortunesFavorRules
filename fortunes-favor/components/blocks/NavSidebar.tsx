@@ -1,12 +1,15 @@
 "use client";
 
-import { nav } from "@/app/rules/layout";
+import { NavElement, NavSection } from "@/app/rules/layout";
 import { isSmallWindow } from "@/utils/isSmallWindow";
 import useWindowDimensions from "@/utils/useWindowDimensions";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
+import FancyChevron from "../icons/FancyChevron";
+import Button, { ButtonType } from "./Inputs/Button";
+import Chevron from "../icons/Chevron";
 
 const buttonUpStyle =
   "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
@@ -32,11 +35,12 @@ const buildPartialPathFromStr = (str: string) => {
   return new partialPath(pathname, hash);
 };
 
-const mapNavToPartialPaths = (navMap: nav[]): partialPath[] => {
+const mapNavToPartialPaths = (navMap: NavSection[]): partialPath[] => {
   const mappedPaths: partialPath[] = [];
   navMap.forEach((n) => {
     const partialPaths: partialPath[] = [];
     if (n.href) partialPaths.push(buildPartialPathFromStr(n.href));
+    else if (n.basePath) partialPaths.push(buildPartialPathFromStr(n.basePath));
     if (n.subroutes) {
       n.subroutes.forEach((r) => {
         if (r.href) partialPaths.push(buildPartialPathFromStr(r.href));
@@ -52,6 +56,12 @@ const findCurrentPath = (
   partialPaths: partialPath[],
   currentLocation: Location,
 ) => {
+  console.log(
+    "location",
+    currentLocation.pathname,
+    partialPaths,
+    currentLocation.hash,
+  );
   if (currentLocation.hash) {
     const path = partialPaths.find(
       (p) =>
@@ -61,7 +71,7 @@ const findCurrentPath = (
     if (path) return path;
   } else {
     const path = partialPaths.find(
-      (p) => p.pathname === currentLocation.pathname && !p.hash,
+      (p) => p.pathname === currentLocation.pathname,
     );
     if (path) return path;
   }
@@ -103,9 +113,9 @@ const findCurrentPathOnScroll = (
 };
 
 const updateNavMap = (
-  navMap: nav[],
+  navMap: NavSection[],
   currentPath: partialPath | undefined,
-): nav[] => {
+): NavSection[] => {
   const updatedNavMap = navMap.map((n) => {
     return {
       ...n,
@@ -120,17 +130,18 @@ const updateNavMap = (
       }),
     };
   });
+
   return updatedNavMap;
 };
 
 type navProps = {
-  navEl: nav;
+  navEl: NavElement;
   isSub?: boolean;
   closeMenuIfOpen: () => void;
 };
 export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
   return (
-    <div key={navEl.title} className="">
+    <div key={navEl.title} className="w-fit">
       {navEl.href && (
         <div
           className={
@@ -151,8 +162,8 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
             <div
               className={
                 navEl.isCurrent
-                  ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis ml-3 hover:text-amber-700 dark:hover:text-amber-100 hover:mr-0"
-                  : "font-light text-lg text-slate-800 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-100 ml-3 mr-3 text-balance hover:font-normal hover:mr-0"
+                  ? "text-amber-600 dark:text-amber-300 text-lg text-ellipsis ml-3 hover:text-amber-700 dark:hover:text-amber-100 hover:mr-2"
+                  : "font-light text-lg text-slate-800 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-100 ml-3 mr-3 text-balance hover:font-normal hover:mr-2"
               }
             >
               {navEl.title}
@@ -160,23 +171,45 @@ export const NavElem = ({ navEl, isSub, closeMenuIfOpen }: navProps) => {
           </Link>
         </div>
       )}
-      <div className="mx-2">
-        {navEl.subroutes?.map((r) => {
-          return (
-            <NavElem
-              navEl={r}
-              isSub={true}
-              key={r.title}
-              closeMenuIfOpen={closeMenuIfOpen}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 };
 
-const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
+type NavSectionProps = {
+  navSection: NavSection;
+  closeMenuIfOpen: () => void;
+};
+const NavSectionDisplay = ({
+  navSection,
+  closeMenuIfOpen,
+}: NavSectionProps) => {
+  return (
+    <div>
+      <div className="flex flex-row items-center">
+        <NavElem
+          navEl={{ ...navSection, href: navSection.basePath }}
+          closeMenuIfOpen={closeMenuIfOpen}
+          isSub={false}
+        />
+      </div>
+
+      {navSection.subroutes && (
+        <div className="mx-4">
+          {navSection.subroutes.map((n) => (
+            <NavElem
+              key={n.slug}
+              navEl={n}
+              closeMenuIfOpen={closeMenuIfOpen}
+              isSub={true}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const NavSidebar = ({ navMap }: { navMap: NavSection[] }) => {
   const { height, width } = useWindowDimensions();
   const pathname = usePathname();
   const router = useRouter();
@@ -220,7 +253,6 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
     let path = findCurrentPath(navPaths, window.location);
     if (!path) path = findCurrentPathOnScroll(navPaths, document);
     if (path) setCurrentPath(path);
-    // setCurrentPath(findCurrentPath(navPaths, window.location));
   }, [pathname]);
 
   useEffect(() => {
@@ -308,9 +340,8 @@ const NavSidebar = ({ navMap }: { navMap: nav[] }) => {
               {currentNavMap.map((n) => {
                 return (
                   <div key={n.title} className="flex flex-col">
-                    <NavElem
-                      navEl={n}
-                      isSub={false}
+                    <NavSectionDisplay
+                      navSection={n}
                       closeMenuIfOpen={closeMenuIfOpen}
                     />
                   </div>

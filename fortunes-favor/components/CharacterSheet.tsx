@@ -31,6 +31,9 @@ import Button, { ButtonType } from "./blocks/Inputs/Button";
 import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
 import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
+import Edit from "./icons/Edit";
+import Unlock from "./icons/Unlock";
+import Lock from "./icons/Lock";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -353,12 +356,14 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   };
 
   return (
-    <>
+    <div className="pb-20">
       {isEditable ? (
         <h2 className="font-thin text-xl mx-auto text-center p-4 dark:bg-teal-900 bg-teal-100">
           <TextInput
             placeholder="Character Name"
             defaultValue={character.name}
+            required
+            pattern="\S+"
             onChange={(e) => {
               updateName(e.target.value);
             }}
@@ -369,7 +374,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           {character.name}
         </h2>
       )}
-      <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-3 md:gap-2">
+      <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid lg:grid-cols-3 md:grid-cols-2 md:gap-2">
         <div className="bg-slate-50 dark:bg-slate-900 order-2 md:order-1">
           <CharacterOtherInfo
             character={character}
@@ -385,7 +390,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             characterOptions={characterOptions}
           />
         </div>
-        <div className="pt-6 md:pt-0 bg-slate-50 dark:bg-slate-900 order-3">
+        <div className="pt-6 md:pt-0 bg-slate-50 dark:bg-slate-900 order-3 md:col-span-2 lg:col-span-1">
           <CharacterFeatures
             character={character}
             setCharacter={setCharacter}
@@ -412,23 +417,31 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           />
         </div>
       </div>
-      <div className="mx-auto w-fit">
-        <Button
-          buttonType={ButtonType.simple}
-          color="amber"
-          onClick={() => {
-            if (isEditable) saveCharacter(character);
-            setEditable(!isEditable);
-          }}
-        >
-          {isEditable ? (
-            <span>Save Character</span>
-          ) : (
-            <span>Edit Character</span>
-          )}
-        </Button>
+      <div className="mx-auto w-fit fixed bottom-4 right-4">
+        {isEditable ? (
+          <Button
+            buttonType={ButtonType.default}
+            color="amber"
+            onClick={() => {
+              saveCharacter(character);
+              setEditable(false);
+            }}
+          >
+            <span className="pr-2">Lock</span>
+            <Lock />
+          </Button>
+        ) : (
+          <Button
+            buttonType={ButtonType.default}
+            color="amber"
+            onClick={() => setEditable(true)}
+          >
+            <span className="pr-2">Unlock</span>
+            <Unlock />
+          </Button>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -3,14 +3,14 @@ import RuleDisplay from "../../components/blocks/RuleDisplay";
 import AlertPopup from "../../components/AlertPopup";
 import client from "@/utils/graphQLclient";
 import NavSidebar from "@/components/blocks/NavSidebar";
-export type nav = {
+export type NavElement = {
   title: string;
   href?: string;
-  subroutes?: nav[];
+  subroutes?: NavElement[];
   isCurrent?: boolean;
 };
 
-type nav_section = {
+export type NavSection = {
   title: string;
   shortTitle?: string;
   basePath: string;
@@ -23,17 +23,17 @@ type nav_section = {
   }[];
 };
 
-const NavBuilder = (sections: nav_section[]): nav[] => {
-  const navRoutes: nav[] = [];
+const NavBuilder = (sections: NavSection[]): NavElement[] => {
+  const navRoutes: NavElement[] = [];
   sections.forEach((section) => {
     if (section.subroutes) {
-      let route: nav = {
+      let route: NavElement = {
         title: section.title,
         href: section.href,
         subroutes: [],
       };
       section.subroutes.forEach((subRoute) => {
-        const sub: nav = {
+        const sub: NavElement = {
           title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
           href: subRoute.href.includes("#")
             ? subRoute.href
@@ -73,33 +73,37 @@ export default async function RulesLayout({
     query,
   });
 
-  const rulesSection: nav_section = {
+  const rulesSection: NavSection = {
     title: "General Rules",
     basePath: "/rules/player_rules",
     href: "/rules/player_rules",
     subroutes: data.genericRules,
   };
-  const culturesSection: nav_section = {
+  const culturesSection: NavSection = {
     title: "Cultures",
     basePath: "/rules/cultures",
+    href: "/rules/cultures",
   };
-  const lineagesSection: nav_section = {
+  const lineagesSection: NavSection = {
     title: "Lineages",
     basePath: "/rules/lineages",
+    href: "/rules/lineages",
   };
-  const characterClassesSection: nav_section = {
+  const characterClassesSection: NavSection = {
     title: "Classes",
     href: "/rules/classes",
     basePath: "/rules/classes",
     subroutes: data.characterClasses,
   };
-  const noviceFeaturesSection: nav_section = {
+  const noviceFeaturesSection: NavSection = {
     title: "Novice Features",
     basePath: "/rules/generic_features/novice_features",
+    href: "/rules/generic_features/novice_features",
   };
-  const veteranFeaturesSection: nav_section = {
+  const veteranFeaturesSection: NavSection = {
     title: "Veteran Features",
     basePath: "/rules/generic_features/veteran_features",
+    href: "/rules/generic_features/veteran_features",
   };
 
   return (
@@ -111,14 +115,14 @@ export default async function RulesLayout({
       </div>
       <div className="fixed">
         <NavSidebar
-          navMap={NavBuilder([
+          navMap={[
             rulesSection,
             culturesSection,
             lineagesSection,
             characterClassesSection,
             noviceFeaturesSection,
             veteranFeaturesSection,
-          ])}
+          ]}
         />
       </div>
       <AlertPopup />

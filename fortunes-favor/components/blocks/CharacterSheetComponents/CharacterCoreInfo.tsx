@@ -238,7 +238,7 @@ const CharacterCoreInfo = ({
       </VerticalLabeledBox>
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800 pb-4">
         <VerticalLabeledBox label="stats">
-          <div className="p-4 pb-0 grid grid-cols-4 gap-2 justify-center w-max mx-auto">
+          <div className="p-4 pb-0 flex flex-wrap md:grid md:grid-cols-4 gap-2 justify-center w-auto md:w-max mx-auto">
             <LockableSmallTextInput
               isEditable={isEditable}
               label="Mettle"
@@ -280,7 +280,7 @@ const CharacterCoreInfo = ({
         )}
       </div>
       <div className="">
-        <div className="grid grid-cols-2 gap-4 justify-center mx-auto w-max">
+        <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
           <ResourceDisplay
             current={character.currentHealth}
             max={character.maxHealth}
@@ -297,7 +297,7 @@ const CharacterCoreInfo = ({
       </div>
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
         <VerticalLabeledBox label="Combat">
-          <div className="grid grid-cols-4 gap-0 justify-center mx-auto w-max justify-items-center">
+          <div className="flex flex-wrap md:grid grid-cols-4 gap-0 justify-center mx-auto w-auto md:w-max justify-items-center">
             <CombatStatDisplay stat={character.attack} label="Attack" />
             <CombatStatDisplay
               stat={
