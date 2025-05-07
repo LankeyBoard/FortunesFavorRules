@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
   color,
   ...props
 }) => {
-  let buttonStyle = "cursor-pointer p-2";
+  let buttonStyle = "cursor-pointer p-2 " + props.className;
   if (color) {
     const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
 
