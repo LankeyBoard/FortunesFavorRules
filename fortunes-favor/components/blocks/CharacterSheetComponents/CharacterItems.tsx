@@ -1,5 +1,5 @@
 import Plus from "@/components/icons/Plus";
-import Item from "@/utils/Item";
+import CharacterItem from "@/utils/CharacterItem";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction, useState } from "react";
 import Button, { ButtonType } from "../Inputs/Button";
@@ -17,7 +17,7 @@ const CharacterItems = ({
 }) => {
   const [showItemForm, setShowItemForm] = useState(false);
   const updateItemBuilder = (i: number) => {
-    const updateItem = (item: Item) => {
+    const updateItem = (item: CharacterItem) => {
       const newCharacter = new PlayerCharacter(
         undefined,
         undefined,

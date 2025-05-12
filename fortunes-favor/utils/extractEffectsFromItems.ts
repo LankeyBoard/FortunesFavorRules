@@ -1,7 +1,7 @@
 import { Effect } from "./applyConditionalEffects";
-import Item from "./Item";
+import CharacterItem from "./CharacterItem";
 
-function extractEffectsFromItems(items: Item[]): Effect[] {
+function extractEffectsFromItems(items: CharacterItem[]): Effect[] {
   if (!items || items.length === 0) return [];
   return items
     .flatMap((item) => item.effects || [])

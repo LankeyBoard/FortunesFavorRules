@@ -26,7 +26,7 @@ class Feature extends Input {
   }
 }
 
-class Item extends Feature {
+class CharacterItem extends Feature {
   readonly id?: Number;
   readonly isMagic: boolean;
   readonly rarity?: ItemRarity;
@@ -59,4 +59,4 @@ class Item extends Feature {
   }
 }
 
-export default Item;
+export default CharacterItem;

@@ -28,7 +28,7 @@ import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterM
 import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
-import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import CharacterItem, { ItemRarity, RechargeOn } from "@/utils/CharacterItem";
 import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
 import Edit from "./icons/Edit";
@@ -63,7 +63,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.items = data.character.items.map((item) => {
     const itemText: [RuleText] =
       item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];
-    return new Item(
+    return new CharacterItem(
       item.title,
       itemText,
       item.isMagic,

@@ -1,5 +1,5 @@
 import Plus from "@/components/icons/Plus";
-import Item, { RechargeOn, ItemRarity } from "@/utils/Item";
+import CharacterItem, { RechargeOn, ItemRarity } from "@/utils/CharacterItem";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import Button, { ButtonType } from "../Inputs/Button";
 import DropdownField from "../Inputs/DropdownField";
@@ -277,7 +277,7 @@ const CreateItem = ({
             color="green"
             type="submit"
             onClick={() => {
-              const newItem: Item = new Item(
+              const newItem: CharacterItem = new CharacterItem(
                 newItemTitle,
                 [{ text: newItemText }],
                 isMagicItem,

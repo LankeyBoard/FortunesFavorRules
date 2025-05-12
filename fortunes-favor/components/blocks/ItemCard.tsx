@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
-import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import CharacterItem, { ItemRarity, RechargeOn } from "@/utils/CharacterItem";
 import Button, { ButtonType } from "./Inputs/Button";
 import Trash from "../icons/Trash";
 
@@ -25,13 +25,13 @@ const ItemCharges = (uses: {
 };
 
 type ItemCardProps = {
-  item: Item;
+  item: CharacterItem;
   isExpanded: boolean;
-  updateItem?: (item: Item) => void;
+  updateItem?: (item: CharacterItem) => void;
   deleteItem?: () => void;
 };
 
-const ItemCardTitle = ({ item }: { item: Item }) => {
+const ItemCardTitle = ({ item }: { item: CharacterItem }) => {
   let titleStyle = "flex p-2 mt-2 ";
   if (!item.isMagic) {
     titleStyle += "bg-slate-300 dark:bg-slate-700";
@@ -175,7 +175,7 @@ const ItemCard = ({
                   buttonType={ButtonType.simple}
                   color="green"
                   onClick={() => {
-                    const newItem = new Item(
+                    const newItem = new CharacterItem(
                       cardItem.title,
                       cardItem.text,
                       cardItem.isMagic,
