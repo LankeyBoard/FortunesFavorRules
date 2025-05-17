@@ -1,14 +1,17 @@
 import Plus from "@/components/icons/Plus";
-import CharacterItem, { RechargeOn, ItemRarity } from "@/utils/CharacterItem";
-import PlayerCharacter from "@/utils/PlayerCharacter";
-import Button, { ButtonType } from "../Inputs/Button";
-import DropdownField from "../Inputs/DropdownField";
-import MultilineTextInput from "../Inputs/MulitlineTextInput";
-import NumInput from "../Inputs/NumInput";
-import TextInput from "../Inputs/TextInput";
+import CharacterItem from "@/utils/CharacterItem";
+import Button, { ButtonType } from "./Button";
+import DropdownField from "./DropdownField";
+import MultilineTextInput from "./MulitlineTextInput";
+import NumInput from "./NumInput";
+import TextInput from "./TextInput";
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { Effect } from "@/utils/applyConditionalEffects";
+import { Rarity, RechargeOn } from "@/utils/enums";
+import { BaseItem } from "@/utils/BaseItem";
+import { ShopItem } from "@/utils/ItemShop";
+import SmallField from "../SmallField";
 
 type EffectBuilder = {
   target?: string;
@@ -17,14 +20,19 @@ type EffectBuilder = {
   condition?: string;
 };
 
+export enum ItemType {
+  CHARACTER_ITEM,
+  SHOP_ITEM,
+}
+
 const CreateItem = ({
-  character,
-  setCharacter,
+  addItemToParent,
   setShowItemForm,
+  itemType,
 }: {
-  character: PlayerCharacter;
-  setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
-  setShowItemForm: Dispatch<SetStateAction<boolean>>;
+  addItemToParent?: (item: BaseItem) => void;
+  setShowItemForm?: Dispatch<SetStateAction<boolean>>;
+  itemType?: ItemType;
 }) => {
   const [newItemTitle, setNewItemTitle] = useState("");
   const [newItemText, setNewItemText] = useState("");
@@ -46,14 +54,29 @@ const CreateItem = ({
     operation: "",
   });
   const [showEffectsInput, setShowEffectsInput] = useState(false);
+  const [inStock, setInStock] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [defaultPrice, setDefaultPrice] = useState(-1);
+  const [salePrice, setSalePrice] = useState(-1);
+  const resetItemInputs = () => {
+    setNewItemTitle("");
+    setNewItemText("");
+    setIsMagicItem(false);
+    setItemRarity("Common");
+    setItemUses(undefined);
+    setHasUses(false);
+    setItemEffects([]);
+    setNewItemEffect({
+      value: "",
+      target: "",
+      operation: "",
+    });
+    setInStock(false);
+  };
+
   return (
     <div className="mt-4 p-4 border rounded bg-slate-100 dark:bg-slate-900">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setShowItemForm(false);
-        }}
-      >
+      <div>
         <div>
           <TextInput
             placeholder="Item Title"
@@ -145,7 +168,7 @@ const CreateItem = ({
                     ...itemUses!,
                     rechargeOn: e.target.value.slice(
                       "RechargeOn".length + 1,
-                    ) as RechargeOn,
+                    ) as unknown as RechargeOn,
                   });
                 }}
               />
@@ -261,12 +284,39 @@ const CreateItem = ({
             )}
           </div>
         </div>
+        {itemType === ItemType.SHOP_ITEM && (
+          <div>
+            <input
+              type="checkbox"
+              checked={inStock}
+              onChange={(e) => {
+                setInStock(e.target.checked);
+              }}
+            />
+            <label>Currently In Stock</label>
+            <SmallField label="Base Price">
+              <NumInput
+                name="Base Price"
+                min={0}
+                required={true}
+                onChange={(e) => setDefaultPrice(Number(e.target.value))}
+              />
+            </SmallField>
+            <SmallField label="Sale Price">
+              <NumInput
+                name="Sale Price"
+                min={0}
+                onChange={(e) => setSalePrice(Number(e.target.value))}
+              />
+            </SmallField>
+          </div>
+        )}
         <div className="flex justify-end gap-2 mt-2">
           <Button
             buttonType={ButtonType.default}
             color="red"
             onClick={() => {
-              setShowItemForm(false);
+              setShowItemForm?.(false);
             }}
             type="button"
           >
@@ -277,42 +327,41 @@ const CreateItem = ({
             color="green"
             type="submit"
             onClick={() => {
-              const newItem: CharacterItem = new CharacterItem(
-                newItemTitle,
-                [{ text: newItemText }],
-                isMagicItem,
-                itemRarity as ItemRarity,
-                itemUses,
-                undefined,
-                itemEffects,
-              );
-              const newCharacter = new PlayerCharacter(
-                undefined,
-                undefined,
-                undefined,
-                character,
-              );
-              newCharacter.addItem(newItem);
-              setCharacter(newCharacter);
-              setNewItemTitle("");
-              setNewItemText("");
-              setShowItemForm(false);
-              setIsMagicItem(false);
-              setItemRarity("Common");
-              setItemUses(undefined);
-              setHasUses(false);
-              setItemEffects([]);
-              setNewItemEffect({
-                value: "",
-                target: "",
-                operation: "",
-              });
+              if (itemType === ItemType.SHOP_ITEM) {
+                const newItem: ShopItem = new ShopItem(
+                  newItemTitle,
+                  [{ text: newItemText }],
+                  isMagicItem,
+                  itemRarity as unknown as Rarity,
+                  itemEffects,
+                  tags,
+                  defaultPrice,
+                  inStock,
+                  undefined,
+                  itemUses,
+                  salePrice > -1 ? salePrice : undefined,
+                );
+                addItemToParent?.(newItem);
+              } else {
+                const newItem: CharacterItem = new CharacterItem(
+                  newItemTitle,
+                  [{ text: newItemText }],
+                  isMagicItem,
+                  itemRarity as unknown as Rarity,
+                  itemUses,
+                  undefined,
+                  itemEffects,
+                );
+                addItemToParent?.(newItem);
+              }
+              resetItemInputs();
+              setShowItemForm?.(false);
             }}
           >
             Create Item
           </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

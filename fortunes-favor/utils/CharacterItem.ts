@@ -1,52 +1,35 @@
 import { Effect } from "./applyConditionalEffects";
+import { BaseItem } from "./BaseItem";
+import { Rarity, RechargeOn } from "./enums";
 import { RuleText } from "./graphQLtypes";
 import Input from "./Input";
 
-export enum RechargeOn {
-  NONE = "None",
-  CATCH_BREATH = "Catch Your Breath",
-  NIGHTS_REST = "Night's Rest",
-  REST_AND_RECUPERATE = "Rest and Recuperate",
-}
-
-export enum ItemRarity {
-  COMMON = "Common",
-  UNCOMMON = "Uncommon",
-  RARE = "Rare",
-  LEGENDARY = "Legendary",
-  UNIQUE = "Unique",
-}
-
-class Feature extends Input {
+class CharacterItem extends Input implements BaseItem {
+  readonly id?: string;
+  readonly title!: string;
+  readonly text!: RuleText[];
+  readonly isMagic: boolean;
+  readonly rarity?: Rarity;
+  readonly uses?: { used: number; max: number; rechargeOn: RechargeOn };
   readonly effects?: Effect[];
 
-  constructor(title: string, text: [RuleText], effects?: Effect[]) {
-    super(title, text);
-    this.effects = effects;
-  }
-}
-
-class CharacterItem extends Feature {
-  readonly id?: Number;
-  readonly isMagic: boolean;
-  readonly rarity?: ItemRarity;
-  readonly uses?: { used: number; max: number; rechargeOn: RechargeOn };
   constructor(
     title: string,
-    text: [RuleText],
-
+    text: RuleText[],
     isMagic: boolean,
-    rarity?: ItemRarity,
+    rarity?: Rarity,
     uses?: { used: number; max: number; rechargeOn: RechargeOn },
-    id?: Number,
+    id?: string,
     effects?: Effect[],
   ) {
-    super(title, text, effects);
+    super(title, text);
     this.isMagic = isMagic;
     this.rarity = rarity;
     this.uses = uses;
     this.id = id;
+    this.effects = effects;
   }
+
   public use() {
     if (!this.uses) {
       throw new Error("Item does not have uses");

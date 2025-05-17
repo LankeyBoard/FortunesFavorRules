@@ -8,6 +8,8 @@ import {
 import { ItemShop, ShopItem } from "@/utils/ItemShop";
 
 const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
+  console.log(data);
+
   return new ItemShop(
     data.itemShop.name,
     data.itemShop.description,
@@ -60,9 +62,11 @@ export default async function ShopView(props: {
   params: Promise<{ id: string }>;
 }) {
   const params = await props.params;
+  console.log(params);
   const { data } = await client.query({
     query: GET_ITEM_SHOP,
     variables: { id: params.id },
   });
-  return <Shop shop={convertDataToItemShop(data.itemShop)} />;
+  console.log(data.itemShop);
+  if (data.itemShop.name) return <Shop shop={convertDataToItemShop(data)} />;
 }

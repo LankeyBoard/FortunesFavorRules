@@ -1,8 +1,9 @@
+import { BaseItem } from "./BaseItem";
 import { Rarity, RechargeOn } from "./enums";
 import { RuleText } from "./graphQLtypes";
 import Effect from "./types/Effect";
 
-export class ShopItem {
+export class ShopItem implements BaseItem {
   id?: string;
   title: string;
   text: RuleText[];

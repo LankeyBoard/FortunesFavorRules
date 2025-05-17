@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
-import CharacterItem, { ItemRarity, RechargeOn } from "@/utils/CharacterItem";
+import CharacterItem from "@/utils/CharacterItem";
 import Button, { ButtonType } from "./Inputs/Button";
 import Trash from "../icons/Trash";
+import { BaseItem } from "@/utils/BaseItem";
+import { RechargeOn, Rarity } from "@/utils/enums";
 
 const ItemCharges = (uses: {
   used: number;
@@ -25,31 +27,31 @@ const ItemCharges = (uses: {
 };
 
 type ItemCardProps = {
-  item: CharacterItem;
+  item: BaseItem;
   isExpanded: boolean;
-  updateItem?: (item: CharacterItem) => void;
+  updateItem?: (item: BaseItem) => void;
   deleteItem?: () => void;
 };
 
-const ItemCardTitle = ({ item }: { item: CharacterItem }) => {
+const ItemCardTitle = ({ item }: { item: BaseItem }) => {
   let titleStyle = "flex p-2 mt-2 ";
   if (!item.isMagic) {
     titleStyle += "bg-slate-300 dark:bg-slate-700";
   } else {
     switch (item.rarity) {
-      case ItemRarity.COMMON:
+      case Rarity.COMMON:
         titleStyle += "bg-gray-400 dark:bg-gray-600";
         break;
-      case ItemRarity.UNCOMMON:
+      case Rarity.UNCOMMON:
         titleStyle += "bg-green-300 dark:bg-green-800";
         break;
-      case ItemRarity.RARE:
+      case Rarity.RARE:
         titleStyle += "bg-blue-300 dark:bg-blue-800";
         break;
-      case ItemRarity.LEGENDARY:
+      case Rarity.LEGENDARY:
         titleStyle += "bg-purple-300 dark:bg-purple-800";
         break;
-      case ItemRarity.UNIQUE:
+      case Rarity.UNIQUE:
         titleStyle += "bg-orange-300 dark:bg-orange-800";
         break;
       default:
