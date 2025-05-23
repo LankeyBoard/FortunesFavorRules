@@ -3,6 +3,44 @@ import { Rarity, RechargeOn } from "./enums";
 import { RuleText } from "./graphQLtypes";
 import Effect from "./types/Effect";
 
+export function isShopItem(item: BaseItem): item is ShopItem {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    "title" in item &&
+    "text" in item &&
+    "isMagic" in item &&
+    "rarity" in item &&
+    "effects" in item &&
+    "tags" in item &&
+    "defaultPrice" in item &&
+    "inStock" in item
+  );
+}
+
+export type ShopItemInput = {
+  title: string;
+  text: RuleText[];
+  isMagic: boolean;
+  rarity: Rarity;
+  effects: {
+    target: string;
+    operation: string;
+    value: number;
+    condition?: string;
+  }[];
+  tags: string[];
+  defaultPrice: number;
+  inStock: boolean;
+  id?: string;
+  uses?: {
+    used: number;
+    max: number;
+    rechargeOn: RechargeOn;
+  };
+  salePrice?: number;
+};
+
 export class ShopItem implements BaseItem {
   id?: string;
   title: string;
@@ -57,8 +95,8 @@ export class ShopItem implements BaseItem {
   public get price() {
     return this.salePrice ? this.salePrice : this.defaultPrice;
   }
-  public get onSale() {
-    return this.salePrice && this.salePrice < this.defaultPrice;
+  public get onSale(): boolean {
+    return typeof this.salePrice === "number";
   }
 }
 

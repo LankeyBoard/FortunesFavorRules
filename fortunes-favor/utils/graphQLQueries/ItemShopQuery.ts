@@ -7,9 +7,7 @@ export const GET_ITEM_SHOP = gql`
       id
       name
       description
-      createdBy {
-        id
-      }
+      canEdit
       itemsInStock {
         id
         title
@@ -64,6 +62,7 @@ export const GET_ITEM_SHOP = gql`
 `;
 
 type ShopItem = {
+  salePrice: number | undefined;
   id: string;
   title: string;
   isMagic: boolean;
@@ -85,9 +84,7 @@ export type ItemShopQueryDataType = {
     id: string;
     name: string;
     description: string;
-    createdBy: {
-      id: string;
-    }[];
+    canEdit: boolean;
 
     itemsInStock: InStockItem[];
     itemsCouldStock: ShopItem[];

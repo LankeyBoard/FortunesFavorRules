@@ -29,16 +29,21 @@ const CreateItem = ({
   addItemToParent,
   setShowItemForm,
   itemType,
+  initialItem,
 }: {
   addItemToParent?: (item: BaseItem) => void;
   setShowItemForm?: Dispatch<SetStateAction<boolean>>;
   itemType?: ItemType;
+  initialItem?: BaseItem;
 }) => {
-  const [newItemTitle, setNewItemTitle] = useState("");
-  const [newItemText, setNewItemText] = useState("");
-  const [isMagicItem, setIsMagicItem] = useState(false);
-  const [itemRarity, setItemRarity] = useState("Common");
-  const [hasUses, setHasUses] = useState(false);
+  const [newItemTitle, setNewItemTitle] = useState(initialItem?.title ?? "");
+
+  const [newItemText, setNewItemText] = useState(
+    initialItem?.text[0].text ?? "",
+  );
+  const [isMagicItem, setIsMagicItem] = useState(initialItem?.isMagic ?? false);
+  const [itemRarity, setItemRarity] = useState(initialItem?.rarity ?? "Common");
+  const [hasUses, setHasUses] = useState(initialItem?.uses != undefined);
   const [itemUses, setItemUses] = useState<
     | {
         used: number;
@@ -46,18 +51,34 @@ const CreateItem = ({
         rechargeOn: RechargeOn;
       }
     | undefined
-  >(undefined);
-  const [itemEffects, setItemEffects] = useState<Effect[]>([]);
+  >(initialItem?.uses);
+  const [itemEffects, setItemEffects] = useState<Effect[]>(
+    initialItem?.effects ?? [],
+  );
   const [newItemEffect, setNewItemEffect] = useState<EffectBuilder>({
     value: "",
     target: "",
     operation: "",
   });
   const [showEffectsInput, setShowEffectsInput] = useState(false);
-  const [inStock, setInStock] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [defaultPrice, setDefaultPrice] = useState(-1);
-  const [salePrice, setSalePrice] = useState(-1);
+  const [inStock, setInStock] = useState(
+    itemType === ItemType.SHOP_ITEM && initialItem && "inStock" in initialItem
+      ? (initialItem as ShopItem).inStock
+      : false,
+  );
+  const [tags, setTags] = useState<string[]>(initialItem?.tags ?? []);
+  const [defaultPrice, setDefaultPrice] = useState(
+    itemType === ItemType.SHOP_ITEM &&
+      initialItem &&
+      "defaultPrice" in initialItem
+      ? (initialItem as ShopItem).defaultPrice
+      : -1,
+  );
+  const [salePrice, setSalePrice] = useState(
+    itemType === ItemType.SHOP_ITEM && initialItem && "salePrice" in initialItem
+      ? (initialItem as ShopItem).salePrice
+      : undefined,
+  );
   const resetItemInputs = () => {
     setNewItemTitle("");
     setNewItemText("");
@@ -75,7 +96,7 @@ const CreateItem = ({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded bg-slate-100 dark:bg-slate-900">
+    <div className="mt-4 p-4 border rounded bg-slate-100 dark:bg-slate-900 max-w-lg">
       <div>
         <div>
           <TextInput
@@ -294,21 +315,29 @@ const CreateItem = ({
               }}
             />
             <label>Currently In Stock</label>
-            <SmallField label="Base Price">
-              <NumInput
-                name="Base Price"
-                min={0}
-                required={true}
-                onChange={(e) => setDefaultPrice(Number(e.target.value))}
-              />
-            </SmallField>
-            <SmallField label="Sale Price">
-              <NumInput
-                name="Sale Price"
-                min={0}
-                onChange={(e) => setSalePrice(Number(e.target.value))}
-              />
-            </SmallField>
+            <div className="flex flex-row">
+              <div className="">
+                <SmallField label="Base Price">
+                  <NumInput
+                    name="Base Price"
+                    min={0}
+                    required={true}
+                    className="max-w-10"
+                    defaultValue={(initialItem as ShopItem).defaultPrice}
+                    onChange={(e) => setDefaultPrice(Number(e.target.value))}
+                  />
+                </SmallField>
+              </div>
+              <SmallField label="Sale Price">
+                <NumInput
+                  name="Sale Price"
+                  min={0}
+                  className="max-w-10"
+                  defaultValue={(initialItem as ShopItem).salePrice}
+                  onChange={(e) => setSalePrice(Number(e.target.value))}
+                />
+              </SmallField>
+            </div>
           </div>
         )}
         <div className="flex justify-end gap-2 mt-2">
@@ -339,7 +368,7 @@ const CreateItem = ({
                   inStock,
                   undefined,
                   itemUses,
-                  salePrice > -1 ? salePrice : undefined,
+                  salePrice && salePrice > -1 ? salePrice : undefined,
                 );
                 addItemToParent?.(newItem);
               } else {
@@ -358,7 +387,7 @@ const CreateItem = ({
               setShowItemForm?.(false);
             }}
           >
-            Create Item
+            Save Item
           </Button>
         </div>
       </div>

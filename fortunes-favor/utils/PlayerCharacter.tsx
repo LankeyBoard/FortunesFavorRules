@@ -4,6 +4,7 @@ import {
   RuleType,
   StatOptions,
   SizeOptions,
+  RechargeOn,
 } from "./enums";
 import CharacterClassData, { BeastMasterBeast } from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
@@ -12,7 +13,7 @@ import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
 import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
-import CharacterItem, { RechargeOn } from "./CharacterItem";
+import CharacterItem from "./CharacterItem";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 import { Form } from "@/components/blocks/FormDisplay";
 
