@@ -1,8 +1,13 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
-import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import CharacterItem from "@/utils/CharacterItem";
 import Button, { ButtonType } from "./Inputs/Button";
 import Trash from "../icons/Trash";
+import { BaseItem } from "@/utils/BaseItem";
+import { RechargeOn, Rarity } from "@/utils/enums";
+import { isShopItem, ShopItem } from "@/utils/ItemShop";
 
 const ItemCharges = (uses: {
   used: number;
@@ -25,40 +30,68 @@ const ItemCharges = (uses: {
 };
 
 type ItemCardProps = {
-  item: Item;
+  item: BaseItem;
   isExpanded: boolean;
-  updateItem?: (item: Item) => void;
+  updateItem?: (item: BaseItem) => void;
   deleteItem?: () => void;
+  showDetails?: boolean;
 };
 
-const ItemCardTitle = ({ item }: { item: Item }) => {
+const ItemCardTitle = ({
+  item,
+  showDetails,
+}: {
+  item: BaseItem;
+  showDetails: boolean;
+}) => {
   let titleStyle = "flex p-2 mt-2 ";
   if (!item.isMagic) {
     titleStyle += "bg-slate-300 dark:bg-slate-700";
   } else {
     switch (item.rarity) {
-      case ItemRarity.COMMON:
+      case Rarity.COMMON:
         titleStyle += "bg-gray-400 dark:bg-gray-600";
         break;
-      case ItemRarity.UNCOMMON:
+      case Rarity.UNCOMMON:
         titleStyle += "bg-green-300 dark:bg-green-800";
         break;
-      case ItemRarity.RARE:
+      case Rarity.RARE:
         titleStyle += "bg-blue-300 dark:bg-blue-800";
         break;
-      case ItemRarity.LEGENDARY:
+      case Rarity.LEGENDARY:
         titleStyle += "bg-purple-300 dark:bg-purple-800";
         break;
-      case ItemRarity.UNIQUE:
+      case Rarity.UNIQUE:
         titleStyle += "bg-orange-300 dark:bg-orange-800";
         break;
       default:
         titleStyle += "bg-red-300 dark:bg-red-800"; // Fallback color
     }
   }
+  console.log(
+    "Item title check",
+    item.title,
+    isShopItem(item),
+    (item as ShopItem).onSale,
+    Object.getPrototypeOf(item),
+  );
   return (
     <div className={titleStyle}>
       <h1 className="text-lg font-semibold float-left grow">{item.title}</h1>
+      <div className="flex flex-row">
+        {showDetails && isShopItem(item) && (
+          <>
+            {item.onSale && (
+              <p className="px-2 underline underline-offset-2 decoration-red-500">
+                On Sale!
+              </p>
+            )}
+            <div className="bg-yellow-400 text-black px-2 py-1 rounded">
+              {item.onSale ? item.salePrice : item.defaultPrice} Coin
+            </div>
+          </>
+        )}
+      </div>
       {item.uses && (
         <div className="float-right">
           <ItemCharges
@@ -78,6 +111,7 @@ const ItemCard = ({
   isExpanded,
   updateItem,
   deleteItem,
+  showDetails,
 }: ItemCardProps) => {
   const [cardItem, setItem] = useState(item);
   const [isOpen, setOpen] = useState(isExpanded);
@@ -85,12 +119,6 @@ const ItemCard = ({
     setOpen(isExpanded);
   }, [isExpanded]);
 
-  const choiceStyle =
-    "p-2 odd:bg-slate-300 dark:odd:bg-slate-700 cursor-pointer hover:border-2 hover:border-amber-300 hover:dark:border-amber-700 hover:bg-slate-200 hover:dark:bg-slate-800";
-  const selectedChoiceStyle = choiceStyle + " border-2 border-amber-500";
-  const deselectedChoiceStyle =
-    choiceStyle +
-    " border-2 border-gray-100 dark:border-gray-900 odd:border-slate-300 odd:dark:border-slate-700";
   if (!isOpen) {
     return (
       <div
@@ -99,7 +127,7 @@ const ItemCard = ({
           setOpen(true);
         }}
       >
-        <ItemCardTitle item={cardItem} />
+        <ItemCardTitle item={cardItem} showDetails={showDetails || false} />
       </div>
     );
   }
@@ -107,7 +135,7 @@ const ItemCard = ({
     <>
       <div className="pb-2 bg-slate-50 dark:bg-slate-800 mb-4">
         <div onClick={() => setOpen(false)} className="hover:cursor-pointer">
-          <ItemCardTitle item={cardItem} />
+          <ItemCardTitle item={cardItem} showDetails={showDetails || false} />
         </div>
 
         <div className="clear-both mx-2">
@@ -175,7 +203,7 @@ const ItemCard = ({
                   buttonType={ButtonType.simple}
                   color="green"
                   onClick={() => {
-                    const newItem = new Item(
+                    const newItem = new CharacterItem(
                       cardItem.title,
                       cardItem.text,
                       cardItem.isMagic,

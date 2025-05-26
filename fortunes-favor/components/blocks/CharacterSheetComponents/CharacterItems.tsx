@@ -1,10 +1,11 @@
 import Plus from "@/components/icons/Plus";
-import Item from "@/utils/Item";
+import CharacterItem from "@/utils/CharacterItem";
 import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction, useState } from "react";
 import Button, { ButtonType } from "../Inputs/Button";
 import ItemCard from "../ItemCard";
-import CreateItem from "./CreateItem";
+import CreateItem from "../Inputs/CreateItem";
+import { BaseItem } from "@/utils/BaseItem";
 
 const CharacterItems = ({
   character,
@@ -17,14 +18,14 @@ const CharacterItems = ({
 }) => {
   const [showItemForm, setShowItemForm] = useState(false);
   const updateItemBuilder = (i: number) => {
-    const updateItem = (item: Item) => {
+    const updateItem = (item: BaseItem) => {
       const newCharacter = new PlayerCharacter(
         undefined,
         undefined,
         undefined,
         character,
       );
-      newCharacter.items[i] = item;
+      newCharacter.items[i] = item as CharacterItem;
       setCharacter(newCharacter);
     };
     return updateItem;
@@ -42,6 +43,17 @@ const CharacterItems = ({
       setCharacter(newCharacter);
     };
     return deleteItem;
+  };
+
+  const addItemToCharacter = (item: CharacterItem) => {
+    const newCharacter = new PlayerCharacter(
+      undefined,
+      undefined,
+      undefined,
+      character,
+    );
+    newCharacter.addItem(item);
+    setCharacter(newCharacter);
   };
 
   return (
@@ -67,8 +79,9 @@ const CharacterItems = ({
         <div>
           {showItemForm ? (
             <CreateItem
-              character={character}
-              setCharacter={setCharacter}
+              addItemToParent={(item) =>
+                addItemToCharacter(item as CharacterItem)
+              }
               setShowItemForm={setShowItemForm}
             />
           ) : (

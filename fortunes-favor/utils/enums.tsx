@@ -67,3 +67,18 @@ export enum Languages {
   SEAWHISPER = "Seawhisper",
   VOIDHOWL = "Voidhowl",
 }
+
+export enum Rarity {
+  COMMON,
+  UNCOMMON,
+  RARE,
+  LEGENDARY,
+  UNIQUE,
+}
+
+export enum RechargeOn {
+  NONE,
+  CATCH_BREATH,
+  NIGHTS_REST,
+  REST_AND_RECUPERATE,
+}

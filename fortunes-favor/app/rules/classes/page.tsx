@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ClassTitleAndTags } from "@/components/CharacterClass";
 import { StatOptions } from "@/utils/enums";
 import CharacterClass from "../../../utils/CharacterClass";
+import FullPageLoading from "@/components/FullPageLoading";
 const query = gql`
   query GetAllClasses {
     characterClasses {
@@ -40,7 +41,7 @@ async function ClassesPage() {
     query,
   });
   return (
-    <Suspense fallback={<>Loading</>}>
+    <Suspense fallback={<FullPageLoading />}>
       <div className="md:grid md:grid-cols-2 md:gap-2">
         {data.characterClasses.map((characterClass: CharacterClass) => {
           return (

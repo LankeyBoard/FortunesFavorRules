@@ -1,7 +1,7 @@
 "use client";
 
 import client from "@/utils/graphQLclient";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 
 import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
@@ -19,7 +19,13 @@ import CharacterFeatures from "./blocks/CharacterSheetComponents/CharacterFeatur
 import debounce from "@/utils/debounce";
 import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
-import { ActionType, findEnum, RuleType } from "@/utils/enums";
+import {
+  ActionType,
+  findEnum,
+  Rarity,
+  RechargeOn,
+  RuleType,
+} from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
   GetCharacterData,
@@ -28,12 +34,13 @@ import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterM
 import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
-import Item, { ItemRarity, RechargeOn } from "@/utils/Item";
+import CharacterItem from "@/utils/CharacterItem";
 import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
-import Edit from "./icons/Edit";
 import Unlock from "./icons/Unlock";
 import Lock from "./icons/Lock";
+import Loading from "./blocks/Loading";
+import FullPageLoading from "./FullPageLoading";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -63,11 +70,11 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.items = data.character.items.map((item) => {
     const itemText: [RuleText] =
       item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];
-    return new Item(
+    return new CharacterItem(
       item.title,
       itemText,
       item.isMagic,
-      findEnum(item.rarity, ItemRarity),
+      item.rarity as unknown as Rarity,
       item.uses
         ? {
             ...item.uses,
@@ -75,7 +82,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
               RechargeOn[item.uses.rechargeOn as keyof typeof RechargeOn],
           }
         : undefined,
-      Number(item.id),
+      item.id,
       item.effects,
     );
   });
@@ -191,7 +198,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
               condition: effect.condition,
             };
           }) || [],
-        rarity: item.rarity?.toUpperCase(),
+        rarity: item.rarity,
         uses: item.uses
           ? {
               used: item.uses.used,
@@ -206,7 +213,6 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
       };
     }),
   };
-  console.log(inputs);
   return inputs;
 };
 
@@ -341,7 +347,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   }
 
   if (!character || !character.characterClass || !characterOptions) {
-    return <div>Loading...</div>;
+    return <FullPageLoading />;
   }
 
   const updateName = (newName: string) => {

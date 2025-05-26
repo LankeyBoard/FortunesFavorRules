@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
 import Trash from "../icons/Trash";
 import CharacterCard from "./CharacterCard";
+import Loading from "./Loading";
+import FullPageLoading from "../FullPageLoading";
 
 interface Character {
   id: string;
@@ -75,7 +77,7 @@ const UserProfile = () => {
     return <div>Error</div>;
   }
   if (!data) {
-    return <div>Loading...</div>;
+    return <FullPageLoading />;
   }
   const user = data.me;
   const characters = user.characters;

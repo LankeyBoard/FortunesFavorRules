@@ -4,6 +4,7 @@ import {
   RuleType,
   StatOptions,
   SizeOptions,
+  RechargeOn,
 } from "./enums";
 import CharacterClassData, { BeastMasterBeast } from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
@@ -12,7 +13,7 @@ import CharacterLineage from "./CharacterLineage";
 import GenericFeatureData from "./GenericFeatureData";
 import { FeatureChoices, RuleText } from "./graphQLtypes";
 import CharacterClass from "./CharacterClass";
-import Item, { RechargeOn } from "./Item";
+import CharacterItem from "./CharacterItem";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 import { Form } from "@/components/blocks/FormDisplay";
 
@@ -265,7 +266,7 @@ export default class PlayerCharacter {
   private _currentStamina?: number;
   private _armorName: ArmorType;
   private _shieldName: ShieldType;
-  private _items: Item[];
+  private _items: CharacterItem[];
   private _actions?: PlayerCharacterFeature[];
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
@@ -718,11 +719,11 @@ export default class PlayerCharacter {
     return this._items;
   }
 
-  public set items(items: Item[]) {
+  public set items(items: CharacterItem[]) {
     this._items = items;
   }
 
-  public addItem(item: Item) {
+  public addItem(item: CharacterItem) {
     this._items.push(item);
   }
 
