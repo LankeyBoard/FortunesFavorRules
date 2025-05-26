@@ -111,9 +111,13 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
   inputBuilder.itemsInStock = inputBuilder.itemsInStock.map(
     (item: ShopItem) => {
       const { inStock, ...trimmedItem } = item;
+      //removes _typename that sometimes is still present from graphql
       trimmedItem.text = trimmedItem.text.map((text) => {
-        const { __typename, ...trimmedText } = text;
-        return trimmedText;
+        return {
+          text: text.text,
+          type: text.type,
+          choices: text.choices,
+        };
       });
       return {
         ...trimmedItem,
@@ -125,8 +129,11 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
     (item: ShopItem) => {
       const { inStock, salePrice, ...trimmedItem } = item;
       trimmedItem.text = trimmedItem.text.map((text) => {
-        const { __typename, ...trimmedText } = text;
-        return trimmedText;
+        return {
+          text: text.text,
+          type: text.type,
+          choices: text.choices,
+        };
       });
       return {
         ...trimmedItem,
