@@ -323,7 +323,11 @@ const CreateItem = ({
                     min={0}
                     required={true}
                     className="max-w-10"
-                    defaultValue={(initialItem as ShopItem).defaultPrice}
+                    defaultValue={
+                      initialItem
+                        ? (initialItem as ShopItem).defaultPrice
+                        : undefined
+                    }
                     onChange={(e) => setDefaultPrice(Number(e.target.value))}
                   />
                 </SmallField>
@@ -333,7 +337,11 @@ const CreateItem = ({
                   name="Sale Price"
                   min={0}
                   className="max-w-10"
-                  defaultValue={(initialItem as ShopItem).salePrice}
+                  defaultValue={
+                    initialItem
+                      ? (initialItem as ShopItem).salePrice
+                      : undefined
+                  }
                   onChange={(e) => setSalePrice(Number(e.target.value))}
                 />
               </SmallField>

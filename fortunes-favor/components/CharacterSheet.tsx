@@ -39,6 +39,8 @@ import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
 import Unlock from "./icons/Unlock";
 import Lock from "./icons/Lock";
+import Loading from "./blocks/Loading";
+import FullPageLoading from "./FullPageLoading";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -345,7 +347,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   }
 
   if (!character || !character.characterClass || !characterOptions) {
-    return <div>Loading...</div>;
+    return <FullPageLoading />;
   }
 
   const updateName = (newName: string) => {

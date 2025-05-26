@@ -12,8 +12,10 @@ const Shop = ({ shop }: ShopProps) => {
         <p className="max-w-xl">{shop.description}</p>
       </div>
       <div>
-        <h2>Items For Sale</h2>
-        <ul className="m-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <h2 className="text-3xl tracking-wider font-extralight py-4 px-3 bg-teal-300 dark:bg-teal-800 text-center">
+          Items For Sale
+        </h2>
+        <ul className="m-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {shop.itemsInStock.length > 0 ? (
             shop.itemsInStock.map((item) => (
               <li key={item.title}>
@@ -21,7 +23,7 @@ const Shop = ({ shop }: ShopProps) => {
               </li>
             ))
           ) : (
-            <p>Nothing for sale, check back later</p>
+            <p className="text-center">Nothing for sale, check back later</p>
           )}
         </ul>
       </div>

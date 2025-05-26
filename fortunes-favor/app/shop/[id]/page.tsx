@@ -10,6 +10,8 @@ import {
 } from "@/utils/graphQLQueries/ItemShopQuery";
 import { ItemShop, ShopItem } from "@/utils/ItemShop";
 import EditableShop from "@/components/EditableShop";
+import Loading from "@/components/blocks/Loading";
+import FullPageLoading from "@/components/FullPageLoading";
 
 const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
   console.log("data:", data);
@@ -92,7 +94,7 @@ const ShopPage = ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   if (!shop) {
-    return <div>Loading...</div>;
+    return <FullPageLoading />;
   }
 
   return canEdit ? <EditableShop shop={shop} /> : <Shop shop={shop} />;

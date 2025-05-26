@@ -13,6 +13,7 @@ import UPDATE_SHOP_MUTATION, {
   UpdateShopInputType,
 } from "@/utils/graphQLMutations/UpdateShopMutation";
 import { BaseItem } from "@/utils/BaseItem";
+import FullPageLoading from "./FullPageLoading";
 
 const exampleItems: ShopItemInput[] = [
   {
@@ -79,9 +80,9 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
     return (
       <div>
         <div
-          className="cursor-pointer"
-          onClick={() => {
-            setIsEditing(true);
+          className=""
+          onClick={(e) => {
+            e.stopPropagation();
           }}
         >
           <ItemCard item={item} isExpanded={true} showDetails />
@@ -217,7 +218,7 @@ const parseShopItemsFromFile = async (
 
 type ShopBuilderProps = {
   initialShop?: ItemShop;
-  extraSubmitEffect?: () => void;
+  extraSubmitEffect?: (shop: ItemShop) => void;
 };
 
 const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
@@ -231,8 +232,13 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
   const [itemsCouldStock, setItemsCouldStock] = useState<ShopItem[]>(
     initialShop?.itemsCouldStock ?? [],
   );
+  const [fileItemsInStock, setFileItemsInStock] = useState<ShopItem[]>([]);
+  const [fileItemsCouldStock, setFileItemsCouldStock] = useState<ShopItem[]>(
+    [],
+  );
   const [CreateShop] = useMutation(CREATE_SHOP_MUTATION);
   const [UpdateShop] = useMutation(UPDATE_SHOP_MUTATION);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -245,6 +251,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
 
     const newShop = new ItemShop(
@@ -263,7 +270,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
         },
       });
       data = result.data;
-      if (extraSubmitEffect) extraSubmitEffect();
+      if (extraSubmitEffect) extraSubmitEffect(newShop);
     } else {
       const result = await CreateShop({
         variables: {
@@ -279,13 +286,14 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
       setShopDescription("");
       setItemsInStock([]);
       setItemsCouldStock([]);
-      if (extraSubmitEffect) extraSubmitEffect();
+      if (extraSubmitEffect) extraSubmitEffect(newShop);
       if (!newShop.id) router.push(`/shop/${data.createShop.id}`);
     }
+    setLoading(false);
   };
 
   const [showCreateItem, setShowCreateItem] = useState(false);
-
+  if (loading) return <FullPageLoading />;
   return (
     <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Shop Builder</h1>
@@ -309,43 +317,58 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
             required
           />
         </div>
+        <Button
+          buttonType={ButtonType.default}
+          color="blue"
+          onClick={() => {
+            setShowCreateItem(!showCreateItem);
+          }}
+        >
+          {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
+        </Button>
         <div className="mb-4">
-          <input
-            type="file"
-            accept="application/json"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              try {
-                const items = await parseShopItemsFromFile(file);
-                setItemsCouldStock((prev) => [
-                  ...prev,
-                  ...items.itemsCouldStock,
-                ]);
-                setItemsInStock((prev) => [...prev, ...items.itemsInStock]);
-              } catch (err) {
-                alert("Failed to parse JSON file: " + (err as Error).message);
-              }
-            }}
-          />
+          <div className="mb-3 w-96">
+            <label
+              htmlFor="formFile"
+              className="mb-2 inline-block text-neutral-700 dark:text-neutral-200"
+            >
+              Upload Shop Items
+            </label>
+            <input
+              className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:text-neutral-100 dark:focus:border-primary file:bg-blue-400 file:dark:bg-blue-700 hover:file:bg-blue-500 hover:file:dark:bg-blue-600 file:border-blue-300 file:dark:border-blue-700 file:hover:border-blue-500 cursor-pointer"
+              type="file"
+              id="formFile"
+              accept="application/json"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const items = await parseShopItemsFromFile(file);
+                  setFileItemsCouldStock((prev) => [
+                    ...prev,
+                    ...items.itemsCouldStock,
+                  ]);
+                  setFileItemsInStock((prev) => [
+                    ...prev,
+                    ...items.itemsInStock,
+                  ]);
+                } catch (err) {
+                  alert("Failed to parse JSON file: " + (err as Error).message);
+                }
+              }}
+            />
+          </div>
+
           <a
             href={`data:application/json;charset=utf-8,${encodeURIComponent(
               JSON.stringify(exampleItems, null, 2),
             )}`}
             download="example-shop-items.json"
-            className="text-blue-600 underline mb-2 block"
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 mb-2 block w-max"
           >
             Download example JSON file
           </a>
-          <Button
-            buttonType={ButtonType.default}
-            color="blue"
-            onClick={() => {
-              setShowCreateItem(!showCreateItem);
-            }}
-          >
-            {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
-          </Button>
+
           {showCreateItem && (
             <CreateItem
               addItemToParent={(item) => AddItemToShop(item as ShopItem)}
@@ -353,6 +376,103 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
               setShowItemForm={() => setShowCreateItem(false)}
             />
           )}
+        </div>
+        <div className="mb-4 flex gap-2">
+          <Button
+            buttonType={ButtonType.default}
+            color="red"
+            onClick={(e) => {
+              e.preventDefault();
+              setFileItemsInStock([]);
+              setFileItemsCouldStock([]);
+            }}
+          >
+            Reset Uploaded File Items
+          </Button>
+        </div>
+        <div className="mt-6 mb-4">
+          {fileItemsInStock && (
+            <h2 className="text-lg font-bold mb-2">File: Items In Stock</h2>
+          )}
+          <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {fileItemsInStock.map((item, index) => (
+              <div
+                key={item.title + item.id + "fileInStock"}
+                className="relative"
+              >
+                <ShopItemCard
+                  item={item}
+                  deleteItem={() => {
+                    setFileItemsInStock((prev) =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                  }}
+                  updateItem={(newItem) => {
+                    setFileItemsInStock((prev) =>
+                      prev.map((it, i) =>
+                        i === index ? (newItem as ShopItem) : it,
+                      ),
+                    );
+                  }}
+                />
+                <Button
+                  buttonType={ButtonType.default}
+                  color="green"
+                  className="absolute top-2 right-2"
+                  onClick={() => {
+                    setItemsInStock((prev) => [...prev, item]);
+                    setFileItemsInStock((prev) =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                  }}
+                >
+                  Add to Shop
+                </Button>
+              </div>
+            ))}
+          </ul>
+          {fileItemsInStock && (
+            <h2 className="text-lg font-bold mt-4 mb-2">
+              File: Items Could Stock
+            </h2>
+          )}
+          <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {fileItemsCouldStock.map((item, index) => (
+              <div
+                key={item.title + item.id + "fileCouldStock"}
+                className="relative"
+              >
+                <ShopItemCard
+                  item={item}
+                  deleteItem={() => {
+                    setFileItemsCouldStock((prev) =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                  }}
+                  updateItem={(newItem) => {
+                    setFileItemsCouldStock((prev) =>
+                      prev.map((it, i) =>
+                        i === index ? (newItem as ShopItem) : it,
+                      ),
+                    );
+                  }}
+                />
+                <Button
+                  buttonType={ButtonType.default}
+                  color="green"
+                  className="absolute top-2 right-2"
+                  onClick={() => {
+                    setItemsCouldStock((prev) => [...prev, item]);
+                    setFileItemsCouldStock((prev) =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                  }}
+                >
+                  Add to Shop
+                </Button>
+              </div>
+            ))}
+          </ul>
         </div>
         <div className="mt-6 mb-4">
           <h2 className="text-lg font-bold mb-2">Items In Stock</h2>

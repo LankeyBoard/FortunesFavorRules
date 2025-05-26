@@ -1,3 +1,5 @@
+import Loading from "@/components/blocks/Loading";
+import FullPageLoading from "@/components/FullPageLoading";
 import RuleField from "@/components/RuleField";
 import RuleData from "@/utils/GenericRuleData";
 import client from "@/utils/graphQLclient";
@@ -95,7 +97,7 @@ async function GeneralRule() {
     );
   });
   if (loading || !data) {
-    return <div>Loading...</div>;
+    return <FullPageLoading />;
   } else if (error) {
     return <div>Error: {error.message}</div>;
   }

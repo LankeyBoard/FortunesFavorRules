@@ -1,8 +1,9 @@
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import client from "../utils/graphQLclient";
 import { gql } from "@apollo/client";
 import Link from "next/link";
 import { RuleText } from "../utils/graphQLtypes";
+import FullPageLoading from "./FullPageLoading";
 
 const query = gql`
   query SearchAll($search: String!) {
@@ -184,10 +185,10 @@ const SearchResults = async ({
     variables: { search: searchQuery },
   });
   if (error) console.error("SearchResults", data, loading, error);
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <FullPageLoading />;
   return (
     <div className="pt-10 px-4">
-      <Suspense key={searchQuery + currentPage} fallback={<>Searching...</>}>
+      <Suspense key={searchQuery + currentPage} fallback={<FullPageLoading />}>
         {data.searchAll && data.searchAll.length > 0 ? (
           <SearchResultsTable searchTerm={searchQuery} results={data} />
         ) : (

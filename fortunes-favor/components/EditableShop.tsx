@@ -9,20 +9,35 @@ interface EditableShopProps {
 }
 
 const EditableShop: React.FC<EditableShopProps> = ({ shop }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  // Determine initial editing state from URL
+  const url = new URL(window.location.href);
+  const hasEditingKey = url.searchParams.has("editing");
+  const [isEditing, setIsEditing] = useState(hasEditingKey);
+
+  // Update URL when editing state changes
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    if (isEditing) {
+      url.searchParams.set("editing", "1");
+    } else {
+      url.searchParams.delete("editing");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [isEditing]);
+  const [currentShop, setCurrentShop] = useState(shop);
 
   return (
     <div>
       {isEditing ? (
         <ShopBuilder
-          initialShop={shop}
-          extraSubmitEffect={() => {
+          initialShop={currentShop}
+          extraSubmitEffect={(shop: ItemShop) => {
             setIsEditing(false);
-            // window.location.reload();
+            setCurrentShop(shop);
           }}
         />
       ) : (
-        <Shop shop={shop} />
+        <Shop shop={currentShop} />
       )}
       <div className="my-6">
         {!isEditing && (

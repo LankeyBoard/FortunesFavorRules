@@ -78,10 +78,14 @@ const ItemCardTitle = ({
   return (
     <div className={titleStyle}>
       <h1 className="text-lg font-semibold float-left grow">{item.title}</h1>
-      <div className="float-right">
+      <div className="flex flex-row">
         {showDetails && isShopItem(item) && (
           <>
-            {item.onSale && <p>On Sale!</p>}
+            {item.onSale && (
+              <p className="px-2 underline underline-offset-2 decoration-red-500">
+                On Sale!
+              </p>
+            )}
             <div className="bg-yellow-400 text-black px-2 py-1 rounded">
               {item.onSale ? item.salePrice : item.defaultPrice} Coin
             </div>
