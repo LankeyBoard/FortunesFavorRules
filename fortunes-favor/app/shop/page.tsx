@@ -16,6 +16,7 @@ const ShopView = async (): Promise<JSX.Element> => {
     });
     data = result.data;
   } catch (error) {
+    console.error(error, data);
     return <div>Error loading shops.</div>;
   }
 
