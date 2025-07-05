@@ -7,9 +7,7 @@ import { useEffect, useState } from "react";
 import VerticalLabeledBox from "./VerticalLabeledBox";
 import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
-import Trash from "../icons/Trash";
 import CharacterCard from "./CharacterCard";
-import Loading from "./Loading";
 import FullPageLoading from "../FullPageLoading";
 
 interface Character {

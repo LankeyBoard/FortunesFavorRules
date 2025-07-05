@@ -16,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Provider>
-      <html lang="en">
-        <head></head>
-        <body className="">
+    <html lang="en">
+      <head></head>
+      <body className="">
+        <Provider>
           <AlertProvider>
             <Suspense>
               <div className="fixed top-0 w-full h-20 bg-slate-700 z-50">
@@ -30,8 +30,8 @@ export default function RootLayout({
               <div className="mt-20">{children}</div>
             </div>
           </AlertProvider>
-        </body>
-      </html>
-    </Provider>
+        </Provider>
+      </body>
+    </html>
   );
 }
