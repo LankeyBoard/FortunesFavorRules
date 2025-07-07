@@ -35,8 +35,9 @@ const ADD_CHARACTER_TO_CAMPAIGN = gql`
   }
 `;
 
-const CampaignInvitePage = ({ params }: { params: { id: string } }) => {
-  const campaignId = use(params.id);
+const CampaignInvitePage = (props: { params: Promise<{ id: string }> }) => {
+  const params = use(props.params);
+  const campaignId = params.id;
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
     null,
   );
