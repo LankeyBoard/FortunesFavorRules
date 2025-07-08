@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { gql } from "@apollo/client";
 import client from "@/utils/graphQLclient";
 import FullPageLoading from "@/components/FullPageLoading";
@@ -30,6 +30,22 @@ const GET_CAMPAIGN = gql`
       characters {
         id
         name
+        characterClass {
+          title
+        }
+        characterLineage {
+          title
+        }
+        characterCulture {
+          title
+        }
+        level
+        maxHealth
+        maxStamina
+        mettle
+        agility
+        intellect
+        heart
       }
     }
     me {
@@ -63,6 +79,23 @@ const ADD_SHOP_TO_CAMPAIGN = gql`
   }
 `;
 
+const UPDATE_CAMPAIGN_STATUS = gql`
+  mutation UpdateCampaignStatus($id: ID!, $input: CampaignInput!) {
+    updateCampaign(id: $id, input: $input) {
+      id
+      status
+    }
+  }
+`;
+
+const statusOptions = [
+  { title: "Planning", slug: "PLANNING" },
+  { title: "Active", slug: "ACTIVE" },
+  { title: "On Hold", slug: "ON_HOLD" },
+  { title: "Completed", slug: "COMPLETED" },
+  { title: "Cancelled", slug: "CANCELLED" },
+];
+
 const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
   const [campaign, setCampaign] = useState<any>(null);
   const [me, setMe] = useState<any>(null);
@@ -72,6 +105,8 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
   const [selectedShop, setSelectedShop] = useState<string>("");
   const [addShopError, setAddShopError] = useState<string | null>(null);
   const [addingShop, setAddingShop] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
 
   const { setAlert } = useAlert();
 
@@ -131,6 +166,37 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
     }
   };
 
+  const handleStatusChange = useCallback(
+    async (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const newStatus = e.target.value;
+      setUpdatingStatus(true);
+      setStatusError(null);
+      try {
+        const { data } = await client.mutate({
+          mutation: UPDATE_CAMPAIGN_STATUS,
+          variables: {
+            id: campaignID,
+            input: {
+              name: campaign.name,
+              description: campaign.description,
+              status: newStatus,
+              startDate: campaign.startDate,
+            },
+          },
+        });
+        setCampaign((prev: any) => ({
+          ...prev,
+          status: data.updateCampaign.status,
+        }));
+      } catch (error: any) {
+        setStatusError("Failed to update status.");
+      } finally {
+        setUpdatingStatus(false);
+      }
+    },
+    [campaignID, campaign],
+  );
+
   if (loadingError)
     return <div>Error loading campaign. {String(loadingError)}</div>;
   if (!campaign) return <FullPageLoading />;
@@ -144,18 +210,25 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
       </h2>
       <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-2 md:gap-2">
         <div className="bg-slate-50 dark:bg-slate-900 p-4 order-2 md:order-1">
-          <div className="mb-4">
-            <span className="font-semibold">Status:</span> {campaign.status}
-          </div>
-          <div className="mb-4">
-            <span className="font-semibold">Start Date:</span>{" "}
-            {campaign.startDate}
-            {campaign.endDate && (
-              <>
-                {" | "}
-                <span className="font-semibold">End Date:</span>{" "}
-                {campaign.endDate}
-              </>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="font-semibold">Status:</span>
+            {isOwner ? (
+              <DropdownField
+                name="status"
+                options={statusOptions}
+                defaultValue={campaign.status}
+                onChange={handleStatusChange}
+              />
+            ) : (
+              <span className="capitalize">
+                {campaign.status.toLowerCase()}
+              </span>
+            )}
+            {updatingStatus && (
+              <span className="ml-2 text-xs text-gray-500">Updating...</span>
+            )}
+            {statusError && (
+              <span className="ml-2 text-xs text-red-600">{statusError}</span>
             )}
           </div>
           <div className="mb-6">
@@ -253,11 +326,24 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
             {campaign.characters.length === 0 ? (
               <p>No characters in this campaign.</p>
             ) : (
-              <ul className="list-disc ml-6">
+              <div className="flex">
                 {campaign.characters.map((char: any) => (
-                  <li key={char.id}>{char.name}</li>
+                  <div key={char.id}>
+                    <h1>{char.name}</h1>
+                    <p>level: {char.level}</p>
+                    <div className="grid grid-cols-2 gap-4 bg-teal-500/30 p-4">
+                      <div>Mettle: {char.mettle}</div>
+                      <div>Agility: {char.agility}</div>
+                      <div>Intellect: {char.intellect}</div>
+                      <div>Heart: {char.heart}</div>
+                    </div>
+                    <div>
+                      <div>Max Stamina: {char.maxStamina}</div>
+                      <div>Max Health: {char.maxHealth}</div>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
             {isOwner && (
               <Button
