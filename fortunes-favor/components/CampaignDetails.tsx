@@ -9,6 +9,7 @@ import Button, { ButtonType } from "./blocks/Inputs/Button";
 import DropdownField from "./blocks/Inputs/DropdownField";
 import Link from "next/link";
 import useAlert from "@/hooks/useAlert";
+import CharacterCard, { CARD_SIZE } from "./blocks/CharacterCard";
 
 const GET_CAMPAIGN = gql`
   query GetCampaign($id: ID!) {
@@ -46,6 +47,7 @@ const GET_CAMPAIGN = gql`
         agility
         intellect
         heart
+        coin
       }
     }
     me {
@@ -211,7 +213,6 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
       <div className="bg-slate-200 dark:bg-slate-950 rounded-lg shadow-md flex flex-col md:grid md:grid-cols-2 md:gap-2">
         <div className="bg-slate-50 dark:bg-slate-900 p-4 order-2 md:order-1">
           <div className="mb-4 flex items-center gap-2">
-            <span className="font-semibold">Status:</span>
             {isOwner ? (
               <DropdownField
                 name="status"
@@ -221,6 +222,7 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
               />
             ) : (
               <span className="capitalize">
+                Span: http://localhost:3000/campaign/1/invite
                 {campaign.status.toLowerCase()}
               </span>
             )}
@@ -319,6 +321,21 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
           <div className="mb-2">
             <Markdown>{campaign.description}</Markdown>
           </div>
+          {isOwner && (
+            <Button
+              buttonType={ButtonType.simple}
+              color="green"
+              className="text-sm"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${window.location.origin}/campaign/${campaignID}/invite`,
+                );
+                setAlert("Link copied", "none");
+              }}
+            >
+              Copy Campaign Invite Link
+            </Button>
+          )}
           <div>
             <h2 className="text-xl font-semibold mb-2">
               Characters in Campaign
@@ -326,39 +343,15 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
             {campaign.characters.length === 0 ? (
               <p>No characters in this campaign.</p>
             ) : (
-              <div className="flex">
+              <div className="flex flex-wrap">
                 {campaign.characters.map((char: any) => (
-                  <div key={char.id}>
-                    <h1>{char.name}</h1>
-                    <p>level: {char.level}</p>
-                    <div className="grid grid-cols-2 gap-4 bg-teal-500/30 p-4">
-                      <div>Mettle: {char.mettle}</div>
-                      <div>Agility: {char.agility}</div>
-                      <div>Intellect: {char.intellect}</div>
-                      <div>Heart: {char.heart}</div>
-                    </div>
-                    <div>
-                      <div>Max Stamina: {char.maxStamina}</div>
-                      <div>Max Health: {char.maxHealth}</div>
-                    </div>
-                  </div>
+                  <CharacterCard
+                    character={char}
+                    key={char.id}
+                    cardSize={CARD_SIZE.MEDIUM}
+                  />
                 ))}
               </div>
-            )}
-            {isOwner && (
-              <Button
-                buttonType={ButtonType.default}
-                color="green"
-                className="text-sm"
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `${window.location.origin}/campaign/${campaignID}/invite`,
-                  );
-                  setAlert("Link copied", "none");
-                }}
-              >
-                Copy Invite Link
-              </Button>
             )}
           </div>
         </div>

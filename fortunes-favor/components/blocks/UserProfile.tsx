@@ -86,9 +86,8 @@ const UserProfile = () => {
   };
   return (
     <div className="w-full">
-      <VerticalLabeledBox label="User">
-        <p>Email: {user.email}</p>
-      </VerticalLabeledBox>
+      <p>Email: {user.email}</p>
+
       <Button
         color="red"
         buttonType={ButtonType.default}
