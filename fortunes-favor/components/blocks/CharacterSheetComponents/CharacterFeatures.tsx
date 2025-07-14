@@ -5,7 +5,10 @@ import PlayerCharacter, {
 import FeatureCard from "../FeatureCard";
 import { Dispatch, SetStateAction, useState } from "react";
 import SlugLinker from "../SlugLinker";
-import { CharacterOptions } from "@/components/CharacterSheet";
+import {
+  CharacterOptions,
+  CharacterSheetViewMode,
+} from "@/components/CharacterSheet";
 import GenericFeaturePicker from "../GenericFeaturePicker";
 import Button, { ButtonType } from "../Inputs/Button";
 import Close from "@/components/icons/Close";
@@ -40,6 +43,7 @@ const CharacterFeatures = ({
   isEditable,
   label,
   characterOptions,
+  viewMode = CharacterSheetViewMode.ViewOnly,
 }: {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
@@ -47,6 +51,7 @@ const CharacterFeatures = ({
   isEditable: boolean;
   label: string;
   characterOptions?: CharacterOptions;
+  viewMode?: CharacterSheetViewMode;
 }) => {
   const [areExpanded, setExpanded] = useState(false);
   const [showGenericFeaturesModal, setShowGenericFeaturesModal] =

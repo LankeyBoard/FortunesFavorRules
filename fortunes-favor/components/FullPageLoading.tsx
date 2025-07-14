@@ -1,5 +1,6 @@
 import React from "react";
 import Loading from "./blocks/Loading";
+import ColorfulWand from "./icons/ColorfulWand";
 
 const FullPageLoading: React.FC = () => (
   <div
@@ -15,7 +16,9 @@ const FullPageLoading: React.FC = () => (
       zIndex: 9999,
     }}
   >
-    <Loading />
+    <div className="animate-bounce">
+      <ColorfulWand />
+    </div>
   </div>
 );
 

@@ -7,17 +7,20 @@ import CharacterItems from "./CharacterItems";
 import CharacterFeatures from "./CharacterFeatures";
 import EditableShifterFormDisplay from "./EditableFormDisplay";
 import EditableBeastmasterBeastsDisplay from "./EditableBeastmasterBeastsDisplay";
+import { CharacterSheetViewMode } from "@/components/CharacterSheet";
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
   isEditable: boolean;
+  viewMode?: CharacterSheetViewMode;
 }
 
 const CharacterOtherInfo = ({
   character,
   setCharacter,
   isEditable,
+  viewMode = CharacterSheetViewMode.ViewOnly,
 }: CharacterBasicInfoProps) => {
   const updateCoin = (newCoin: number) => {
     const newCharacter = new PlayerCharacter(
@@ -29,10 +32,7 @@ const CharacterOtherInfo = ({
     newCharacter.coin = newCoin;
     setCharacter(newCharacter);
   };
-  console.log(
-    "Beastmaster exists?",
-    character?.characterClass?.extra?.beastMasterPet,
-  );
+  const isOwner = viewMode === CharacterSheetViewMode.Owner;
   return (
     <div className="pb-4 border-b-2 md:border-0 border-teal-200 dark:border-teal-800">
       <div className="grid grid-cols-2 p-4">
@@ -72,11 +72,15 @@ const CharacterOtherInfo = ({
         />
         <div className="flex justify-end items-end h-full">
           <SmallField label="Coin">
-            <NumInput
-              defaultValue={character.coin}
-              onChange={(e) => updateCoin(Number(e.target.value))}
-              size={String(character.coin).length}
-            />
+            {isOwner ? (
+              <NumInput
+                defaultValue={character.coin}
+                onChange={(e) => updateCoin(Number(e.target.value))}
+                size={String(character.coin).length}
+              />
+            ) : (
+              <p>{character.coin}</p>
+            )}
           </SmallField>
         </div>
       </div>

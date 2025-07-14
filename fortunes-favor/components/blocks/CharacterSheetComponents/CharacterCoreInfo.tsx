@@ -9,7 +9,10 @@ import LockableSmallTextInput from "../Inputs/LockableSmallTextInput";
 import VerticalLabeledBox from "../VerticalLabeledBox";
 import Button, { ButtonType } from "../Inputs/Button";
 import DropdownField from "../Inputs/DropdownField";
-import { CharacterOptions } from "@/components/CharacterSheet";
+import {
+  CharacterOptions,
+  CharacterSheetViewMode,
+} from "@/components/CharacterSheet";
 
 const CombatStatDisplay = ({
   stat,
@@ -61,11 +64,13 @@ const CharacterCoreInfo = ({
   setCharacter,
   isEditable,
   characterOptions,
+  viewMode = CharacterSheetViewMode.ViewOnly,
 }: {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
   isEditable: boolean;
   characterOptions: CharacterOptions;
+  viewMode?: CharacterSheetViewMode;
 }) => {
   const updateCurrentHealth = (newHealth: number) => {
     const newCharacter = new PlayerCharacter(
@@ -141,99 +146,116 @@ const CharacterCoreInfo = ({
     setCharacter(newCharacter);
   };
 
+  const isOwner = viewMode === CharacterSheetViewMode.Owner;
+
+  function OwnerCoreInfo() {
+    return (
+      <div className="flex flex-wrap gap-x-2 justify-center">
+        <LockableSmallTextInput
+          isEditable={isEditable}
+          label="level"
+          value={character.level}
+          updateFunc={(e) => updateLevel(Number(e.target.value))}
+        />
+        {isEditable ? (
+          <DropdownField
+            name="Class"
+            options={characterOptions.characterClasses}
+            defaultValue={character.characterClass.slug}
+            unselectedOption={!character.characterClass}
+            onChange={(e) => {
+              const slug = e.target.value;
+              const updatedCharacterClass =
+                characterOptions.characterClasses.find((c) => c.slug === slug);
+              if (updatedCharacterClass) {
+                const updatedCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                updatedCharacter.characterClass = updatedCharacterClass;
+                setCharacter(updatedCharacter);
+              }
+            }}
+          />
+        ) : (
+          <SmallField label="Class">
+            {character.characterClass.title}
+          </SmallField>
+        )}
+        {isEditable ? (
+          <DropdownField
+            name="Culture"
+            options={characterOptions.characterCultures}
+            unselectedOption={!character.culture}
+            defaultValue={character.culture.slug}
+            onChange={(e) => {
+              const slug = e.target.value;
+              const updatedCharacterCulture =
+                characterOptions.characterCultures.find((c) => c.slug === slug);
+              if (updatedCharacterCulture) {
+                const updatedCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                updatedCharacter.culture = updatedCharacterCulture;
+                setCharacter(updatedCharacter);
+              }
+            }}
+          />
+        ) : (
+          <SmallField label="Culture">{character.culture.title}</SmallField>
+        )}
+        {isEditable ? (
+          <DropdownField
+            name="Lineage"
+            options={characterOptions.characterLineages}
+            unselectedOption={!character.lineage}
+            defaultValue={character.lineage.slug}
+            onChange={(e) => {
+              const slug = e.target.value;
+              const updatedCharacterLineage =
+                characterOptions.characterLineages.find((c) => c.slug === slug);
+              if (updatedCharacterLineage) {
+                const updatedCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                updatedCharacter.lineage = updatedCharacterLineage;
+                setCharacter(updatedCharacter);
+              }
+            }}
+          />
+        ) : (
+          <SmallField label="Lineage">{character.lineage.title}</SmallField>
+        )}
+      </div>
+    );
+  }
+
+  function ViewerCoreInfo() {
+    return (
+      <div className="flex flex-wrap gap-x-2 justify-center">
+        <SmallField label="Level">{character.level}</SmallField>
+        <SmallField label="Class">{character.characterClass.title}</SmallField>
+
+        <SmallField label="Culture">{character.culture.title}</SmallField>
+
+        <SmallField label="Lineage">{character.lineage.title}</SmallField>
+      </div>
+    );
+  }
+
   return (
     <div className="m-auto">
       <VerticalLabeledBox label="Basics">
         <div className="flex flex-wrap gap-x-2 justify-center">
-          <LockableSmallTextInput
-            isEditable={isEditable}
-            label="level"
-            value={character.level}
-            updateFunc={(e) => updateLevel(Number(e.target.value))}
-          />
-          {isEditable ? (
-            <DropdownField
-              name="Class"
-              options={characterOptions.characterClasses}
-              defaultValue={character.characterClass.slug}
-              unselectedOption={!character.characterClass}
-              onChange={(e) => {
-                const slug = e.target.value;
-                const updatedCharacterClass =
-                  characterOptions.characterClasses.find(
-                    (c) => c.slug === slug,
-                  );
-                if (updatedCharacterClass) {
-                  const updatedCharacter = new PlayerCharacter(
-                    undefined,
-                    undefined,
-                    undefined,
-                    character,
-                  );
-                  updatedCharacter.characterClass = updatedCharacterClass;
-                  setCharacter(updatedCharacter);
-                }
-              }}
-            />
-          ) : (
-            <SmallField label="Class">
-              {character.characterClass.title}
-            </SmallField>
-          )}
-          {isEditable ? (
-            <DropdownField
-              name="Culture"
-              options={characterOptions.characterCultures}
-              unselectedOption={!character.culture}
-              defaultValue={character.culture.slug}
-              onChange={(e) => {
-                const slug = e.target.value;
-                const updatedCharacterCulture =
-                  characterOptions.characterCultures.find(
-                    (c) => c.slug === slug,
-                  );
-                if (updatedCharacterCulture) {
-                  const updatedCharacter = new PlayerCharacter(
-                    undefined,
-                    undefined,
-                    undefined,
-                    character,
-                  );
-                  updatedCharacter.culture = updatedCharacterCulture;
-                  setCharacter(updatedCharacter);
-                }
-              }}
-            />
-          ) : (
-            <SmallField label="Culture">{character.culture.title}</SmallField>
-          )}
-          {isEditable ? (
-            <DropdownField
-              name="Lineage"
-              options={characterOptions.characterLineages}
-              unselectedOption={!character.lineage}
-              defaultValue={character.lineage.slug}
-              onChange={(e) => {
-                const slug = e.target.value;
-                const updatedCharacterLineage =
-                  characterOptions.characterLineages.find(
-                    (c) => c.slug === slug,
-                  );
-                if (updatedCharacterLineage) {
-                  const updatedCharacter = new PlayerCharacter(
-                    undefined,
-                    undefined,
-                    undefined,
-                    character,
-                  );
-                  updatedCharacter.lineage = updatedCharacterLineage;
-                  setCharacter(updatedCharacter);
-                }
-              }}
-            />
-          ) : (
-            <SmallField label="Lineage">{character.lineage.title}</SmallField>
-          )}
+          {isOwner ? <OwnerCoreInfo /> : <ViewerCoreInfo />}
         </div>
       </VerticalLabeledBox>
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800 pb-4">
@@ -280,20 +302,51 @@ const CharacterCoreInfo = ({
         )}
       </div>
       <div className="">
-        <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
-          <ResourceDisplay
-            current={character.currentHealth}
-            max={character.maxHealth}
-            update={updateCurrentHealth}
-            label="Health"
-          />
-          <ResourceDisplay
-            current={character.currentStamina}
-            max={character.maxStamina}
-            update={updateCurrentStamina}
-            label="Stamina"
-          />
-        </div>
+        {isOwner ? (
+          <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
+            <ResourceDisplay
+              current={character.currentHealth}
+              max={character.maxHealth}
+              update={updateCurrentHealth}
+              label="Health"
+            />
+            <ResourceDisplay
+              current={character.currentStamina}
+              max={character.maxStamina}
+              update={updateCurrentStamina}
+              label="Stamina"
+            />
+          </div>
+        ) : (
+          <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
+            <div className="grid grid-cols-1 justify-items-center p-4">
+              <p className="text-xs tracking-tighter opacity-80">Health</p>
+              <div>
+                <span className="w-min text-xl align-text-bottom">
+                  {character.currentHealth}
+                </span>
+
+                <span className="font-extralight"> / </span>
+                <span className="font-extralight align-text-top">
+                  {character.maxHealth}
+                </span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 justify-items-center p-4">
+              <p className="text-xs tracking-tighter opacity-80">Stamina</p>
+              <div>
+                <span className="w-min text-xl align-text-bottom">
+                  {character.currentStamina}
+                </span>
+
+                <span className="font-extralight"> / </span>
+                <span className="font-extralight align-text-top">
+                  {character.maxStamina}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
         <VerticalLabeledBox label="Combat">
@@ -408,63 +461,65 @@ const CharacterCoreInfo = ({
           </p>
         </div>
       )}
-      <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
-        <div className="mx-auto">
-          <Button
-            color="green"
-            buttonType={ButtonType.simple}
-            onClick={() => {
-              const newCharacter = new PlayerCharacter(
-                undefined,
-                undefined,
-                undefined,
-                character,
-              );
-              newCharacter.catchBreath();
-              setCharacter(newCharacter);
-            }}
-          >
-            Catch Your Breath
-          </Button>
+      {isOwner && (
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-1 justify-center px-auto w-full py-4 bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
+          <div className="mx-auto">
+            <Button
+              color="green"
+              buttonType={ButtonType.simple}
+              onClick={() => {
+                const newCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                newCharacter.catchBreath();
+                setCharacter(newCharacter);
+              }}
+            >
+              Catch Your Breath
+            </Button>
+          </div>
+          <div className="mx-auto">
+            <Button
+              color="blue"
+              buttonType={ButtonType.simple}
+              onClick={() => {
+                console.log("click");
+                const newCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                newCharacter.nightsRest();
+                setCharacter(newCharacter);
+              }}
+            >
+              Night&#39;s Rest
+            </Button>
+          </div>
+          <div className="mx-auto">
+            <Button
+              color="amber"
+              buttonType={ButtonType.simple}
+              onClick={() => {
+                const newCharacter = new PlayerCharacter(
+                  undefined,
+                  undefined,
+                  undefined,
+                  character,
+                );
+                newCharacter.restAndRecuperate();
+                setCharacter(newCharacter);
+              }}
+            >
+              Rest and Recuperate
+            </Button>
+          </div>
         </div>
-        <div className="mx-auto">
-          <Button
-            color="blue"
-            buttonType={ButtonType.simple}
-            onClick={() => {
-              console.log("click");
-              const newCharacter = new PlayerCharacter(
-                undefined,
-                undefined,
-                undefined,
-                character,
-              );
-              newCharacter.nightsRest();
-              setCharacter(newCharacter);
-            }}
-          >
-            Night&#39;s Rest
-          </Button>
-        </div>
-        <div className="mx-auto">
-          <Button
-            color="amber"
-            buttonType={ButtonType.simple}
-            onClick={() => {
-              const newCharacter = new PlayerCharacter(
-                undefined,
-                undefined,
-                undefined,
-                character,
-              );
-              newCharacter.restAndRecuperate();
-              setCharacter(newCharacter);
-            }}
-          >
-            Rest and Recuperate
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

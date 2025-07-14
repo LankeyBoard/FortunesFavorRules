@@ -4,6 +4,9 @@ import { Effect } from "../applyConditionalEffects";
 const GET_CHARACTER_INFO = gql`
   query getCharacter($id: ID!) {
     character(id: $id) {
+      createdBy {
+        id
+      }
       agility
       armorName
       baseDamage
@@ -666,6 +669,9 @@ const GET_CHARACTER_INFO = gql`
         text
         type
       }
+    }
+    me {
+      id
     }
   }
 `;

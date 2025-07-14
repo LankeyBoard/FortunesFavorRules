@@ -39,7 +39,6 @@ import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
 import Unlock from "./icons/Unlock";
 import Lock from "./icons/Lock";
-import Loading from "./blocks/Loading";
 import FullPageLoading from "./FullPageLoading";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
@@ -198,7 +197,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
               condition: effect.condition,
             };
           }) || [],
-        rarity: item.rarity,
+        rarity: item.rarity?.toString().toUpperCase(),
         uses: item.uses
           ? {
               used: item.uses.used,
@@ -210,11 +209,18 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
               ),
             }
           : undefined,
+        defaultPrice: item.defaultPrice || 0,
+        tags: [],
       };
     }),
   };
   return inputs;
 };
+
+export enum CharacterSheetViewMode {
+  ViewOnly,
+  Owner,
+}
 
 export type CharacterOptions = {
   characterClasses: CharacterClass[];
@@ -232,6 +238,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     CharacterOptions | undefined
   >(undefined);
   const [isEditable, setEditable] = useState(characterId === undefined);
+  const [viewMode, setViewMode] = useState(CharacterSheetViewMode.ViewOnly);
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
@@ -277,6 +284,8 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
+        if (data.me.id === data.character.createdBy.id)
+          setViewMode(CharacterSheetViewMode.Owner);
         const genericFeatures = extractGenericFeatures(data);
         if (characterId) {
           setCharacter(
@@ -386,6 +395,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             character={character}
             setCharacter={setCharacter}
             isEditable={isEditable}
+            viewMode={viewMode}
           />
         </div>
         <div className="pb-4 bg-slate-50 dark:bg-slate-900 order-1 md:order-2">
@@ -394,6 +404,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             setCharacter={setCharacter}
             isEditable={isEditable}
             characterOptions={characterOptions}
+            viewMode={viewMode}
           />
         </div>
         <div className="pt-6 md:pt-0 bg-slate-50 dark:bg-slate-900 order-3 md:col-span-2 lg:col-span-1">
@@ -402,6 +413,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             setCharacter={setCharacter}
             features={character.actions}
             isEditable={isEditable}
+            viewMode={viewMode}
             label="Actions"
           />
 
@@ -410,6 +422,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             setCharacter={setCharacter}
             features={character.counters}
             isEditable={isEditable}
+            viewMode={viewMode}
             label="Counters"
           />
 
@@ -418,35 +431,38 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             setCharacter={setCharacter}
             features={character.features}
             isEditable={isEditable}
+            viewMode={viewMode}
             label="Features"
             characterOptions={characterOptions}
           />
         </div>
       </div>
-      <div className="mx-auto w-fit fixed bottom-4 right-4">
-        {isEditable ? (
-          <Button
-            buttonType={ButtonType.default}
-            color="amber"
-            onClick={() => {
-              saveCharacter(character);
-              setEditable(false);
-            }}
-          >
-            <span className="pr-2">Lock</span>
-            <Lock />
-          </Button>
-        ) : (
-          <Button
-            buttonType={ButtonType.default}
-            color="amber"
-            onClick={() => setEditable(true)}
-          >
-            <span className="pr-2">Unlock</span>
-            <Unlock />
-          </Button>
-        )}
-      </div>
+      {viewMode === CharacterSheetViewMode.Owner && (
+        <div className="mx-auto w-fit fixed bottom-4 right-4">
+          {isEditable ? (
+            <Button
+              buttonType={ButtonType.default}
+              color="amber"
+              onClick={() => {
+                saveCharacter(character);
+                setEditable(false);
+              }}
+            >
+              <span className="pr-2">Lock</span>
+              <Lock />
+            </Button>
+          ) : (
+            <Button
+              buttonType={ButtonType.default}
+              color="amber"
+              onClick={() => setEditable(true)}
+            >
+              <span className="pr-2">Unlock</span>
+              <Unlock />
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
