@@ -23,6 +23,15 @@ interface Character {
   characterLineage: { title: string };
 }
 
+interface SimpleCharacter {
+  id: string;
+  name: string;
+  level: number;
+  characterClass: { title: string };
+  characterCulture: { title: string };
+  characterLineage: { title: string };
+}
+
 interface Data {
   me: {
     id: string;
@@ -48,7 +57,7 @@ const CharacterCard = ({
   setData,
   cardSize = CARD_SIZE.DEFAULT,
 }: {
-  character: Character;
+  character: Character | SimpleCharacter;
   setData?: Dispatch<SetStateAction<Data | undefined>>;
   cardSize?: CARD_SIZE;
 }) => {
@@ -105,64 +114,66 @@ const CharacterCard = ({
   };
   switch (cardSize) {
     case CARD_SIZE.MEDIUM:
-      return (
-        <div className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-84 block">
-          {showDeleteConfirmation ? (
-            <DeleteConfirmation />
-          ) : (
-            <>
-              <Link href={`/characters/${character.id}`}>
-                <div key={character.id}>
-                  <header className="bg-purple-300 dark:bg-purple-700 p-2 ">
-                    <span className="font-bold text-lg max-w-3/4 truncate inline-block">
-                      {character.name}
-                    </span>
-                    <span className="float-right">{character.level}</span>
-                  </header>
-                  <div className="mx-4 my-2 gap-2 flex">
-                    <SmallField label="Class">
-                      {character.characterClass.title}
-                    </SmallField>
-                    <SmallField label="Culture">
-                      {character.characterCulture.title}
-                    </SmallField>
-                    <SmallField label="Lineage">
-                      {character.characterClass.title}
+      // verify that the character is a full character
+      if ("mettle" in character)
+        return (
+          <div className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-84 block">
+            {showDeleteConfirmation ? (
+              <DeleteConfirmation />
+            ) : (
+              <>
+                <Link href={`/characters/${character.id}`}>
+                  <div key={character.id}>
+                    <header className="bg-purple-300 dark:bg-purple-700 p-2 ">
+                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
+                        {character.name}
+                      </span>
+                      <span className="float-right">{character.level}</span>
+                    </header>
+                    <div className="mx-4 my-2 gap-2 flex">
+                      <SmallField label="Class">
+                        {character.characterClass.title}
+                      </SmallField>
+                      <SmallField label="Culture">
+                        {character.characterCulture.title}
+                      </SmallField>
+                      <SmallField label="Lineage">
+                        {character.characterClass.title}
+                      </SmallField>
+                    </div>
+                  </div>
+                  <div className="p-4 pb-0 flex flex-wrap md:grid md:grid-cols-4 gap-2 justify-center w-auto md:w-max mx-auto">
+                    <SmallField label="Mettle">{character.mettle}</SmallField>
+                    <SmallField label="Agility">{character.agility}</SmallField>
+                    <SmallField label="Heart">{character.heart}</SmallField>
+                    <SmallField label="Intellect">
+                      {character.intellect}
                     </SmallField>
                   </div>
-                </div>
-                <div className="p-4 pb-0 flex flex-wrap md:grid md:grid-cols-4 gap-2 justify-center w-auto md:w-max mx-auto">
-                  <SmallField label="Mettle">{character.mettle}</SmallField>
-                  <SmallField label="Agility">{character.agility}</SmallField>
-                  <SmallField label="Heart">{character.heart}</SmallField>
-                  <SmallField label="Intellect">
-                    {character.intellect}
-                  </SmallField>
-                </div>
-                <div className="p-4 pb-0 flex flex-wrap md:grid md:grid-cols-2 gap-2 justify-center w-auto md:w-max mx-auto">
-                  <SmallField label="Max Health">
-                    {character.maxHealth}
-                  </SmallField>
-                  <SmallField label="Max Stamina">
-                    {character.maxStamina}
-                  </SmallField>
-                </div>
-                <SmallField label="Coin">{character.coin}</SmallField>
-              </Link>
+                  <div className="p-4 pb-0 flex flex-wrap md:grid md:grid-cols-2 gap-2 justify-center w-auto md:w-max mx-auto">
+                    <SmallField label="Max Health">
+                      {character.maxHealth}
+                    </SmallField>
+                    <SmallField label="Max Stamina">
+                      {character.maxStamina}
+                    </SmallField>
+                  </div>
+                  <SmallField label="Coin">{character.coin}</SmallField>
+                </Link>
 
-              <div className="z-20 w-full ">
-                <button
-                  className="w-10 mx-auto cursor-pointer p-2 float-right"
-                  type="button"
-                  onClick={() => setShowDeleteConfirmation(true)}
-                >
-                  <Trash color="red" />
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      );
+                <div className="z-20 w-full ">
+                  <button
+                    className="w-10 mx-auto cursor-pointer p-2 float-right"
+                    type="button"
+                    onClick={() => setShowDeleteConfirmation(true)}
+                  >
+                    <Trash color="red" />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        );
     default:
       return (
         <div className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block">
