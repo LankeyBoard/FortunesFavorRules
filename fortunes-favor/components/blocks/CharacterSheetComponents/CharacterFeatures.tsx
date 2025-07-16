@@ -121,6 +121,7 @@ const CharacterFeatures = ({
                 character={character}
                 setCharacter={setCharacter}
                 isExpanded={areExpanded}
+                viewMode={viewMode}
               />
             ))}
           </>

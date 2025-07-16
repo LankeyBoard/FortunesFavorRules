@@ -35,6 +35,7 @@ type ItemCardProps = {
   updateItem?: (item: BaseItem) => void;
   deleteItem?: () => void;
   showDetails?: boolean;
+  viewOnly?: boolean;
 };
 
 const ItemCardTitle = ({
@@ -112,6 +113,7 @@ const ItemCard = ({
   updateItem,
   deleteItem,
   showDetails,
+  viewOnly = true,
 }: ItemCardProps) => {
   const [cardItem, setItem] = useState(item);
   const [isOpen, setOpen] = useState(isExpanded);
@@ -196,32 +198,34 @@ const ItemCard = ({
               <Trash color="red" />
             </Button>
           )}
-          {cardItem.uses && cardItem.uses.used < cardItem.uses.max && (
-            <>
-              <div>
-                <Button
-                  buttonType={ButtonType.simple}
-                  color="green"
-                  onClick={() => {
-                    const newItem = new CharacterItem(
-                      cardItem.title,
-                      cardItem.text,
-                      cardItem.isMagic,
-                      cardItem.rarity,
-                      cardItem.uses,
-                      cardItem.id,
-                      cardItem.effects,
-                    );
-                    newItem.use();
-                    if (updateItem) updateItem(newItem);
-                    setItem(newItem);
-                  }}
-                >
-                  Use
-                </Button>
-              </div>
-            </>
-          )}
+          {!viewOnly &&
+            cardItem.uses &&
+            cardItem.uses.used < cardItem.uses.max && (
+              <>
+                <div>
+                  <Button
+                    buttonType={ButtonType.simple}
+                    color="green"
+                    onClick={() => {
+                      const newItem = new CharacterItem(
+                        cardItem.title,
+                        cardItem.text,
+                        cardItem.isMagic,
+                        cardItem.rarity,
+                        cardItem.uses,
+                        cardItem.id,
+                        cardItem.effects,
+                      );
+                      newItem.use();
+                      if (updateItem) updateItem(newItem);
+                      setItem(newItem);
+                    }}
+                  >
+                    Use
+                  </Button>
+                </div>
+              </>
+            )}
         </div>
       </div>
     </>

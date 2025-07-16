@@ -69,6 +69,7 @@ const CharacterOtherInfo = ({
           character={character}
           setCharacter={setCharacter}
           isEditable={isEditable}
+          viewItemsOnly={!isOwner}
         />
         <div className="flex justify-end items-end h-full">
           <SmallField label="Coin">
