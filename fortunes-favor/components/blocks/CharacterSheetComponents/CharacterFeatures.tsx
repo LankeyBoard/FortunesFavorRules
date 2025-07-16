@@ -19,7 +19,7 @@ const LinkToBasicFeatures = ({ label }: { label: string }) => {
       return (
         <div className="mx-auto text-center">
           <SlugLinker
-            text={"[Basic Actions](/rules/player_rules#BASIC-ACTIONS)"}
+            text={"[Universal Actions](/rules/player_rules#BASIC-ACTIONS)"}
           />
         </div>
       );
@@ -27,7 +27,7 @@ const LinkToBasicFeatures = ({ label }: { label: string }) => {
       return (
         <div className="mx-auto text-center">
           <SlugLinker
-            text={"[Basic Counters](/rules/player_rules#BASIC-COUNTERS)"}
+            text={"[Universal Counters](/rules/player_rules#BASIC-COUNTERS)"}
           />
         </div>
       );
