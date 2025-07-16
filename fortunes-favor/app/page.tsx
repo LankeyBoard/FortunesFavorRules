@@ -236,6 +236,33 @@ export default async function Home() {
                 </ul>
               </td>
             </tr>
+            <tr className="border-slate-500 border mb-2">
+              <td className="border-spacing-x-3 align-baseline">7/16/2025</td>
+              <td>
+                <ul>
+                  <li>
+                    <SlugLinker
+                      text={"Improved the [profile page](/profile)"}
+                    />
+                  </li>
+                  <li>
+                    <SlugLinker
+                      text={"Added [campaign pages](/campaign/all)"}
+                    />
+                  </li>
+                  <li>
+                    <SlugLinker text={"Added [Item Shops](/shop/builder)"} />
+                  </li>
+                  <li>
+                    <SlugLinker
+                      text={
+                        "Updated the rules for [Clashes and Counters](/rules/player_rules#BASIC-COUNTERS) and updated some classes and features to match"
+                      }
+                    />
+                  </li>
+                </ul>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
