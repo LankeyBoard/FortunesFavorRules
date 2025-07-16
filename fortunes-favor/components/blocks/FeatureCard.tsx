@@ -3,6 +3,7 @@ import PlayerCharacter, {
 } from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
+import { CharacterSheetViewMode } from "../CharacterSheet";
 
 type FeatureCardProps = {
   feature: PlayerCharacterFeature;
@@ -10,6 +11,7 @@ type FeatureCardProps = {
   character?: PlayerCharacter;
   setCharacter?: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
   isExpanded: boolean;
+  viewMode?: CharacterSheetViewMode;
 };
 
 export const hasInsufficientChoices = (
@@ -85,6 +87,7 @@ const FeatureCard = ({
   character,
   setCharacter,
   isExpanded,
+  viewMode = CharacterSheetViewMode.ViewOnly,
 }: FeatureCardProps) => {
   const [cardFeature, setFeature] = useState(feature);
   const [showAllChoices, setShowAllChoices] = useState(
@@ -169,37 +172,41 @@ const FeatureCard = ({
                             : deselectedChoiceStyle
                         }
                         onClick={(click) => {
-                          if (feature.chosen.includes(click.currentTarget.id)) {
-                            feature.removeChoice(click.currentTarget.id);
-                          } else feature.addChoice(click.currentTarget.id);
-                          setFeature(
-                            new PlayerCharacterFeature(
-                              feature.title,
-                              feature.source,
-                              feature.effects,
-                              feature.slug,
-                              feature.ruleType,
-                              feature.text,
-                              feature.multiSelect,
-                              feature.choices,
-                              feature.chosen,
-                              feature.chooseNum,
-                              feature.shortText,
-                              feature.level,
-                            ),
-                          );
-                          setShowAllChoices(
-                            feature.chosen.length < feature.chooseNum,
-                          );
-                          if (setCharacter) {
-                            const newCharacter = new PlayerCharacter(
-                              undefined,
-                              undefined,
-                              undefined,
-                              character,
+                          if (viewMode === CharacterSheetViewMode.Owner) {
+                            if (
+                              feature.chosen.includes(click.currentTarget.id)
+                            ) {
+                              feature.removeChoice(click.currentTarget.id);
+                            } else feature.addChoice(click.currentTarget.id);
+                            setFeature(
+                              new PlayerCharacterFeature(
+                                feature.title,
+                                feature.source,
+                                feature.effects,
+                                feature.slug,
+                                feature.ruleType,
+                                feature.text,
+                                feature.multiSelect,
+                                feature.choices,
+                                feature.chosen,
+                                feature.chooseNum,
+                                feature.shortText,
+                                feature.level,
+                              ),
                             );
-                            newCharacter.updateFeature(feature);
-                            setCharacter(newCharacter);
+                            setShowAllChoices(
+                              feature.chosen.length < feature.chooseNum,
+                            );
+                            if (setCharacter) {
+                              const newCharacter = new PlayerCharacter(
+                                undefined,
+                                undefined,
+                                undefined,
+                                character,
+                              );
+                              newCharacter.updateFeature(feature);
+                              setCharacter(newCharacter);
+                            }
                           }
                         }}
                       >

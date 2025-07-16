@@ -16,13 +16,7 @@ const CurrentUserProfile: React.FC = () => {
   }
 
   if (!localStorage.getItem("token")) {
-    return (
-      <SignupOrLoginModal
-        setIsOpen={() => {}}
-        setIsAuthenticated={() => {}}
-        isLoginClicked={false}
-      />
-    );
+    return <div>Signup or login to view your profile</div>;
   }
   return <UserProfile />;
 };

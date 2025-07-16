@@ -1,4 +1,3 @@
-import FullPageLoading from "@/components/FullPageLoading";
 import ALL_SHOPS_QUERY, {
   AllShopsQueryData,
 } from "@/utils/graphQLQueries/AllShopsQuery";

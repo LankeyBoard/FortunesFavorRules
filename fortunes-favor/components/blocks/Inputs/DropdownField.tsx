@@ -21,7 +21,7 @@ export const DropdownField = ({
     });
   }
   return (
-    <div>
+    <div className="w-max">
       <label
         htmlFor={name}
         className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"

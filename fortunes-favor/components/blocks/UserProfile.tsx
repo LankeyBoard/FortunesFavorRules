@@ -4,29 +4,39 @@ import client from "@/utils/graphQLclient";
 import { gql, TypedDocumentNode } from "@apollo/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import VerticalLabeledBox from "./VerticalLabeledBox";
 import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
-import Trash from "../icons/Trash";
 import CharacterCard from "./CharacterCard";
-import Loading from "./Loading";
 import FullPageLoading from "../FullPageLoading";
-
-interface Character {
+interface QueryCampaign {
+  id: number;
+  name: string;
+  description: string;
+}
+interface QueryShop {
+  id: number;
+  name: string;
+  description: string;
+}
+interface QueryCharacter {
   id: string;
   name: string;
   level: number;
   characterClass: { title: string };
   characterCulture: { title: string };
   characterLineage: { title: string };
+  campaign: QueryCampaign;
 }
 
 interface Data {
   me: {
+    campaigns: any;
     id: string;
     email: string;
     name: string;
-    characters: Character[];
+    characters: QueryCharacter[];
+    createdCampaigns: QueryCampaign[];
+    createdItemShops: QueryShop[];
   };
 }
 
@@ -38,10 +48,25 @@ const PROFILE_QUERY: TypedDocumentNode<Data, Variables> = gql`
       id
       email
       name
+      createdCampaigns {
+        id
+        name
+        description
+      }
+      createdItemShops {
+        id
+        name
+        description
+      }
       characters {
         id
         name
         level
+        campaign {
+          id
+          name
+          description
+        }
         characterClass {
           title
         }
@@ -81,6 +106,21 @@ const UserProfile = () => {
   }
   const user = data.me;
   const characters = user.characters;
+  const campaignIds = new Set(
+    user.createdCampaigns.map((campaign) => campaign.id),
+  );
+  const campaigns: QueryCampaign[] = [];
+  characters.forEach((character) => {
+    if (
+      character.campaign &&
+      character.campaign.id &&
+      !campaignIds.has(character.campaign.id)
+    ) {
+      campaigns.push(character.campaign);
+      campaignIds.add(character.campaign.id);
+    }
+  });
+  console.log("campaign IDs", campaignIds, campaigns, characters);
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/");
@@ -88,9 +128,8 @@ const UserProfile = () => {
   };
   return (
     <div className="w-full">
-      <VerticalLabeledBox label="User">
-        <p>Email: {user.email}</p>
-      </VerticalLabeledBox>
+      <p>Email: {user.email}</p>
+
       <Button
         color="red"
         buttonType={ButtonType.default}
@@ -157,12 +196,103 @@ const UserProfile = () => {
                 +
               </div>
             </Link>
-            {characters.map((character: Character) => (
+            {characters.map((character: QueryCharacter) => (
               <CharacterCard
                 key={character.id}
                 character={character}
                 setData={setData}
               />
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
+          Campaigns
+        </h2>
+        <div className="">
+          <ul className="flex flex-auto flex-wrap justify-center md:justify-start">
+            <Link
+              href={"/campaign/create"}
+              className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 w-11/12 max-w-11/12 md:w-56 block"
+            >
+              <div className="text-4xl flex items-center justify-center h-full">
+                +
+              </div>
+            </Link>
+            {user.createdCampaigns.map((campaign: QueryCampaign) => (
+              <div
+                key={campaign.id}
+                className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
+              >
+                <Link href={`/campaign/${campaign.id}`}>
+                  <div>
+                    <header className="bg-amber-300 dark:bg-amber-700 p-2 ">
+                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
+                        {campaign.name}
+                      </span>
+                    </header>
+                    <div className="mx-4 my-2">
+                      <p>{campaign.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+            {campaigns.map((campaign: QueryCampaign) => (
+              <div
+                key={campaign.id}
+                className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
+              >
+                <Link href={`/campaign/${campaign.id}`}>
+                  <div>
+                    <header className="bg-purple-300 dark:bg-purple-700 p-2 ">
+                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
+                        {campaign.name}
+                      </span>
+                    </header>
+                    <div className="mx-4 my-2">
+                      <p className="line-clamp-3">{campaign.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
+          Shops
+        </h2>
+        <div className="">
+          <ul className="flex flex-auto flex-wrap justify-center md:justify-start">
+            <Link
+              href={"/shop/builder"}
+              className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 w-11/12 max-w-11/12 md:w-56 block"
+            >
+              <div className="text-4xl flex items-center justify-center h-full">
+                +
+              </div>
+            </Link>
+            {user.createdItemShops.map((shop: QueryShop) => (
+              <div
+                key={shop.id}
+                className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
+              >
+                <Link href={`/shop/${shop.id}`}>
+                  <div>
+                    <header className="bg-amber-300 dark:bg-amber-700 p-2 ">
+                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
+                        {shop.name}
+                      </span>
+                    </header>
+                    <div className="mx-4 my-2">
+                      <p className="line-clamp-3">{shop.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             ))}
           </ul>
         </div>

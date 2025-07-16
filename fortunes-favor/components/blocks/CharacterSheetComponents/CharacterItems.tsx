@@ -11,10 +11,12 @@ const CharacterItems = ({
   character,
   setCharacter,
   isEditable,
+  viewItemsOnly = true,
 }: {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
   isEditable: boolean;
+  viewItemsOnly?: boolean;
 }) => {
   const [showItemForm, setShowItemForm] = useState(false);
   const updateItemBuilder = (i: number) => {
@@ -69,6 +71,7 @@ const CharacterItems = ({
             isExpanded={false}
             updateItem={updateItemBuilder(i)}
             deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
+            viewOnly={viewItemsOnly}
           />
         ))
       ) : (

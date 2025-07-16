@@ -5,7 +5,10 @@ import PlayerCharacter, {
 import FeatureCard from "../FeatureCard";
 import { Dispatch, SetStateAction, useState } from "react";
 import SlugLinker from "../SlugLinker";
-import { CharacterOptions } from "@/components/CharacterSheet";
+import {
+  CharacterOptions,
+  CharacterSheetViewMode,
+} from "@/components/CharacterSheet";
 import GenericFeaturePicker from "../GenericFeaturePicker";
 import Button, { ButtonType } from "../Inputs/Button";
 import Close from "@/components/icons/Close";
@@ -16,7 +19,7 @@ const LinkToBasicFeatures = ({ label }: { label: string }) => {
       return (
         <div className="mx-auto text-center">
           <SlugLinker
-            text={"[Basic Actions](/rules/player_rules#BASIC-ACTIONS)"}
+            text={"[Universal Actions](/rules/player_rules#BASIC-ACTIONS)"}
           />
         </div>
       );
@@ -24,7 +27,7 @@ const LinkToBasicFeatures = ({ label }: { label: string }) => {
       return (
         <div className="mx-auto text-center">
           <SlugLinker
-            text={"[Basic Counters](/rules/player_rules#BASIC-COUNTERS)"}
+            text={"[Universal Counters](/rules/player_rules#BASIC-COUNTERS)"}
           />
         </div>
       );
@@ -40,6 +43,7 @@ const CharacterFeatures = ({
   isEditable,
   label,
   characterOptions,
+  viewMode = CharacterSheetViewMode.ViewOnly,
 }: {
   character: PlayerCharacter;
   setCharacter: Dispatch<SetStateAction<PlayerCharacter | undefined>>;
@@ -47,6 +51,7 @@ const CharacterFeatures = ({
   isEditable: boolean;
   label: string;
   characterOptions?: CharacterOptions;
+  viewMode?: CharacterSheetViewMode;
 }) => {
   const [areExpanded, setExpanded] = useState(false);
   const [showGenericFeaturesModal, setShowGenericFeaturesModal] =
@@ -116,6 +121,7 @@ const CharacterFeatures = ({
                 character={character}
                 setCharacter={setCharacter}
                 isExpanded={areExpanded}
+                viewMode={viewMode}
               />
             ))}
           </>
