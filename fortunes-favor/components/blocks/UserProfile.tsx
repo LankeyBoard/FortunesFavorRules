@@ -4,12 +4,16 @@ import client from "@/utils/graphQLclient";
 import { gql, TypedDocumentNode } from "@apollo/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import VerticalLabeledBox from "./VerticalLabeledBox";
 import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
 import CharacterCard from "./CharacterCard";
 import FullPageLoading from "../FullPageLoading";
 interface QueryCampaign {
+  id: number;
+  name: string;
+  description: string;
+}
+interface QueryShop {
   id: number;
   name: string;
   description: string;
@@ -32,6 +36,7 @@ interface Data {
     name: string;
     characters: QueryCharacter[];
     createdCampaigns: QueryCampaign[];
+    createdItemShops: QueryShop[];
   };
 }
 
@@ -44,6 +49,11 @@ const PROFILE_QUERY: TypedDocumentNode<Data, Variables> = gql`
       email
       name
       createdCampaigns {
+        id
+        name
+        description
+      }
+      createdItemShops {
         id
         name
         description
@@ -242,7 +252,43 @@ const UserProfile = () => {
                       </span>
                     </header>
                     <div className="mx-4 my-2">
-                      <p>{campaign.description}</p>
+                      <p className="line-clamp-3">{campaign.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
+          Shops
+        </h2>
+        <div className="">
+          <ul className="flex flex-auto flex-wrap justify-center md:justify-start">
+            <Link
+              href={"/shop/builder"}
+              className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 w-11/12 max-w-11/12 md:w-56 block"
+            >
+              <div className="text-4xl flex items-center justify-center h-full">
+                +
+              </div>
+            </Link>
+            {user.createdItemShops.map((shop: QueryShop) => (
+              <div
+                key={shop.id}
+                className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
+              >
+                <Link href={`/shop/${shop.id}`}>
+                  <div>
+                    <header className="bg-amber-300 dark:bg-amber-700 p-2 ">
+                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
+                        {shop.name}
+                      </span>
+                    </header>
+                    <div className="mx-4 my-2">
+                      <p className="line-clamp-3">{shop.description}</p>
                     </div>
                   </div>
                 </Link>

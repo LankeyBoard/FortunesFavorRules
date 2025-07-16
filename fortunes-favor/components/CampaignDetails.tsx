@@ -60,7 +60,7 @@ const GET_MY_SHOPS = gql`
   query GetMyShops {
     me {
       id
-      createdShops {
+      createdItemShops {
         id
         name
       }
@@ -137,7 +137,7 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
         query: GET_MY_SHOPS,
         fetchPolicy: "no-cache",
       });
-      setMyShops(data.me?.createdShops || []);
+      setMyShops(data.me?.createdItemShops || []);
     } catch (error) {
       console.error(error);
       setAddShopError("Failed to load your shops.");
@@ -222,8 +222,7 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
               />
             ) : (
               <span className="capitalize">
-                Span: http://localhost:3000/campaign/1/invite
-                {campaign.status.toLowerCase()}
+                Campaign Status: {campaign.status.toLowerCase()}
               </span>
             )}
             {updatingStatus && (

@@ -10,7 +10,7 @@ const Shop = ({ shop }: ShopProps) => {
         {shop.name}
       </h1>
       <div className="m-2 p-2">
-        <p className="max-w-xl">{shop.description}</p>
+        <p className="max-w-2xl mx-auto">{shop.description}</p>
       </div>
       <div>
         <h2 className="text-3xl tracking-wider font-extralight py-4 px-3 bg-teal-300 dark:bg-teal-800 text-center">
