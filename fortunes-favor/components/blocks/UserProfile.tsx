@@ -197,11 +197,7 @@ const UserProfile = () => {
               </div>
             </Link>
             {characters.map((character: QueryCharacter) => (
-              <CharacterCard
-                key={character.id}
-                character={character}
-                setData={setData}
-              />
+              <CharacterCard key={character.id} character={character} />
             ))}
           </ul>
         </div>
