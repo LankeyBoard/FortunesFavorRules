@@ -289,7 +289,6 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           variables: { id: Number(characterId) },
         });
         const genericFeatures = extractGenericFeatures(data);
-        console.log("characterId", characterId);
         if (characterId) {
           if (data.me.id === data.character.createdBy.id)
             setViewMode(CharacterSheetViewMode.Owner);
@@ -304,7 +303,6 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
               ),
           );
         }
-        // if there is no characterId the user is making a new character
         const charOptions: CharacterOptions = {
           characterClasses: [],
           characterCultures: [],
