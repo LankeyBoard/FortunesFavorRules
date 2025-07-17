@@ -238,7 +238,11 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     CharacterOptions | undefined
   >(undefined);
   const [isEditable, setEditable] = useState(characterId === undefined);
-  const [viewMode, setViewMode] = useState(CharacterSheetViewMode.ViewOnly);
+  const [viewMode, setViewMode] = useState(
+    characterId
+      ? CharacterSheetViewMode.ViewOnly
+      : CharacterSheetViewMode.Owner,
+  );
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
@@ -285,6 +289,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           variables: { id: Number(characterId) },
         });
         const genericFeatures = extractGenericFeatures(data);
+        console.log("characterId", characterId);
         if (characterId) {
           if (data.me.id === data.character.createdBy.id)
             setViewMode(CharacterSheetViewMode.Owner);
@@ -299,6 +304,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
               ),
           );
         }
+        // if there is no characterId the user is making a new character
         const charOptions: CharacterOptions = {
           characterClasses: [],
           characterCultures: [],
