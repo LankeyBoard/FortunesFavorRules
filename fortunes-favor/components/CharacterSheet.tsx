@@ -284,10 +284,10 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
-        if (data.me.id === data.character.createdBy.id)
-          setViewMode(CharacterSheetViewMode.Owner);
         const genericFeatures = extractGenericFeatures(data);
         if (characterId) {
+          if (data.me.id === data.character.createdBy.id)
+            setViewMode(CharacterSheetViewMode.Owner);
           setCharacter(
             extractPlayerCharacter(data)
               .updateChoices(data.character.featureChoiceSlugs)
