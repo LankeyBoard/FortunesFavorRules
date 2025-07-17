@@ -238,7 +238,11 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     CharacterOptions | undefined
   >(undefined);
   const [isEditable, setEditable] = useState(characterId === undefined);
-  const [viewMode, setViewMode] = useState(CharacterSheetViewMode.ViewOnly);
+  const [viewMode, setViewMode] = useState(
+    characterId
+      ? CharacterSheetViewMode.ViewOnly
+      : CharacterSheetViewMode.Owner,
+  );
   const [loadingError, setLoadingError] = useState<any>(null);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
