@@ -1,8 +1,11 @@
-import { use } from "react";
+import ForgotPassword from "@/components/ForgotPassword";
 
-const ForgotPasswordPage = (props: { params: Promise<{ id: string }> }) => {
-  const params = use(props.params);
-  const campaignId = params.id;
+const ForgotPasswordPage = async (props: {
+  params: Promise<{ id: string }>;
+}) => {
+  const params = await props.params;
+  const forgotPasswordId = params.id;
+  return <ForgotPassword forgotPasswordId={forgotPasswordId} />;
 };
 
 export default ForgotPasswordPage;

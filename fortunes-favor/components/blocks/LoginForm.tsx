@@ -1,11 +1,12 @@
 "use client";
 
 import { gql, useMutation } from "@apollo/client";
-import React from "react";
+import React, { useState } from "react";
 import { useUser } from "../UserContext";
 import TextInput from "./Inputs/TextInput";
 import Button, { ButtonType } from "./Inputs/Button";
 import { handleLogin } from "@/utils/handleLogin";
+import { usePathname } from "next/navigation";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -19,6 +20,12 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+const FORGOT_PASSWORD_MUTATION = gql`
+  mutation ForgotPassword($email: String!, $baseUrl: String) {
+    forgotPassword(email: $email, baseUrl: $baseUrl)
+  }
+`;
+
 const LoginForm = ({
   setIsOpen,
   setIsAuthenticated,
@@ -27,6 +34,10 @@ const LoginForm = ({
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [login, { error }] = useMutation(LOGIN_MUTATION);
+  const [forgotPassword] = useMutation(FORGOT_PASSWORD_MUTATION);
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotStatus, setForgotStatus] = useState<string | null>(null);
   const userContext = useUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -48,6 +59,25 @@ const LoginForm = ({
       }
     } catch (err) {
       console.error("Login failed:", err);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotStatus(null);
+    const host = window.location.host;
+    console.log("Host", host);
+    try {
+      const { data } = await forgotPassword({
+        variables: { email: forgotEmail, baseUrl: host },
+      });
+      if (data?.forgotPassword) {
+        setForgotStatus("Password reset email sent!");
+      } else {
+        setForgotStatus("Could not send password reset email.");
+      }
+    } catch (err) {
+      setForgotStatus("Error sending password reset email.");
     }
   };
 
@@ -94,7 +124,6 @@ const LoginForm = ({
             color="gray"
             buttonType={ButtonType.default}
             onClick={() => {
-              console.log("click");
               setIsOpen(false);
               setIsAuthenticated(false);
             }}
@@ -108,6 +137,46 @@ const LoginForm = ({
           ? "Error logging in, check your email and password and try again."
           : ""}
       </span>
+      <div className="mt-4 text-center">
+        {!showForgot ? (
+          <Button
+            color="blue"
+            buttonType={ButtonType.simple}
+            onClick={() => setShowForgot(true)}
+          >
+            Forgot my password
+          </Button>
+        ) : (
+          <form onSubmit={handleForgotPassword} className="space-y-2">
+            <TextInput
+              type="email"
+              name="forgotEmail"
+              placeholder="Enter your email"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              required
+              className="block w-full px-3 py-2 border rounded-md"
+            />
+            <Button type="submit" color="amber" buttonType={ButtonType.default}>
+              Send Reset Email
+            </Button>
+            <Button
+              color="gray"
+              buttonType={ButtonType.default}
+              onClick={() => {
+                setShowForgot(false);
+                setForgotStatus(null);
+                setForgotEmail("");
+              }}
+            >
+              Cancel
+            </Button>
+            {forgotStatus && (
+              <div className="text-sm mt-2 text-blue-600">{forgotStatus}</div>
+            )}
+          </form>
+        )}
+      </div>
     </>
   );
 };
