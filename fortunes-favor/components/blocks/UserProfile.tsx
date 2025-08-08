@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./Inputs/Button";
 import CharacterCard from "./CharacterCard";
 import FullPageLoading from "../FullPageLoading";
+import UPDATE_ME_MUTATION from "@/utils/graphQLMutations/UpdateMeMutation";
+import TextInput from "./Inputs/TextInput";
+
 interface QueryCampaign {
   id: number;
   name: string;
@@ -84,6 +87,12 @@ const PROFILE_QUERY: TypedDocumentNode<Data, Variables> = gql`
 const UserProfile = () => {
   const [data, setData] = useState<Data | undefined>(undefined);
   const [error, setError] = useState<any>(null);
+  const [editing, setEditing] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [updateSuccess, setUpdateSuccess] = useState<string | null>(null);
   const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
@@ -126,17 +135,129 @@ const UserProfile = () => {
     router.push("/");
     location.reload();
   };
+  const handleEdit = () => {
+    setEditing(true);
+    setNewName(user.name);
+    setNewEmail(user.email);
+    setNewPassword("");
+    setUpdateError(null);
+    setUpdateSuccess(null);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setUpdateError(null);
+    setUpdateSuccess(null);
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUpdateError(null);
+    setUpdateSuccess(null);
+    try {
+      const { data } = await client.mutate({
+        mutation: UPDATE_ME_MUTATION,
+        variables: {
+          email: newEmail,
+          name: newName,
+          password: newPassword || undefined,
+        },
+      });
+      if (data?.updateMe?.token) {
+        setUpdateSuccess("Profile updated!");
+        setEditing(false);
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                me: {
+                  ...prev.me,
+                  name: newName,
+                  email: newEmail,
+                },
+              }
+            : prev,
+        );
+      } else {
+        console.log(data);
+        setUpdateError("Failed to update profile.");
+      }
+    } catch (err: any) {
+      console.log(err);
+      setUpdateError("Failed to update profile.");
+    }
+  };
+
   return (
     <div className="w-full">
-      <p>Email: {user.email}</p>
-
-      <Button
-        color="red"
-        buttonType={ButtonType.default}
-        onClick={handleLogout}
-      >
-        Logout
-      </Button>
+      <div className="mb-4 w-sm">
+        {editing ? (
+          <form onSubmit={handleUpdate} className="space-y-2 flex flex-col">
+            <TextInput
+              placeholder="Name"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              required
+            />
+            <TextInput
+              placeholder="Email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              required
+            />
+            <TextInput
+              type="password"
+              placeholder="New Password (leave blank to keep current)"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button
+                color="blue"
+                buttonType={ButtonType.default}
+                type="submit"
+              >
+                Save
+              </Button>
+              <Button
+                color="gray"
+                buttonType={ButtonType.default}
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </div>
+            {updateError && <div className="text-red-600">{updateError}</div>}
+            {updateSuccess && (
+              <div className="text-green-600">{updateSuccess}</div>
+            )}
+          </form>
+        ) : (
+          <>
+            <p>
+              <span className="font-semibold">Name:</span> {user.name}
+            </p>
+            <p>
+              <span className="font-semibold">Email:</span> {user.email}
+            </p>
+            <Button
+              color="blue"
+              buttonType={ButtonType.default}
+              onClick={handleEdit}
+            >
+              Edit Profile
+            </Button>
+          </>
+        )}
+        <Button
+          color="red"
+          buttonType={ButtonType.default}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </div>
       <div>
         <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
           Characters
