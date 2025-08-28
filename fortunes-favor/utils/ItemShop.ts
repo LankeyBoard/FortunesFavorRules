@@ -57,7 +57,7 @@ export class ShopItem implements BaseItem {
   defaultPrice: number;
   salePrice?: number;
   inStock: boolean;
-
+  slots: number;
   constructor(
     title: string,
     text: RuleText[],
@@ -72,6 +72,7 @@ export class ShopItem implements BaseItem {
     tags: string[],
     defaultPrice: number,
     inStock: boolean,
+    slots: number,
     id?: string,
     uses?: {
       used: number;
@@ -91,6 +92,7 @@ export class ShopItem implements BaseItem {
     this.defaultPrice = defaultPrice;
     this.salePrice = salePrice;
     this.inStock = inStock;
+    this.slots = slots;
   }
   public get price() {
     return this.salePrice ? this.salePrice : this.defaultPrice;

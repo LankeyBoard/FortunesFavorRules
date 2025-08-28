@@ -171,6 +171,11 @@ const ItemCard = ({
           )}
 
           <TextBlock text={cardItem.text} style="px-4" />
+          <div id="slots">
+            <p>
+              <span>Slots: </span> {cardItem.slots}
+            </p>
+          </div>
           <div>
             {cardItem.effects && cardItem.effects.length > 0 && (
               <div className="px-4">
@@ -211,6 +216,7 @@ const ItemCard = ({
                         cardItem.title,
                         cardItem.text,
                         cardItem.isMagic,
+                        cardItem.slots,
                         cardItem.rarity,
                         cardItem.uses,
                         cardItem.id,

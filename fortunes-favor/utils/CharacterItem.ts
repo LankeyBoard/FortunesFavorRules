@@ -13,11 +13,13 @@ class CharacterItem extends Input implements BaseItem {
   readonly uses?: { used: number; max: number; rechargeOn: RechargeOn };
   readonly effects?: Effect[];
   defaultPrice?: number;
+  slots: number;
 
   constructor(
     title: string,
     text: RuleText[],
     isMagic: boolean,
+    slots: number,
     rarity?: Rarity,
     uses?: { used: number; max: number; rechargeOn: RechargeOn },
     id?: string,
@@ -31,6 +33,7 @@ class CharacterItem extends Input implements BaseItem {
     this.id = id;
     this.effects = effects;
     this.defaultPrice = defaultPrice;
+    this.slots = slots;
   }
 
   public use() {

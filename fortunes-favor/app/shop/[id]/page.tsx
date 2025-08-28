@@ -10,7 +10,6 @@ import {
 } from "@/utils/graphQLQueries/ItemShopQuery";
 import { ItemShop, ShopItem } from "@/utils/ItemShop";
 import EditableShop from "@/components/EditableShop";
-import Loading from "@/components/blocks/Loading";
 import FullPageLoading from "@/components/FullPageLoading";
 
 const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
@@ -29,6 +28,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.tags,
           item.defaultPrice,
           true,
+          item.slots,
           item.id,
           item.uses
             ? {
@@ -50,6 +50,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.tags,
           item.defaultPrice,
           true,
+          item.slots,
           item.id,
           item.uses
             ? {

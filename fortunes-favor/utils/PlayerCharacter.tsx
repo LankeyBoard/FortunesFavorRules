@@ -271,7 +271,7 @@ export default class PlayerCharacter {
   private _counters?: PlayerCharacterFeature[];
   private _features?: PlayerCharacterFeature[];
   private _languages?: Languages[];
-
+  private _maxSlots?: number;
   private _form?: Form;
   private _isInForm: boolean = false;
 
@@ -348,6 +348,7 @@ export default class PlayerCharacter {
           counters: this._counters,
         } = updateFeatures(FeatureSource.LINEAGE, lineage, this));
     }
+    this._maxSlots = startingCharacter?._maxSlots;
   }
 
   public get level(): number {
@@ -451,10 +452,25 @@ export default class PlayerCharacter {
   public set shieldName(name: ShieldType) {
     this._shieldName = name.toLowerCase() as ShieldType;
   }
+  public get maxSlots(): number {
+    return this._maxSlots || 0;
+  }
 
+  public set maxSlots(maxSlots: number) {
+    this._maxSlots = maxSlots;
+  }
+  public get slotsUsed(): number {
+    return this._items.reduce(
+      (accumulator: number, currentValue: { slots: number }) => {
+        return accumulator + currentValue.slots;
+      },
+      0,
+    );
+  }
   public get form(): Form | undefined {
     return this._form;
   }
+
   public setFormSlug(formSlug: string) {
     if (!this.characterClass)
       throw new Error("Class must be set before setting form");

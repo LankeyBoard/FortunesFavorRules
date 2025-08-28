@@ -13,6 +13,7 @@ const UPDATE_CHARACTER_MUTATION = gql`
           value
           condition
         }
+        slots
       }
       level
       mettle

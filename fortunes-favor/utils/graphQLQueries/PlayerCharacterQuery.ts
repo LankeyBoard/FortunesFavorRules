@@ -22,6 +22,7 @@ const GET_CHARACTER_INFO = gql`
       level
       maxHealth
       mettle
+      maxSlots
       maxStamina
       name
       rangeMax
@@ -202,6 +203,7 @@ const GET_CHARACTER_INFO = gql`
           value
           condition
         }
+        slots
       }
       characterCulture {
         description
@@ -678,6 +680,7 @@ const GET_CHARACTER_INFO = gql`
 
 export type GetCharacterData = {
   character: {
+    maxSlots: number;
     agility: number;
     armorName: string;
     baseDamage: number;
@@ -815,6 +818,7 @@ export type GetCharacterData = {
       };
     };
     items: {
+      slots: number;
       id: string;
       title: string;
       text: {

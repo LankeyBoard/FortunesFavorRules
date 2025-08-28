@@ -66,6 +66,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   character.id = data.character.id;
   character.armorName = data.character.armorName as ArmorType;
   character.shieldName = data.character.shieldName as ShieldType;
+  character.maxSlots = data.character.maxSlots;
   character.items = data.character.items.map((item) => {
     const itemText: [RuleText] =
       item.text && item.text.length > 0 ? [item.text[0]] : [{ text: "" }];
@@ -73,6 +74,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
       item.title,
       itemText,
       item.isMagic,
+      item.slots,
       item.rarity as unknown as Rarity,
       item.uses
         ? {
@@ -157,6 +159,7 @@ const extractGenericFeatures = (
 };
 
 const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
+  console.log("character at start of conversion", character);
   const inputs = {
     name: character.name,
     level: character.level,
@@ -182,12 +185,10 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     featureChoiceSlugs: character.choices,
     items: character.items.map((item) => {
       return {
-        id: item.id,
-        title: item.title,
+        ...item,
         text: item.text.map((text) => {
           return { text: text.text, type: text.type, choices: text.choices };
         }),
-        isMagic: item.isMagic,
         effects:
           item.effects?.map((effect) => {
             return {
@@ -214,6 +215,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
       };
     }),
   };
+  console.log("character sheet inputs converted to graphql Input", inputs);
   return inputs;
 };
 

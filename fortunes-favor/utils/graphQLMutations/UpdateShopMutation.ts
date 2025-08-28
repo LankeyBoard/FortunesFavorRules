@@ -30,6 +30,7 @@ const UPDATE_SHOP_MUTATION = gql`
         defaultPrice
         tags
         salePrice
+        slots
       }
       itemsCouldStock {
         id
@@ -54,6 +55,7 @@ const UPDATE_SHOP_MUTATION = gql`
         }
         defaultPrice
         tags
+        slots
       }
     }
   }

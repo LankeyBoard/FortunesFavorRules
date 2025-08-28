@@ -79,6 +79,9 @@ const CreateItem = ({
       ? (initialItem as ShopItem).salePrice
       : undefined,
   );
+  const [slots, setSlots] = useState(
+    initialItem?.slots ? initialItem.slots : 0,
+  );
   const resetItemInputs = () => {
     setNewItemTitle("");
     setNewItemText("");
@@ -93,6 +96,7 @@ const CreateItem = ({
       operation: "",
     });
     setInStock(false);
+    setSlots(0);
   };
 
   return (
@@ -136,6 +140,16 @@ const CreateItem = ({
               }}
             />
           )}
+          <SmallField label="Slots">
+            <NumInput
+              name="Slots"
+              min={0}
+              required={true}
+              className="max-w-10"
+              defaultValue={slots}
+              onChange={(e) => setSlots(Number(e.target.value))}
+            />
+          </SmallField>
           <div>
             <input
               type="checkbox"
@@ -374,21 +388,26 @@ const CreateItem = ({
                   tags,
                   defaultPrice,
                   inStock,
+                  slots,
                   undefined,
                   itemUses,
                   salePrice && salePrice > -1 ? salePrice : undefined,
                 );
+                console.log("new item", newItem);
+
                 addItemToParent?.(newItem);
               } else {
                 const newItem: CharacterItem = new CharacterItem(
                   newItemTitle,
                   [{ text: newItemText }],
                   isMagicItem,
+                  slots,
                   itemRarity as unknown as Rarity,
                   itemUses,
                   undefined,
                   itemEffects,
                 );
+                console.log("new item 2", newItem);
                 addItemToParent?.(newItem);
               }
               resetItemInputs();
