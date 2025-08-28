@@ -1,9 +1,9 @@
 import { ItemShop } from "@/utils/ItemShop";
-import ItemCard from "./blocks/ItemCard";
 import ItemSection from "./ItemSection";
 
 type ShopProps = { shop: ItemShop };
 const Shop = ({ shop }: ShopProps) => {
+  console.log("shop", shop);
   return (
     <div className="pb-6">
       <h1 className="text-4xl mt-8 font-light text-center tracking-wider p-6">

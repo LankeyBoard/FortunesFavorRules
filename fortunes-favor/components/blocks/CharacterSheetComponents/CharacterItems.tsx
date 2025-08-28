@@ -7,6 +7,35 @@ import ItemCard from "../ItemCard";
 import CreateItem from "../Inputs/CreateItem";
 import { BaseItem } from "@/utils/BaseItem";
 
+const SlotBar = ({
+  slotsUsed,
+  maxSlots,
+}: {
+  slotsUsed: number;
+  maxSlots: number;
+}) => {
+  const percent = Math.min((slotsUsed / maxSlots) * 100, 100);
+  const overLimit = slotsUsed > maxSlots;
+  const barColor = overLimit ? "bg-red-500" : "bg-amber-400";
+
+  return (
+    <div className="w-full max-w-xs mx-auto my-2">
+      <div className="flex justify-between mb-1 text-xs font-semibold">
+        <span>
+          Slots: {slotsUsed}/{maxSlots}
+        </span>
+        {overLimit && <span>Over burdened</span>}
+      </div>
+      <div className="w-full h-4 bg-gray-300 dark:bg-black rounded overflow-hidden">
+        <div
+          className={`h-full ${barColor} transition-all duration-300`}
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const CharacterItems = ({
   character,
   setCharacter,
@@ -77,7 +106,7 @@ const CharacterItems = ({
       ) : (
         <div>No items</div>
       )}
-
+      <SlotBar slotsUsed={character.slotsUsed} maxSlots={character.maxSlots} />
       {isEditable && (
         <div>
           {showItemForm ? (

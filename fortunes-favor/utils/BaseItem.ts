@@ -15,4 +15,5 @@ export interface BaseItem {
   }; // Optional usage details
   effects?: Effect[]; // Optional effects of the item
   tags?: string[]; // Optional tags for categorization
+  slots: number;
 }

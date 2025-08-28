@@ -32,6 +32,7 @@ export const GET_ITEM_SHOP = gql`
         defaultPrice
         tags
         salePrice
+        slots
       }
       itemsCouldStock {
         id
@@ -56,6 +57,7 @@ export const GET_ITEM_SHOP = gql`
         }
         defaultPrice
         tags
+        slots
       }
     }
   }
@@ -67,6 +69,7 @@ type ShopItem = {
   title: string;
   isMagic: boolean;
   rarity: string;
+  slots: number;
   uses?: {
     used: number;
     max: number;
