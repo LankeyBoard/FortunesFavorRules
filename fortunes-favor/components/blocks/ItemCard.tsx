@@ -69,13 +69,7 @@ const ItemCardTitle = ({
         titleStyle += "bg-red-300 dark:bg-red-800"; // Fallback color
     }
   }
-  console.log(
-    "Item title check",
-    item.title,
-    isShopItem(item),
-    (item as ShopItem).onSale,
-    Object.getPrototypeOf(item),
-  );
+
   return (
     <div className={titleStyle}>
       <h1 className="text-lg font-semibold float-left grow">{item.title}</h1>

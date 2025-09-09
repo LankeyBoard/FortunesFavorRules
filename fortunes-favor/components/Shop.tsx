@@ -17,7 +17,7 @@ const Shop = ({ shop }: ShopProps) => {
           Items For Sale
         </h2>
         {shop.itemsInStock.length > 0 ? (
-          <ItemSection Items={shop.itemsInStock} />
+          <ItemSection items={shop.itemsInStock} shopId={shop.id} />
         ) : (
           <p className="text-center">Nothing for sale, check back later</p>
         )}
