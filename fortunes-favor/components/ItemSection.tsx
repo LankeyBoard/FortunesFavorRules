@@ -39,26 +39,31 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   loadingError,
   shopId,
 }) => {
+  const charactersInCampaign = itemSectionData?.me.characters.filter(
+    (char) => char.campaign?.id === itemSectionData.itemShop.campaign.id,
+  );
+
   const [showSelectCharacter, setShowSelectCharacter] = useState(false);
-  const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState(
+    charactersInCampaign?.length === 1 ? charactersInCampaign[0] : undefined,
+  );
   const [sellError, setSellError] = useState<string | null>(null);
   const [sellItem, { loading: selling }] = useMutation(SELL_ITEM_MUTATION);
-
   const showButtons = itemSectionData && shopId;
 
   const handleSell = async () => {
-    if (!selectedCharId) return;
+    if (!selectedCharacter) return;
     setSellError(null);
     try {
       await sellItem({
         variables: {
           shopId,
           itemId: item.id,
-          characterId: selectedCharId,
+          characterId: selectedCharacter.id,
         },
       });
       setShowSelectCharacter(false);
-      setSelectedCharId(null);
+      setSelectedCharacter(undefined);
       window.location.reload();
     } catch (e) {
       console.log("error handling sell", e);
@@ -66,20 +71,12 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
     }
   };
 
-  const charactersInCampaign = itemSectionData?.me.characters.filter(
-    (char) => char.campaign?.id === itemSectionData.itemShop.campaign.id,
-  );
   console.log(
     "Characters in campaign",
     charactersInCampaign,
     itemSectionData?.me.characters,
     itemSectionData?.itemShop.campaign,
   );
-  useEffect(() => {
-    if (charactersInCampaign?.length === 1) {
-      setSelectedCharId(charactersInCampaign[0].id);
-    }
-  }, [charactersInCampaign]);
 
   return (
     <div className="bg-slate-50 dark:bg-slate-800 pb-2">
@@ -95,40 +92,62 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
                       <DropdownField
                         name="character"
                         options={charactersInCampaign.map((char) => ({
-                          title: char.name,
+                          title: `${char.name} - ${char.coin} coin`,
                           slug: char.id,
                         }))}
-                        onChange={(e) => setSelectedCharId(e.target.value)}
+                        onChange={(e) =>
+                          setSelectedCharacter(
+                            charactersInCampaign.find(
+                              (character) => character.id === e.target.value,
+                            ),
+                          )
+                        }
                         unselectedOption={true}
                       />
                     )}
                     {charactersInCampaign.length === 1 && (
-                      <span className="font-light">
+                      <>
+                        <p className="font-light text-center w-full">
+                          Character
+                        </p>
                         <span className="font-bold">
                           {charactersInCampaign[0].name}
-                        </span>{" "}
-                        is your only character in this campaign
-                      </span>
+                        </span>
+                        <span> {charactersInCampaign[0].coin} coin</span>
+                      </>
                     )}
                   </div>
                 ) : (
                   <p>No characters in this campaign!</p>
                 )}
-                <Button
-                  buttonType={ButtonType.default}
-                  color="green"
-                  type="button"
-                  disabled={!selectedCharId || loadingError || selling}
-                  onClick={handleSell}
-                >
-                  Add to Character
-                </Button>
+                {selectedCharacter && selectedCharacter.coin >= item.price ? (
+                  <Button
+                    buttonType={ButtonType.default}
+                    color={
+                      selectedCharacter && selectedCharacter.coin >= item.price
+                        ? "green"
+                        : "red"
+                    }
+                    type="button"
+                    disabled={
+                      !selectedCharacter ||
+                      loadingError ||
+                      selling ||
+                      selectedCharacter.coin < item.price
+                    }
+                    onClick={handleSell}
+                  >
+                    Add to Character
+                  </Button>
+                ) : (
+                  <div className="text-red-600  my-auto">Not enough Coin</div>
+                )}
                 <Button
                   buttonType={ButtonType.default}
                   color="gray"
                   type="button"
                   onClick={() => {
-                    setSelectedCharId(null);
+                    setSelectedCharacter(undefined);
                     setShowSelectCharacter(false);
                     setSellError(null);
                   }}
@@ -150,9 +169,7 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
             </Button>
           )}
           {sellError && (
-            <div className="text-red-600 text-sm mt-1">
-              {sellError} Do you have enough coin?
-            </div>
+            <div className="text-red-600 text-sm mt-1">{sellError}</div>
           )}
         </div>
       )}

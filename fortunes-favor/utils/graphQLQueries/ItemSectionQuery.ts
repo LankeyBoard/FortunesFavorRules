@@ -4,6 +4,7 @@ export type ItemSectionData = {
     characters: {
       id: string;
       name: string;
+      coin: number;
       campaign: { id: string };
     }[];
   };
@@ -15,6 +16,7 @@ const ITEM_SECTION_QUERY = gql`
       characters {
         id
         name
+        coin
         campaign {
           id
         }
