@@ -39,7 +39,7 @@ const CreateItem = ({
   const [newItemTitle, setNewItemTitle] = useState(initialItem?.title ?? "");
 
   const [newItemText, setNewItemText] = useState(
-    initialItem?.text[0].text ?? "",
+    initialItem?.text ? initialItem.text.map((t) => t.text).join("\n") : "",
   );
   const [isMagicItem, setIsMagicItem] = useState(initialItem?.isMagic ?? false);
   const [itemRarity, setItemRarity] = useState(initialItem?.rarity ?? "Common");

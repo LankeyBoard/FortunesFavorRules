@@ -77,8 +77,8 @@ export enum Rarity {
 }
 
 export enum RechargeOn {
-  NONE,
-  CATCH_BREATH,
-  NIGHTS_REST,
-  REST_AND_RECUPERATE,
+  NONE = "None",
+  CATCH_BREATH = "Catch Your Breath",
+  NIGHTS_REST = "Night's Rest",
+  REST_AND_RECUPERATE = "Rest & Recuperate",
 }

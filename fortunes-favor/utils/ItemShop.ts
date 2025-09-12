@@ -39,6 +39,7 @@ export type ShopItemInput = {
     rechargeOn: RechargeOn;
   };
   salePrice?: number;
+  slots: number;
 };
 
 export class ShopItem implements BaseItem {
@@ -62,7 +63,7 @@ export class ShopItem implements BaseItem {
     title: string,
     text: RuleText[],
     isMagic: boolean,
-    rarity: Rarity,
+    rarity: Rarity | string,
     effects: {
       target: string;
       operation: string;
@@ -85,7 +86,7 @@ export class ShopItem implements BaseItem {
     this.title = title;
     this.text = text;
     this.isMagic = isMagic;
-    this.rarity = rarity;
+    this.rarity = Rarity[rarity as keyof typeof Rarity];
     this.uses = uses;
     this.effects = effects;
     this.tags = tags;
@@ -98,7 +99,9 @@ export class ShopItem implements BaseItem {
     return this.salePrice ? this.salePrice : this.defaultPrice;
   }
   public get onSale(): boolean {
-    return typeof this.salePrice === "number";
+    return (
+      typeof this.salePrice === "number" && this.salePrice < this.defaultPrice
+    );
   }
 }
 

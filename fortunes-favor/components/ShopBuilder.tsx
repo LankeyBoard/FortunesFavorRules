@@ -34,6 +34,7 @@ const exampleItems: ShopItemInput[] = [
     salePrice: 1,
     inStock: false,
     defaultPrice: 2,
+    slots: 1,
   },
   {
     title: "Another Example",
@@ -52,6 +53,7 @@ const exampleItems: ShopItemInput[] = [
     defaultPrice: 5,
     salePrice: 4,
     inStock: true,
+    slots: 0,
   },
 ];
 
@@ -202,9 +204,13 @@ const parseShopItemsFromFile = async (
 
         // Ensure each item has 'effects' and 'tags' keys
         parsed.forEach((item) => {
-          item.rarity = Rarity[item.rarity];
+          item.rarity = Rarity[item.rarity as keyof typeof Rarity];
           if (!("effects" in item)) item.effects = [];
           if (!("tags" in item)) item.tags = [];
+          if (item.uses) {
+            item.uses.rechargeOn =
+              RechargeOn[item.uses.rechargeOn as keyof typeof RechargeOn];
+          }
         });
         const validItems = parsed.filter(isValidShopItem);
         const invalidItems = parsed.filter((item) => !isValidShopItem(item));
@@ -324,15 +330,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
             required
           />
         </div>
-        <Button
-          buttonType={ButtonType.default}
-          color="blue"
-          onClick={() => {
-            setShowCreateItem(!showCreateItem);
-          }}
-        >
-          {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
-        </Button>
+
         <div className="mb-4">
           <div className="mb-3 w-96">
             <label
@@ -375,7 +373,15 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
           >
             Download example JSON file
           </a>
-
+          <Button
+            buttonType={ButtonType.default}
+            color="blue"
+            onClick={() => {
+              setShowCreateItem(!showCreateItem);
+            }}
+          >
+            {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
+          </Button>
           {showCreateItem && (
             <CreateItem
               addItemToParent={(item) => AddItemToShop(item as ShopItem)}

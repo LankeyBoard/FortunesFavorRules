@@ -20,7 +20,7 @@ class CharacterItem extends Input implements BaseItem {
     text: RuleText[],
     isMagic: boolean,
     slots: number,
-    rarity?: Rarity,
+    rarity?: Rarity | string,
     uses?: { used: number; max: number; rechargeOn: RechargeOn },
     id?: string,
     effects?: Effect[],
@@ -28,14 +28,16 @@ class CharacterItem extends Input implements BaseItem {
   ) {
     super(title, text);
     this.isMagic = isMagic;
-    this.rarity = rarity;
+    this.rarity = Rarity[rarity as keyof typeof Rarity];
     this.uses = uses;
     this.id = id;
     this.effects = effects;
     this.defaultPrice = defaultPrice;
     this.slots = slots;
   }
-
+  public get price(): number {
+    return this.defaultPrice ?? 0;
+  }
   public use() {
     if (!this.uses) {
       throw new Error("Item does not have uses");

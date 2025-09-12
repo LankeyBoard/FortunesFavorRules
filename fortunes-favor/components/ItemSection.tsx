@@ -40,7 +40,7 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   shopId,
 }) => {
   const charactersInCampaign = itemSectionData?.me.characters.filter(
-    (char) => char.campaign?.id === itemSectionData.itemShop.campaign.id,
+    (char) => char.campaign?.id === itemSectionData.itemShop.campaign?.id,
   );
 
   const [showSelectCharacter, setShowSelectCharacter] = useState(false);
