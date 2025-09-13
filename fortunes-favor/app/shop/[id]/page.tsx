@@ -23,7 +23,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.title,
           item.text,
           item.isMagic,
-          item.rarity as unknown as Rarity,
+          Rarity[item.rarity as unknown as keyof typeof Rarity],
           item.effects,
           item.tags,
           item.defaultPrice,
@@ -33,7 +33,10 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.uses
             ? {
                 ...item.uses,
-                rechargeOn: item.uses.rechargeOn as unknown as RechargeOn,
+                rechargeOn:
+                  RechargeOn[
+                    item.uses.rechargeOn as unknown as keyof typeof RechargeOn
+                  ],
               }
             : undefined,
           item.salePrice,

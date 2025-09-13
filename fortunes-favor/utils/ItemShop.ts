@@ -49,6 +49,7 @@ export class ShopItem implements BaseItem {
   isMagic: boolean;
   rarity: Rarity;
   uses?: {
+    __typename?: any;
     used: number;
     max: number;
     rechargeOn: RechargeOn;
@@ -63,7 +64,7 @@ export class ShopItem implements BaseItem {
     title: string,
     text: RuleText[],
     isMagic: boolean,
-    rarity: Rarity | string,
+    rarity: Rarity,
     effects: {
       target: string;
       operation: string;
@@ -86,7 +87,7 @@ export class ShopItem implements BaseItem {
     this.title = title;
     this.text = text;
     this.isMagic = isMagic;
-    this.rarity = Rarity[rarity as keyof typeof Rarity];
+    this.rarity = rarity;
     this.uses = uses;
     this.effects = effects;
     this.tags = tags;

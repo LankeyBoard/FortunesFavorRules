@@ -1,4 +1,4 @@
-import { ComplexityOptions, findEnum, StatOptions } from "./enums";
+import { ComplexityOptions, findEnumValue, StatOptions } from "./enums";
 import CharacterFeature from "./CharacterFeature";
 import { CharacterClass } from "./graphQLtypes";
 import { Form } from "@/components/blocks/FormDisplay";
@@ -93,7 +93,7 @@ export default class CharacterClassData implements CharacterClass {
     this.slug = data.slug;
     this.description = data.description;
     this.href = data.href;
-    const c = findEnum(data.complexity, ComplexityOptions);
+    const c = findEnumValue(data.complexity, ComplexityOptions);
     this.complexity = ComplexityOptions.ERROR;
     if (c) {
       this.complexity = c;
@@ -105,7 +105,7 @@ export default class CharacterClassData implements CharacterClass {
     }
     this.health = data.health;
     this.healthOnLevel = data.healthOnLevel;
-    const ss = findEnum(data.staminaStat, StatOptions);
+    const ss = findEnumValue(data.staminaStat, StatOptions);
     this.staminaStat = StatOptions.error;
     if (ss) {
       this.staminaStat = ss;
@@ -136,7 +136,7 @@ export default class CharacterClassData implements CharacterClass {
     const as = new Array();
     if (Array.isArray(data.attackStat)) {
       data.attackStat.forEach((stat: string) => {
-        as.push(findEnum(stat, StatOptions));
+        as.push(findEnumValue(stat, StatOptions));
       });
     }
     this.attackStat = [StatOptions.error];
@@ -155,7 +155,7 @@ export default class CharacterClassData implements CharacterClass {
     const ds = new Array();
     if (Array.isArray(data.damage.stat)) {
       data.damage.stat.forEach((stat: string) => {
-        ds.push(findEnum(stat, StatOptions));
+        ds.push(findEnumValue(stat, StatOptions));
       });
     }
     let dmgStat = [StatOptions.error];

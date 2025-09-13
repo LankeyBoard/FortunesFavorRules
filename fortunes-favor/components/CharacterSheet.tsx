@@ -21,7 +21,7 @@ import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
 import {
   ActionType,
-  findEnum,
+  findEnumValue,
   Rarity,
   RechargeOn,
   RuleType,
@@ -105,7 +105,7 @@ const extractGenericFeatures = (
       FeatureSource.NOVICE_FEATURE,
       [],
       feature.slug,
-      findEnum(feature.ruleType, RuleType),
+      findEnumValue(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
       feature.complexChoices
@@ -113,8 +113,8 @@ const extractGenericFeatures = (
           ? feature.complexChoices?.map((choice) => {
               return {
                 ...choice,
-                ruleType: findEnum(choice.ruleType, RuleType),
-                actionType: findEnum(choice.actionType, ActionType),
+                ruleType: findEnumValue(choice.ruleType, RuleType),
+                actionType: findEnumValue(choice.actionType, ActionType),
               };
             })
           : feature.simpleChoices
@@ -133,7 +133,7 @@ const extractGenericFeatures = (
       FeatureSource.VETERAN_FEATURE,
       [],
       feature.slug,
-      findEnum(feature.ruleType, RuleType),
+      findEnumValue(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
       feature.complexChoices
@@ -141,8 +141,8 @@ const extractGenericFeatures = (
           ? feature.complexChoices?.map((choice) => {
               return {
                 ...choice,
-                ruleType: findEnum(choice.ruleType, RuleType),
-                actionType: findEnum(choice.actionType, ActionType),
+                ruleType: findEnumValue(choice.ruleType, RuleType),
+                actionType: findEnumValue(choice.actionType, ActionType),
               };
             })
           : feature.simpleChoices

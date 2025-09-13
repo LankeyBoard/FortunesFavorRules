@@ -1,4 +1,4 @@
-import { SizeOptions, findEnum } from "./enums";
+import { SizeOptions, findEnumValue } from "./enums";
 import { CharacterTrait } from "./CharacterTrait";
 
 export default class CharacterLineage {
@@ -14,7 +14,7 @@ export default class CharacterLineage {
     this.slug = json.slug;
     this.desc = json.description;
     if (typeof json.size === "string") {
-      const s = findEnum(json.size, SizeOptions);
+      const s = findEnumValue(json.size, SizeOptions);
       this.size = SizeOptions.ERROR;
       if (s) {
         this.size = s;
@@ -24,7 +24,7 @@ export default class CharacterLineage {
     } else {
       let sizeList: SizeOptions[] = [];
       json.size.forEach((sizeOpt: string) => {
-        const s = findEnum(sizeOpt, SizeOptions);
+        const s = findEnumValue(sizeOpt, SizeOptions);
         sizeList.push(s);
       });
       this.size = sizeList;

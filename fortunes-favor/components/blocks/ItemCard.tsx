@@ -141,7 +141,7 @@ const ItemCard = ({
         <div className="clear-both mx-2">
           {cardItem.uses && (
             <div>
-              {cardItem.uses.rechargeOn !== RechargeOn.NONE ? (
+              {cardItem.uses.rechargeOn.toString() !== RechargeOn.NONE ? (
                 <div>
                   <p>
                     <span>Charges: </span>
@@ -150,12 +150,7 @@ const ItemCard = ({
                   </p>
                   <p>
                     <span>Recharge: </span>
-                    {
-                      RechargeOn[
-                        cardItem.uses
-                          .rechargeOn as unknown as keyof typeof RechargeOn
-                      ]
-                    }
+                    {cardItem.uses.rechargeOn}
                   </p>
                 </div>
               ) : (
