@@ -21,6 +21,7 @@ import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
 import {
   ActionType,
+  findEnumKey,
   findEnumValue,
   Rarity,
   RechargeOn,
@@ -75,7 +76,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
       itemText,
       item.isMagic,
       item.slots,
-      item.rarity as unknown as Rarity,
+      Rarity[item.rarity as keyof typeof Rarity],
       item.uses
         ? {
             ...item.uses,
@@ -198,7 +199,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
               condition: effect.condition,
             };
           }) || [],
-        rarity: item.rarity?.toString().toUpperCase(),
+        rarity: item.rarity ? findEnumKey(item.rarity, Rarity) : undefined,
         uses: item.uses
           ? {
               used: item.uses.used,

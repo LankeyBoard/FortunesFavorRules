@@ -20,7 +20,7 @@ class CharacterItem extends Input implements BaseItem {
     text: RuleText[],
     isMagic: boolean,
     slots: number,
-    rarity?: Rarity | string,
+    rarity?: Rarity,
     uses?: { used: number; max: number; rechargeOn: RechargeOn },
     id?: string,
     effects?: Effect[],
@@ -28,7 +28,7 @@ class CharacterItem extends Input implements BaseItem {
   ) {
     super(title, text);
     this.isMagic = isMagic;
-    this.rarity = Rarity[rarity as keyof typeof Rarity];
+    this.rarity = rarity;
     this.uses = uses;
     this.id = id;
     this.effects = effects;

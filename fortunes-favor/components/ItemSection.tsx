@@ -42,7 +42,6 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   const charactersInCampaign = itemSectionData?.me.characters.filter(
     (char) => char.campaign?.id === itemSectionData.itemShop.campaign?.id,
   );
-
   const [showSelectCharacter, setShowSelectCharacter] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(
     charactersInCampaign?.length === 1 ? charactersInCampaign[0] : undefined,
@@ -74,9 +73,16 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   console.log(
     "Characters in campaign",
     charactersInCampaign,
+    selectedCharacter,
     itemSectionData?.me.characters,
     itemSectionData?.itemShop.campaign,
   );
+
+  useEffect(() => {
+    if (charactersInCampaign?.length === 1) {
+      setSelectedCharacter(charactersInCampaign[0]);
+    }
+  }, [charactersInCampaign]);
 
   return (
     <div className="bg-slate-50 dark:bg-slate-800 pb-2">
@@ -140,7 +146,10 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
                     Add to Character
                   </Button>
                 ) : (
-                  <div className="text-red-600  my-auto">Not enough Coin</div>
+                  selectedCharacter &&
+                  selectedCharacter?.coin < item.price && (
+                    <div className="text-red-600  my-auto">Not enough Coin</div>
+                  )
                 )}
                 <Button
                   buttonType={ButtonType.default}
