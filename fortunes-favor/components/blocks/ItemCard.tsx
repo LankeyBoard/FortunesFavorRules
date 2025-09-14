@@ -7,7 +7,7 @@ import Button, { ButtonType } from "./Inputs/Button";
 import Trash from "../icons/Trash";
 import { BaseItem } from "@/utils/BaseItem";
 import { RechargeOn, Rarity } from "@/utils/enums";
-import { isShopItem, ShopItem } from "@/utils/ItemShop";
+import { isShopItem } from "@/utils/ItemShop";
 
 const ItemCharges = (uses: {
   used: number;
@@ -96,7 +96,11 @@ const ItemCardTitle = ({
           />
         </div>
       )}
-      {item.isMagic && <h3 className="float-right">{item.rarity}</h3>}
+      {item.isMagic && (
+        <h3 className="ml-2 float-right capitalize">
+          {item.rarity?.toString().toLowerCase()}
+        </h3>
+      )}
     </div>
   );
 };
@@ -137,7 +141,7 @@ const ItemCard = ({
         <div className="clear-both mx-2">
           {cardItem.uses && (
             <div>
-              {cardItem.uses.rechargeOn !== RechargeOn.NONE ? (
+              {cardItem.uses.rechargeOn.toString() !== RechargeOn.NONE ? (
                 <div>
                   <p>
                     <span>Charges: </span>

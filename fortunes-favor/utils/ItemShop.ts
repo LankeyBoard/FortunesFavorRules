@@ -39,6 +39,7 @@ export type ShopItemInput = {
     rechargeOn: RechargeOn;
   };
   salePrice?: number;
+  slots: number;
 };
 
 export class ShopItem implements BaseItem {
@@ -48,6 +49,7 @@ export class ShopItem implements BaseItem {
   isMagic: boolean;
   rarity: Rarity;
   uses?: {
+    __typename?: any;
     used: number;
     max: number;
     rechargeOn: RechargeOn;
@@ -98,7 +100,9 @@ export class ShopItem implements BaseItem {
     return this.salePrice ? this.salePrice : this.defaultPrice;
   }
   public get onSale(): boolean {
-    return typeof this.salePrice === "number";
+    return (
+      typeof this.salePrice === "number" && this.salePrice < this.defaultPrice
+    );
   }
 }
 

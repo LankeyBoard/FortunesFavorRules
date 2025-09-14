@@ -7,7 +7,7 @@ import { useMutation } from "@apollo/client";
 import CREATE_SHOP_MUTATION from "@/utils/graphQLMutations/CreateShopMutation";
 import { useRouter } from "next/navigation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
-import { Rarity, RechargeOn } from "@/utils/enums";
+import { findEnumKey, Rarity, RechargeOn } from "@/utils/enums";
 import Trash from "./icons/Trash";
 import UPDATE_SHOP_MUTATION, {
   UpdateShopInputType,
@@ -34,6 +34,7 @@ const exampleItems: ShopItemInput[] = [
     salePrice: 1,
     inStock: false,
     defaultPrice: 2,
+    slots: 1,
   },
   {
     title: "Another Example",
@@ -52,6 +53,7 @@ const exampleItems: ShopItemInput[] = [
     defaultPrice: 5,
     salePrice: 4,
     inStock: true,
+    slots: 0,
   },
 ];
 
@@ -105,7 +107,6 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
 };
 
 const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
-  console.log(shop);
   let inputBuilder: any = { ...shop };
   console.log("unprocessed graph inputs", inputBuilder);
   inputBuilder.itemsInStock = inputBuilder.itemsInStock.map(
@@ -119,9 +120,22 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
           choices: text.choices,
         };
       });
+      if (trimmedItem.uses && typeof trimmedItem.uses === "object") {
+        const trimmedUses = trimmedItem.uses;
+        delete trimmedUses.__typename;
+        const rechargeOn = findEnumKey(
+          trimmedUses.rechargeOn,
+          RechargeOn,
+        ) as unknown as RechargeOn;
+        trimmedUses.rechargeOn = rechargeOn || trimmedUses.rechargeOn;
+        trimmedItem.uses = trimmedUses;
+      }
+      const rarity = findEnumKey(trimmedItem.rarity, Rarity) ?? Rarity.COMMON;
+      if (!rarity)
+        console.warn("Rarity not found for item, set to common", trimmedItem);
       return {
         ...trimmedItem,
-        rarity: item.rarity.toString().toUpperCase(),
+        rarity: rarity,
       };
     },
   );
@@ -135,10 +149,7 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
           choices: text.choices,
         };
       });
-      return {
-        ...trimmedItem,
-        rarity: item.rarity.toString().toUpperCase(),
-      };
+      return trimmedItem;
     },
   );
 
@@ -202,7 +213,7 @@ const parseShopItemsFromFile = async (
 
         // Ensure each item has 'effects' and 'tags' keys
         parsed.forEach((item) => {
-          item.rarity = Rarity[item.rarity];
+          item.rarity = Rarity[item.rarity as keyof typeof Rarity];
           if (!("effects" in item)) item.effects = [];
           if (!("tags" in item)) item.tags = [];
         });
@@ -324,15 +335,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
             required
           />
         </div>
-        <Button
-          buttonType={ButtonType.default}
-          color="blue"
-          onClick={() => {
-            setShowCreateItem(!showCreateItem);
-          }}
-        >
-          {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
-        </Button>
+
         <div className="mb-4">
           <div className="mb-3 w-96">
             <label
@@ -375,7 +378,15 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
           >
             Download example JSON file
           </a>
-
+          <Button
+            buttonType={ButtonType.default}
+            color="blue"
+            onClick={() => {
+              setShowCreateItem(!showCreateItem);
+            }}
+          >
+            {showCreateItem ? "Hide Item Builder" : "Show Item Builder"}
+          </Button>
           {showCreateItem && (
             <CreateItem
               addItemToParent={(item) => AddItemToShop(item as ShopItem)}

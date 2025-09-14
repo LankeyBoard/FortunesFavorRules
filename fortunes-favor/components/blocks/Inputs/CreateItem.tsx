@@ -8,7 +8,7 @@ import TextInput from "./TextInput";
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { Effect } from "@/utils/applyConditionalEffects";
-import { Rarity, RechargeOn } from "@/utils/enums";
+import { findEnumValue, Rarity, RechargeOn } from "@/utils/enums";
 import { BaseItem } from "@/utils/BaseItem";
 import { ShopItem } from "@/utils/ItemShop";
 import SmallField from "../SmallField";
@@ -39,10 +39,12 @@ const CreateItem = ({
   const [newItemTitle, setNewItemTitle] = useState(initialItem?.title ?? "");
 
   const [newItemText, setNewItemText] = useState(
-    initialItem?.text[0].text ?? "",
+    initialItem?.text ? initialItem.text.map((t) => t.text).join("\n") : "",
   );
   const [isMagicItem, setIsMagicItem] = useState(initialItem?.isMagic ?? false);
-  const [itemRarity, setItemRarity] = useState(initialItem?.rarity ?? "Common");
+  const [itemRarity, setItemRarity] = useState(
+    initialItem?.rarity ?? Rarity.COMMON,
+  );
   const [hasUses, setHasUses] = useState(initialItem?.uses != undefined);
   const [itemUses, setItemUses] = useState<
     | {
@@ -86,7 +88,7 @@ const CreateItem = ({
     setNewItemTitle("");
     setNewItemText("");
     setIsMagicItem(false);
-    setItemRarity("Common");
+    setItemRarity(Rarity.COMMON);
     setItemUses(undefined);
     setHasUses(false);
     setItemEffects([]);
@@ -128,15 +130,15 @@ const CreateItem = ({
           {isMagicItem && (
             <DropdownField
               name="Item Rarity"
-              options={[
-                { title: "Common", value: "Common" },
-                { title: "Uncommon", value: "Uncommon" },
-                { title: "Rare", value: "Rare" },
-                { title: "Legendary", value: "Legendary" },
-                { title: "Unique", value: "Unique" },
-              ]}
+              options={Object.keys(Rarity).map((key) => {
+                return Rarity[key as keyof typeof Rarity];
+              })}
+              value={itemRarity}
               onChange={(e) => {
-                setItemRarity(e.target.value.slice("Item Rarity".length));
+                console.log(e.target.value);
+                const newRarity: Rarity = findEnumValue(e.target.value, Rarity);
+                console.log("rarity: ", newRarity);
+                setItemRarity(newRarity);
               }}
             />
           )}
@@ -183,27 +185,14 @@ const CreateItem = ({
               />
               <DropdownField
                 name="Recharge On"
-                options={[
-                  { title: "None", value: RechargeOn.NONE },
-                  {
-                    title: "Catch Your Breath",
-                    value: RechargeOn.CATCH_BREATH,
-                  },
-                  {
-                    title: "Night's Rest",
-                    value: RechargeOn.NIGHTS_REST,
-                  },
-                  {
-                    title: "Rest and Recuperate",
-                    value: RechargeOn.REST_AND_RECUPERATE,
-                  },
-                ]}
+                value={itemUses?.rechargeOn}
+                options={Object.keys(RechargeOn).map((key) => {
+                  return RechargeOn[key as keyof typeof RechargeOn];
+                })}
                 onChange={(e) => {
                   setItemUses({
                     ...itemUses!,
-                    rechargeOn: e.target.value.slice(
-                      "RechargeOn".length + 1,
-                    ) as unknown as RechargeOn,
+                    rechargeOn: e.target.value as RechargeOn,
                   });
                 }}
               />
@@ -378,12 +367,13 @@ const CreateItem = ({
             color="green"
             type="submit"
             onClick={() => {
+              console.log(itemRarity);
               if (itemType === ItemType.SHOP_ITEM) {
                 const newItem: ShopItem = new ShopItem(
                   newItemTitle,
                   [{ text: newItemText }],
                   isMagicItem,
-                  itemRarity as unknown as Rarity,
+                  itemRarity,
                   itemEffects,
                   tags,
                   defaultPrice,
@@ -402,7 +392,7 @@ const CreateItem = ({
                   [{ text: newItemText }],
                   isMagicItem,
                   slots,
-                  itemRarity as unknown as Rarity,
+                  itemRarity,
                   itemUses,
                   undefined,
                   itemEffects,

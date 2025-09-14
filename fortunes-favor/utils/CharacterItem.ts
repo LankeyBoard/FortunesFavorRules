@@ -35,7 +35,9 @@ class CharacterItem extends Input implements BaseItem {
     this.defaultPrice = defaultPrice;
     this.slots = slots;
   }
-
+  public get price(): number {
+    return this.defaultPrice ?? 0;
+  }
   public use() {
     if (!this.uses) {
       throw new Error("Item does not have uses");

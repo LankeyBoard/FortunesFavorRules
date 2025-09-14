@@ -1,13 +1,27 @@
-export function findEnum(s: string, e: any): any | undefined {
+export function findEnumValue(s: string, e: any): any | undefined {
   if (!s) return;
-  let keys: string[] = Object.keys(e);
+  const numKeys: string[] = Object.keys(e).filter((key) => !isNaN(Number(key)));
+  const strKeys: string[] = Object.keys(e).filter((key) => isNaN(Number(key)));
+  // if there are numbers in the key then use them
+  const keys = numKeys.length > 0 ? numKeys : strKeys;
   let match = undefined;
   keys.forEach((key) => {
-    if (s.toLocaleLowerCase() === e[key].toLocaleLowerCase()) {
+    if (s.toLowerCase() === e[key].toLowerCase()) {
+      console.log(e[key]);
       match = e[key];
     }
   });
   return match;
+}
+export function findEnumKey(s: string, e: any): string | undefined {
+  if (!s) return;
+  const entries = Object.entries(e);
+  for (const [key, value] of entries) {
+    if (value === s) {
+      return key;
+    }
+  }
+  return undefined;
 }
 export enum ActionType {
   ACTION = "ACTION",
@@ -69,16 +83,16 @@ export enum Languages {
 }
 
 export enum Rarity {
-  COMMON,
-  UNCOMMON,
-  RARE,
-  LEGENDARY,
-  UNIQUE,
+  COMMON = "Common",
+  UNCOMMON = "Uncommon",
+  RARE = "Rare",
+  LEGENDARY = "Legendary",
+  UNIQUE = "Unique",
 }
 
 export enum RechargeOn {
-  NONE,
-  CATCH_BREATH,
-  NIGHTS_REST,
-  REST_AND_RECUPERATE,
+  NONE = "None",
+  CATCH_BREATH = "Catch Your Breath",
+  NIGHTS_REST = "Night's Rest",
+  REST_AND_RECUPERATE = "Rest & Recuperate",
 }

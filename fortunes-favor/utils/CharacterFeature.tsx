@@ -1,4 +1,4 @@
-import { findEnum, ActionType } from "./enums";
+import { findEnumValue, ActionType } from "./enums";
 import {
   CharacterClassFeature,
   FeatureWithoutChoices,
@@ -31,7 +31,7 @@ export default class CharacterFeatureData
     this.costsFortunesFavor = feature_data.costsFortunesFavor;
     this.actionType = undefined;
     if (feature_data.actionType !== null) {
-      const at = findEnum(feature_data.actionType, ActionType);
+      const at = findEnumValue(feature_data.actionType, ActionType);
       if (at) {
         this.actionType = at;
       } else {
@@ -70,7 +70,7 @@ export default class CharacterFeatureData
     };
     return new PlayerCharacterFeature(
       this.title,
-      findEnum(source.toString(), FeatureSource),
+      findEnumValue(source.toString(), FeatureSource),
       [],
       this.slug,
       this.ruleType,

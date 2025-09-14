@@ -1,4 +1,4 @@
-import { RuleType, findEnum } from "./enums";
+import { RuleType, findEnumValue } from "./enums";
 
 export class TextField {
   type: RuleType;
@@ -6,7 +6,7 @@ export class TextField {
   choices: string[];
   constructor(json_field: any) {
     this.type = RuleType.ERROR;
-    const t = findEnum(json_field.type, RuleType);
+    const t = findEnumValue(json_field.type, RuleType);
     if (t !== undefined) {
       this.type = t;
     } else {
