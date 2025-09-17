@@ -106,50 +106,45 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
     );
 };
 
+const TrimItemForGraphQL = (item: ShopItem) => {
+  const { inStock, ...trimmedItem } = item;
+  trimmedItem.text = trimmedItem.text.map((text) => {
+    return {
+      text: text.text,
+      type: text.type,
+      choices: text.choices,
+    };
+  });
+  if (trimmedItem.uses && typeof trimmedItem.uses === "object") {
+    const trimmedUses = trimmedItem.uses;
+    delete trimmedUses.__typename;
+    const rechargeOn = findEnumKey(
+      trimmedUses.rechargeOn,
+      RechargeOn,
+    ) as unknown as RechargeOn;
+    trimmedUses.rechargeOn = rechargeOn || trimmedUses.rechargeOn;
+    trimmedItem.uses = trimmedUses;
+  }
+  const rarity = findEnumKey(trimmedItem.rarity, Rarity) ?? Rarity.COMMON;
+  if (!rarity)
+    console.warn("Rarity not found for item, set to common", trimmedItem);
+  return {
+    ...trimmedItem,
+    rarity: rarity,
+  };
+};
+
 const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
   let inputBuilder: any = { ...shop };
   console.log("unprocessed graph inputs", inputBuilder);
   inputBuilder.itemsInStock = inputBuilder.itemsInStock.map(
     (item: ShopItem) => {
-      const { inStock, ...trimmedItem } = item;
-      //removes _typename that sometimes is still present from graphql
-      trimmedItem.text = trimmedItem.text.map((text) => {
-        return {
-          text: text.text,
-          type: text.type,
-          choices: text.choices,
-        };
-      });
-      if (trimmedItem.uses && typeof trimmedItem.uses === "object") {
-        const trimmedUses = trimmedItem.uses;
-        delete trimmedUses.__typename;
-        const rechargeOn = findEnumKey(
-          trimmedUses.rechargeOn,
-          RechargeOn,
-        ) as unknown as RechargeOn;
-        trimmedUses.rechargeOn = rechargeOn || trimmedUses.rechargeOn;
-        trimmedItem.uses = trimmedUses;
-      }
-      const rarity = findEnumKey(trimmedItem.rarity, Rarity) ?? Rarity.COMMON;
-      if (!rarity)
-        console.warn("Rarity not found for item, set to common", trimmedItem);
-      return {
-        ...trimmedItem,
-        rarity: rarity,
-      };
+      return TrimItemForGraphQL(item);
     },
   );
   inputBuilder.itemsCouldStock = inputBuilder.itemsCouldStock.map(
     (item: ShopItem) => {
-      const { inStock, salePrice, ...trimmedItem } = item;
-      trimmedItem.text = trimmedItem.text.map((text) => {
-        return {
-          text: text.text,
-          type: text.type,
-          choices: text.choices,
-        };
-      });
-      return trimmedItem;
+      return TrimItemForGraphQL(item);
     },
   );
 
