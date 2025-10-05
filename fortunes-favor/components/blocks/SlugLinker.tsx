@@ -1,4 +1,6 @@
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 var split: RegExp = new RegExp(`\\[.*?\\)`, "g");
 
@@ -17,9 +19,47 @@ const linkMaker = (text: string) => {
   );
 };
 
+const isMarkdownTable = (text: string) => {
+  // Checks if text starts with '|' and has at least one table row
+  return (
+    typeof text === "string" &&
+    text.trim().startsWith("|") &&
+    text.includes("\n|")
+  );
+};
+
 const parseLinksFromString = (text: string) => {
   if (typeof text !== "string") return;
-  // TODO: slug should change the link href to the location of the slug
+
+  if (isMarkdownTable(text)) {
+    return (
+      <div className="gap-2">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            table: ({ children }) => (
+              <table className="min-w-full border border-slate-300 rounded overflow-hidden my-2">
+                {children}
+              </table>
+            ),
+            thead: ({ children }) => (
+              <thead className="bg-teal-100 dark:bg-teal-900">{children}</thead>
+            ),
+            th: ({ children }) => (
+              <th className="px-4 py-2 font-semibold text-left border-b border-slate-500">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => <td className="px-4 py-2">{children}</td>,
+            tr: ({ children }) => <tr className="">{children}</tr>,
+          }}
+        >
+          {text}
+        </ReactMarkdown>
+      </div>
+    );
+  }
+
   const splitText = text.split(split);
   const links = Array.from(text.matchAll(split));
   const display: JSX.Element[] = [];
@@ -46,7 +86,11 @@ const parseLinksFromString = (text: string) => {
       l++;
     } else {
       display.push(
-        <span key={splitText[t] + Math.random() * 100}>{splitText[t]}</span>,
+        <span key={splitText[t] + Math.random() * 100}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {splitText[t]}
+          </ReactMarkdown>
+        </span>,
       );
       t++;
     }
