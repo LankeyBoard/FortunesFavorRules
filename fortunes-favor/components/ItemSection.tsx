@@ -9,6 +9,7 @@ import ITEM_SECTION_QUERY, {
 import client from "@/utils/graphQLclient";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 import { gql, useMutation } from "@apollo/client";
+import { useUser } from "./UserContext";
 
 const SELL_ITEM_MUTATION = gql`
   mutation SellItem($shopId: ID!, $itemId: ID!, $characterId: ID!) {
@@ -30,13 +31,11 @@ type ItemSectionProps = {
 type ItemCardWButtonsProps = {
   item: ShopItem;
   itemSectionData?: ItemSectionData;
-  loadingError: any;
   shopId?: string;
 };
 const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   item,
   itemSectionData,
-  loadingError,
   shopId,
 }) => {
   const charactersInCampaign = itemSectionData?.me.characters.filter(
@@ -48,7 +47,8 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   );
   const [sellError, setSellError] = useState<string | null>(null);
   const [sellItem, { loading: selling }] = useMutation(SELL_ITEM_MUTATION);
-  const showButtons = itemSectionData && shopId;
+  const { isLoggedIn } = useUser();
+  const showButtons = itemSectionData && shopId && isLoggedIn();
 
   const handleSell = async () => {
     if (!selectedCharacter) return;
@@ -137,7 +137,6 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
                     type="button"
                     disabled={
                       !selectedCharacter ||
-                      loadingError ||
                       selling ||
                       selectedCharacter.coin < item.price
                     }
@@ -160,7 +159,7 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
                     setShowSelectCharacter(false);
                     setSellError(null);
                   }}
-                  disabled={loadingError || selling}
+                  disabled={selling}
                 >
                   Cancel
                 </Button>
@@ -171,7 +170,6 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
               buttonType={ButtonType.default}
               color="green"
               type="button"
-              disabled={loadingError}
               onClick={() => setShowSelectCharacter(true)}
             >
               Buy
@@ -191,7 +189,6 @@ const ItemSection: React.FC<ItemSectionProps> = ({ items, shopId }) => {
   const [itemSectionData, setItemSectionData] = useState<
     ItemSectionData | undefined
   >(undefined);
-  const [loadingError, setLoadingError] = useState<any>(null);
   useEffect(() => {
     const fetchMyCharacters = async () => {
       try {
@@ -204,16 +201,12 @@ const ItemSection: React.FC<ItemSectionProps> = ({ items, shopId }) => {
           setItemSectionData(data);
         }
       } catch (error) {
-        setLoadingError(error);
+        console.error(error);
       }
     };
     if (shopId) fetchMyCharacters();
   }, [shopId]);
 
-  if (loadingError) {
-    console.error(loadingError);
-    return <div>Error loading shop data.</div>;
-  }
   const sortedItems = [...items].sort((a, b) => {
     if (sortType === "alpha") {
       return a.title.localeCompare(b.title);
@@ -241,7 +234,6 @@ const ItemSection: React.FC<ItemSectionProps> = ({ items, shopId }) => {
             <ItemCardWButtons
               item={item}
               itemSectionData={itemSectionData}
-              loadingError={loadingError}
               shopId={shopId}
             />
           </li>
