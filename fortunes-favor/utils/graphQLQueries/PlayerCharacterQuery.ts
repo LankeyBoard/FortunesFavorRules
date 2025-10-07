@@ -64,6 +64,7 @@ const GET_CHARACTER_INFO = gql`
                 base
                 perLevel
               }
+              armor
               size
               slug
               speed {
@@ -352,6 +353,7 @@ const GET_CHARACTER_INFO = gql`
               base
               perLevel
             }
+            armor
             size
             slug
             speed {
