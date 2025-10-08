@@ -24,6 +24,10 @@ export const BeastDisplay = ({ beast }: { beast: BeastMasterBeast }) => {
           </span>
         </div>
         <div>
+          <span className="font-bold">Armor: </span>
+          <span>{beast.armor}</span>
+        </div>
+        <div>
           <span className="font-bold">Speed: </span>
           {beast.speed.map((speed, index) => (
             <span key={"speed" + index}>

@@ -23,38 +23,16 @@ export type NavSection = {
   }[];
 };
 
-const NavBuilder = (sections: NavSection[]): NavElement[] => {
-  const navRoutes: NavElement[] = [];
-  sections.forEach((section) => {
-    if (section.subroutes) {
-      let route: NavElement = {
-        title: section.title,
-        href: section.href,
-        subroutes: [],
-      };
-      section.subroutes.forEach((subRoute) => {
-        const sub: NavElement = {
-          title: subRoute.shortTitle ? subRoute.shortTitle : subRoute.title,
-          href: subRoute.href.includes("#")
-            ? subRoute.href
-            : section.basePath + "/" + subRoute.slug,
-        };
-        if (!route.subroutes) route.subroutes = [sub];
-        route.subroutes.push(sub);
-      });
-      navRoutes.push(route);
-    } else navRoutes.push({ title: section.title, href: section.basePath });
-  });
-  return navRoutes;
-};
-
 const query = gql`
   query GetNavSlugs {
-    genericRules {
-      slug
-      title
-      shortTitle
-      href
+    rules {
+      sectionName
+      rules {
+        slug
+        title
+        shortTitle
+        href
+      }
     }
     characterClasses {
       slug
@@ -73,11 +51,16 @@ export default async function RulesLayout({
     query,
   });
 
+  const rulesSlugsMap = new Map();
+  data.rules.forEach((rule: { sectionName: string; rules: any }) => {
+    rulesSlugsMap.set(rule.sectionName, rule.rules);
+  });
+  console.log(rulesSlugsMap);
   const rulesSection: NavSection = {
     title: "General Rules",
     basePath: "/rules/player_rules",
     href: "/rules/player_rules",
-    subroutes: data.genericRules,
+    subroutes: rulesSlugsMap.get("General Rules"),
   };
   const culturesSection: NavSection = {
     title: "Cultures",
@@ -105,6 +88,12 @@ export default async function RulesLayout({
     basePath: "/rules/generic_features/veteran_features",
     href: "/rules/generic_features/veteran_features",
   };
+  const gmSection: NavSection = {
+    title: "Running the Game",
+    basePath: "/rules/gm_rules",
+    href: "/rules/gm_rules",
+    subroutes: rulesSlugsMap.get("Running the Game"),
+  };
 
   return (
     <div className="flex flex-row flex-grow">
@@ -122,6 +111,7 @@ export default async function RulesLayout({
             characterClassesSection,
             noviceFeaturesSection,
             veteranFeaturesSection,
+            gmSection,
           ]}
         />
       </div>

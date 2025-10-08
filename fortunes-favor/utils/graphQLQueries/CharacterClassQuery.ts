@@ -85,6 +85,7 @@ export const GET_CHARACTER_CLASS = gql`
             }
             size
             slug
+            armor
             speed {
               speed
               type

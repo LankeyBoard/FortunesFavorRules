@@ -32,6 +32,7 @@ export type BeastMasterBeast = {
   };
   size: string;
   slug: string;
+  armor: number;
   speed: {
     speed: number;
     type: string;
