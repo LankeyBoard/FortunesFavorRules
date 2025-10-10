@@ -9,7 +9,7 @@ import ITEM_SECTION_QUERY, {
 import client from "@/utils/graphQLclient";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 import { gql, useMutation } from "@apollo/client";
-import { useUser } from "./UserContext";
+import { UserProvider, useUser } from "./UserContext";
 
 const SELL_ITEM_MUTATION = gql`
   mutation SellItem($shopId: ID!, $itemId: ID!, $characterId: ID!) {
@@ -49,7 +49,13 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   const [sellItem, { loading: selling }] = useMutation(SELL_ITEM_MUTATION);
   const { isLoggedIn } = useUser();
   const showButtons = itemSectionData && shopId && isLoggedIn();
-
+  console.log(
+    "showButtons:",
+    showButtons,
+    itemSectionData,
+    shopId,
+    isLoggedIn(),
+  );
   const handleSell = async () => {
     if (!selectedCharacter) return;
     setSellError(null);
@@ -69,14 +75,6 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
       setSellError("Failed to buy item.");
     }
   };
-
-  console.log(
-    "Characters in campaign",
-    charactersInCampaign,
-    selectedCharacter,
-    itemSectionData?.me.characters,
-    itemSectionData?.itemShop.campaign,
-  );
 
   useEffect(() => {
     if (charactersInCampaign?.length === 1) {
@@ -217,28 +215,30 @@ const ItemSection: React.FC<ItemSectionProps> = ({ items, shopId }) => {
 
   return (
     <div>
-      <div className="w-fit mt-2 mx-auto">
-        <DropdownField
-          name="Sort"
-          defaultValue={sortType}
-          options={[
-            { title: "Alphabetical", slug: "alpha" },
-            { title: "Cost", slug: "cost" },
-          ]}
-          onChange={(e) => setSortType(e.target.value as "alpha" | "cost")}
-        />
-      </div>
-      <ul className="m-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-        {sortedItems.map((item) => (
-          <li key={item.title}>
-            <ItemCardWButtons
-              item={item}
-              itemSectionData={itemSectionData}
-              shopId={shopId}
-            />
-          </li>
-        ))}
-      </ul>
+      <UserProvider>
+        <div className="w-fit mt-2 mx-auto">
+          <DropdownField
+            name="Sort"
+            defaultValue={sortType}
+            options={[
+              { title: "Alphabetical", slug: "alpha" },
+              { title: "Cost", slug: "cost" },
+            ]}
+            onChange={(e) => setSortType(e.target.value as "alpha" | "cost")}
+          />
+        </div>
+        <ul className="m-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {sortedItems.map((item) => (
+            <li key={item.title}>
+              <ItemCardWButtons
+                item={item}
+                itemSectionData={itemSectionData}
+                shopId={shopId}
+              />
+            </li>
+          ))}
+        </ul>
+      </UserProvider>
     </div>
   );
 };

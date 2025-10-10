@@ -50,6 +50,7 @@ const Button: React.FC<ButtonProps> = ({
   if (buttonType === ButtonType.icon) {
     buttonStyle += " w-10";
   }
+  buttonStyle = props.className + " " + buttonStyle;
   return (
     <button type="button" {...props} className={buttonStyle}>
       {children}

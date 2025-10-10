@@ -7,6 +7,10 @@ const GET_CHARACTER_INFO = gql`
       createdBy {
         id
       }
+      campaign {
+        id
+        name
+      }
       agility
       armorName
       baseDamage
