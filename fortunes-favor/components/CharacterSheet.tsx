@@ -42,6 +42,8 @@ import Unlock from "./icons/Unlock";
 import Lock from "./icons/Lock";
 import FullPageLoading from "./FullPageLoading";
 import Link from "next/link";
+import Save from "./icons/Save";
+import Edit from "./icons/Edit";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -489,18 +491,20 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
                   saveCharacter(character);
                   setEditable(false);
                 }}
+                className="flex flex-row"
               >
-                <span className="pr-2">Unlocked</span>
-                <Unlock />
+                <span className="pr-2">Save</span>
+                <Save className="w-6" />
               </Button>
             ) : (
               <Button
                 buttonType={ButtonType.default}
                 color="amber"
                 onClick={() => setEditable(true)}
+                className="flex flex-row"
               >
-                <span className="pr-2">Locked</span>
-                <Lock />
+                <span className="pr-2">Edit</span>
+                <Edit className="w-6" />
               </Button>
             )}
           </>
