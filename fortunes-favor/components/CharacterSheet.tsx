@@ -41,6 +41,9 @@ import { useRouter } from "next/navigation";
 import Unlock from "./icons/Unlock";
 import Lock from "./icons/Lock";
 import FullPageLoading from "./FullPageLoading";
+import Link from "next/link";
+import Save from "./icons/Save";
+import Edit from "./icons/Edit";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -232,9 +235,17 @@ export type CharacterOptions = {
   genericFeatures: GenericCharacterFeatures;
 };
 
+type CampaignInfo = {
+  id: string;
+  title: string;
+};
+
 // If a characterId is provided, the sheet will load that character and edit it. Otherwise a new character will be created.
 const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const [character, setCharacter] = useState<PlayerCharacter | undefined>(
+    undefined,
+  );
+  const [campaignInfo, setCampaignInfo] = useState<CampaignInfo | undefined>(
     undefined,
   );
   const [characterOptions, setCharacterOptions] = useState<
@@ -291,6 +302,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
+        console.log("Data", data);
         const genericFeatures = extractGenericFeatures(data);
         if (characterId) {
           if (data.me.id === data.character.createdBy.id)
@@ -327,6 +339,12 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             charOptions.characterClasses.push(
               new CharacterClass(characterClass),
             );
+          });
+        }
+        if (data.character.campaign) {
+          setCampaignInfo({
+            id: data.character.campaign.id,
+            title: data.character.campaign.name,
           });
         }
         setCharacterOptions(charOptions);
@@ -444,32 +462,54 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           />
         </div>
       </div>
-      {viewMode === CharacterSheetViewMode.Owner && (
-        <div className="mx-auto w-fit fixed bottom-4 right-4">
-          {isEditable ? (
-            <Button
-              buttonType={ButtonType.default}
-              color="amber"
-              onClick={() => {
-                saveCharacter(character);
-                setEditable(false);
-              }}
-            >
-              <span className="pr-2">Lock</span>
-              <Lock />
-            </Button>
-          ) : (
-            <Button
-              buttonType={ButtonType.default}
-              color="amber"
-              onClick={() => setEditable(true)}
-            >
-              <span className="pr-2">Unlock</span>
-              <Unlock />
-            </Button>
-          )}
-        </div>
-      )}
+      <div>
+        {campaignInfo && (
+          <div className="font-light">
+            <span className="text-center w-full inline-block">Campaign</span>
+            <div className="w-full">
+              <Button
+                buttonType={ButtonType.simple}
+                color="blue"
+                className="mx-auto"
+              >
+                <Link href={`/campaign/${campaignInfo?.id}`}>
+                  {campaignInfo?.title}
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="mx-auto w-fit fixed bottom-4 right-4 flex flex-row">
+        {viewMode === CharacterSheetViewMode.Owner && (
+          <>
+            {isEditable ? (
+              <Button
+                buttonType={ButtonType.default}
+                color="amber"
+                onClick={() => {
+                  saveCharacter(character);
+                  setEditable(false);
+                }}
+                className="flex flex-row"
+              >
+                <span className="pr-2">Save</span>
+                <Save className="w-6" />
+              </Button>
+            ) : (
+              <Button
+                buttonType={ButtonType.default}
+                color="amber"
+                onClick={() => setEditable(true)}
+                className="flex flex-row"
+              >
+                <span className="pr-2">Edit</span>
+                <Edit className="w-6" />
+              </Button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

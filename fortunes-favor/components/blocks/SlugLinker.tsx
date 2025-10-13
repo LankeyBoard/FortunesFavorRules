@@ -4,27 +4,33 @@ import remarkGfm from "remark-gfm";
 
 var split: RegExp = new RegExp(`\\[.*?\\)`, "g");
 
-const linkMaker = (text: string) => {
-  const i = text.indexOf("]");
-  let href = text.substring(i + 2, text.length - 1);
-  if (href[0] !== "/") href = "/" + href;
-  return (
-    <Link
-      key={href + Math.random() * 1000}
-      href={href}
-      className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200"
-    >
-      {text.substring(1, i)}
-    </Link>
-  );
-};
-
 const isMarkdownTable = (text: string) => {
   // Checks if text starts with '|' and has at least one table row
   return (
     typeof text === "string" &&
     text.trim().startsWith("|") &&
     text.includes("\n|")
+  );
+};
+
+const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+const renderMarkdownWithSpaces = (text: string, key: number) => {
+  // Match leading and trailing whitespace
+  const match = text.match(/^(\s*)(.*?)(\s*)$/s);
+  if (!match) return text;
+  const [, leading, core, trailing] = match;
+  return (
+    <span key={key}>
+      {leading}
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{ p: ({ children }) => <span>{children}</span> }}
+      >
+        {core}
+      </ReactMarkdown>
+      {trailing}
+    </span>
   );
 };
 
@@ -52,6 +58,7 @@ const parseLinksFromString = (text: string) => {
             ),
             td: ({ children }) => <td className="px-4 py-2">{children}</td>,
             tr: ({ children }) => <tr className="">{children}</tr>,
+            p: ({ children }) => <span>{children}</span>,
           }}
         >
           {text}
@@ -60,47 +67,36 @@ const parseLinksFromString = (text: string) => {
     );
   }
 
-  const splitText = text.split(split);
-  const links = Array.from(text.matchAll(split));
-  const display: JSX.Element[] = [];
-  let l = 0;
-  let t = 0;
-  // if there are no links
-  if (links.length < 1) {
-    return <span>{text}</span>;
-  }
-  //if there are only links
-  if (splitText.length < 1) {
-    links.forEach((link) => {
-      display.push(linkMaker(link.toLocaleString()));
-    });
-  }
-  //if text starts with a link
-  if (text[0] === "[") {
-    display.push(linkMaker(links[l].toLocaleString()));
-    l++;
-  }
-  while (l < links.length || t < links.length) {
-    if (l < t) {
-      display.push(linkMaker(links[l].toLocaleString()));
-      l++;
-    } else {
-      display.push(
-        <span key={splitText[t] + Math.random() * 100}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {splitText[t]}
-          </ReactMarkdown>
-        </span>,
+  const elements: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    // Add text before the link (preserving spaces)
+    if (match.index > lastIndex) {
+      elements.push(
+        renderMarkdownWithSpaces(text.slice(lastIndex, match.index), key++),
       );
-      t++;
     }
-  }
-  if (t < splitText.length) {
-    display.push(
-      <span key={splitText[t] + Math.random() * 100}>{splitText[t]}</span>,
+    // Add the link
+    elements.push(
+      <Link
+        key={key++}
+        href={match[2].startsWith("/") ? match[2] : "/" + match[2]}
+        className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 inline"
+      >
+        {match[1]}
+      </Link>,
     );
+    lastIndex = match.index + match[0].length;
   }
-  return <>{display}</>;
+  // Add any remaining text after the last link (preserving spaces)
+  if (lastIndex < text.length) {
+    elements.push(renderMarkdownWithSpaces(text.slice(lastIndex), key++));
+  }
+
+  return <>{elements}</>;
 };
 
 const SlugLinker = ({ text }: { text: string | string[] | undefined }) => {

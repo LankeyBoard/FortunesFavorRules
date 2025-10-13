@@ -5,9 +5,7 @@ const Edit: React.FC<React.HTMLAttributes<SVGElement>> = ({ ...props }) => {
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 494.936 494.936"
-      className={
-        props.className ? props.className : "fill-black dark:fill-white"
-      }
+      className={"fill-black dark:fill-white " + props.className}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
