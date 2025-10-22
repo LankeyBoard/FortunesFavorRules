@@ -31,14 +31,8 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
     (char) => char.campaign?.id === itemSectionData.itemShop.campaign?.id,
   );
 
-  const { isLoggedIn } = useUser();
-  const [showButtons, setShowButtons] = useState(
-    (itemSectionData && shopId && isLoggedIn()) == true,
-  );
-  useEffect(() => {
-    setShowButtons((itemSectionData && shopId && isLoggedIn()) == true);
-    console.log("showButtons:", itemSectionData, shopId, isLoggedIn());
-  }, [isLoggedIn, itemSectionData, shopId]);
+  const showButtons = charactersInCampaign != undefined;
+
   console.log("characters in campaign", charactersInCampaign);
   return (
     <div className="bg-slate-50 dark:bg-slate-800 pb-2">
