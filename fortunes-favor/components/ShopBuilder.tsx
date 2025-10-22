@@ -128,6 +128,7 @@ const TrimItemForGraphQL = (item: ShopItem) => {
   const rarity = findEnumKey(trimmedItem.rarity, Rarity) ?? Rarity.COMMON;
   if (!rarity)
     console.warn("Rarity not found for item, set to common", trimmedItem);
+  console.log("Trimmed item for graphQL", trimmedItem);
   return {
     ...trimmedItem,
     rarity: rarity,
@@ -274,6 +275,8 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
       itemsCouldStock,
       initialShop?.id,
     );
+    console.log("submitted Shop", newShop);
+
     let data;
     if (newShop.id) {
       const result = await UpdateShop({

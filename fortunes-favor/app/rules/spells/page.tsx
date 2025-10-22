@@ -181,7 +181,7 @@ const SpellList: React.FC = () => {
   });
 
   return (
-    <div>
+    <div className="mb-18 md:mb-0">
       <div className="filters mb-6">
         <label className="">
           Filter by Type:

@@ -367,7 +367,6 @@ const CreateItem = ({
             color="green"
             type="submit"
             onClick={() => {
-              console.log(itemRarity);
               if (itemType === ItemType.SHOP_ITEM) {
                 const newItem: ShopItem = new ShopItem(
                   newItemTitle,
@@ -379,11 +378,11 @@ const CreateItem = ({
                   defaultPrice,
                   inStock,
                   slots,
-                  undefined,
+                  initialItem?.id,
                   itemUses,
                   salePrice && salePrice > -1 ? salePrice : undefined,
                 );
-                console.log("new item", newItem);
+                console.log("new Shop item", newItem);
 
                 addItemToParent?.(newItem);
               } else {
@@ -394,10 +393,10 @@ const CreateItem = ({
                   slots,
                   itemRarity,
                   itemUses,
-                  undefined,
+                  initialItem?.id,
                   itemEffects,
                 );
-                console.log("new item 2", newItem);
+                console.log("new character item", newItem);
                 addItemToParent?.(newItem);
               }
               resetItemInputs();
