@@ -52,7 +52,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.effects,
           item.tags,
           item.defaultPrice,
-          true,
+          false,
           item.slots,
           item.id,
           item.uses
