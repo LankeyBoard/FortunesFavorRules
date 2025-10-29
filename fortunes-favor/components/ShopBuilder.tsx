@@ -60,7 +60,7 @@ const exampleItems: ShopItemInput[] = [
 type ShopItemCardProps = {
   item: ShopItem;
   deleteItem: () => void;
-  updateItem: (item: BaseItem) => void;
+  updateItem: (item: ShopItem | BaseItem) => void;
 };
 
 const ShopItemCard: React.FC<ShopItemCardProps> = ({
@@ -233,9 +233,14 @@ const parseShopItemsFromFile = async (
 type ShopBuilderProps = {
   initialShop?: ItemShop;
   extraSubmitEffect?: (shop: ItemShop) => void;
+  extraCancelEffect?: () => void;
 };
 
-const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
+const ShopBuilder = ({
+  initialShop,
+  extraSubmitEffect,
+  extraCancelEffect,
+}: ShopBuilderProps) => {
   const [shopName, setShopName] = useState(initialShop?.name ?? "");
   const [shopDescription, setShopDescription] = useState(
     initialShop?.description ?? "",
@@ -246,10 +251,10 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
   const [itemsCouldStock, setItemsCouldStock] = useState<ShopItem[]>(
     initialShop?.itemsCouldStock ?? [],
   );
-  const [fileItemsInStock, setFileItemsInStock] = useState<ShopItem[]>([]);
-  const [fileItemsCouldStock, setFileItemsCouldStock] = useState<ShopItem[]>(
-    [],
-  );
+  const [inputFileItemsInStock, setFileItemsInStock] = useState<ShopItem[]>([]);
+  const [inputFileItemsCouldStock, setFileItemsCouldStock] = useState<
+    ShopItem[]
+  >([]);
   const [CreateShop] = useMutation(CREATE_SHOP_MUTATION);
   const [UpdateShop] = useMutation(UPDATE_SHOP_MUTATION);
   const [loading, setLoading] = useState(false);
@@ -407,11 +412,11 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
           </Button>
         </div>
         <div className="mt-6 mb-4">
-          {fileItemsInStock && (
+          {inputFileItemsInStock && (
             <h2 className="text-lg font-bold mb-2">File: Items In Stock</h2>
           )}
           <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {fileItemsInStock.map((item, index) => (
+            {inputFileItemsInStock.map((item, index) => (
               <div
                 key={item.title + item.id + "fileInStock"}
                 className="relative"
@@ -424,11 +429,21 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
                     );
                   }}
                   updateItem={(newItem) => {
-                    setFileItemsInStock((prev) =>
-                      prev.map((it, i) =>
-                        i === index ? (newItem as ShopItem) : it,
-                      ),
-                    );
+                    if ("inStock" in newItem && !newItem.inStock) {
+                      setFileItemsInStock((prev) =>
+                        prev.filter((_, i) => i !== index),
+                      );
+                      setFileItemsCouldStock((prev) => {
+                        prev.push(newItem as ShopItem);
+                        return prev;
+                      });
+                    } else {
+                      setFileItemsInStock((prev) =>
+                        prev.map((it, i) =>
+                          i === index ? (newItem as ShopItem) : it,
+                        ),
+                      );
+                    }
                   }}
                 />
                 <Button
@@ -447,13 +462,13 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
               </div>
             ))}
           </ul>
-          {fileItemsInStock && (
+          {inputFileItemsInStock && (
             <h2 className="text-lg font-bold mt-4 mb-2">
               File: Items Could Stock
             </h2>
           )}
           <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {fileItemsCouldStock.map((item, index) => (
+            {inputFileItemsCouldStock.map((item, index) => (
               <div
                 key={item.title + item.id + "fileCouldStock"}
                 className="relative"
@@ -466,11 +481,21 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
                     );
                   }}
                   updateItem={(newItem) => {
-                    setFileItemsCouldStock((prev) =>
-                      prev.map((it, i) =>
-                        i === index ? (newItem as ShopItem) : it,
-                      ),
-                    );
+                    if ("inStock" in newItem && newItem.inStock) {
+                      setFileItemsCouldStock((prev) =>
+                        prev.filter((_, i) => i !== index),
+                      );
+                      setFileItemsInStock((prev) => {
+                        prev.push(newItem as ShopItem);
+                        return prev;
+                      });
+                    } else {
+                      setFileItemsCouldStock((prev) =>
+                        prev.map((it, i) =>
+                          i === index ? (newItem as ShopItem) : it,
+                        ),
+                      );
+                    }
                   }}
                 />
                 <Button
@@ -519,6 +544,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
                 }}
               />
             ))}
+            {itemsInStock.length === 0 && <div>No Items</div>}
           </ul>
           <h2 className="text-lg font-bold mt-4 mb-2">Items Could Stock</h2>
           <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -532,7 +558,7 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
                   );
                 }}
                 updateItem={(newItem) => {
-                  if ((newItem as ShopItem).inStock) {
+                  if (!(newItem as ShopItem).inStock) {
                     setItemsCouldStock((prev) =>
                       prev.map((it, i) =>
                         i === index ? (newItem as ShopItem) : it,
@@ -542,24 +568,36 @@ const ShopBuilder = ({ initialShop, extraSubmitEffect }: ShopBuilderProps) => {
                     setItemsCouldStock((prev) =>
                       prev.filter((_, i) => i !== index),
                     );
-                    setItemsCouldStock((prev) => [
-                      ...prev,
-                      newItem as ShopItem,
-                    ]);
+                    setItemsInStock((prev) => [...prev, newItem as ShopItem]);
                   }
                 }}
               />
             ))}
+            {itemsCouldStock.length === 0 && <div>No Items</div>}
           </ul>
         </div>
-        <Button
-          buttonType={ButtonType.default}
-          onClick={() => setShowCreateItem(false)}
-          type="submit"
-          color="green"
-        >
-          {initialShop?.id ? "Update Shop" : "Create Shop"}
-        </Button>
+        <div>
+          <Button
+            buttonType={ButtonType.default}
+            onClick={() => {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("editing");
+              window.history.replaceState({}, "", url.toString());
+              if (extraCancelEffect) extraCancelEffect();
+            }}
+            color="red"
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType={ButtonType.default}
+            onClick={() => setShowCreateItem(false)}
+            type="submit"
+            color="green"
+          >
+            {initialShop?.id ? "Update Shop" : "Create Shop"}
+          </Button>
+        </div>
       </form>
     </div>
   );

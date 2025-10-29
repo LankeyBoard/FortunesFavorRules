@@ -35,6 +35,7 @@ const EditableShop: React.FC<EditableShopProps> = ({ shop }) => {
             setIsEditing(false);
             setCurrentShop(shop);
           }}
+          extraCancelEffect={() => setIsEditing(false)}
         />
       ) : (
         <Shop shop={currentShop} />
