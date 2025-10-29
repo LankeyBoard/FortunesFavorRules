@@ -4,9 +4,61 @@ import PlayerCharacter from "@/utils/PlayerCharacter";
 import { Dispatch, SetStateAction, useState } from "react";
 import Button, { ButtonType } from "../Inputs/Button";
 import ItemCard from "../ItemCard";
-import CreateItem from "../Inputs/CreateItem";
+import CreateItem, { ItemType } from "../Inputs/CreateItem";
 import { BaseItem } from "@/utils/BaseItem";
+import { ShopItem } from "@/utils/ItemShop";
 
+type ItemCardSectionProps = {
+  item: BaseItem;
+  updateItemBuilder: (i: number) => (item: BaseItem) => void;
+  deleteItemBuilder: (i: number) => () => void;
+  isEditable: boolean;
+  viewItemsOnly: boolean;
+  i: number;
+};
+
+const ItemCardSection: React.FC<ItemCardSectionProps> = ({
+  item,
+  updateItemBuilder,
+  deleteItemBuilder,
+  isEditable,
+  viewItemsOnly,
+  i,
+}) => {
+  const [editItem, setEditItem] = useState(false);
+  return (
+    <>
+      {editItem ? (
+        <CreateItem
+          addItemToParent={updateItemBuilder(i)}
+          setShowItemForm={setEditItem}
+          itemType={ItemType.CHARACTER_ITEM}
+          initialItem={item}
+        />
+      ) : (
+        <ItemCard
+          key={item.title + item.id}
+          item={item}
+          isExpanded={false}
+          updateItem={updateItemBuilder(i)}
+          deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
+          viewOnly={viewItemsOnly}
+        />
+      )}
+      {isEditable && (
+        <div>
+          <Button
+            buttonType={ButtonType.default}
+            color="amber"
+            onClick={() => setEditItem(true)}
+          >
+            Edit Item
+          </Button>
+        </div>
+      )}
+    </>
+  );
+};
 const SlotBar = ({
   slotsUsed,
   maxSlots,
@@ -76,14 +128,29 @@ const CharacterItems = ({
     return deleteItem;
   };
 
-  const addItemToCharacter = (item: CharacterItem) => {
+  const upsertItemToCharacter = (item: CharacterItem) => {
     const newCharacter = new PlayerCharacter(
       undefined,
       undefined,
       undefined,
       character,
     );
-    newCharacter.addItem(item);
+
+    // If item has an id, try to find and replace existing item
+    if (item && item.id) {
+      const existingIndex = newCharacter.items.findIndex(
+        (it) => it.id === item.id,
+      );
+      if (existingIndex !== -1) {
+        newCharacter.items[existingIndex] = item;
+      } else {
+        newCharacter.addItem(item);
+      }
+    } else {
+      // No id provided — add as new item
+      newCharacter.addItem(item);
+    }
+
     setCharacter(newCharacter);
   };
 
@@ -94,13 +161,14 @@ const CharacterItems = ({
       </h2>
       {character.items.length > 0 ? (
         character.items.map((item, i) => (
-          <ItemCard
-            key={item.title + item.id}
+          <ItemCardSection
+            key={item.id}
             item={item}
-            isExpanded={false}
-            updateItem={updateItemBuilder(i)}
-            deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
-            viewOnly={viewItemsOnly}
+            updateItemBuilder={updateItemBuilder}
+            deleteItemBuilder={deleteItemBuilder}
+            isEditable={isEditable}
+            viewItemsOnly={viewItemsOnly}
+            i={i}
           />
         ))
       ) : (
@@ -112,7 +180,7 @@ const CharacterItems = ({
           {showItemForm ? (
             <CreateItem
               addItemToParent={(item) =>
-                addItemToCharacter(item as CharacterItem)
+                upsertItemToCharacter(item as CharacterItem)
               }
               setShowItemForm={setShowItemForm}
             />
