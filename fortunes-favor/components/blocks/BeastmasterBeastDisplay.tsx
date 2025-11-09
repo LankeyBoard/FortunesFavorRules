@@ -69,7 +69,6 @@ export const BeastDisplay = ({ beast }: { beast: BeastMasterBeast }) => {
 };
 
 const BeastmasterBeastsSection = ({ beastMasterPet }: BeastDisplayProps) => {
-  console.log("beastmaster pet", beastMasterPet);
   return (
     <div className="my-5" id={beastMasterPet.slug}>
       <h1 className="py-2 my-2 px-2 text-2xl tracking-wide bg-purple-300 dark:bg-purple-800">

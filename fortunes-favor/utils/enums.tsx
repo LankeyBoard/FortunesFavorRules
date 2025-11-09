@@ -7,7 +7,6 @@ export function findEnumValue(s: string, e: any): any | undefined {
   let match = undefined;
   keys.forEach((key) => {
     if (s.toLowerCase() === e[key].toLowerCase()) {
-      console.log(e[key]);
       match = e[key];
     }
   });

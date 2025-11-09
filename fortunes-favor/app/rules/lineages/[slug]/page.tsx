@@ -1,80 +1,32 @@
 import client from "@/utils/graphQLclient";
-import { gql } from "@apollo/client";
-import { graphQLLineage } from "@/utils/graphQLtypes";
 import Lineage from "@/components/Lineage";
+import { Lineage as LineageType } from "@/utils/types/types.generated";
+import GET_LINEAGE from "@/utils/graphQLQueries/lineage/lineageQuery";
 
-const query = gql`
-  query GetLineage($slug: String) {
-    lineages(slug: $slug) {
-      description
-      href
-      shortTitle
-      size
-      slug
-      speeds {
-        type
-        speed
-      }
-      stat
-      title
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-      }
-    }
-  }
-`;
-
-async function SingleLineagePage(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
+async function SingleLineagePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { slug } = await params;
+  const { variant } = await searchParams;
   const { data } = await client.query({
-    query,
-    variables: { slug: params.slug },
+    query: GET_LINEAGE,
+    variables: { slug: slug },
   });
+
   return (
     <div className="grid grid-cols-1 mb-2">
-      {data.lineages.map((lineage_data: graphQLLineage) => {
-        return <Lineage data={lineage_data} key={lineage_data.slug} />;
+      {data.lineages.map((lineage_data: LineageType) => {
+        return (
+          <Lineage
+            data={lineage_data}
+            key={lineage_data.slug}
+            variantSearchParam={variant}
+          />
+        );
       })}
     </div>
   );

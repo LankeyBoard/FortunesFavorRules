@@ -30,9 +30,9 @@ import {
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
   GetCharacterData,
-} from "@/utils/graphQLQueries/PlayerCharacterQuery";
+} from "@/utils/graphQLQueries/playerCharacterQueries/PlayerCharacterQuery";
 import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterMutation";
-import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/PlayerCharacterOptionsQuery";
+import GET_CHARACTER_OPTIONS from "@/utils/graphQLQueries/playerCharacterQueries/PlayerCharacterOptionsQuery";
 import CREATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/CreateCharacterMutation";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 import CharacterItem from "@/utils/CharacterItem";

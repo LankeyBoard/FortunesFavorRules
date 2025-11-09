@@ -7,12 +7,14 @@ export default class CharacterCulture {
   lang: string;
   stat: string;
   features: [CharacterTrait];
+  variants?: CharacterCulture[];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
     this.desc = json.description;
     this.lang = json.languages;
     this.stat = json.stat;
+    this.variants = json.variants?.map((v: any) => new CharacterCulture(v));
     if (json.traits) {
       this.features = json.traits.map((t: any) => {
         return new CharacterTrait(t);

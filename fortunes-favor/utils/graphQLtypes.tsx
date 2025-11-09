@@ -37,16 +37,6 @@ export type graphQLCulture = {
   traits: GenericRule[];
 };
 
-export type graphQLLineage = {
-  title: string;
-  slug: string;
-  description: string[];
-  size: SizeOptions[];
-  speed: number;
-  stat: string;
-  traits: GenericRule[];
-};
-
 export type GenericFeature = {
   title: string;
   slug: string;

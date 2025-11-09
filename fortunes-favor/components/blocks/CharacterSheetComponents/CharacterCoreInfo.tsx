@@ -13,6 +13,9 @@ import {
   CharacterOptions,
   CharacterSheetViewMode,
 } from "@/components/CharacterSheet";
+import findClass from "@/utils/findClassWithSlug";
+import findCulture from "@/utils/findCultureWithSlug";
+import findLineage from "@/utils/findLineageWithSlug";
 
 const CombatStatDisplay = ({
   stat,
@@ -72,6 +75,32 @@ const CharacterCoreInfo = ({
   characterOptions: CharacterOptions;
   viewMode?: CharacterSheetViewMode;
 }) => {
+  const characterClassOptions: { title: string; slug: string }[] =
+    characterOptions.characterClasses.flatMap((c) => {
+      const classLabel = { title: c.title, slug: c.slug };
+      const variantLabels = c.variants?.map((v) => {
+        return { title: ` - ${v.title}`, slug: v.slug };
+      });
+      return variantLabels ? [classLabel, ...variantLabels] : [classLabel];
+    });
+
+  const characterCultureOptions: { title: string; slug: string }[] =
+    characterOptions.characterCultures.flatMap((c) => {
+      const cultureLabel = { title: c.title, slug: c.slug };
+      const variantLabels = c.variants?.map((v) => {
+        return { title: ` - ${v.title}`, slug: v.slug };
+      });
+      return variantLabels ? [cultureLabel, ...variantLabels] : [cultureLabel];
+    });
+
+  const characterLineageOptions: { title: string; slug: string }[] =
+    characterOptions.characterLineages.flatMap((c) => {
+      const lineageLabel = { title: c.title, slug: c.slug };
+      const variantLabels = c.variants?.map((v) => {
+        return { title: ` - ${v.title}`, slug: v.slug };
+      });
+      return variantLabels ? [lineageLabel, ...variantLabels] : [lineageLabel];
+    });
   const updateCurrentHealth = (newHealth: number) => {
     const newCharacter = new PlayerCharacter(
       undefined,
@@ -160,13 +189,17 @@ const CharacterCoreInfo = ({
         {isEditable ? (
           <DropdownField
             name="Class"
-            options={characterOptions.characterClasses}
+            options={characterClassOptions}
             defaultValue={character.characterClass.slug}
             unselectedOption={!character.characterClass}
             onChange={(e) => {
               const slug = e.target.value;
-              const updatedCharacterClass =
-                characterOptions.characterClasses.find((c) => c.slug === slug);
+
+              // find primary class or any variant matching the selected slug
+              let updatedCharacterClass = findClass(
+                characterOptions.characterClasses,
+                slug,
+              );
               if (updatedCharacterClass) {
                 const updatedCharacter = new PlayerCharacter(
                   undefined,
@@ -187,13 +220,15 @@ const CharacterCoreInfo = ({
         {isEditable ? (
           <DropdownField
             name="Culture"
-            options={characterOptions.characterCultures}
+            options={characterCultureOptions}
             unselectedOption={!character.culture}
             defaultValue={character.culture.slug}
             onChange={(e) => {
               const slug = e.target.value;
-              const updatedCharacterCulture =
-                characterOptions.characterCultures.find((c) => c.slug === slug);
+              const updatedCharacterCulture = findCulture(
+                characterOptions.characterCultures,
+                slug,
+              );
               if (updatedCharacterCulture) {
                 const updatedCharacter = new PlayerCharacter(
                   undefined,
@@ -212,13 +247,15 @@ const CharacterCoreInfo = ({
         {isEditable ? (
           <DropdownField
             name="Lineage"
-            options={characterOptions.characterLineages}
+            options={characterLineageOptions}
             unselectedOption={!character.lineage}
             defaultValue={character.lineage.slug}
             onChange={(e) => {
               const slug = e.target.value;
-              const updatedCharacterLineage =
-                characterOptions.characterLineages.find((c) => c.slug === slug);
+              const updatedCharacterLineage = findLineage(
+                characterOptions.characterLineages,
+                slug,
+              );
               if (updatedCharacterLineage) {
                 const updatedCharacter = new PlayerCharacter(
                   undefined,
@@ -432,7 +469,6 @@ const CharacterCoreInfo = ({
                     undefined,
                     character,
                   );
-                  console.log(e.target.value);
                   newCharacter.shieldName = e.target.value as ShieldType;
                   setCharacter(newCharacter);
                 }}

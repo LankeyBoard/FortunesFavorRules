@@ -1,162 +1,21 @@
 import { gql } from "@apollo/client";
+import DAMAGE_FRAGMENT from "./fragments/Damage.fragment";
+import DEFLECT_FRAGMENT from "./fragments/Deflect.fragment";
+import RULE_TEXT_FRAGMENT from "./fragments/RuleText.fragment";
+import BEASTMASTER_PET_FRAGMENT from "./fragments/BeastmasterPet.fragment";
+import FEATURE_FRAGMENT from "./fragments/Feature.fragment";
+import CHARACTER_CLASS_FRAGMENT from "../class/fragments/class.fragment";
 
 const GET_CHARACTER_OPTIONS = gql`
+  ${DAMAGE_FRAGMENT}
+  ${DEFLECT_FRAGMENT}
+  ${RULE_TEXT_FRAGMENT}
+  ${BEASTMASTER_PET_FRAGMENT}
+  ${FEATURE_FRAGMENT}
+  ${CHARACTER_CLASS_FRAGMENT}
   query getCharacterOptions {
     characterClasses {
-      attackStat
-      complexity
-      damage {
-        count
-        stat
-        dice
-        type
-      }
-      deflect {
-        dice
-        count
-        flat
-      }
-      description
-      extra {
-        beastMasterPet {
-          title
-          slug
-          description
-          beasts {
-            abilities {
-              text
-              title
-              type
-            }
-            damage {
-              count
-              dice
-              stat
-              type
-            }
-            health {
-              base
-              perLevel
-            }
-            armor
-            size
-            slug
-            speed {
-              speed
-              type
-            }
-            stats {
-              agility
-              heart
-              intellect
-              mettle
-            }
-            title
-          }
-        }
-        forms {
-          armor {
-            stat
-            baseArmor
-          }
-          attackStat
-          damage {
-            count
-            dice
-            stat
-            type
-          }
-          features {
-            text
-            title
-          }
-          href
-          shortTitle
-          size
-          title
-          slug
-        }
-      }
-      health
-      healthOnLevel
-      href
-      shortTitle
-      range {
-        max
-        min
-      }
-      slug
-      stamina
-      staminaOnLevel
-      staminaStat
-      title
-      features {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        level
-        href
-        ruleType
-        multiSelect
-        shortText
-        slug
-        shortTitle
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-        costsFortunesFavor
-      }
-      training {
-        armor
-        magic {
-          options
-          pick
-        }
-        shields
-        weapons {
-          melee {
-            options
-            pick
-          }
-          ranged {
-            options
-            pick
-          }
-          special {
-            options
-            pick
-          }
-        }
-      }
+      ...CharacterClassFragment
     }
     cultures {
       description
@@ -166,48 +25,7 @@ const GET_CHARACTER_OPTIONS = gql`
       slug
       stat
       traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        text {
-          choices
-          type
-          text
-        }
-        title
+        ...GenericFeatureFragment
       }
       title
     }
@@ -224,139 +42,14 @@ const GET_CHARACTER_OPTIONS = gql`
       stat
       title
       traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
+        ...GenericFeatureFragment
       }
     }
     noviceFeatures: universalFeatures(featureType: NOVICE) {
-      actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
-      }
-      chooseNum
-      featureType
-      costsFortunesFavor
-      href
-      ruleType
-      multiSelect
-      shortText
-      shortTitle
-      slug
-      staminaCost
-      title
-      text {
-        choices
-        text
-        type
-      }
+      ...GenericFeatureFragment
     }
     veteranFeatures: universalFeatures(featureType: VETERAN) {
-      actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
-      }
-      chooseNum
-      featureType
-      costsFortunesFavor
-      href
-      ruleType
-      multiSelect
-      shortText
-      shortTitle
-      slug
-      staminaCost
-      title
-      text {
-        choices
-        text
-        type
-      }
+      ...GenericFeatureFragment
     }
   }
 `;

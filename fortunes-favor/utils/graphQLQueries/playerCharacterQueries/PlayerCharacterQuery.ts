@@ -1,7 +1,33 @@
 import { gql } from "@apollo/client";
-import { Effect } from "../applyConditionalEffects";
+import DAMAGE_FRAGMENT from "./fragments/Damage.fragment";
+import DEFLECT_FRAGMENT from "./fragments/Deflect.fragment";
+import RULE_TEXT_FRAGMENT from "./fragments/RuleText.fragment";
+import USES_FRAGMENT from "./fragments/Uses.fragment";
+import EFFECT_FRAGMENT from "./fragments/Effect.fragment";
+import ITEM_FRAGMENT from "./fragments/Item.fragment";
+import { Effect } from "../../applyConditionalEffects";
+import FORM_FRAGMENT from "./fragments/Form.fragment";
+import FEATURE_FRAGMENT from "./fragments/Feature.fragment";
+import CHARACTER_CLASS_FRAGMENT from "../class/fragments/class.fragment";
+import BEASTMASTER_PET_FRAGMENT from "../class/fragments/beastmaster.fragment";
+import {
+  LINEAGE_FRAGMENT,
+  LINEAGE_VARIANT_FRAGMENT,
+} from "../lineage/fragments/lineageFragments";
 
 const GET_CHARACTER_INFO = gql`
+  ${DAMAGE_FRAGMENT}
+  ${DEFLECT_FRAGMENT}
+  ${FEATURE_FRAGMENT}
+  ${RULE_TEXT_FRAGMENT}
+  ${USES_FRAGMENT}
+  ${EFFECT_FRAGMENT}
+  ${ITEM_FRAGMENT}
+  ${BEASTMASTER_PET_FRAGMENT}
+  ${FORM_FRAGMENT}
+  ${CHARACTER_CLASS_FRAGMENT}
+  ${LINEAGE_FRAGMENT}
+  ${LINEAGE_VARIANT_FRAGMENT}
   query getCharacter($id: ID!) {
     character(id: $id) {
       createdBy {
@@ -36,75 +62,18 @@ const GET_CHARACTER_INFO = gql`
         attackStat
         complexity
         damage {
-          count
-          stat
-          dice
-          type
+          ...DamageFragment
         }
         deflect {
-          dice
-          count
-          flat
+          ...DeflectFragment
         }
         description
         extra {
           beastMasterPet {
-            title
-            slug
-            description
-            beasts {
-              abilities {
-                text
-                title
-                type
-              }
-              damage {
-                count
-                dice
-                stat
-                type
-              }
-              health {
-                base
-                perLevel
-              }
-              armor
-              size
-              slug
-              speed {
-                speed
-                type
-              }
-              stats {
-                agility
-                heart
-                intellect
-                mettle
-              }
-              title
-            }
+            ...BeastmasterPetFragment
           }
           forms {
-            armor {
-              stat
-              baseArmor
-            }
-            attackStat
-            damage {
-              count
-              dice
-              stat
-              type
-            }
-            features {
-              text
-              title
-            }
-            href
-            shortTitle
-            size
-            title
-            slug
+            ...FormFragment
           }
         }
         health
@@ -121,49 +90,7 @@ const GET_CHARACTER_INFO = gql`
         staminaStat
         title
         features {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          level
-          href
-          ruleType
-          multiSelect
-          shortText
-          slug
-          shortTitle
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-          costsFortunesFavor
+          ...CharacterClassFeatureFragment
         }
         training {
           armor
@@ -189,26 +116,7 @@ const GET_CHARACTER_INFO = gql`
         }
       }
       items {
-        id
-        title
-        text {
-          text
-          type
-        }
-        isMagic
-        rarity
-        uses {
-          max
-          used
-          rechargeOn
-        }
-        effects {
-          target
-          operation
-          value
-          condition
-        }
-        slots
+        ...ItemFragment
       }
       characterCulture {
         description
@@ -218,48 +126,7 @@ const GET_CHARACTER_INFO = gql`
         slug
         stat
         traits {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          costsFortunesFavor
-          href
-          multiSelect
-          ruleType
-          shortText
-          shortTitle
-          slug
-          staminaCost
-          text {
-            choices
-            type
-            text
-          }
-          title
+          ...GenericFeatureFragment
         }
         title
       }
@@ -276,206 +143,12 @@ const GET_CHARACTER_INFO = gql`
         stat
         title
         traits {
-          actionType
-          simpleChoices: choices {
-            ... on RuleText {
-              type
-              choices
-              text
-            }
-          }
-          complexChoices: choices {
-            ... on FeatureWithoutChoices {
-              href
-              shortTitle
-              actionType
-              costsFortunesFavor
-              multiSelect
-              ruleType
-              shortText
-              slug
-              staminaCost
-              title
-              text {
-                choices
-                text
-                type
-              }
-            }
-          }
-          chooseNum
-          costsFortunesFavor
-          href
-          multiSelect
-          ruleType
-          shortText
-          shortTitle
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
+          ...GenericFeatureFragment
         }
       }
     }
     characterClasses {
-      attackStat
-      complexity
-      damage {
-        count
-        stat
-        dice
-        type
-      }
-      deflect {
-        dice
-        count
-        flat
-      }
-      description
-      extra {
-        beastMasterPet {
-          title
-          slug
-          description
-          beasts {
-            abilities {
-              text
-              title
-              type
-            }
-            damage {
-              count
-              dice
-              stat
-              type
-            }
-            health {
-              base
-              perLevel
-            }
-            armor
-            size
-            slug
-            speed {
-              speed
-              type
-            }
-            stats {
-              agility
-              heart
-              intellect
-              mettle
-            }
-            title
-          }
-        }
-        forms {
-          armor {
-            stat
-            baseArmor
-          }
-          attackStat
-          damage {
-            count
-            dice
-            stat
-            type
-          }
-          features {
-            text
-            title
-          }
-          href
-          shortTitle
-          size
-          title
-          slug
-        }
-      }
-      health
-      healthOnLevel
-      href
-      shortTitle
-      range {
-        max
-        min
-      }
-      slug
-      stamina
-      staminaOnLevel
-      staminaStat
-      title
-      features {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        level
-        href
-        ruleType
-        multiSelect
-        shortText
-        slug
-        shortTitle
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-        costsFortunesFavor
-      }
-      training {
-        armor
-        magic {
-          options
-          pick
-        }
-        shields
-        weapons {
-          melee {
-            options
-            pick
-          }
-          ranged {
-            options
-            pick
-          }
-          special {
-            options
-            pick
-          }
-        }
-      }
+      ...CharacterClassFragment
     }
 
     cultures {
@@ -488,30 +161,10 @@ const GET_CHARACTER_INFO = gql`
       traits {
         actionType
         simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
+          ...RuleTextFragment
         }
         complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
+          ...FeatureWithoutChoicesFragment
         }
         chooseNum
         costsFortunesFavor
@@ -532,89 +185,18 @@ const GET_CHARACTER_INFO = gql`
       title
     }
     lineages {
-      description
-      href
-      shortTitle
-      size
-      slug
-      speeds {
-        type
-        speed
-      }
-      stat
-      title
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        chooseNum
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
+      ...LineageFragment
+      variants {
+        ...LineageVariantFragment
       }
     }
     noviceFeatures: universalFeatures(featureType: NOVICE) {
       actionType
       simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
+        ...RuleTextFragment
       }
       complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
+        ...FeatureWithoutChoicesFragment
       }
       chooseNum
       featureType
@@ -636,30 +218,10 @@ const GET_CHARACTER_INFO = gql`
     veteranFeatures: universalFeatures(featureType: VETERAN) {
       actionType
       simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
+        ...RuleTextFragment
       }
       complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
+        ...FeatureWithoutChoicesFragment
       }
       chooseNum
       featureType
