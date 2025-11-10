@@ -5,9 +5,11 @@ import CharacterFeature from "../utils/CharacterFeature";
 import CharacterClass, { TrainingOptions } from "../utils/CharacterClass";
 import { Deflect } from "../utils/graphQLtypes";
 import FormDisplay, { Form } from "./blocks/FormDisplay";
-import { CharacterClass as ClassGraphType } from "../app/types.generated";
+import { CharacterClass as ClassGraphType } from "../utils/types/types.generated";
 import TextBlock from "./blocks/TextBlock";
 import BeastDisplay from "./blocks/BeastmasterBeastDisplay";
+import Link from "next/link";
+import Button, { ButtonType } from "./blocks/Inputs/Button";
 
 type featureProps = {
   feature: CharacterFeature;
@@ -239,9 +241,13 @@ export const ClassTags = ({ c }: classTagsProps) => {
 
 type ClassTitleAndTagsProps = {
   classRules: CharacterClass;
+  variants?: { title: string; href: string; isBase: boolean }[];
 };
 
-export const ClassTitleAndTags = ({ classRules }: ClassTitleAndTagsProps) => {
+export const ClassTitleAndTags = ({
+  classRules,
+  variants,
+}: ClassTitleAndTagsProps) => {
   return (
     <div className="w-full h-fit bg-teal-300 dark:bg-teal-700">
       <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700 flex justify-between">
@@ -250,6 +256,27 @@ export const ClassTitleAndTags = ({ classRules }: ClassTitleAndTagsProps) => {
           <ClassTags c={classRules} />
         </span>
       </div>
+      {variants && (
+        <div className="flex flex-row mx-2">
+          <label className="mr-2">Variants</label>
+          {variants.map((variant) => {
+            if (!variant.href) {
+              console.warn(`variant has no href ${variant}`);
+              return;
+            }
+            return (
+              <div key={variant.title} className="mr-2">
+                <Button
+                  buttonType={ButtonType.simple}
+                  color={variant.isBase ? "amber" : "blue"}
+                >
+                  <Link href={variant.href}>{variant.title}</Link>
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -273,30 +300,61 @@ const ClassDeflect = ({ classDeflect }: ClassDeflectProps) => {
 
 type classProps = {
   data: ClassGraphType;
+  variant: string | string[] | undefined;
 };
-const ClassRule = ({ data }: classProps) => {
-  const class_rules: CharacterClass = new CharacterClass(data);
+const ClassRule = ({ data, variant }: classProps) => {
+  console.log("variant passed to classrule", variant);
+
+  const classVariants: CharacterClass[] = data.variants
+    ? data.variants?.map((data) => new CharacterClass(data))
+    : [];
+
+  let classRules: CharacterClass = new CharacterClass(data);
+  let variantLinks = classVariants.map((variant) => {
+    return { title: variant.title, href: variant.href, isBase: false };
+  });
+  if (variant) {
+    const baseClassLink = {
+      title: classRules.title,
+      href: classRules.href,
+      isBase: true,
+    };
+    variantLinks.unshift(baseClassLink);
+    let variantStr = Array.isArray(variant) ? variant[0] : variant;
+    if (variantStr) {
+      let classVariant = classVariants.find(
+        (v) => v.slug.toLowerCase() === variantStr.toLowerCase(),
+      );
+      console.log("Class variant used", classVariant);
+      if (classVariant) {
+        classRules = classVariant;
+        variantLinks = variantLinks.filter(
+          (link) => link.title !== classVariant?.title,
+        );
+      }
+    }
+  }
+
   let rangeString = "";
-  if (class_rules.range.min === 0) {
-    if (class_rules.range.max === 0) {
+  if (classRules.range.min === 0) {
+    if (classRules.range.max === 0) {
       rangeString = "Melee";
-    } else rangeString = "Melee - " + class_rules.range.max + "ft";
+    } else rangeString = "Melee - " + classRules.range.max + "ft";
   } else {
-    rangeString =
-      class_rules.range.min + "ft - " + class_rules.range.max + "ft";
+    rangeString = classRules.range.min + "ft - " + classRules.range.max + "ft";
   }
   const dmgString =
-    class_rules.damage.count +
+    classRules.damage.count +
     "d" +
-    class_rules.damage.dice +
+    classRules.damage.dice +
     " + " +
-    class_rules.damage.stat.join(", ").replace(/, ((?:.(?!, ))+)$/, " or $1");
+    classRules.damage.stat.join(", ").replace(/, ((?:.(?!, ))+)$/, " or $1");
   return (
-    <div id={class_rules.slug}>
-      <ClassTitleAndTags classRules={class_rules} />
+    <div id={classRules.slug}>
+      <ClassTitleAndTags classRules={classRules} variants={variantLinks} />
       <div className="clear-both">
         <div className="mx-3">
-          <p className="italic">{class_rules.description}</p>
+          <p className="italic">{classRules.description}</p>
         </div>
         <div className="mt-2">
           <div className="mx-3">
@@ -304,16 +362,15 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold">Health</span>
               <span className="">
                 {" "}
-                : {class_rules.health} (+{class_rules.healthOnLevel} on level
-                up)
+                : {classRules.health} (+{classRules.healthOnLevel} on level up)
               </span>
             </p>
             <p>
               <span className="font-semibold clear-left">Stamina</span>
               <span>
                 {" "}
-                : {class_rules.stamina}+{class_rules.staminaStat} (+
-                {class_rules.staminaOnLevel}+{class_rules.staminaStat} on level
+                : {classRules.stamina}+{classRules.staminaStat} (+
+                {classRules.staminaOnLevel}+{classRules.staminaStat} on level
                 up)
               </span>
             </p>
@@ -326,32 +383,32 @@ const ClassRule = ({ data }: classProps) => {
             <ul className="px-4">
               <Training
                 training_type="Armor"
-                training_list={class_rules.training.armor}
+                training_list={classRules.training.armor}
               />
               <Training
                 training_type="Shield"
-                training_list={class_rules.training.shields}
+                training_list={classRules.training.shields}
               />
               <li>
                 <p className="font-normal">Weapons </p>
                 <ul className="font-extralight px-4">
                   <Training
                     training_type="Melee"
-                    training_list={class_rules.training.weapons?.melee}
+                    training_list={classRules.training.weapons?.melee}
                   />
                   <Training
                     training_type="Ranged"
-                    training_list={class_rules.training.weapons?.ranged}
+                    training_list={classRules.training.weapons?.ranged}
                   />
                   <Training
                     training_type="Special"
-                    training_list={class_rules.training.weapons?.special}
+                    training_list={classRules.training.weapons?.special}
                   />
                 </ul>
               </li>
               <Training
                 training_type="Magic"
-                training_list={class_rules.training.magic}
+                training_list={classRules.training.magic}
               />
             </ul>
           </div>
@@ -361,7 +418,7 @@ const ClassRule = ({ data }: classProps) => {
 
               <span className="">
                 :{" "}
-                {class_rules.attackStat
+                {classRules.attackStat
                   .join(", ")
                   .replace(/, ((?:.(?!, ))+)$/, " or $1")}
               </span>
@@ -374,7 +431,7 @@ const ClassRule = ({ data }: classProps) => {
               <span className="font-semibold clear-left">Damage</span>
               <span>: {dmgString}</span>
             </p>
-            <ClassDeflect classDeflect={class_rules.deflect} />
+            <ClassDeflect classDeflect={classRules.deflect} />
           </div>
         </div>
       </div>
@@ -384,14 +441,14 @@ const ClassRule = ({ data }: classProps) => {
           Features
         </div>
         <div className="md:px-10">
-          {class_rules.features.map((f) => (
+          {classRules.features.map((f) => (
             <FeatureDisplay feature={f} key={f.slug} />
           ))}
         </div>
       </div>
-      {class_rules.extra && (
+      {classRules.extra && (
         <div id="extras">
-          <ExtrasDisplay extras={class_rules.extra} />
+          <ExtrasDisplay extras={classRules.extra} />
         </div>
       )}
     </div>

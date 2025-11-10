@@ -89,6 +89,7 @@ export default class CharacterClassData implements CharacterClass {
   features: CharacterFeature[];
   extra: Extra;
   href: string;
+  variants?: CharacterClassData[];
   constructor(data: any) {
     this.title = data.title;
     this.slug = data.slug;
@@ -178,5 +179,8 @@ export default class CharacterClassData implements CharacterClass {
       (feature_data: any) => new CharacterFeature(feature_data),
     );
     this.extra = data.extra;
+    this.variants = data.variants?.map(
+      (variant: any) => new CharacterClassData(variant),
+    );
   }
 }

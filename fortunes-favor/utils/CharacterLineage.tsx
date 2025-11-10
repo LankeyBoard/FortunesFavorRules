@@ -5,14 +5,18 @@ export default class CharacterLineage {
   title: string;
   slug: string;
   desc: string;
+  href: string;
   size: SizeOptions | SizeOptions[];
   speeds: [{ type: string; speed: number; source: string }];
   stat: string;
   features: [CharacterTrait];
+  variants?: CharacterLineage[];
   constructor(json: any) {
     this.title = json.title;
     this.slug = json.slug;
     this.desc = json.description;
+    this.href = json.href;
+    this.variants = json.variants?.map((v: any) => new CharacterLineage(v));
     if (typeof json.size === "string") {
       const s = findEnumValue(json.size, SizeOptions);
       this.size = SizeOptions.ERROR;

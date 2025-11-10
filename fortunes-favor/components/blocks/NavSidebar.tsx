@@ -56,12 +56,6 @@ const findCurrentPath = (
   partialPaths: partialPath[],
   currentLocation: Location,
 ) => {
-  console.log(
-    "location",
-    currentLocation.pathname,
-    partialPaths,
-    currentLocation.hash,
-  );
   if (currentLocation.hash) {
     const path = partialPaths.find(
       (p) =>

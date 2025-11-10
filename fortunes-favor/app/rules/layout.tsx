@@ -55,7 +55,6 @@ export default async function RulesLayout({
   data.rules.forEach((rule: { sectionName: string; rules: any }) => {
     rulesSlugsMap.set(rule.sectionName, rule.rules);
   });
-  console.log(rulesSlugsMap);
   const rulesSection: NavSection = {
     title: "General Rules",
     basePath: "/rules/player_rules",

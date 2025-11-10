@@ -19,6 +19,7 @@ export const hasInsufficientChoices = (
   choices: PlayerCharacterFeature["choices"],
   chooseNum: number,
 ): boolean => {
+  console.log("hasInsufficientChoices", choices, selectedSlugs);
   const matchingChoices = choices.filter(
     (choice) =>
       ("slug" in choice && selectedSlugs.includes(choice.slug)) ||
@@ -26,6 +27,7 @@ export const hasInsufficientChoices = (
         typeof choice.text === "string" &&
         selectedSlugs.includes(choice.text)),
   );
+  console.log(matchingChoices.length, chooseNum);
   return matchingChoices.length < chooseNum;
 };
 
@@ -89,6 +91,7 @@ const FeatureCard = ({
   isExpanded,
   viewMode = CharacterSheetViewMode.ViewOnly,
 }: FeatureCardProps) => {
+  console.log("feature card feature", feature, feature.choices.length);
   const [cardFeature, setFeature] = useState(feature);
   const [showAllChoices, setShowAllChoices] = useState(
     character
@@ -146,6 +149,7 @@ const FeatureCard = ({
       </div>
     );
   }
+  console.log("FeatureCard choices", cardFeature, cardFeature.choices.length);
   return (
     <>
       <div className="pb-3">
