@@ -1,4 +1,4 @@
-import { CharacterClass } from "../schema/types.generated";
+import CharacterClass from "./CharacterClass";
 
 const findClass = (characterClasses: CharacterClass[], slug: string) => {
   const flattenedClasses = characterClasses.flatMap((c) =>

@@ -2,9 +2,9 @@ import { gql } from "@apollo/client";
 import DAMAGE_FRAGMENT from "./fragments/Damage.fragment";
 import DEFLECT_FRAGMENT from "./fragments/Deflect.fragment";
 import RULE_TEXT_FRAGMENT from "./fragments/RuleText.fragment";
-import BEASTMASTER_PET_FRAGMENT from "./fragments/BeastmasterPet.fragment";
 import FEATURE_FRAGMENT from "./fragments/Feature.fragment";
 import CHARACTER_CLASS_FRAGMENT from "../class/fragments/class.fragment";
+import BEASTMASTER_PET_FRAGMENT from "../class/fragments/beastmaster.fragment";
 
 const GET_CHARACTER_OPTIONS = gql`
   ${DAMAGE_FRAGMENT}

@@ -329,7 +329,7 @@ const ClassRule = ({ data, variant }: classProps) => {
       if (classVariant) {
         classRules = classVariant;
         variantLinks = variantLinks.filter(
-          (link) => link.title !== classVariant.title,
+          (link) => link.title !== classVariant?.title,
         );
       }
     }

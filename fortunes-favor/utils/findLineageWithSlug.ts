@@ -1,6 +1,6 @@
-import { Lineage } from "../schema/types.generated";
+import CharacterLineage from "./CharacterLineage";
 
-const findLineage = (lineages: Lineage[], slug: string) => {
+const findLineage = (lineages: CharacterLineage[], slug: string) => {
   const flattenedLineages = lineages.flatMap((l) =>
     l.variants ? [l, ...l.variants] : [l],
   );

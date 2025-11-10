@@ -15,7 +15,6 @@ const Lineage = ({
   isList = false,
   variantSearchParam,
 }: LineageProps) => {
-  console.log("variantSearchParam", variantSearchParam);
   let lineageRules = new CharacterLineage(data);
   const lineageVariants = data.variants
     ? data.variants?.map((data) => new CharacterLineage(data))
@@ -41,7 +40,7 @@ const Lineage = ({
       if (lineageVariant) {
         lineageRules = lineageVariant;
         variantLinks = variantLinks.filter(
-          (link) => link.title !== lineageVariant.title,
+          (link) => link.title !== lineageVariant?.title,
         );
       }
     }

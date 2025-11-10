@@ -1,6 +1,6 @@
-import { Culture } from "../schema/types.generated";
+import CharacterCulture from "./CharacterCulture";
 
-const findCulture = (cultures: Culture[], slug: string) => {
+const findCulture = (cultures: CharacterCulture[], slug: string) => {
   const flattenedCultures = cultures.flatMap((c) =>
     c.variants ? [c, ...c.variants] : [c],
   );
