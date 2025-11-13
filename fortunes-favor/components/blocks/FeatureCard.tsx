@@ -118,6 +118,7 @@ const FeatureCard = ({
       feature.choices,
       feature.chosen,
       feature.chooseNum,
+      feature.isVariant,
       feature.shortText,
       feature.level,
     );
@@ -194,6 +195,7 @@ const FeatureCard = ({
                                 feature.choices,
                                 feature.chosen,
                                 feature.chooseNum,
+                                feature.isVariant,
                                 feature.shortText,
                                 feature.level,
                               ),

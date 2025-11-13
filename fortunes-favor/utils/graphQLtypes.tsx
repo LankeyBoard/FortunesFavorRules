@@ -45,6 +45,7 @@ export type GenericFeature = {
   shortText?: string;
   multiSelect: boolean;
   choices: FeatureChoices[];
+  isVariant: boolean;
 };
 
 export type SlugDict = {
@@ -117,6 +118,7 @@ export type CharacterClassFeature = {
   multiSelect: boolean;
   shortText?: string;
   choices: FeatureChoices[];
+  isVariant: boolean;
 };
 
 export type CharacterClass = {

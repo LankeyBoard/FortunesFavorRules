@@ -17,11 +17,7 @@ async function PlayerClass({
     query: GET_CHARACTER_CLASS,
     variables: { slug: slug },
   });
-  console.log(
-    "Character class page data",
-    data,
-    data.characterClasses[0].variants,
-  );
+
   return (
     <Suspense>
       <ClassRule data={data.characterClasses[0]} variant={variant} />

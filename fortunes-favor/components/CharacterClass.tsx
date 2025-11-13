@@ -19,6 +19,9 @@ const FeatureDisplay = ({ feature }: featureProps) => {
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
       <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
         {feature.title}
+        {feature.isVariant && (
+          <span className="mx-4 font-extralight text-sm">Variant</span>
+        )}
         <div className="text-slate-700 dark:text-slate-200 float-right text-base ordinal">
           {feature.level}
           <span className="underline text-xs align-text-top">
@@ -250,14 +253,14 @@ export const ClassTitleAndTags = ({
 }: ClassTitleAndTagsProps) => {
   return (
     <div className="w-full h-fit bg-teal-300 dark:bg-teal-700">
-      <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700 flex justify-between">
-        <span className="py-4 px-3">{classRules.title}</span>{" "}
-        <span className="text-base font-normal overflow-auto">
+      <div className="text-3xl tracking-wide font-bold h-16 bg-teal-300 dark:bg-teal-700 justify-between">
+        <span className="py-4 px-3 float-left">{classRules.title}</span>{" "}
+        <span className="text-base font-normal overflow-auto float-right">
           <ClassTags c={classRules} />
         </span>
       </div>
       {variants && (
-        <div className="flex flex-row mx-2">
+        <div className="flex flex-row mx-2 clear-both">
           <label className="mr-2">Variants</label>
           {variants.map((variant) => {
             if (!variant.href) {

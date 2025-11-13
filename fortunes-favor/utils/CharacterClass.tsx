@@ -91,6 +91,7 @@ export default class CharacterClassData implements CharacterClass {
   href: string;
   variants?: CharacterClassData[];
   constructor(data: any) {
+    console.log("character class input data", data);
     this.title = data.title;
     this.slug = data.slug;
     this.description = data.description;

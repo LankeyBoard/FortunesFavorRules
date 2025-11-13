@@ -17,6 +17,7 @@ export class CharacterTrait implements GenericFeature {
   multiSelect: boolean;
   choices: FeatureChoices[];
   chooseNum: number;
+  isVariant: boolean;
   constructor(data: any) {
     this.title = data.title;
     this.text = data.text;
@@ -35,5 +36,6 @@ export class CharacterTrait implements GenericFeature {
         this.choices.push(choice);
       }
     });
+    this.isVariant = data.isVariant || false;
   }
 }

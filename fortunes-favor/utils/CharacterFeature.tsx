@@ -21,10 +21,11 @@ export default class CharacterFeatureData
       feature_data.slug,
       feature_data.ruleType,
       feature_data.text,
-      feature_data.list,
-      feature_data.shortText,
+      feature_data.multiSelect,
       feature_data.choices,
       feature_data.chooseNum,
+      feature_data.isVariant,
+      feature_data.shortText,
     );
     this.level = feature_data.level;
     this.staminaCost = feature_data.staminaCost;
@@ -79,6 +80,7 @@ export default class CharacterFeatureData
       this.choices,
       [],
       this.chooseNum,
+      this.isVariant,
       this.shortText,
       this.level,
     );
