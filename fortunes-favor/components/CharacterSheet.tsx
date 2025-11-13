@@ -127,6 +127,7 @@ const extractGenericFeatures = (
         : [],
       [],
       feature.chooseNum,
+      false,
       feature.shortText,
     );
     noviceFeature.push(f);
@@ -155,6 +156,7 @@ const extractGenericFeatures = (
         : [],
       [],
       feature.chooseNum,
+      false,
       feature.shortText,
     );
     veteranFeatures.push(f);
