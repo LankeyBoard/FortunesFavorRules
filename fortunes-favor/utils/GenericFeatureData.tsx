@@ -10,6 +10,7 @@ export default class GenericFeatureData implements GenericFeature {
   multiSelect: boolean;
   choices: FeatureChoices[];
   chooseNum: number;
+  isVariant: boolean;
 
   constructor(
     title: string,
@@ -19,6 +20,7 @@ export default class GenericFeatureData implements GenericFeature {
     multiSelect: boolean,
     choices: FeatureChoices[],
     chooseNum: number,
+    isVariant?: boolean,
     shortText?: string,
   ) {
     this.title = title;
@@ -29,5 +31,6 @@ export default class GenericFeatureData implements GenericFeature {
     this.multiSelect = multiSelect;
     this.choices = choices;
     this.chooseNum = chooseNum;
+    this.isVariant = isVariant ?? false;
   }
 }

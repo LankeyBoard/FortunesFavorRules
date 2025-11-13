@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 const CLASS_FEATURE_FRAGMENT = gql`
   fragment FeatureFragment on CharacterClassFeature {
     actionType
+    isVariant
     simpleChoices: choices {
       ... on RuleText {
         type

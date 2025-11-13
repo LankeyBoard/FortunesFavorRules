@@ -3,6 +3,8 @@ import CharacterLineage from "../utils/CharacterLineage";
 import { Lineage as LineageType } from "@/utils/types/types.generated";
 import Traits from "./Traits";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
+import RightArrow from "./icons/RightArrow";
+import LeftArrow from "./icons/LeftArrow";
 
 type LineageProps = {
   data: LineageType;
@@ -50,30 +52,15 @@ const Lineage = ({
       <div className="py-4 px-2 bg-sky-300 dark:bg-sky-800">
         <div className="text-2xl tracking-wide flex flex-row">
           <h1 className="flex-grow">{lineageRules.title}</h1>
-          {isList && (
-            <div className="flex items-center ps-3 mr-4">
-              <Link
-                className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-400 disabled:text-slate-700"
-                href={lineageRules.href}
-              >
-                <svg
-                  className="w-6 h-6 "
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </Link>
-            </div>
-          )}
+
+          <div className="flex items-center ps-3 mr-4">
+            <Link
+              className="cursor-pointer disabled:cursor-not-allowed text-gray-800 dark:text-amber-200 hover:text-amber-400 disabled:text-slate-700"
+              href={isList ? lineageRules.href : "/rules/lineages"}
+            >
+              {isList ? <RightArrow /> : <LeftArrow />}
+            </Link>
+          </div>
         </div>
         {variantLinks && variantLinks.length > 0 && (
           <div className="flex flex-row mx-2">
@@ -100,7 +87,7 @@ const Lineage = ({
       <div className="px-3">
         <div className="italic">{lineageRules.desc}</div>
         <div>
-          <span className="font-semibold">Size - </span>{" "}
+          <span className="font-semibold">Size: </span>{" "}
           {typeof lineageRules.size === "string" ? (
             <span className="capitalize">
               {lineageRules.size.toLocaleLowerCase()}
@@ -112,17 +99,17 @@ const Lineage = ({
           )}
         </div>
         <div>
-          <span className="font-semibold">Speed - </span>
+          <span className="font-semibold">Speed: </span>
           {lineageRules.speeds?.map((s) => {
             return (
               <span key={s.type} className="capitalize mr-2">
-                {s.type}: <span className="font-light">{s.speed} ft.</span>
+                {s.type} - <span className="font-light">{s.speed} ft.</span>
               </span>
             );
           })}
         </div>
         <div>
-          <span className="font-semibold">Stat - </span>
+          <span className="font-semibold">Stat: </span>
           {lineageRules.stat}
         </div>
         <Traits title="Features" traits={lineageRules.features} />

@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 const TRAIT_FRAGMENT = gql`
   fragment TraitFragment on GenericFeature {
     actionType
+    isVariant
     simpleChoices: choices {
       ... on RuleText {
         type

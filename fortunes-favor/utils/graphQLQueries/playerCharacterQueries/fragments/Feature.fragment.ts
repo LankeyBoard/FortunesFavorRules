@@ -8,6 +8,7 @@ const FEATURE_FRAGMENT = gql`
 
   fragment CharacterClassFeatureFragment on CharacterClassFeature {
     actionType
+    isVariant
     simpleChoices: choices {
       ...RuleTextFragment
     }
@@ -32,6 +33,7 @@ const FEATURE_FRAGMENT = gql`
 
   fragment GenericFeatureFragment on GenericFeature {
     actionType
+    isVariant
     simpleChoices: choices {
       ...RuleTextFragment
     }

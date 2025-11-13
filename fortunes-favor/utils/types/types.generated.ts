@@ -336,6 +336,7 @@ export type GenericFeature = Feature & {
   costsFortunesFavor?: Maybe<Scalars["Boolean"]["output"]>;
   featureType?: Maybe<FeatureType>;
   href?: Maybe<Scalars["String"]["output"]>;
+  isVariant?: Maybe<Scalars["Boolean"]["output"]>;
   multiSelect?: Maybe<Scalars["Boolean"]["output"]>;
   ruleType?: Maybe<RuleType>;
   shortText?: Maybe<Scalars["String"]["output"]>;
@@ -1846,6 +1847,11 @@ export type GenericFeatureResolvers<
     ContextType
   >;
   href?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  isVariant?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
   multiSelect?: Resolver<
     Maybe<ResolversTypes["Boolean"]>,
     ParentType,

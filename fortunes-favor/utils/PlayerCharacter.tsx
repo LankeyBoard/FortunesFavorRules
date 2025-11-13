@@ -98,7 +98,8 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     choices: FeatureChoices[],
     chosen: string[],
     chooseNum: number,
-    shortText?: string | undefined,
+    isVariant?: boolean,
+    shortText?: string,
     level?: number,
   ) {
     super(
@@ -109,6 +110,7 @@ export class PlayerCharacterFeature extends GenericFeatureData {
       multiSelect,
       choices,
       chooseNum,
+      isVariant,
       shortText,
     );
     this.source = source;
@@ -182,6 +184,7 @@ const updateFeatures = (
               feature.choices,
               [],
               feature.chooseNum,
+              feature.isVariant,
               feature.shortText,
               feature.level,
             ),
@@ -199,6 +202,7 @@ const updateFeatures = (
               feature.choices,
               [],
               feature.chooseNum,
+              feature.isVariant,
               feature.shortText,
               feature.level,
             ),
@@ -216,6 +220,7 @@ const updateFeatures = (
               feature.choices,
               [],
               feature.chooseNum,
+              feature.isVariant,
               feature.shortText,
               feature.level,
             ),
