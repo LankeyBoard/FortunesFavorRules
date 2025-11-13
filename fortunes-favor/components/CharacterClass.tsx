@@ -17,11 +17,14 @@ type featureProps = {
 const FeatureDisplay = ({ feature }: featureProps) => {
   return (
     <div id={feature.slug} className="bg-slate-200 dark:bg-slate-800 my-5">
-      <div className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">
+      <div
+        className={
+          feature.isVariant
+            ? "bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold border-l-4 border-amber-500"
+            : "bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold"
+        }
+      >
         {feature.title}
-        {feature.isVariant && (
-          <span className="mx-4 font-extralight text-sm">Variant</span>
-        )}
         <div className="text-slate-700 dark:text-slate-200 float-right text-base ordinal">
           {feature.level}
           <span className="underline text-xs align-text-top">

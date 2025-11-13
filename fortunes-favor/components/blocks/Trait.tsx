@@ -3,8 +3,16 @@ import TextBlock from "./TextBlock";
 const Trait = ({ t }: { t: CharacterTrait }) => {
   return (
     <div key={t.title + "trait"} className="">
-      {t.isVariant && <p className="font-extralight text-sm">Variant</p>}
-      <span className="font-light text-lg inline-block">{t.title}: &nbsp;</span>
+      {/* {t.isVariant && <p className="font-extralight text-sm">Variant</p>} */}
+      <span
+        className={
+          t.isVariant
+            ? "border-l-4 border-amber-500 font-light text-lg inline-block pl-2"
+            : "font-light text-lg inline-block"
+        }
+      >
+        {t.title}: &nbsp;
+      </span>
       <TextBlock text={t.text} inline={true} />
 
       <div className="">
