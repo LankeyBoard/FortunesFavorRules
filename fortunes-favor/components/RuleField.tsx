@@ -19,7 +19,7 @@ const titleStyler = (depth: number) => {
 
 const CompactList = ({ rule }: { rule: GenericRule }) => {
   return (
-    <div>
+    <div id={rule.slug}>
       {rule.title ? (
         <>
           <span className="text-amber-600">- </span>

@@ -2,8 +2,8 @@ import { RuleText } from "@/utils/graphQLtypes";
 import SlugLinker from "./SlugLinker";
 
 const textStyler = (textType?: string) => {
-  let style = "pt-3 break-after-all ";
-  switch (textType) {
+  let style = "pt-3 break-after-all pr-2 ";
+  switch (textType?.toUpperCase()) {
     case "FLAVOR":
       style += "italic";
       break;
@@ -19,7 +19,7 @@ const textStyler = (textType?: string) => {
 const TextBlock = ({
   text,
   style,
-  inline,
+  inline = false,
 }: {
   text: RuleText[];
   style?: string;
