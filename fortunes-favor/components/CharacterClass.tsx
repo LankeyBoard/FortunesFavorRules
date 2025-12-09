@@ -262,7 +262,7 @@ export const ClassTitleAndTags = ({
           <ClassTags c={classRules} />
         </span>
       </div>
-      {variants && (
+      {variants && variants.length > 0 && (
         <div className="flex flex-row mx-2 clear-both">
           <label className="mr-2">Variants</label>
           {variants.map((variant) => {
@@ -375,9 +375,11 @@ const ClassRule = ({ data, variant }: classProps) => {
               <span className="font-semibold clear-left">Stamina</span>
               <span>
                 {" "}
-                : {classRules.stamina}+{classRules.staminaStat} (+
-                {classRules.staminaOnLevel}+{classRules.staminaStat} on level
-                up)
+                : {classRules.stamina}+{classRules.staminaStat} (
+                {classRules.staminaOnLevel > 0 &&
+                  `+
+                ${classRules.staminaOnLevel}`}
+                +{classRules.staminaStat} on level up)
               </span>
             </p>
           </div>
