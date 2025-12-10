@@ -16,6 +16,7 @@ import CharacterClass from "./CharacterClass";
 import CharacterItem from "./CharacterItem";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 import { Form } from "@/components/blocks/FormDisplay";
+import { FeatureWithoutChoices } from "./types/types.generated";
 
 type Stats = {
   mettle: number;
@@ -80,6 +81,33 @@ const downgradeBaseDamage = (damage: {
     count: updatedDamage.count,
     stat: damage.stat,
   };
+};
+
+const featureToText = (
+  feature: PlayerCharacterFeature,
+  selectedChoices: string[],
+): string => {
+  const featureText = `${feature.title}: ${feature.text?.map((text) => text.text).join(" ")}`;
+  console.log(
+    "featureToText",
+    feature.choices,
+    selectedChoices,
+    feature.chosen,
+  );
+  const filteredChoices = feature.choices
+    .filter((choice) =>
+      "slug" in choice
+        ? selectedChoices.includes(choice.slug)
+        : selectedChoices.includes(choice.text),
+    )
+    .map((choice) => {
+      if ("slug" in choice) {
+        return `\t${choice.title}: ${choice.text.map((text) => text.text).join(" ")}`;
+      } else return choice.text;
+    })
+    .join("\n");
+  if (filteredChoices) return featureText + "\n" + filteredChoices;
+  return featureText;
 };
 
 export class PlayerCharacterFeature extends GenericFeatureData {
@@ -610,11 +638,18 @@ export default class PlayerCharacter {
         flat: this.characterClass?.deflect.flat + 3,
       };
     }
-    return {
+    const conditionalDeflect = {
       dice: applyConditionalEffects("deflect.dice", deflect.dice, this),
       count: applyConditionalEffects("deflect.count", deflect.count, this),
       flat: applyConditionalEffects("deflect.flat", deflect.flat, this),
     };
+    return Object.assign(conditionalDeflect, {
+      toString: () =>
+        conditionalDeflect.count +
+        "d" +
+        conditionalDeflect.dice +
+        (conditionalDeflect.flat > 0 ? "+" + conditionalDeflect.flat : ""),
+    });
   }
 
   public get maxHealth() {
@@ -713,11 +748,19 @@ export default class PlayerCharacter {
         baseDmg = downgradeBaseDamage(baseDmg);
       }
     }
-    return {
+
+    const updatedDamage = {
       dice: applyConditionalEffects("baseDamage.dice", baseDmg.dice, this),
       count: applyConditionalEffects("baseDamage.count", baseDmg.count, this),
       stat: applyConditionalEffects("baseDamage.stat", baseDmg.stat, this),
     };
+    return Object.assign(updatedDamage, {
+      toString: () =>
+        updatedDamage.count +
+        "d" +
+        updatedDamage.dice +
+        (updatedDamage.stat > 0 ? "+" + updatedDamage.stat : ""),
+    });
   }
   public get range() {
     if (!this.characterClass)
@@ -749,16 +792,35 @@ export default class PlayerCharacter {
   }
 
   public get actions() {
+    if (!this._actions) return [];
     this.sortFeatures();
-    return this._actions;
+    return Object.assign([...this._actions], {
+      toString: () =>
+        this._actions
+          ?.map((action) => featureToText(action, this.choices))
+          .join("\n"),
+    });
   }
+
   public get counters() {
+    if (!this._counters) return [];
     this.sortFeatures();
-    return this._counters;
+    return Object.assign([...this._counters], {
+      toString: () =>
+        this._counters
+          ?.map((counter) => featureToText(counter, this.choices))
+          .join("\n"),
+    });
   }
   public get features() {
+    if (!this._features) return [];
     this.sortFeatures();
-    return this._features;
+    return Object.assign([...this._features], {
+      toString: () =>
+        this._features
+          ?.map((feature) => featureToText(feature, this.choices))
+          .join("\n"),
+    });
   }
   public get languages() {
     return this._languages;

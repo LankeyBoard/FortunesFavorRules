@@ -91,7 +91,6 @@ const FeatureCard = ({
   isExpanded,
   viewMode = CharacterSheetViewMode.ViewOnly,
 }: FeatureCardProps) => {
-  console.log("feature card feature", feature, feature.choices.length);
   const [cardFeature, setFeature] = useState(feature);
   const [showAllChoices, setShowAllChoices] = useState(
     character
@@ -150,7 +149,6 @@ const FeatureCard = ({
       </div>
     );
   }
-  console.log("FeatureCard choices", cardFeature, cardFeature.choices.length);
   return (
     <>
       <div className="pb-3">

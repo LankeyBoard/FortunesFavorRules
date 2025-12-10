@@ -3,6 +3,7 @@
 import client from "@/utils/graphQLclient";
 import { useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
+import { PDFDocument, rgb } from "pdf-lib";
 
 import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
 import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
@@ -38,12 +39,11 @@ import Button, { ButtonType } from "./blocks/Inputs/Button";
 import CharacterItem from "@/utils/CharacterItem";
 import { RuleText } from "@/utils/graphQLtypes";
 import { useRouter } from "next/navigation";
-import Unlock from "./icons/Unlock";
-import Lock from "./icons/Lock";
 import FullPageLoading from "./FullPageLoading";
 import Link from "next/link";
 import Save from "./icons/Save";
 import Edit from "./icons/Edit";
+import Print from "./icons/Print";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.log(data);
@@ -377,6 +377,74 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     }
   }, [character]);
 
+  const populateAndDownloadPDF = async (character: PlayerCharacter) => {
+    console.log("Creating Downloadable Character Sheet", character);
+    const url = "/CharacterSheetFillable.pdf";
+    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const form = pdfDoc.getForm();
+
+    // Populate fields with character data
+    form.getTextField("CharacterName").setText(character.name);
+    form.getTextField("Level").setText(character.level.toString());
+    form.getTextField("Class").setText(character.characterClass?.title || "");
+    form.getTextField("Culture").setText(character.culture?.title || "");
+    form.getTextField("Lineage").setText(character.lineage?.title || "");
+    form.getTextField("Mettle").setText(character.stats.mettle.toString());
+    form.getTextField("Agility").setText(character.stats.agility.toString());
+    form
+      .getTextField("Intellect")
+      .setText(character.stats.intellect.toString());
+    form.getTextField("Heart").setText(character.stats.heart.toString());
+
+    form.getTextField("MaxHealth").setText(character.maxHealth.toString());
+
+    form.getTextField("MaxStamina").setText(character.maxStamina.toString());
+    form.getTextField("Coin").setText(character.coin?.toString() || "0");
+    form
+      .getTextField("CurrentSlots")
+      .setText(character.items.length.toString());
+    form.getTextField("MaxSlots").setText(character.maxSlots.toString());
+    form.getTextField("Languages").setText(character.languages?.join(", "));
+
+    // Populate combat info
+    form.getTextField("Attack").setText(character.attack.toString() || "");
+    form.getTextField("Damage").setText(character.baseDamage.toString());
+    form
+      .getTextField("Range")
+      .setText(
+        character.range ? `${character.range.min}-${character.range.max}` : "",
+      );
+    form.getTextField("Armor").setText(character.armorName || "");
+    form.getTextField("Counter").setText(character.counter?.toString() || "");
+    form.getTextField("Deflect").setText(character.deflect?.toString() || "");
+
+    // Populate features and items
+    form.getTextField("Actions").setText(character.actions.toString());
+    form.getTextField("Counters").setText(character.counters.toString());
+    form.getTextField("Features").setText(character.features.toString());
+    form
+      .getTextField("Items")
+      .setText(
+        character.items
+          .map((item) => `${item.title} (${item.slots} slots)`)
+          .join("\n"),
+      );
+
+    // Save the PDF
+    const pdfBytes = await pdfDoc.save();
+
+    // Trigger download
+    const blob = new Blob([new Uint8Array(pdfBytes)], {
+      type: "application/pdf",
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${character.name}_character_sheet.pdf`;
+    link.click();
+  };
+
   if (loadingError) {
     console.error(loadingError);
     return <div>Error loading character data.</div>;
@@ -509,6 +577,15 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
                 <Edit className="w-6" />
               </Button>
             )}
+            <Button
+              buttonType={ButtonType.default}
+              color="blue"
+              onClick={() => populateAndDownloadPDF(character)}
+              className="flex flex-row ml-4"
+            >
+              <span className="pr-2">Print</span>
+              <Print />
+            </Button>
           </>
         )}
       </div>
