@@ -1,33 +1,25 @@
 import { gql } from "@apollo/client";
-import DAMAGE_FRAGMENT from "./fragments/Damage.fragment";
-import DEFLECT_FRAGMENT from "./fragments/Deflect.fragment";
 import RULE_TEXT_FRAGMENT from "./fragments/RuleText.fragment";
 import USES_FRAGMENT from "./fragments/Uses.fragment";
 import EFFECT_FRAGMENT from "./fragments/Effect.fragment";
 import ITEM_FRAGMENT from "./fragments/Item.fragment";
 import { Effect } from "../../applyConditionalEffects";
-import FORM_FRAGMENT from "./fragments/Form.fragment";
-import FEATURE_FRAGMENT from "./fragments/Feature.fragment";
 import CHARACTER_CLASS_FRAGMENT from "../class/fragments/class.fragment";
-import BEASTMASTER_PET_FRAGMENT from "../class/fragments/beastmaster.fragment";
 import {
   LINEAGE_FRAGMENT,
   LINEAGE_VARIANT_FRAGMENT,
 } from "../lineage/fragments/lineageFragments";
+import GENERIC_FEATURE_FRAGMENT from "./fragments/Feature.fragment";
 
 const GET_CHARACTER_INFO = gql`
-  ${DAMAGE_FRAGMENT}
-  ${DEFLECT_FRAGMENT}
-  ${FEATURE_FRAGMENT}
   ${RULE_TEXT_FRAGMENT}
   ${USES_FRAGMENT}
   ${EFFECT_FRAGMENT}
   ${ITEM_FRAGMENT}
-  ${BEASTMASTER_PET_FRAGMENT}
-  ${FORM_FRAGMENT}
   ${CHARACTER_CLASS_FRAGMENT}
   ${LINEAGE_FRAGMENT}
   ${LINEAGE_VARIANT_FRAGMENT}
+  ${GENERIC_FEATURE_FRAGMENT}
   query getCharacter($id: ID!) {
     character(id: $id) {
       createdBy {
@@ -59,61 +51,7 @@ const GET_CHARACTER_INFO = gql`
       shieldName
       rangeMin
       characterClass {
-        attackStat
-        complexity
-        damage {
-          ...DamageFragment
-        }
-        deflect {
-          ...DeflectFragment
-        }
-        description
-        extra {
-          beastMasterPet {
-            ...BeastmasterPetFragment
-          }
-          forms {
-            ...FormFragment
-          }
-        }
-        health
-        healthOnLevel
-        href
-        shortTitle
-        range {
-          max
-          min
-        }
-        slug
-        stamina
-        staminaOnLevel
-        staminaStat
-        title
-        features {
-          ...CharacterClassFeatureFragment
-        }
-        training {
-          armor
-          magic {
-            options
-            pick
-          }
-          shields
-          weapons {
-            melee {
-              options
-              pick
-            }
-            ranged {
-              options
-              pick
-            }
-            special {
-              options
-              pick
-            }
-          }
-        }
+        ...CharacterClassFragment
       }
       items {
         ...ItemFragment
@@ -150,7 +88,6 @@ const GET_CHARACTER_INFO = gql`
     characterClasses {
       ...CharacterClassFragment
     }
-
     cultures {
       description
       href

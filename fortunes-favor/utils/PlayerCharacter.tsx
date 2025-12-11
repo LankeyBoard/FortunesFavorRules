@@ -765,13 +765,14 @@ export default class PlayerCharacter {
   public get range() {
     if (!this.characterClass)
       throw new Error("Range cannot be calculated without a class");
-    let range = this.characterClass.range;
+    let range = { ...this.characterClass.range };
     if (this.isInForm) range = { min: 0, max: 0 };
     if (
       this.characterClass.slug === "BRAWLER" &&
       this.stats.agility >= this.stats.mettle
     ) {
       range.max = range.max * 2;
+      console.log("Doubling Range", range, this.characterClass.range);
     }
 
     return {

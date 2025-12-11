@@ -343,7 +343,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             );
           });
         }
-        if (data.character.campaign) {
+        if (data.character?.campaign) {
           setCampaignInfo({
             id: data.character.campaign.id,
             title: data.character.campaign.name,
@@ -416,7 +416,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       .setText(
         character.range ? `${character.range.min}-${character.range.max}` : "",
       );
-    form.getTextField("Armor").setText(character.armorName || "");
+    form.getTextField("Armor").setText(character.armor.toString() || "");
     form.getTextField("Counter").setText(character.counter?.toString() || "");
     form.getTextField("Deflect").setText(character.deflect?.toString() || "");
 
