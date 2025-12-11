@@ -1,17 +1,13 @@
 import { gql } from "@apollo/client";
-import DAMAGE_FRAGMENT from "./fragments/Damage.fragment";
-import DEFLECT_FRAGMENT from "./fragments/Deflect.fragment";
 import RULE_TEXT_FRAGMENT from "./fragments/RuleText.fragment";
-import FEATURE_FRAGMENT from "./fragments/Feature.fragment";
+import GENERIC_FEATURE_FRAGMENT from "./fragments/Feature.fragment";
 import CHARACTER_CLASS_FRAGMENT from "../class/fragments/class.fragment";
 import BEASTMASTER_PET_FRAGMENT from "../class/fragments/beastmaster.fragment";
 
 const GET_CHARACTER_OPTIONS = gql`
-  ${DAMAGE_FRAGMENT}
-  ${DEFLECT_FRAGMENT}
   ${RULE_TEXT_FRAGMENT}
   ${BEASTMASTER_PET_FRAGMENT}
-  ${FEATURE_FRAGMENT}
+  ${GENERIC_FEATURE_FRAGMENT}
   ${CHARACTER_CLASS_FRAGMENT}
   query getCharacterOptions {
     characterClasses {

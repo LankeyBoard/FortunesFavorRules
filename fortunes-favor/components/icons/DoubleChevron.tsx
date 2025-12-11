@@ -1,9 +1,13 @@
-const FancyChevron = () => {
+const DoubleChevron: React.FC<React.HTMLAttributes<SVGElement>> = ({
+  ...props
+}) => {
   return (
     <svg
       viewBox="0 0 24 24"
+      height="100px"
+      width="100px"
       xmlns="http://www.w3.org/2000/svg"
-      className="hover:-translate-y-1"
+      className={props.className ? props.className : "hover:-translate-y-1"}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
@@ -26,4 +30,4 @@ const FancyChevron = () => {
   );
 };
 
-export default FancyChevron;
+export default DoubleChevron;
