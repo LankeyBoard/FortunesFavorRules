@@ -59,7 +59,7 @@ const GenericFeaturePicker = ({
         character={character}
         setCharacter={setCharacter}
       />
-      {character.level >= 8 && (
+      {character.level >= 6 && (
         <FeatureSection
           label="Veteran Features"
           genericFeatures={genericFeatures.veteranFeatures}
