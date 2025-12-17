@@ -24,6 +24,10 @@ const CHARACTER_CLASS_FRAGMENT = gql`
       flat
     }
     description
+    img {
+      target
+      style
+    }
     features {
       ...FeatureFragment
     }

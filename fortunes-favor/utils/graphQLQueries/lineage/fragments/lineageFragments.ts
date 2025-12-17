@@ -1,55 +1,13 @@
 import { gql } from "@apollo/client";
+import TRAIT_FRAGMENT from "../../sharedFragments/traitFragment";
 
-const TRAIT_FRAGMENT = gql`
-  fragment TraitFragment on GenericFeature {
-    actionType
-    isVariant
-    simpleChoices: choices {
-      ... on RuleText {
-        type
-        choices
-        text
-      }
-    }
-    complexChoices: choices {
-      ... on FeatureWithoutChoices {
-        href
-        shortTitle
-        actionType
-        costsFortunesFavor
-        multiSelect
-        ruleType
-        shortText
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-      }
-    }
-    costsFortunesFavor
-    href
-    multiSelect
-    ruleType
-    shortText
-    shortTitle
-    slug
-    staminaCost
-    title
-    chooseNum
-    text {
-      choices
-      text
-      type
-    }
-  }
-`;
 export const LINEAGE_FRAGMENT = gql`
   fragment LineageFragment on Lineage {
     description
+    img {
+      target
+      style
+    }
     href
     shortTitle
     size

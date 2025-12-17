@@ -772,7 +772,6 @@ export default class PlayerCharacter {
       this.stats.agility >= this.stats.mettle
     ) {
       range.max = range.max * 2;
-      console.log("Doubling Range", range, this.characterClass.range);
     }
 
     return {

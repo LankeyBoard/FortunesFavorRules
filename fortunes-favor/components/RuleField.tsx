@@ -6,6 +6,7 @@ import { GenericRule } from "../utils/graphQLtypes";
 import SlugLinker from "./blocks/SlugLinker";
 import TextBlock from "./blocks/TextBlock";
 import CopyLink from "./CopyLink";
+import ImgDisplay from "./blocks/ImgDisplay";
 const titleStyler = (depth: number) => {
   switch (depth) {
     case 1:
@@ -74,6 +75,8 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
           {field.slug && depth < 3 && <CopyLink target={field.slug} />}
         </label>
       </div>
+      {field.img && <ImgDisplay img={field.img} altText={field.title} />}
+
       <div className={field.ruleType != RuleType.LIST ? "pb-2" : "pb-2 mx-2"}>
         {field.text != undefined && typeof field.text === "string" && (
           <div className="mt-2">

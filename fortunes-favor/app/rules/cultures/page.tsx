@@ -1,68 +1,12 @@
 import Culture from "@/components/Culture";
-import { gql } from "@apollo/client";
 import client from "@/utils/graphQLclient";
+import GET_ALL_CULTURES from "@/utils/graphQLQueries/culture/allCulturesQuery";
 import { graphQLCulture } from "@/utils/graphQLtypes";
 import { Suspense } from "react";
 
-const query = gql`
-  query GetAllCultures {
-    cultures {
-      description
-      href
-      languages
-      shortTitle
-      slug
-      stat
-      title
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        text {
-          choices
-          text
-          type
-        }
-        title
-      }
-    }
-  }
-`;
 async function CulturePage() {
   const { data } = await client.query({
-    query,
+    query: GET_ALL_CULTURES,
   });
   return (
     <Suspense>

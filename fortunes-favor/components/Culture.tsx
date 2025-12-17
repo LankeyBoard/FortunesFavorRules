@@ -2,6 +2,7 @@ import Link from "next/link";
 import CharacterCulture from "../utils/CharacterCulture";
 import Traits from "./Traits";
 import { graphQLCulture } from "../utils/graphQLtypes";
+import ImgDisplay from "./blocks/ImgDisplay";
 
 type CultureProps = {
   data: graphQLCulture;
@@ -41,6 +42,7 @@ const Culture = ({ data, isList = false }: CultureProps) => {
       </div>
 
       <div className="px-3">
+        {data.img && <ImgDisplay img={data.img} altText={c.title} />}
         <div className="italic">{c.desc}</div>
         <div>
           <span className="font-semibold">Language: </span>

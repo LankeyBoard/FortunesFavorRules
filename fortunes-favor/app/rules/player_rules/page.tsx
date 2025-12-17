@@ -1,87 +1,13 @@
-import Loading from "@/components/blocks/Loading";
 import FullPageLoading from "@/components/FullPageLoading";
 import RuleField from "@/components/RuleField";
 import RuleData from "@/utils/GenericRuleData";
 import client from "@/utils/graphQLclient";
+import GENERAL_RULES_QUERY from "@/utils/graphQLQueries/GeneralRulesQuery";
 import { GenericRule } from "@/utils/graphQLtypes";
-import { gql } from "@apollo/client";
-
-const query = gql`
-  query GetGenericRules {
-    genericRules {
-      href
-      lists {
-        label
-        items
-      }
-      ruleType
-      shortText
-      shortTitle
-      slug
-      title
-      subRules {
-        href
-        lists {
-          label
-          items
-        }
-        ruleType
-        shortText
-        shortTitle
-        subRules {
-          href
-          lists {
-            label
-            items
-          }
-          ruleType
-          shortText
-          shortTitle
-          slug
-          text {
-            text
-            type
-            choices
-          }
-          title
-          subRules {
-            href
-            lists {
-              label
-              items
-            }
-            ruleType
-            shortText
-            shortTitle
-            slug
-            text {
-              text
-              type
-              choices
-            }
-            title
-          }
-        }
-        slug
-        text {
-          choices
-          text
-          type
-        }
-        title
-      }
-      text {
-        choices
-        text
-        type
-      }
-    }
-  }
-`;
 
 async function GeneralRule() {
-  const { data, loading, error } = await client.query({
-    query,
+  const { data, error } = await client.query({
+    query: GENERAL_RULES_QUERY,
   });
   const rules: GenericRule[] = [];
   data.genericRules.forEach((rule: any) => {
@@ -93,14 +19,17 @@ async function GeneralRule() {
         rule.text,
         rule.subRules,
         rule.lists,
+        rule.shortText,
+        rule.img,
       ),
     );
   });
-  if (loading || !data) {
+  if (!data && !error) {
     return <FullPageLoading />;
   } else if (error) {
     return <div>Error: {error.message}</div>;
   }
+  console.log("Data", data);
   return (
     <>
       {rules.map((rule) => {
@@ -112,6 +41,7 @@ async function GeneralRule() {
           subRules: rule.subRules,
           lists: rule.lists,
           shortText: rule.shortText,
+          img: rule.img,
         };
         return <RuleField field={plainRule} depth={1} key={rule.slug} />;
       })}

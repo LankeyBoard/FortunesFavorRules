@@ -1,69 +1,13 @@
 import Culture from "@/components/Culture";
-import { gql } from "@apollo/client";
 import client from "@/utils/graphQLclient";
 import { graphQLCulture } from "@/utils/graphQLtypes";
 import { Suspense } from "react";
+import FIND_CULTURE from "@/utils/graphQLQueries/culture/cultureBySlugQuery";
 
-const query = gql`
-  query FindCulture($slug: String) {
-    cultures(slug: $slug) {
-      description
-      href
-      languages
-      shortTitle
-      slug
-      stat
-      title
-      traits {
-        actionType
-        simpleChoices: choices {
-          ... on RuleText {
-            type
-            choices
-            text
-          }
-        }
-        complexChoices: choices {
-          ... on FeatureWithoutChoices {
-            href
-            shortTitle
-            actionType
-            costsFortunesFavor
-            multiSelect
-            ruleType
-            shortText
-            slug
-            staminaCost
-            title
-            text {
-              choices
-              text
-              type
-            }
-          }
-        }
-        costsFortunesFavor
-        href
-        multiSelect
-        ruleType
-        shortText
-        shortTitle
-        slug
-        staminaCost
-        text {
-          choices
-          text
-          type
-        }
-        title
-      }
-    }
-  }
-`;
 async function SingleCulturePage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const { data } = await client.query({
-    query,
+    query: FIND_CULTURE,
     variables: { slug: params.slug },
   });
   return (

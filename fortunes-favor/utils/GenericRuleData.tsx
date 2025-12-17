@@ -10,6 +10,10 @@ export default class RuleData implements GenericRule {
   subRules: RuleData[];
   lists: { label?: string; items: string[] }[];
   shortText?: string;
+  img?: {
+    target: string;
+    style?: string;
+  };
 
   constructor(
     title: string,
@@ -19,6 +23,10 @@ export default class RuleData implements GenericRule {
     rules: RuleData[],
     lists: { label?: string; items: string[] }[],
     shortText?: string,
+    img?: {
+      target: string;
+      style?: string;
+    },
   ) {
     this.title = title;
     this.slug = slug;
@@ -27,5 +35,6 @@ export default class RuleData implements GenericRule {
     this.subRules = rules;
     this.lists = lists;
     this.shortText = shortText;
+    this.img = img;
   }
 }
