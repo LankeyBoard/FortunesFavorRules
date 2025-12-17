@@ -5,6 +5,7 @@ import Traits from "./Traits";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
 import RightArrow from "./icons/RightArrow";
 import LeftArrow from "./icons/LeftArrow";
+import ImgDisplay from "./blocks/ImgDisplay";
 
 type LineageProps = {
   data: LineageType;
@@ -85,6 +86,7 @@ const Lineage = ({
         )}
       </div>
       <div className="px-3">
+        {data.img && <ImgDisplay img={data.img} altText={lineageRules.title} />}
         <div className="italic">{lineageRules.desc}</div>
         <div>
           <span className="font-semibold">Size: </span>{" "}

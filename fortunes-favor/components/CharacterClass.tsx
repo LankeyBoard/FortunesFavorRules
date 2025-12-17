@@ -10,6 +10,7 @@ import TextBlock from "./blocks/TextBlock";
 import BeastDisplay from "./blocks/BeastmasterBeastDisplay";
 import Link from "next/link";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
+import ImgDisplay from "./blocks/ImgDisplay";
 
 type featureProps = {
   feature: CharacterFeature;
@@ -359,6 +360,9 @@ const ClassRule = ({ data, variant }: classProps) => {
     <div id={classRules.slug}>
       <ClassTitleAndTags classRules={classRules} variants={variantLinks} />
       <div className="clear-both">
+        {data.img && (
+          <ImgDisplay img={data.img} altText={classRules.title + " Image"} />
+        )}
         <div className="mx-3">
           <p className="italic">{classRules.description}</p>
         </div>

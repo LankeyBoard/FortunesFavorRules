@@ -1,10 +1,4 @@
-import {
-  ActionType,
-  ComplexityOptions,
-  RuleType,
-  SizeOptions,
-  StatOptions,
-} from "./enums";
+import { ActionType, ComplexityOptions, RuleType, StatOptions } from "./enums";
 
 export type SearchResult = {
   title: string;
@@ -18,6 +12,11 @@ export type RuleText = {
   choices?: string[];
 };
 
+type img = {
+  target: string;
+  style?: string;
+};
+
 export type GenericRule = {
   title: string;
   slug: string;
@@ -26,12 +25,14 @@ export type GenericRule = {
   subRules: GenericRule[];
   lists: { label?: string; items: string[] }[];
   shortText?: string;
+  img?: img;
 };
 
 export type graphQLCulture = {
   title: string;
   slug: string;
   description: string[];
+  img?: img;
   stat: string;
   languages: string;
   traits: GenericRule[];
@@ -126,6 +127,7 @@ export type CharacterClass = {
   slug: string;
   complexity?: ComplexityOptions;
   description: string[];
+  img?: img;
   health: number;
   healthOnLevel: number;
   stamina: number;
