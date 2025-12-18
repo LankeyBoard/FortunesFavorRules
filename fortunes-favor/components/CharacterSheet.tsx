@@ -2,8 +2,9 @@
 
 import client from "@/utils/graphQLclient";
 import { useMutation } from "@apollo/client";
-import { useState, useEffect } from "react";
-import { PDFDocument, rgb } from "pdf-lib";
+import { useState, useEffect, useRef } from "react";
+import { PDFDocument } from "pdf-lib";
+import * as Sentry from "@sentry/react";
 
 import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
 import CharacterCoreInfo from "./blocks/CharacterSheetComponents/CharacterCoreInfo";
@@ -46,7 +47,7 @@ import Edit from "./icons/Edit";
 import Print from "./icons/Print";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
-  console.log(data);
+  console.debug("extractPlayerCharacter input data", data);
   const characterClass = new CharacterClassData(data.character.characterClass);
   const culture = new CharacterCulture(data.character.characterCulture);
   const lineage = new CharacterLineage(data.character.characterLineage);
@@ -91,7 +92,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
       item.effects,
     );
   });
-  console.log(character);
+  console.debug("extractPlayerCharacter returned", character);
   return character;
 };
 
@@ -266,36 +267,51 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   const router = useRouter();
 
   const saveCharacter = async (character: PlayerCharacter) => {
-    console.log("saveCharacter character id", character.id);
-    if (character.id) {
-      const { data } = await updateCharacter({
-        variables: {
-          id: character.id,
-          characterInputs: convertPlayerCharacterToGraphInput(character),
-        },
-      });
-      console.log("character updated", data);
-      return data;
-    } else {
-      const { data } = await createCharacter({
-        variables: {
-          characterInputs: convertPlayerCharacterToGraphInput(character),
-        },
-      });
-      console.log("character created", data);
-      if (!data.createCharacter.id) throw new Error("Error creating character");
-      const newCharacter = new PlayerCharacter(
-        undefined,
-        undefined,
-        undefined,
-        character,
-      );
-      newCharacter.id = data.createCharacter.id;
-      setCharacter(newCharacter);
-      router.replace(`/characters/${data.createCharacter.id}`);
-      return data;
+    try {
+      console.log("saveCharacter character id", character.id);
+      if (character.id) {
+        const { data } = await updateCharacter({
+          variables: {
+            id: character.id,
+            characterInputs: convertPlayerCharacterToGraphInput(character),
+          },
+        });
+        console.log("character updated", data);
+        Sentry.captureMessage("Character updated successfully", {
+          level: "info",
+          extra: { characterId: character.id },
+        });
+        return data;
+      } else {
+        const { data } = await createCharacter({
+          variables: {
+            characterInputs: convertPlayerCharacterToGraphInput(character),
+          },
+        });
+        console.log("character created", data);
+        if (!data.createCharacter.id)
+          throw new Error("Error creating character");
+        const newCharacter = new PlayerCharacter(
+          undefined,
+          undefined,
+          undefined,
+          character,
+        );
+        newCharacter.id = data.createCharacter.id;
+        setCharacter(newCharacter);
+        router.replace(`/characters/${data.createCharacter.id}`);
+        Sentry.captureMessage("Character created successfully", {
+          level: "info",
+          extra: { characterId: data.createCharacter.id },
+        });
+        return data;
+      }
+    } catch (error) {
+      Sentry.captureException(error);
+      throw error;
     }
   };
+
   // load character if there is a characterId otherwise only load character options.
   useEffect(() => {
     const fetchData = async () => {
@@ -304,7 +320,11 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
-        console.log("Data", data);
+        console.debug("Character Sheet GraphQL Data", data);
+        Sentry.captureMessage("Character data loaded successfully", {
+          level: "info",
+          extra: { characterId },
+        });
         const genericFeatures = extractGenericFeatures(data);
         if (characterId) {
           if (data.me.id === data.character.createdBy.id)
@@ -361,19 +381,31 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         }
       } catch (error) {
         setLoadingError(error);
+        Sentry.captureException(error);
       }
     };
     fetchData();
   }, [characterId]);
 
+  // Add a ref to store the previous character state
+  const prevCharacterRef = useRef<PlayerCharacter | undefined>(undefined);
+
   // save updates to the backend of an existing character.
   useEffect(() => {
     if (character && character.id) {
-      const debouncedSave = debounce(() => {
-        console.log("Saving character to DB", character);
-        saveCharacter(character);
-      }, 2000);
-      debouncedSave();
+      // checks if the character has actually changed. prevCharacterRef.current is undefined when the page loads.
+      const hasCharacterChanged =
+        prevCharacterRef.current != undefined &&
+        JSON.stringify(character) !== JSON.stringify(prevCharacterRef.current);
+
+      if (hasCharacterChanged) {
+        const debouncedSave = debounce(() => {
+          console.info("Saving character to DB", character);
+          saveCharacter(character);
+        }, 2000);
+        debouncedSave();
+      }
+      prevCharacterRef.current = character; // Update the ref with the current character
     }
   }, [character]);
 

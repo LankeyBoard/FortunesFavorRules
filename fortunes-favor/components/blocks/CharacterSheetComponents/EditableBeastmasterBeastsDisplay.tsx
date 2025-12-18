@@ -13,7 +13,6 @@ interface EditableBeastmasterBeastsDisplayProps {
 const EditableBeastmasterBeastsDisplay: React.FC<
   EditableBeastmasterBeastsDisplayProps
 > = ({ character, setCharacter, isEditable }) => {
-  console.log("beastmaster loaded");
   if (!character?.characterClass?.extra?.beastMasterPet) return <></>;
   let beasts: JSX.Element | undefined = undefined;
   if (character.beast) {

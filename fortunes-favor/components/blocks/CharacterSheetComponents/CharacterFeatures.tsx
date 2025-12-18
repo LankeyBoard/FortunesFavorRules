@@ -56,7 +56,6 @@ const CharacterFeatures = ({
   const [areExpanded, setExpanded] = useState(false);
   const [showGenericFeaturesModal, setShowGenericFeaturesModal] =
     useState(false);
-  console.log("features", features);
   return (
     <>
       <div>
