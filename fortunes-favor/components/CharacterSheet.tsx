@@ -423,7 +423,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     // Populate features and items
     form.getTextField("Actions").setText(character.actions.toString());
     form.getTextField("Counters").setText(character.counters.toString());
-    form.getTextField("Features").setText(character.features.toString());
+    form.getTextField("Features").setText(character.printFeaturesRules());
     form
       .getTextField("Items")
       .setText(
