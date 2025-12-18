@@ -86,14 +86,16 @@ const downgradeBaseDamage = (damage: {
 const featureToText = (
   feature: PlayerCharacterFeature,
   selectedChoices: string[],
+  showAllText: boolean = true,
 ): string => {
-  const featureText = `${feature.title}: ${feature.text?.map((text) => text.text).join(" ")}`;
-  console.log(
-    "featureToText",
-    feature.choices,
-    selectedChoices,
-    feature.chosen,
-  );
+  const featureText = showAllText
+    ? `${feature.title}: ${feature.text?.map((text) => text.text).join(" ")}`
+    : `${feature.title}: ${feature.text
+        ?.filter(
+          (text) => text.type == undefined || text.type === RuleType.RULE,
+        )
+        .map((text) => text.text)
+        .join(" ")}`;
   const filteredChoices = feature.choices
     .filter((choice) =>
       "slug" in choice
@@ -821,6 +823,13 @@ export default class PlayerCharacter {
           ?.map((feature) => featureToText(feature, this.choices))
           .join("\n"),
     });
+  }
+  public printFeaturesRules(): string {
+    if (!this._features) return "";
+    this.sortFeatures();
+    return this.features
+      .map((f) => featureToText(f, this.choices, false))
+      .join("\n");
   }
   public get languages() {
     return this._languages;
