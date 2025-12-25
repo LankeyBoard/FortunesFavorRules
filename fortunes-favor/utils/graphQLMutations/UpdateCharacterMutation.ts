@@ -41,7 +41,6 @@ const UPDATE_CHARACTER_MUTATION = gql`
       baseDamage
       rangeMin
       rangeMax
-      featureChoiceSlugs
     }
   }
 `;

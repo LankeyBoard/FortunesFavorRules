@@ -1,8 +1,7 @@
-import { TextField } from "../utils/FieldTypes";
-import GenericFeatureData from "../utils/GenericFeatureData";
+import GenericFeature from "../utils/GenericFeature";
 import TextBlock from "./blocks/TextBlock";
 
-export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
+export const FeatureLi = ({ feature }: { feature: GenericFeature }) => {
   return (
     <div
       className="py-2 px-5 even:bg-slate-300 dark:even:bg-slate-800"
@@ -17,24 +16,18 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
           <div className="ml-5 mt-2">
             <ul>
               {feature.choices.map((choice) => {
-                if (choice instanceof TextField) {
+                if (!choice || !choice.choice) return;
+                if ("slug" in choice.choice) {
                   return (
-                    <li key={choice.text}>
-                      <span className="text-amber-600">- </span>
-                      {choice.text}
+                    <li key={choice.choice.slug}>
+                      <TextBlock text={choice.choice.text} inline={true} />
                     </li>
                   );
-                } else if (typeof choice === "string") {
+                } else {
                   return (
-                    <li key={choice}>
+                    <li key={choice.choice.text}>
                       <span className="text-amber-600">- </span>
-                      {choice}
-                    </li>
-                  );
-                } else if ("slug" in choice) {
-                  return (
-                    <li key={choice.slug}>
-                      <TextBlock text={choice.text} inline={true} />
+                      <TextBlock text={[choice.choice]} inline={true} />
                     </li>
                   );
                 }
@@ -54,14 +47,14 @@ export const FeatureLi = ({ feature }: { feature: GenericFeatureData }) => {
 };
 
 type genericFeaturesProps = {
-  generic_feature_data: GenericFeatureData[];
+  genericFeatures: GenericFeature[];
 };
 
-const GenericFeatures = ({ generic_feature_data }: genericFeaturesProps) => {
+const GenericFeatures = ({ genericFeatures }: genericFeaturesProps) => {
   return (
     <div className="divide-slate-700 divide-y">
-      {generic_feature_data.map((feature: GenericFeatureData) => {
-        return <FeatureLi feature={feature} key={feature.title} />;
+      {genericFeatures.map((feature: GenericFeature) => {
+        return <FeatureLi feature={feature} key={feature.slug} />;
       })}
     </div>
   );

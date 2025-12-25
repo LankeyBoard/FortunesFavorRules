@@ -22,7 +22,6 @@ import debounce from "@/utils/debounce";
 import TextInput from "./blocks/Inputs/TextInput";
 import CharacterClass from "@/utils/CharacterClass";
 import {
-  ActionType,
   findEnumKey,
   findEnumValue,
   Rarity,
@@ -31,6 +30,7 @@ import {
 } from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
+  ChoiceData,
   GetCharacterData,
 } from "@/utils/graphQLQueries/playerCharacterQueries/PlayerCharacterQuery";
 import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterMutation";
@@ -45,6 +45,7 @@ import Link from "next/link";
 import Save from "./icons/Save";
 import Edit from "./icons/Edit";
 import Print from "./icons/Print";
+import convertToChoices from "@/utils/convertToChoices";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.debug("extractPlayerCharacter input data", data);
@@ -113,20 +114,7 @@ const extractGenericFeatures = (
       findEnumValue(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
-      feature.complexChoices
-        ? feature.complexChoices.length > 0
-          ? feature.complexChoices?.map((choice) => {
-              return {
-                ...choice,
-                ruleType: findEnumValue(choice.ruleType, RuleType),
-                actionType: findEnumValue(choice.actionType, ActionType),
-              };
-            })
-          : feature.simpleChoices
-            ? feature.simpleChoices
-            : []
-        : [],
-      [],
+      convertToChoices(feature.choices),
       feature.chooseNum,
       false,
       feature.shortText,
@@ -142,20 +130,7 @@ const extractGenericFeatures = (
       findEnumValue(feature.ruleType, RuleType),
       feature.text,
       feature.multiSelect,
-      feature.complexChoices
-        ? feature.complexChoices.length > 0
-          ? feature.complexChoices?.map((choice) => {
-              return {
-                ...choice,
-                ruleType: findEnumValue(choice.ruleType, RuleType),
-                actionType: findEnumValue(choice.actionType, ActionType),
-              };
-            })
-          : feature.simpleChoices
-            ? feature.simpleChoices
-            : []
-        : [],
-      [],
+      convertToChoices(feature.choices),
       feature.chooseNum,
       false,
       feature.shortText,
@@ -189,12 +164,12 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     baseDamage: character.baseDamage?.count || 0,
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
-    featureChoiceSlugs: character.choices,
+    chosen: character.getChosenGraphQLInput(),
     items: character.items.map((item) => {
       return {
         ...item,
         text: item.text.map((text) => {
-          return { text: text.text, type: text.type, choices: text.choices };
+          return { text: text.text, type: text.type };
         }),
         effects:
           item.effects?.map((effect) => {
@@ -329,16 +304,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         if (characterId) {
           if (data.me.id === data.character.createdBy.id)
             setViewMode(CharacterSheetViewMode.Owner);
-          setCharacter(
-            extractPlayerCharacter(data)
-              .updateChoices(data.character.featureChoiceSlugs)
-              .extractGenericFeaturesFromChoices(
-                data.character.featureChoiceSlugs,
-                genericFeatures.noviceFeatures.concat(
-                  genericFeatures.veteranFeatures,
-                ),
-              ),
-          );
+          setCharacter(extractPlayerCharacter(data));
         }
         const charOptions: CharacterOptions = {
           characterClasses: [],

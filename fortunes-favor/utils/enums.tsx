@@ -95,3 +95,11 @@ export enum RechargeOn {
   NIGHTS_REST = "Night's Rest",
   REST_AND_RECUPERATE = "Rest & Recuperate",
 }
+
+export enum Choice {
+  SHIFTER_FORM = "shifterForm",
+  BEASTMASTER_BEAST = "beastmasterBeast",
+  NOVICE_FEATURE = "noviceFeature",
+  VETERAN_FEATURE = "veteranFeature",
+  LANGUAGE = "language",
+}

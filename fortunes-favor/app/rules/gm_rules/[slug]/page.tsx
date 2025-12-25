@@ -39,7 +39,6 @@ const query = gql`
           text {
             text
             type
-            choices
           }
           title
           subRules {
@@ -55,21 +54,18 @@ const query = gql`
             text {
               text
               type
-              choices
             }
             title
           }
         }
         slug
         text {
-          choices
           text
           type
         }
         title
       }
       text {
-        choices
         text
         type
       }

@@ -4,6 +4,7 @@ import PlayerCharacter, {
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TextBlock from "./TextBlock";
 import { CharacterSheetViewMode } from "../CharacterSheet";
+import { RuleText } from "@/utils/graphQLtypes";
 
 type FeatureCardProps = {
   feature: PlayerCharacterFeature;
@@ -15,17 +16,11 @@ type FeatureCardProps = {
 };
 
 export const hasInsufficientChoices = (
-  selectedSlugs: string[],
   choices: PlayerCharacterFeature["choices"],
   chooseNum: number,
 ): boolean => {
-  const matchingChoices = choices.filter(
-    (choice) =>
-      ("slug" in choice && selectedSlugs.includes(choice.slug)) ||
-      ("text" in choice &&
-        typeof choice.text === "string" &&
-        selectedSlugs.includes(choice.text)),
-  );
+  if (!choices) return false;
+  const matchingChoices = choices.filter((choice) => choice.isChosen);
   return matchingChoices.length < chooseNum;
 };
 
@@ -92,11 +87,7 @@ const FeatureCard = ({
   const [cardFeature, setFeature] = useState(feature);
   const [showAllChoices, setShowAllChoices] = useState(
     character
-      ? hasInsufficientChoices(
-          character.choices,
-          feature.choices,
-          feature.chooseNum,
-        )
+      ? hasInsufficientChoices(feature.choices, feature.chooseNum)
       : true,
   );
   const [isOpen, setOpen] = useState(isExpanded);
@@ -113,18 +104,16 @@ const FeatureCard = ({
       feature.text,
       feature.multiSelect,
       feature.choices,
-      feature.chosen,
       feature.chooseNum,
       feature.isVariant,
       feature.shortText,
       feature.level,
     );
     if (!showAllChoices) {
-      newFeature.choices = newFeature.choices.filter((choice) => {
-        if ("slug" in choice) {
-          return newFeature.chosen.includes(choice.slug);
-        }
-      });
+      if (newFeature.choices)
+        newFeature.choices = newFeature.choices.filter(
+          (choice) => choice.isChosen,
+        );
       setFeature(newFeature);
     }
   }, [feature, showAllChoices]);
@@ -160,25 +149,23 @@ const FeatureCard = ({
             {cardFeature.choices && cardFeature.choices.length > 0 && (
               <div>
                 {cardFeature.choices.map((choice) => {
-                  if (typeof choice.text === "string") {
-                    return <p key={choice.text}>{choice.text}</p>;
-                  } else if ("slug" in choice) {
+                  if (!choice || !choice.choice) return;
+                  if ("slug" in choice.choice) {
                     return (
                       <div
-                        key={choice.slug}
-                        id={choice.slug}
+                        key={choice.choice.slug}
+                        id={choice.choice.slug}
                         className={
-                          cardFeature.chosen.includes(choice.slug)
+                          choice.isChosen
                             ? selectedChoiceStyle
                             : deselectedChoiceStyle
                         }
                         onClick={(click) => {
                           if (viewMode === CharacterSheetViewMode.Owner) {
-                            if (
-                              feature.chosen.includes(click.currentTarget.id)
-                            ) {
-                              feature.removeChoice(click.currentTarget.id);
-                            } else feature.addChoice(click.currentTarget.id);
+                            if (feature.isSlugChosen(click.currentTarget.id)) {
+                              console.log("REMOVE CHOSEN");
+                              feature.removeChosen(click.currentTarget.id);
+                            } else feature.addChosen(click.currentTarget.id);
                             setFeature(
                               new PlayerCharacterFeature(
                                 feature.title,
@@ -189,7 +176,6 @@ const FeatureCard = ({
                                 feature.text,
                                 feature.multiSelect,
                                 feature.choices,
-                                feature.chosen,
                                 feature.chooseNum,
                                 feature.isVariant,
                                 feature.shortText,
@@ -212,17 +198,36 @@ const FeatureCard = ({
                           }
                         }}
                       >
-                        <h3 className="font-semibold">{choice.title}</h3>
-                        {choice.staminaCost > 0 && (
+                        <h3 className="font-semibold">{choice.choice.title}</h3>
+                        {choice.choice.staminaCost > 0 && (
                           <span id="StaminaCost" className="font-light mx-2">
-                            Stamina: {choice.staminaCost}
+                            Stamina: {choice.choice.staminaCost}
                           </span>
                         )}
-                        {choice.costsFortunesFavor && (
+
+                        {choice.choice.costsFortunesFavor && (
                           <span id="FortuneCost">Fortune&apos;s Favor</span>
                         )}
-                        <TextBlock text={choice.text} style="mx-2 font-light" />
+
+                        {choice.choice.text && (
+                          <TextBlock
+                            text={
+                              choice.choice.text.filter(
+                                (t) => t != undefined && t.text != undefined,
+                              ) as RuleText[]
+                            }
+                            style="mx-2 font-light"
+                          />
+                        )}
                       </div>
+                    );
+                  } else {
+                    return (
+                      <TextBlock
+                        key={choice.choice.join(", ")}
+                        text={choice.choice}
+                        style="mx-2 font-light"
+                      />
                     );
                   }
                 })}

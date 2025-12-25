@@ -4,11 +4,12 @@ import {
   FeatureWithoutChoices,
   RuleText,
 } from "./graphQLtypes";
-import GenericFeatureData from "./GenericFeatureData";
+import GenericFeature from "./GenericFeature";
 import { FeatureSource, PlayerCharacterFeature } from "./PlayerCharacter";
+import convertToChoices from "./convertToChoices";
 
 export default class CharacterFeatureData
-  extends GenericFeatureData
+  extends GenericFeature
   implements CharacterClassFeature
 {
   level: number;
@@ -44,16 +45,8 @@ export default class CharacterFeatureData
       }
     }
     this.text = feature_data.text;
-    this.choices = [];
+    this.choices = convertToChoices(feature_data.choices);
     this.chooseNum = feature_data.chooseNum;
-    feature_data.simpleChoices?.forEach((choice: RuleText) => {
-      if (choice.text) this.choices.push(choice);
-    });
-    feature_data.complexChoices?.forEach((choice: FeatureWithoutChoices) => {
-      if (choice.title != null) {
-        this.choices.push(choice);
-      }
-    });
   }
   toPlayerFeature = (source: Object) => {
     let f = {
@@ -78,7 +71,6 @@ export default class CharacterFeatureData
       this.text,
       this.multiSelect,
       this.choices,
-      [],
       this.chooseNum,
       this.isVariant,
       this.shortText,

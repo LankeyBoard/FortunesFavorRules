@@ -162,7 +162,7 @@ const CharacterItems = ({
       {character.items.length > 0 ? (
         character.items.map((item, i) => (
           <ItemCardSection
-            key={item.id}
+            key={item.id + item.title}
             item={item}
             updateItemBuilder={updateItemBuilder}
             deleteItemBuilder={deleteItemBuilder}

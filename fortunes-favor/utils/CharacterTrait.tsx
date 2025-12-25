@@ -1,11 +1,8 @@
+import convertToChoices from "./convertToChoices";
 import { RuleType } from "./enums";
 import { TextField } from "./FieldTypes";
-import {
-  FeatureChoices,
-  FeatureWithoutChoices,
-  GenericFeature,
-  RuleText,
-} from "./graphQLtypes";
+import { GenericFeature } from "./graphQLtypes";
+import featureChoice from "./types/featureChoice";
 
 export class CharacterTrait implements GenericFeature {
   title: string;
@@ -15,7 +12,7 @@ export class CharacterTrait implements GenericFeature {
   list: string[];
   shortText?: string | undefined;
   multiSelect: boolean;
-  choices: FeatureChoices[];
+  choices: featureChoice[];
   chooseNum: number;
   isVariant: boolean;
   constructor(data: any) {
@@ -27,15 +24,7 @@ export class CharacterTrait implements GenericFeature {
     this.shortText = data.shortText;
     this.multiSelect = data.multiSelect;
     this.chooseNum = data.chooseNum | 0;
-    this.choices = [];
-    data.simpleChoices?.forEach((choice: RuleText) => {
-      if (choice.text) this.choices.push(choice);
-    });
-    data.complexChoices?.forEach((choice: FeatureWithoutChoices) => {
-      if (choice.title != null) {
-        this.choices.push(choice);
-      }
-    });
+    this.choices = convertToChoices(data.choices);
     this.isVariant = data.isVariant || false;
   }
 }
