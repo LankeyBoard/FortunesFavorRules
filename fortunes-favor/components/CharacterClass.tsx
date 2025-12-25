@@ -82,10 +82,7 @@ const FeatureDisplay = ({ feature }: featureProps) => {
                 );
               } else {
                 return (
-                  <TextBlock
-                    key={choice.choice.join(" ")}
-                    text={choice.choice}
-                  />
+                  <TextBlock key={choice.choice.text} text={[choice.choice]} />
                 );
               }
             })}

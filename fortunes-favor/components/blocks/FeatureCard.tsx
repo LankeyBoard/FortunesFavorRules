@@ -224,8 +224,8 @@ const FeatureCard = ({
                   } else {
                     return (
                       <TextBlock
-                        key={choice.choice.join(", ")}
-                        text={choice.choice}
+                        key={choice.choice.text}
+                        text={[choice.choice]}
                         style="mx-2 font-light"
                       />
                     );

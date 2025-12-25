@@ -43,8 +43,8 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
               }
               return (
                 <TextBlock
-                  key={choice.choice.at(0)?.text}
-                  text={choice.choice}
+                  key={choice.choice.text}
+                  text={[choice.choice]}
                   style="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
                 />
               );

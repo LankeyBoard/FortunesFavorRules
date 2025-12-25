@@ -13,7 +13,7 @@ const filterChoicesToChosen = (
       if (!c.choice)
         throw new Error("Cannot filter choices without choice field");
       if ("slug" in c.choice) return c.choice.slug;
-      else return c.choice.join(" ");
+      else return c.choice.text;
     });
   return chosen.filter((c) => c != undefined);
 };

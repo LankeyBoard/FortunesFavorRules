@@ -102,7 +102,7 @@ const featureToText = (
     .map((choice) => {
       if ("slug" in choice.choice) {
         return `\t${choice.choice.title}: ${choice.choice.text.map((text) => text?.text).join(" ")}`;
-      } else return choice.choice.join(" ");
+      } else return choice.choice.text;
     })
     .join("\n");
   if (strChoices) return featureText + "\n" + strChoices;
@@ -935,10 +935,7 @@ export default class PlayerCharacter {
             const updatedChoices = feature.choices.map((choice) => {
               if ("slug" in choice.choice)
                 choice.isChosen = choices.includes(choice.choice.slug);
-              else if ("text" in choice.choice)
-                choice.isChosen = choice.choice.some((text) =>
-                  choices.includes(text.text),
-                );
+              else choice.isChosen = choices.includes(choice.choice.text);
               return choice;
             });
             return new PlayerCharacterFeature(
@@ -1099,7 +1096,7 @@ export default class PlayerCharacter {
           .map((f) => {
             return {
               featureSlug: feature.slug,
-              choiceSlug: "slug" in f.choice ? f.choice.slug : f.choice[0].text,
+              choiceSlug: "slug" in f.choice ? f.choice.slug : f.choice.text,
             };
           }),
       );
