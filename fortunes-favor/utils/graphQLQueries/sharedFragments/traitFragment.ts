@@ -1,34 +1,13 @@
 import { gql } from "@apollo/client";
+import CHOICE_FRAGMENT from "./choiceFragment";
 
 const TRAIT_FRAGMENT = gql`
+  ${CHOICE_FRAGMENT}
   fragment TraitFragment on GenericFeature {
     actionType
     isVariant
-    simpleChoices: choices {
-      ... on RuleText {
-        type
-        choices
-        text
-      }
-    }
-    complexChoices: choices {
-      ... on FeatureWithoutChoices {
-        href
-        shortTitle
-        actionType
-        costsFortunesFavor
-        multiSelect
-        ruleType
-        shortText
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-      }
+    choices {
+      ...ChoiceFragment
     }
     costsFortunesFavor
     href
@@ -41,7 +20,6 @@ const TRAIT_FRAGMENT = gql`
     title
     chooseNum
     text {
-      choices
       text
       type
     }

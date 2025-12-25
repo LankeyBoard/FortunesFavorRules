@@ -1,14 +1,15 @@
 import { RuleType } from "./enums";
-import { FeatureChoices, GenericFeature, RuleText } from "./graphQLtypes";
+import featureChoice from "./types/featureChoice";
+import Text from "./types/text";
 
-export default class GenericFeatureData implements GenericFeature {
+export default class GenericFeature {
   title: string;
   slug: string;
   ruleType: RuleType;
-  text: RuleText[];
+  text: Text[];
   shortText?: string;
   multiSelect: boolean;
-  choices: FeatureChoices[];
+  choices: featureChoice[];
   chooseNum: number;
   isVariant: boolean;
 
@@ -16,9 +17,9 @@ export default class GenericFeatureData implements GenericFeature {
     title: string,
     slug: string,
     ruleType: RuleType,
-    text: RuleText[],
+    text: Text[],
     multiSelect: boolean,
-    choices: FeatureChoices[],
+    choices: featureChoice[],
     chooseNum: number,
     isVariant?: boolean,
     shortText?: string,
@@ -29,7 +30,7 @@ export default class GenericFeatureData implements GenericFeature {
     this.text = text;
     this.shortText = shortText;
     this.multiSelect = multiSelect;
-    this.choices = choices;
+    this.choices = choices.filter((c) => c.choice != undefined);
     this.chooseNum = chooseNum;
     this.isVariant = isVariant ?? false;
   }

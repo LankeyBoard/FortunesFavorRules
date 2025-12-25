@@ -2,36 +2,21 @@ import { gql } from "@apollo/client";
 import client from "@/utils/graphQLclient";
 import GenericFeatures from "@/components/GenericFeatures";
 import { Suspense } from "react";
+import CHOICE_FRAGMENT from "@/utils/graphQLQueries/sharedFragments/choiceFragment";
+import GenericFeatureData from "@/utils/types/genericFeatureData";
+import GenericFeature from "@/utils/GenericFeature";
+import convertToChoices from "@/utils/convertToChoices";
+import RULE_TEXT_FRAGMENT from "@/utils/graphQLQueries/playerCharacterQueries/fragments/RuleText.fragment";
+import GenericFeaturePage from "@/components/pages/GenericFeaturesPage";
 
 const query = gql`
-  query GetNoviceFeatures {
+  ${RULE_TEXT_FRAGMENT}
+  ${CHOICE_FRAGMENT}
+  query noviceFeatures {
     universalFeatures(featureType: NOVICE) {
       actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
+      choices {
+        ...ChoiceFragment
       }
       chooseNum
       featureType
@@ -45,29 +30,16 @@ const query = gql`
       staminaCost
       title
       text {
-        choices
-        text
-        type
+        ...RuleTextFragment
       }
     }
   }
 `;
 async function NoviceFeaturesPage() {
-  const { data } = await client.query({
+  const { data }: { data: GenericFeatureData } = await client.query({
     query,
   });
-  return (
-    <div className="grid grid-cols-1 divide-y-2 divide-slate-500 mb-2">
-      <div id="novice_features">
-        <div className="text-3xl tracking-wide font-bold py-4 px-5 bg-fuchsia-300 dark:bg-fuchsia-900">
-          Novice Features
-        </div>
-        <Suspense>
-          <GenericFeatures generic_feature_data={data.universalFeatures} />
-        </Suspense>
-      </div>
-    </div>
-  );
+  return <GenericFeaturePage data={data} title="Novice Features" />;
 }
 
 export default NoviceFeaturesPage;

@@ -1,34 +1,13 @@
 import { gql } from "@apollo/client";
+import CHOICE_FRAGMENT from "../../sharedFragments/choiceFragment";
 
 const CLASS_FEATURE_FRAGMENT = gql`
+  ${CHOICE_FRAGMENT}
   fragment FeatureFragment on CharacterClassFeature {
     actionType
     isVariant
-    simpleChoices: choices {
-      ... on RuleText {
-        type
-        choices
-        text
-      }
-    }
-    complexChoices: choices {
-      ... on FeatureWithoutChoices {
-        href
-        shortTitle
-        actionType
-        costsFortunesFavor
-        multiSelect
-        ruleType
-        shortText
-        slug
-        staminaCost
-        title
-        text {
-          choices
-          text
-          type
-        }
-      }
+    choices {
+      ...ChoiceFragment
     }
     chooseNum
     costsFortunesFavor
@@ -41,7 +20,6 @@ const CLASS_FEATURE_FRAGMENT = gql`
     slug
     staminaCost
     text {
-      choices
       text
       type
     }

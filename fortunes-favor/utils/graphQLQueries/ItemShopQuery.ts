@@ -21,7 +21,6 @@ export const GET_ITEM_SHOP = gql`
         text {
           text
           type
-          choices
         }
         effects {
           target
@@ -47,7 +46,6 @@ export const GET_ITEM_SHOP = gql`
         text {
           text
           type
-          choices
         }
         effects {
           target

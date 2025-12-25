@@ -13,7 +13,6 @@ export const FEATURE_WITHOUT_CHOICES_FRAGMENT = gql`
     staminaCost
     title
     text {
-      choices
       text
       type
     }

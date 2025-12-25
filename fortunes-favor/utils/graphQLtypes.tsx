@@ -1,4 +1,6 @@
 import { ActionType, ComplexityOptions, RuleType, StatOptions } from "./enums";
+import featureChoice from "./types/featureChoice";
+import { Choice } from "./types/types.generated";
 
 export type SearchResult = {
   title: string;
@@ -9,7 +11,6 @@ export type SearchResult = {
 export type RuleText = {
   text: string;
   type?: string;
-  choices?: string[];
 };
 
 type img = {
@@ -45,7 +46,7 @@ export type GenericFeature = {
   text: RuleText[];
   shortText?: string;
   multiSelect: boolean;
-  choices: FeatureChoices[];
+  choices: featureChoice[];
   isVariant: boolean;
 };
 
@@ -89,8 +90,6 @@ export type Deflect = {
   flat: number;
 };
 
-export type FeatureChoices = RuleText | FeatureWithoutChoices;
-
 export type FeatureWithoutChoices = {
   title: string;
   slug: string;
@@ -118,7 +117,7 @@ export type CharacterClassFeature = {
   text: RuleText[];
   multiSelect: boolean;
   shortText?: string;
-  choices: FeatureChoices[];
+  choices: featureChoice[];
   isVariant: boolean;
 };
 

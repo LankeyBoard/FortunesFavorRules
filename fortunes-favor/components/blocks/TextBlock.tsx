@@ -21,7 +21,7 @@ const TextBlock = ({
   style,
   inline = false,
 }: {
-  text: RuleText[];
+  text?: RuleText[];
   style?: string;
   inline?: boolean;
 }) => {
@@ -49,13 +49,6 @@ const TextBlock = ({
           <div key={t.text} className={textStyler(t.type)}>
             {t.type == "EG" && <span>Eg: </span>}
             <SlugLinker text={t.text} />
-            {t.choices && (
-              <ul>
-                {t.choices.map((choice) => (
-                  <li key={choice}> - {choice}</li>
-                ))}
-              </ul>
-            )}
           </div>
         );
       })}

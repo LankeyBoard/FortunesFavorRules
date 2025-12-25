@@ -19,34 +19,35 @@ const Trait = ({ t }: { t: CharacterTrait }) => {
         {t.choices && t.choices.length > 0 && (
           <div>
             {t.choices.map((choice) => {
-              if (typeof choice.text === "string") {
-                return (
-                  <p
-                    key={choice.text}
-                    className="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
-                  >
-                    {choice.text}
-                  </p>
-                );
-              } else if ("slug" in choice) {
+              if ("slug" in choice.choice) {
                 return (
                   <div
-                    key={choice.slug}
+                    key={choice.choice.slug}
                     className="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
                   >
-                    <h3 className="font-semibold">{choice.title}</h3>
-                    {choice.staminaCost > 0 && (
+                    <h3 className="font-semibold">{choice.choice.title}</h3>
+                    {choice.choice.staminaCost > 0 && (
                       <span id="StaminaCost" className="font-light mx-2">
-                        Stamina: {choice.staminaCost}
+                        Stamina: {choice.choice.staminaCost}
                       </span>
                     )}
-                    {choice.costsFortunesFavor && (
+                    {choice.choice.costsFortunesFavor && (
                       <span id="FortuneCost">Fortune&apos;s Favor</span>
                     )}
-                    <TextBlock text={choice.text} style="mx-2 inline-block" />
+                    <TextBlock
+                      text={choice.choice.text}
+                      style="mx-2 inline-block"
+                    />
                   </div>
                 );
               }
+              return (
+                <TextBlock
+                  key={choice.choice.text}
+                  text={[choice.choice]}
+                  style="odd:bg-slate-300 even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-slate-700 p-2"
+                />
+              );
             })}
           </div>
         )}

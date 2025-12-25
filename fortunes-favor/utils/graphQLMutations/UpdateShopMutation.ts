@@ -19,7 +19,6 @@ const UPDATE_SHOP_MUTATION = gql`
         text {
           text
           type
-          choices
         }
         effects {
           target
@@ -45,7 +44,6 @@ const UPDATE_SHOP_MUTATION = gql`
         text {
           text
           type
-          choices
         }
         effects {
           target

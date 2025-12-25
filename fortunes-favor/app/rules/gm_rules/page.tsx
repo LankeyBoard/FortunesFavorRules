@@ -42,7 +42,6 @@ const query = gql`
             text {
               text
               type
-              choices
             }
             title
             subRules {
@@ -58,21 +57,18 @@ const query = gql`
               text {
                 text
                 type
-                choices
               }
               title
             }
           }
           slug
           text {
-            choices
             text
             type
           }
           title
         }
         text {
-          choices
           text
           type
         }
@@ -82,7 +78,7 @@ const query = gql`
 `;
 
 async function GMRules() {
-  const { data, loading, error } = await client.query({
+  const { data, error } = await client.query({
     query,
   });
   const rules: GenericRule[] = [];
@@ -100,7 +96,7 @@ async function GMRules() {
       );
     }),
   );
-  if (loading || !data) {
+  if (!data && !error) {
     return <FullPageLoading />;
   } else if (error) {
     return <div>Error: {error.message}</div>;

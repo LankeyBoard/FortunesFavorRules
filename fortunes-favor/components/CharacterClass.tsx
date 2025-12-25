@@ -58,24 +58,31 @@ const FeatureDisplay = ({ feature }: featureProps) => {
           {feature.choices &&
             feature.choices.length > 0 &&
             feature.choices.map((choice) => {
-              if (typeof choice.text === "string") {
-                return <p key={choice.text}>{choice.text}</p>;
-              } else if ("slug" in choice) {
+              if ("slug" in choice.choice) {
                 return (
                   <div
-                    key={choice.slug}
-                    id={choice.slug}
+                    key={choice.choice.slug}
+                    id={choice.choice.slug}
                     className="odd:bg-slate-300 dark:odd:bg-slate-700 p-2"
                   >
-                    <h3 className="text-lg font-semibold">{choice.title}</h3>
-                    {choice.staminaCost > 0 && (
+                    <h3 className="text-lg font-semibold">
+                      {choice.choice.title}
+                    </h3>
+                    {choice.choice.staminaCost > 0 && (
                       <>
                         <span className="font-semibold">Costs:</span>{" "}
-                        <span>{choice.staminaCost} Stamina</span>
+                        <span>{choice.choice.staminaCost} Stamina</span>
                       </>
                     )}
-                    <TextBlock text={choice.text} style="mx-2 font-light" />
+                    <TextBlock
+                      text={choice.choice.text}
+                      style="mx-2 font-light"
+                    />
                   </div>
+                );
+              } else {
+                return (
+                  <TextBlock key={choice.choice.text} text={[choice.choice]} />
                 );
               }
             })}

@@ -112,7 +112,6 @@ const TrimItemForGraphQL = (item: ShopItem) => {
     return {
       text: text.text,
       type: text.type,
-      choices: text.choices,
     };
   });
   if (trimmedItem.uses && typeof trimmedItem.uses === "object") {

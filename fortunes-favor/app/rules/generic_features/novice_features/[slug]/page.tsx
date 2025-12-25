@@ -1,37 +1,20 @@
 import { FeatureLi } from "@/components/GenericFeatures";
+import GenericFeaturePage from "@/components/pages/GenericFeaturesPage";
+import convertToChoices from "@/utils/convertToChoices";
+import GenericFeature from "@/utils/GenericFeature";
 import client from "@/utils/graphQLclient";
+import CHOICE_FRAGMENT from "@/utils/graphQLQueries/sharedFragments/choiceFragment";
+import GenericFeatureData from "@/utils/types/genericFeatureData";
 import { gql } from "@apollo/client";
 import { Suspense } from "react";
 
 const query = gql`
+  ${CHOICE_FRAGMENT}
   query SearchNoviceFeatures($slug: String) {
     universalFeatures(featureType: NOVICE, slug: $slug) {
       actionType
-      simpleChoices: choices {
-        ... on RuleText {
-          type
-          choices
-          text
-        }
-      }
-      complexChoices: choices {
-        ... on FeatureWithoutChoices {
-          href
-          shortTitle
-          actionType
-          costsFortunesFavor
-          multiSelect
-          ruleType
-          shortText
-          slug
-          staminaCost
-          title
-          text {
-            choices
-            text
-            type
-          }
-        }
+      choices {
+        ...ChoiceFragment
       }
       chooseNum
       featureType
@@ -45,7 +28,6 @@ const query = gql`
       staminaCost
       title
       text {
-        choices
         text
         type
       }
@@ -55,15 +37,12 @@ const query = gql`
 
 async function NoviceFeature(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const { data } = await client.query({
+  const { data }: { data: GenericFeatureData } = await client.query({
     query,
     variables: { slug: params.slug },
   });
-  return (
-    <Suspense>
-      <FeatureLi feature={data.universalFeatures[0]} />
-    </Suspense>
-  );
+
+  return <GenericFeaturePage data={data} />;
 }
 
 export default NoviceFeature;

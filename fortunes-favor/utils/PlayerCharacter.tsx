@@ -5,18 +5,21 @@ import {
   StatOptions,
   SizeOptions,
   RechargeOn,
+  Choice,
 } from "./enums";
 import CharacterClassData, { BeastMasterBeast } from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
 import CharacterFeatureData from "./CharacterFeature";
 import CharacterLineage from "./CharacterLineage";
-import GenericFeatureData from "./GenericFeatureData";
-import { FeatureChoices, RuleText } from "./graphQLtypes";
+import GenericFeature from "./GenericFeature";
 import CharacterClass from "./CharacterClass";
 import CharacterItem from "./CharacterItem";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 import { Form } from "@/components/blocks/FormDisplay";
-import { FeatureWithoutChoices } from "./types/types.generated";
+import filterChoicesToChosen from "./FilterChoicesToChosen";
+import featureChoice from "./types/featureChoice";
+import Text from "./types/text";
+import { CharacterTrait } from "./CharacterTrait";
 
 type Stats = {
   mettle: number;
@@ -85,7 +88,6 @@ const downgradeBaseDamage = (damage: {
 
 const featureToText = (
   feature: PlayerCharacterFeature,
-  selectedChoices: string[],
   showAllText: boolean = true,
 ): string => {
   const featureText = showAllText
@@ -96,26 +98,20 @@ const featureToText = (
         )
         .map((text) => text.text)
         .join(" ")}`;
-  const filteredChoices = feature.choices
-    .filter((choice) =>
-      "slug" in choice
-        ? selectedChoices.includes(choice.slug)
-        : selectedChoices.includes(choice.text),
-    )
+  const strChoices = feature.choices
     .map((choice) => {
-      if ("slug" in choice) {
-        return `\t${choice.title}: ${choice.text.map((text) => text.text).join(" ")}`;
-      } else return choice.text;
+      if ("slug" in choice.choice) {
+        return `\t${choice.choice.title}: ${choice.choice.text.map((text) => text?.text).join(" ")}`;
+      } else return choice.choice.text;
     })
     .join("\n");
-  if (filteredChoices) return featureText + "\n" + filteredChoices;
+  if (strChoices) return featureText + "\n" + strChoices;
   return featureText;
 };
 
-export class PlayerCharacterFeature extends GenericFeatureData {
+export class PlayerCharacterFeature extends GenericFeature {
   readonly source: FeatureSource;
   readonly effects: Effect[];
-  private _chosen: string[];
   private _level: number;
   constructor(
     title: string,
@@ -123,10 +119,9 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     effects: Effect[],
     slug: string,
     ruleType: RuleType,
-    text: RuleText[],
+    text: Text[],
     multiSelect: boolean,
-    choices: FeatureChoices[],
-    chosen: string[],
+    choices: featureChoice[],
     chooseNum: number,
     isVariant?: boolean,
     shortText?: string,
@@ -145,26 +140,48 @@ export class PlayerCharacterFeature extends GenericFeatureData {
     );
     this.source = source;
     this.effects = effects;
-    this._chosen = chosen;
     this._level = level || -1;
   }
   public get chosen() {
-    return this._chosen;
+    return this.choices.filter((choice) => choice.isChosen);
   }
-  public set chosen(c: string[]) {
-    this._chosen = c;
-  }
+
   public get level() {
     return this._level;
   }
-  public addChoice(choice: string) {
-    if (this.chosen.includes(choice)) return;
-    if (this.chosen.length < this.chooseNum) this.chosen.push(choice);
-    else this.chosen = [...this._chosen.slice(1), choice];
+
+  public isSlugChosen(slug: string): boolean {
+    const choice = this.findChosen(slug);
+    return choice.isChosen;
   }
-  public removeChoice(choice: string) {
-    const i = this._chosen.indexOf(choice);
-    if (i !== -1) this._chosen.splice(i, 1);
+
+  private findChosen(slug: string): featureChoice {
+    const choice = this.choices.find((c) => {
+      if ("slug" in c.choice) {
+        return c.choice.slug === slug;
+      } else if ("text" in c.choice) return c.choice.text === slug;
+      else return false;
+    });
+    if (!choice)
+      throw new Error(
+        `slug ${slug} not found in feature ${this.title} choices`,
+      );
+    return choice;
+  }
+
+  private updateChosen(slug: string, setTo: boolean) {
+    if (!this.choices) return;
+    const c = this.findChosen(slug);
+    c.isChosen = setTo;
+    return;
+  }
+
+  public addChosen(slug: string): void {
+    this.updateChosen(slug, true);
+  }
+
+  public removeChosen(slug: string): void {
+    this.updateChosen(slug, false);
   }
 }
 
@@ -212,7 +229,6 @@ const updateFeatures = (
               feature.text,
               feature.multiSelect,
               feature.choices,
-              [],
               feature.chooseNum,
               feature.isVariant,
               feature.shortText,
@@ -230,7 +246,6 @@ const updateFeatures = (
               feature.text,
               feature.multiSelect,
               feature.choices,
-              [],
               feature.chooseNum,
               feature.isVariant,
               feature.shortText,
@@ -248,7 +263,6 @@ const updateFeatures = (
               feature.text,
               feature.multiSelect,
               feature.choices,
-              [],
               feature.chooseNum,
               feature.isVariant,
               feature.shortText,
@@ -273,7 +287,6 @@ const updateFeatures = (
           feature.text,
           feature.multiSelect,
           feature.choices,
-          [],
           feature.chooseNum,
         ),
       );
@@ -798,9 +811,7 @@ export default class PlayerCharacter {
     this.sortFeatures();
     return Object.assign([...this._actions], {
       toString: () =>
-        this._actions
-          ?.map((action) => featureToText(action, this.choices))
-          .join("\n"),
+        this._actions?.map((action) => featureToText(action)).join("\n"),
     });
   }
 
@@ -809,9 +820,7 @@ export default class PlayerCharacter {
     this.sortFeatures();
     return Object.assign([...this._counters], {
       toString: () =>
-        this._counters
-          ?.map((counter) => featureToText(counter, this.choices))
-          .join("\n"),
+        this._counters?.map((counter) => featureToText(counter)).join("\n"),
     });
   }
   public get features() {
@@ -819,17 +828,13 @@ export default class PlayerCharacter {
     this.sortFeatures();
     return Object.assign([...this._features], {
       toString: () =>
-        this._features
-          ?.map((feature) => featureToText(feature, this.choices))
-          .join("\n"),
+        this._features?.map((feature) => featureToText(feature)).join("\n"),
     });
   }
   public printFeaturesRules(): string {
     if (!this._features) return "";
     this.sortFeatures();
-    return this.features
-      .map((f) => featureToText(f, this.choices, false))
-      .join("\n");
+    return this.features.map((f) => featureToText(f, false)).join("\n");
   }
   public get languages() {
     return this._languages;
@@ -867,34 +872,24 @@ export default class PlayerCharacter {
     }
     return applyConditionalEffects("attack", attack, this);
   }
+
   public get choices() {
-    let choices: string[] = [];
+    let choices: Map<string, string[]> = new Map();
+    const featureChoices: string[] = [];
     this._features?.forEach((feature) => {
-      if (feature.chosen) choices = choices.concat(feature.chosen);
-      if (
-        feature.source === FeatureSource.NOVICE_FEATURE ||
-        feature.source === FeatureSource.VETERAN_FEATURE
-      )
-        choices.push(feature.slug);
+      if (feature.choices)
+        choices.set(feature.slug, filterChoicesToChosen(feature.choices));
     });
     this._actions?.forEach((feature) => {
-      if (feature.chosen) choices = choices.concat(feature.chosen);
-      if (
-        feature.source === FeatureSource.NOVICE_FEATURE ||
-        feature.source === FeatureSource.VETERAN_FEATURE
-      )
-        choices.push(feature.slug);
+      if (feature.choices)
+        choices.set(feature.slug, filterChoicesToChosen(feature.choices));
     });
     this._counters?.forEach((feature) => {
-      if (feature.chosen) choices = choices.concat(feature.chosen);
-      if (
-        feature.source === FeatureSource.NOVICE_FEATURE ||
-        feature.source === FeatureSource.VETERAN_FEATURE
-      )
-        choices.push(feature.slug);
+      if (feature.choices)
+        choices.set(feature.slug, filterChoicesToChosen(feature.choices));
     });
-    if (this._form) choices.push(this._form.slug);
-    if (this._beast) choices.push(this._beast.slug);
+    if (this._form) choices.set(Choice.SHIFTER_FORM, [this._form.slug]);
+    if (this._beast) choices.set(Choice.BEASTMASTER_BEAST, [this._beast.slug]);
     return choices;
   }
 
@@ -927,34 +922,43 @@ export default class PlayerCharacter {
       this,
     );
   }
+
   // Helper Functions
 
   public updateChoices(choices: string[]): PlayerCharacter {
-    const updateChosenFeatures = (features: PlayerCharacterFeature[]) => {
-      features.forEach((feature) => {
-        if (feature.choices) {
-          const chosen: string[] = feature.choices
-            .filter((choice) => {
-              if (typeof choice.text === "string") {
-                return choices.includes(choice.text);
-              } else if ("slug" in choice) {
-                return choices.includes(choice.slug);
-              }
-            })
-            .map((choice) => {
-              if (typeof choice.text === "string") {
-                return choice.text;
-              } else if ("slug" in choice) {
-                return choice.slug;
-              } else
-                throw new Error(`Choice is of invalid type ${typeof choice}`);
+    const updateChosenFeatures = (
+      features: PlayerCharacterFeature[],
+    ): PlayerCharacterFeature[] => {
+      const updatedFeatures: PlayerCharacterFeature[] = features.map(
+        (feature) => {
+          if (feature.choices) {
+            const updatedChoices = feature.choices.map((choice) => {
+              if ("slug" in choice.choice)
+                choice.isChosen = choices.includes(choice.choice.slug);
+              else choice.isChosen = choices.includes(choice.choice.text);
+              return choice;
             });
-          feature.chosen = chosen;
-        }
-      });
+            return new PlayerCharacterFeature(
+              feature.title,
+              feature.source,
+              feature.effects,
+              feature.slug,
+              feature.ruleType,
+              feature.text,
+              feature.multiSelect,
+              updatedChoices,
+              feature.chooseNum,
+              feature.isVariant,
+              feature.shortText,
+              feature.level,
+            );
+          } else return feature;
+        },
+      );
+      return updatedFeatures;
     };
 
-    if (this._features) updateChosenFeatures(this._features);
+    if (this._features) this._features = updateChosenFeatures(this._features);
     if (this._actions) updateChosenFeatures(this._actions);
     if (this._counters) updateChosenFeatures(this._counters);
 
@@ -980,23 +984,6 @@ export default class PlayerCharacter {
       }
     });
 
-    return this;
-  }
-
-  public extractGenericFeaturesFromChoices(
-    choices: string[],
-    genericFeatures: PlayerCharacterFeature[],
-  ): PlayerCharacter {
-    choices.forEach((choice) => {
-      const matchingFeature = genericFeatures.find(
-        (feature) => feature.slug === choice,
-      );
-      if (matchingFeature) {
-        this._features
-          ? this._features.push(matchingFeature)
-          : (this._features = [matchingFeature]);
-      }
-    });
     return this;
   }
 
@@ -1090,5 +1077,74 @@ export default class PlayerCharacter {
       }
     });
     return this;
+  }
+
+  private extractChosenFromFeature(
+    features:
+      | CharacterFeatureData[]
+      | CharacterTrait[]
+      | PlayerCharacterFeature[],
+  ): {
+    featureSlug: string;
+    choiceSlug: string;
+  }[] {
+    return features
+      .filter((f) => f.choices)
+      .flatMap((feature) =>
+        feature.choices
+          .filter((f) => f.isChosen)
+          .map((f) => {
+            return {
+              featureSlug: feature.slug,
+              choiceSlug: "slug" in f.choice ? f.choice.slug : f.choice.text,
+            };
+          }),
+      );
+  }
+
+  public getChosenGraphQLInput(): {
+    featureSlug: string;
+    choiceSlug: string;
+  }[] {
+    const classChosen = this.extractChosenFromFeature(
+      this.characterClass.features,
+    );
+    const cultureChosen = this.extractChosenFromFeature(this.culture.features);
+    const lineageChosen = this.extractChosenFromFeature(this.lineage.features);
+    const noviceFeaturesChosen = this.extractChosenFromFeature(
+      this.noviceFeatures,
+    );
+    const veteranFeaturesChosen = this.extractChosenFromFeature(
+      this.veteranFeatures,
+    );
+    const noviceFeatures = this.noviceFeatures.map((f) => {
+      return {
+        featureSlug: Choice.NOVICE_FEATURE,
+        choiceSlug: f.slug,
+      };
+    });
+    const veteranFeatures = this.veteranFeatures.map((f) => {
+      return {
+        featureSlug: Choice.VETERAN_FEATURE,
+        choiceSlug: f.slug,
+      };
+    });
+
+    const languages =
+      this.languages?.map((l) => {
+        return {
+          featureSlug: Choice.LANGUAGE,
+          choiceSlug: l,
+        };
+      }) ?? [];
+    return classChosen.concat(
+      cultureChosen,
+      lineageChosen,
+      noviceFeaturesChosen,
+      veteranFeaturesChosen,
+      noviceFeatures,
+      veteranFeatures,
+      languages,
+    );
   }
 }
