@@ -75,7 +75,13 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
           {field.slug && depth < 3 && <CopyLink target={field.slug} />}
         </label>
       </div>
-      {field.img && <ImgDisplay img={field.img} altText={field.title} />}
+      {field.img && (
+        <ImgDisplay
+          img={field.img}
+          altText={field.title}
+          className="m-4 w-1/2 float-right"
+        />
+      )}
 
       <div className={field.ruleType != RuleType.LIST ? "pb-2" : "pb-2 mx-2"}>
         {field.text != undefined && typeof field.text === "string" && (

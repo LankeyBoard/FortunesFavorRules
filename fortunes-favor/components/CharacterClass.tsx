@@ -366,91 +366,104 @@ const ClassRule = ({ data, variant }: classProps) => {
   return (
     <div id={classRules.slug}>
       <ClassTitleAndTags classRules={classRules} variants={variantLinks} />
-      <div className="clear-both">
+      <div
+        className={
+          data.img
+            ? "clear-both flex flex-col md:flex-row-reverse"
+            : "clear-both"
+        }
+      >
         {data.img && (
-          <ImgDisplay img={data.img} altText={classRules.title + " Image"} />
+          <ImgDisplay
+            img={data.img}
+            altText={classRules.title + " Image"}
+            className="h-fit w-full p-4"
+          />
         )}
-        <div className="mx-3">
-          <p className="italic">{classRules.description}</p>
-        </div>
-        <div className="mt-2">
+        <div>
           <div className="mx-3">
-            <p>
-              <span className="font-semibold">Health</span>
-              <span className="">
-                {" "}
-                : {classRules.health} (+{classRules.healthOnLevel} on level up)
-              </span>
-            </p>
-            <p>
-              <span className="font-semibold clear-left">Stamina</span>
-              <span>
-                {" "}
-                : {classRules.stamina}+{classRules.staminaStat} (
-                {classRules.staminaOnLevel > 0 &&
-                  `+
+            <p className="italic">{classRules.description}</p>
+          </div>
+          <div className="mt-2">
+            <div className="mx-3">
+              <p>
+                <span className="font-semibold">Health</span>
+                <span className="">
+                  {" "}
+                  : {classRules.health} (+{classRules.healthOnLevel} on level
+                  up)
+                </span>
+              </p>
+              <p>
+                <span className="font-semibold clear-left">Stamina</span>
+                <span>
+                  {" "}
+                  : {classRules.stamina}+{classRules.staminaStat} (
+                  {classRules.staminaOnLevel > 0 &&
+                    `+
                 ${classRules.staminaOnLevel}`}
-                +{classRules.staminaStat} on level up)
-              </span>
-            </p>
-          </div>
-          <div
-            id="classTraining"
-            className="mt-2 p-3 border-amber-800 border-y-2"
-          >
-            <p className="font-semibold text-lg">Training</p>
-            <ul className="px-4">
-              <Training
-                training_type="Armor"
-                training_list={classRules.training.armor}
-              />
-              <Training
-                training_type="Shield"
-                training_list={classRules.training.shields}
-              />
-              <li>
-                <p className="font-normal">Weapons </p>
-                <ul className="font-extralight px-4">
-                  <Training
-                    training_type="Melee"
-                    training_list={classRules.training.weapons?.melee}
-                  />
-                  <Training
-                    training_type="Ranged"
-                    training_list={classRules.training.weapons?.ranged}
-                  />
-                  <Training
-                    training_type="Special"
-                    training_list={classRules.training.weapons?.special}
-                  />
-                </ul>
-              </li>
-              <Training
-                training_type="Magic"
-                training_list={classRules.training.magic}
-              />
-            </ul>
-          </div>
-          <div className="mx-3 mt-2">
-            <p>
-              <span className="font-semibold">Attack Stat</span>
+                  +{classRules.staminaStat} on level up)
+                </span>
+              </p>
+            </div>
+            <div
+              id="classTraining"
+              className="mt-2 p-3 border-amber-800 border-y-2"
+            >
+              <p className="font-semibold text-lg">Training</p>
+              <ul className="px-4">
+                <Training
+                  training_type="Armor"
+                  training_list={classRules.training.armor}
+                />
+                <Training
+                  training_type="Shield"
+                  training_list={classRules.training.shields}
+                />
+                <li>
+                  <p className="font-normal">Weapons </p>
+                  <ul className="font-extralight px-4">
+                    <Training
+                      training_type="Melee"
+                      training_list={classRules.training.weapons?.melee}
+                    />
+                    <Training
+                      training_type="Ranged"
+                      training_list={classRules.training.weapons?.ranged}
+                    />
+                    <Training
+                      training_type="Special"
+                      training_list={classRules.training.weapons?.special}
+                    />
+                  </ul>
+                </li>
+                <Training
+                  training_type="Magic"
+                  training_list={classRules.training.magic}
+                />
+              </ul>
+            </div>
+            <div className="mx-3 mt-2">
+              <p>
+                <span className="font-semibold">Attack Stat</span>
 
-              <span className="">
-                :{" "}
-                {classRules.attackStat
-                  .join(", ")
-                  .replace(/, ((?:.(?!, ))+)$/, " or $1")}
-              </span>
-            </p>
-            <p>
-              <span className="font-semibold clear-left">Range</span>
-              <span>: {rangeString}</span>
-            </p>
-            <p>
-              <span className="font-semibold clear-left">Damage</span>
-              <span>: {dmgString}</span>
-            </p>
-            <ClassDeflect classDeflect={classRules.deflect} />
+                <span className="">
+                  :{" "}
+                  {classRules.attackStat
+                    .join(", ")
+                    .replace(/, ((?:.(?!, ))+)$/, " or $1")}
+                </span>
+              </p>
+              <p>
+                <span className="font-semibold clear-left">Range</span>
+                <span>: {rangeString}</span>
+              </p>
+              <p>
+                <span className="font-semibold clear-left">Damage</span>
+                <span>: {dmgString}</span>
+              </p>
+              <ClassDeflect classDeflect={classRules.deflect} />
+            </div>
           </div>
         </div>
       </div>
