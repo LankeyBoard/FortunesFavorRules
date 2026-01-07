@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "resetCache": "IF EXIST .next (rmdir /S /Q .next)",
     "dev:local": "cross-env NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4000/graphql npm run dev",
+    "dev:local:reset": "npm run resetCache && npm run dev:local",
     "build": "npm install && next build",
     "build:local": "cross-env NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4000/graphql npm run build",
     "start": "next start",
