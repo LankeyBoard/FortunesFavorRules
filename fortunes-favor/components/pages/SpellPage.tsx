@@ -8,7 +8,6 @@ import { getOrdinal } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { findEnumValue } from "@/utils/enums";
 import DropdownField from "../blocks/Inputs/DropdownField";
 
 const filterOptions = ["All", "Arcane", "Divine", "Nature"];
