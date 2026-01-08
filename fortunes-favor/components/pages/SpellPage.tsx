@@ -6,18 +6,39 @@ import {
 } from "@/utils/graphQLQueries/AllSpellsQuery";
 import { getOrdinal } from "@/utils/utils";
 import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { findEnumValue } from "@/utils/enums";
+import DropdownField from "../blocks/Inputs/DropdownField";
+
+const filterOptions = ["All", "Arcane", "Divine", "Nature"];
+
 type SpellPageProps = { data: SpellQueryData };
 const SpellsPage = ({ data }: SpellPageProps) => {
-  const [filterType, setFilterType] = useState<SpellType | "All">("All");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const filterParam = searchParams.get("filter");
+  const [filterType, setFilterType] = useState<number>(
+    Number(filterParam) || 0,
+  );
   const [sortOption, setSortOption] = useState<"Level" | "Alphabetical">(
     "Level",
   );
+
+  useEffect(() => {
+    if (filterParam) {
+      setFilterType(Number(filterParam) || 0);
+    }
+  }, [filterParam]);
+
   const spells = data.allSpells;
   const filteredSpells = useMemo(
     () =>
-      filterType === "All"
+      filterOptions[filterType] === "All" || filterType.toString() === "NaN"
         ? spells
-        : spells.filter((s) => s.type.includes(filterType)),
+        : spells.filter((s) =>
+            s.type.includes(SpellType[filterType - 1] as unknown as SpellType),
+          ),
     [spells, filterType],
   );
 
@@ -30,33 +51,39 @@ const SpellsPage = ({ data }: SpellPageProps) => {
 
   return (
     <div className="mb-18 md:mb-0">
-      <div className="filters mb-6">
-        <label className="">
-          Filter by Type:
-          <select
-            value={filterType}
-            className="dark:bg-slate-800 mx-2"
-            onChange={(e) => setFilterType(e.target.value as SpellType | "All")}
-          >
-            <option value="All">All</option>
-            <option value={SpellType.Arcane}>Arcane</option>
-            <option value={SpellType.Divine}>Divine</option>
-            <option value={SpellType.Nature}>Nature</option>
-          </select>
-        </label>
-        <label>
-          Sort by:
-          <select
-            value={sortOption}
-            className="dark:bg-slate-800 ml-2"
-            onChange={(e) =>
-              setSortOption(e.target.value as "Level" | "Alphabetical")
-            }
-          >
-            <option value="Level">Level</option>
-            <option value="Alphabetical">Alphabetical</option>
-          </select>
-        </label>
+      <div className="filters mb-6 flex flex-row">
+        <span className="my-auto">Sort By: </span>
+        <DropdownField
+          name="Type"
+          options={[]}
+          defaultValue={filterType}
+          className="mx-4"
+          onChange={(e) => {
+            const newValue = Number(e.target.value);
+            console.log(newValue);
+            setFilterType(newValue);
+            const params = new URLSearchParams(searchParams);
+            params.set("filter", newValue.toString());
+            router.push(`?${params.toString()}`);
+          }}
+        >
+          {filterOptions.map((f, i) => (
+            <option key={i} value={i}>
+              {f}
+            </option>
+          ))}
+        </DropdownField>
+        <DropdownField
+          name="Level"
+          value={sortOption}
+          className=""
+          onChange={(e) =>
+            setSortOption(e.target.value as "Level" | "Alphabetical")
+          }
+        >
+          <option value="Level">Level</option>
+          <option value="Alphabetical">Alphabetical</option>
+        </DropdownField>
       </div>
       {sortedSpells.map((spell, index) => (
         <div key={index} className="pb-3 mb-4 dark:bg-slate-800 bg-slate-200">

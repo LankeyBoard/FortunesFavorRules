@@ -1,20 +1,21 @@
 import { ChangeEventHandler, InputHTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 type options = { title: string; slug: string };
 interface DropdownFieldProps extends InputHTMLAttributes<HTMLSelectElement> {
   name: string;
-  options: string[] | options[];
+  options?: string[] | options[];
   onChange?: ChangeEventHandler<HTMLSelectElement>;
   unselectedOption?: boolean;
 }
 
 export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
   // if the option is a string, convert it to an object with a slug and title
-  const options: options[] = props.options.map((o) => {
+  const options: options[] | undefined = props.options?.map((o) => {
     if (typeof o === "string") return { title: o, slug: o };
     else return o;
   });
   return (
-    <div className="w-max">
+    <div className={twMerge("w-max", props.className)}>
       <label
         htmlFor={props.name}
         className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"
@@ -32,7 +33,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
             &#8212;
           </option>
         )}
-        {options.map((o) => {
+        {options?.map((o) => {
           if (!o.slug) o.slug = props.name.concat(o.title);
           return (
             <option key={o.slug} value={o.slug} className="">
@@ -40,6 +41,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
             </option>
           );
         })}
+        {props.children}
       </select>
     </div>
   );
