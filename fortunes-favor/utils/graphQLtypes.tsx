@@ -1,6 +1,5 @@
 import { ActionType, ComplexityOptions, RuleType, StatOptions } from "./enums";
 import featureChoice from "./types/featureChoice";
-import { Choice } from "./types/types.generated";
 
 export type SearchResult = {
   title: string;
@@ -13,9 +12,16 @@ export type RuleText = {
   type?: string;
 };
 
-type img = {
+export type Img = {
   target: string;
   style?: string;
+};
+
+export type BaseStats = {
+  mettle: number;
+  agility: number;
+  heart: number;
+  intellect: number;
 };
 
 export type GenericRule = {
@@ -26,14 +32,14 @@ export type GenericRule = {
   subRules: GenericRule[];
   lists: { label?: string; items: string[] }[];
   shortText?: string;
-  img?: img;
+  img?: Img;
 };
 
 export type graphQLCulture = {
   title: string;
   slug: string;
   description: string[];
-  img?: img;
+  img?: Img;
   stat: string;
   languages: string;
   traits: GenericRule[];
@@ -79,9 +85,11 @@ export type Range = {
 };
 
 export type Damage = {
-  dice: number;
-  count: number;
-  stat: StatOptions[];
+  dice?: number;
+  count?: number;
+  stat?: StatOptions[];
+  type?: [string];
+  flat?: number;
 };
 
 export type Deflect = {
@@ -126,7 +134,7 @@ export type CharacterClass = {
   slug: string;
   complexity?: ComplexityOptions;
   description: string[];
-  img?: img;
+  img?: Img;
   health: number;
   healthOnLevel: number;
   stamina: number;

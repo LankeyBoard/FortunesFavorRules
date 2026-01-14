@@ -18,9 +18,9 @@ export default class GenericFeature {
     slug: string,
     ruleType: RuleType,
     text: Text[],
-    multiSelect: boolean,
-    choices: featureChoice[],
-    chooseNum: number,
+    multiSelect?: boolean,
+    choices?: featureChoice[],
+    chooseNum?: number,
     isVariant?: boolean,
     shortText?: string,
   ) {
@@ -29,9 +29,9 @@ export default class GenericFeature {
     this.ruleType = ruleType;
     this.text = text;
     this.shortText = shortText;
-    this.multiSelect = multiSelect;
-    this.choices = choices.filter((c) => c.choice != undefined);
-    this.chooseNum = chooseNum;
+    this.multiSelect = multiSelect ?? false;
+    this.choices = choices ? choices.filter((c) => c.choice != undefined) : [];
+    this.chooseNum = chooseNum ?? 0;
     this.isVariant = isVariant ?? false;
   }
 }

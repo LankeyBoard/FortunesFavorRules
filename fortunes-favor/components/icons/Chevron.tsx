@@ -1,14 +1,15 @@
+import { twMerge } from "tailwind-merge";
+
 const Chevron: React.FC<React.HTMLAttributes<SVGElement>> = ({ ...props }) => {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={
-        props.className
-          ? props.className
-          : "fill-amber-400 hover:fill-amber-600"
-      }
+      className={twMerge(
+        "fill-amber-400 hover:fill-amber-600",
+        props.className,
+      )}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
