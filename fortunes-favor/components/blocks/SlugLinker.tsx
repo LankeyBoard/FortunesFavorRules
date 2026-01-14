@@ -5,11 +5,12 @@ import remarkGfm from "remark-gfm";
 var split: RegExp = new RegExp(`\\[.*?\\)`, "g");
 
 const isMarkdownTable = (text: string) => {
+  console.log(text);
   // Checks if text starts with '|' and has at least one table row
   return (
     typeof text === "string" &&
     text.trim().startsWith("|") &&
-    text.includes("\n|")
+    text.trim().endsWith("|")
   );
 };
 
@@ -39,7 +40,7 @@ const parseLinksFromString = (text: string) => {
 
   if (isMarkdownTable(text)) {
     return (
-      <div className="gap-2">
+      <div className="gap-2 overflow-auto">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
