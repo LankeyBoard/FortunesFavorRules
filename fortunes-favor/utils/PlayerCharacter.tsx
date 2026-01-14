@@ -21,7 +21,7 @@ import featureChoice from "./types/featureChoice";
 import Text from "./types/text";
 import { CharacterTrait } from "./CharacterTrait";
 
-type Stats = {
+export type Stats = {
   mettle: number;
   agility: number;
   heart: number;

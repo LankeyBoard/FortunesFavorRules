@@ -1,12 +1,21 @@
+import { twMerge } from "tailwind-merge";
+
 const SmallField = ({
   children,
+  className,
   label,
 }: {
   children: React.ReactNode;
   label: string;
+  className?: string;
 }) => {
   return (
-    <div className="grid grid-cols-1 text-center m-2 w-max flex-nowrap">
+    <div
+      className={twMerge(
+        "grid grid-cols-1 text-center m-2 w-max flex-nowrap",
+        className,
+      )}
+    >
       <span className="text-xs tracking-tighter opacity-80 capitalize">
         {label}
       </span>

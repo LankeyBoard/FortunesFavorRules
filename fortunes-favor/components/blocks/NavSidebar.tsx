@@ -33,13 +33,16 @@ const buildPartialPathFromStr = (str: string) => {
   return new partialPath(pathname, hash);
 };
 
-const mapNavToPartialPaths = (navMap: NavSection[]): partialPath[] => {
+const mapNavToPartialPaths = (
+  navMap: NavSection[],
+  mapTopLevel: boolean,
+): partialPath[] => {
   const mappedPaths: partialPath[] = [];
   navMap.forEach((n) => {
     const partialPaths: partialPath[] = [];
     if (n.href) partialPaths.push(buildPartialPathFromStr(n.href));
     else if (n.basePath) partialPaths.push(buildPartialPathFromStr(n.basePath));
-    if (n.subroutes) {
+    if (n.subroutes && !mapTopLevel) {
       n.subroutes.forEach((r) => {
         if (r.href) partialPaths.push(buildPartialPathFromStr(r.href));
       });
@@ -107,6 +110,7 @@ const findCurrentPathOnScroll = (
 const updateNavMap = (
   navMap: NavSection[],
   currentPath: partialPath | undefined,
+  highlightTopLevel: boolean = false,
 ): NavSection[] => {
   const updatedNavMap = navMap.map((n) => {
     return {
@@ -115,9 +119,9 @@ const updateNavMap = (
       subroutes: n.subroutes?.map((r) => {
         return {
           ...r,
-          isCurrent: currentPath?.isEqual(
-            buildPartialPathFromStr(r.href || ""),
-          ),
+          isCurrent: highlightTopLevel
+            ? false
+            : currentPath?.isEqual(buildPartialPathFromStr(r.href || "")),
         };
       }),
     };
@@ -179,7 +183,7 @@ const NavSectionDisplay = ({
     <div>
       <div className="flex flex-row items-center">
         <NavElem
-          navEl={{ ...navSection, href: navSection.basePath }}
+          navEl={{ ...navSection, href: navSection.href }}
           closeMenuIfOpen={closeMenuIfOpen}
           isSub={false}
         />
@@ -201,12 +205,18 @@ const NavSectionDisplay = ({
   );
 };
 
-const NavSidebar = ({ navMap }: { navMap: NavSection[] }) => {
+const NavSidebar = ({
+  navMap,
+  highlightTopLevel = false,
+}: {
+  navMap: NavSection[];
+  highlightTopLevel?: boolean;
+}) => {
   const { height, width } = useWindowDimensions();
   const pathname = usePathname();
   const router = useRouter();
 
-  const navPaths = mapNavToPartialPaths(navMap);
+  const navPaths = mapNavToPartialPaths(navMap, highlightTopLevel);
   const [menuStyle, setMenuStyle] = useState("flex");
   const [menuVisible, setMenuVisible] = useState(true);
   const [buttonStyle, setButtonStyle] = useState(buttonUpStyle);
@@ -216,7 +226,7 @@ const NavSidebar = ({ navMap }: { navMap: NavSection[] }) => {
       : undefined,
   );
   const [currentNavMap, setCurrentNavMap] = useState(
-    updateNavMap(navMap, currentPath),
+    updateNavMap(navMap, currentPath, highlightTopLevel),
   );
   const [timeoutID, setTimeoutId] = useState<NodeJS.Timeout>();
 
@@ -248,8 +258,8 @@ const NavSidebar = ({ navMap }: { navMap: NavSection[] }) => {
   }, [pathname]);
 
   useEffect(() => {
-    setCurrentNavMap(updateNavMap(navMap, currentPath));
-  }, [currentPath]);
+    setCurrentNavMap(updateNavMap(navMap, currentPath, highlightTopLevel));
+  }, [currentPath, highlightTopLevel]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
