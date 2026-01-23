@@ -101,7 +101,7 @@ const FilterHeader = ({ tags }: FilterHeaderProps) => {
               );
               setLevelsFilter(
                 Array.from(levelsFilter.keys()).length ===
-                  levels.keys().toArray().length
+                  Array.from(levels.keys()).length
                   ? new Set()
                   : new Set(levels.keys()),
               );
@@ -150,8 +150,8 @@ const FilterHeader = ({ tags }: FilterHeaderProps) => {
             onClick={() => {
               console.log(monsterTagsFilter);
               setMonsterTagFilter(
-                monsterTagsFilter.keys().toArray().length ===
-                  tags.keys().toArray().length
+                Array.from(monsterTagsFilter.keys()).length ===
+                  Array.from(tags.keys()).length
                   ? new Set()
                   : new Set(tags),
               );
