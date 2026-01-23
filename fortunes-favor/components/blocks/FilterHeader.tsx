@@ -62,7 +62,7 @@ const FilterHeader = ({ tags }: FilterHeaderProps) => {
         <h1 className="text-xl font-light">Filters</h1>
         <div>
           <h2 className="inline font-light text-lg">Levels</h2>
-          {levels.keys().map((key) => {
+          {Array.from(levels.keys()).map((key) => {
             return (
               <Button
                 key={key}
@@ -96,11 +96,11 @@ const FilterHeader = ({ tags }: FilterHeaderProps) => {
             className="p-0"
             onClick={() => {
               console.log(
-                levelsFilter.keys().toArray().length,
-                levels.keys().toArray(),
+                Array.from(levels.keys()).length,
+                Array.from(levels.keys()),
               );
               setLevelsFilter(
-                levelsFilter.keys().toArray().length ===
+                Array.from(levelsFilter.keys()).length ===
                   levels.keys().toArray().length
                   ? new Set()
                   : new Set(levels.keys()),
