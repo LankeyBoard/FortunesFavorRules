@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 export enum ButtonType {
   simple,
   default,
@@ -50,7 +52,7 @@ const Button: React.FC<ButtonProps> = ({
   if (buttonType === ButtonType.icon) {
     buttonStyle += " w-10";
   }
-  buttonStyle = props.className + " " + buttonStyle;
+  buttonStyle = twMerge(buttonStyle, props.className);
   return (
     <button type="button" {...props} className={buttonStyle}>
       {children}

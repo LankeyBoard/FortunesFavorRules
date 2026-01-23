@@ -18,7 +18,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
     <div className={twMerge("w-max", props.className)}>
       <label
         htmlFor={props.name}
-        className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"
+        className="block mb-2 text-xs tracking-tighter capitalize text-center"
       >
         {props.name}
       </label>
