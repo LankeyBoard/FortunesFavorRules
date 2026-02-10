@@ -95,7 +95,7 @@ const CharacterCard = ({
         <p>This action cannot be undone</p>
         <div className="flex flex-row-reverse mt-4">
           <Button
-            color="green"
+            color="gray"
             onClick={() => setShowDeleteConfirmation(false)}
             buttonType={ButtonType.default}
           >

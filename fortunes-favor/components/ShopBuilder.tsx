@@ -107,7 +107,7 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
 };
 
 const TrimItemForGraphQL = (item: ShopItem) => {
-  const { inStock, ...trimmedItem } = item;
+  const { inStock, onSale, ...trimmedItem } = item;
   trimmedItem.text = trimmedItem.text.map((text) => {
     return {
       text: text.text,
@@ -168,32 +168,61 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
   }
 };
 
-// Utility function to validate if an object is a valid ShopItem
-const isValidShopItem = (item: any): item is ShopItem => {
-  return (
-    typeof item === "object" &&
-    item !== null &&
-    typeof item.title === "string" &&
-    Array.isArray(item.text) &&
-    typeof item.isMagic === "boolean" &&
-    Object.values(Rarity).includes(item.rarity) &&
-    (item.uses === undefined ||
-      (typeof item.uses === "object" &&
-        typeof item.uses.used === "number" &&
-        typeof item.uses.max === "number" &&
-        Object.values(RechargeOn).includes(item.uses.rechargeOn))) &&
-    Array.isArray(item.effects) &&
-    Array.isArray(item.tags) &&
-    typeof item.defaultPrice === "number" &&
-    (typeof item.salePrice === "number" || item.salePrice === undefined) &&
-    typeof item.inStock === "boolean"
-  );
+// Validate a ShopItem and return an array of reasons why it's invalid (empty = valid)
+const validateShopItem = (item: any): string[] => {
+  const reasons: string[] = [];
+  if (typeof item !== "object" || item === null) {
+    reasons.push("Item is not an object");
+    return reasons;
+  }
+  if (typeof item.title !== "string")
+    reasons.push("Missing or invalid `title` (string expected)");
+  if (!Array.isArray(item.text))
+    reasons.push("Missing or invalid `text` (array expected)");
+  if (typeof item.isMagic !== "boolean")
+    reasons.push("Missing or invalid `isMagic` (boolean expected)");
+  if (!Object.values(Rarity).includes(item.rarity))
+    reasons.push(
+      `Missing or invalid ` +
+        "`rarity`" +
+        ` (expected one of: ${Object.keys(Rarity).join(", ")})`,
+    );
+
+  if (item.uses !== undefined) {
+    if (typeof item.uses !== "object") {
+      reasons.push("`uses` must be an object when provided");
+    } else {
+      if (typeof item.uses.used !== "number")
+        reasons.push("`uses.used` must be a number");
+      if (typeof item.uses.max !== "number")
+        reasons.push("`uses.max` must be a number");
+      if (!Object.values(RechargeOn).includes(item.uses.rechargeOn))
+        reasons.push("`uses.rechargeOn` is missing or invalid");
+    }
+  }
+
+  if (!Array.isArray(item.effects))
+    reasons.push("Missing or invalid `effects` (array expected)");
+  if (!Array.isArray(item.tags))
+    reasons.push("Missing or invalid `tags` (array expected)");
+  if (typeof item.defaultPrice !== "number")
+    reasons.push("Missing or invalid `defaultPrice` (number expected)");
+  if (item.salePrice !== undefined && typeof item.salePrice !== "number")
+    reasons.push("`salePrice` must be a number when provided");
+  if (typeof item.inStock !== "boolean")
+    reasons.push("Missing or invalid `inStock` (boolean expected)");
+
+  return reasons;
 };
 
-// Function to handle uploaded JSON file and return valid ShopItems
+// Function to handle uploaded JSON file and return valid ShopItems plus invalid item reasons
 const parseShopItemsFromFile = async (
   file: File,
-): Promise<{ itemsInStock: ShopItem[]; itemsCouldStock: ShopItem[] }> => {
+): Promise<{
+  itemsInStock: ShopItem[];
+  itemsCouldStock: ShopItem[];
+  invalidItems: { index: number; item: any; reasons: string[] }[];
+}> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -206,20 +235,37 @@ const parseShopItemsFromFile = async (
           return;
         }
 
-        // Ensure each item has 'effects' and 'tags' keys
+        // Ensure each item has 'effects' and 'tags' keys and try to normalize rarity
         parsed.forEach((item) => {
-          item.rarity = Rarity[item.rarity as keyof typeof Rarity];
+          if (
+            typeof item === "object" &&
+            item !== null &&
+            typeof item.rarity === "string"
+          ) {
+            const mapped = Rarity[item.rarity as keyof typeof Rarity];
+            if (mapped !== undefined) item.rarity = mapped;
+          }
           if (!("effects" in item)) item.effects = [];
           if (!("tags" in item)) item.tags = [];
         });
-        const validItems = parsed.filter(isValidShopItem);
-        const invalidItems = parsed.filter((item) => !isValidShopItem(item));
+
+        const validItems: ShopItem[] = [];
+        const invalidItems: { index: number; item: any; reasons: string[] }[] =
+          [];
+
+        parsed.forEach((item: any, idx: number) => {
+          const reasons = validateShopItem(item);
+          if (reasons.length === 0) validItems.push(item as ShopItem);
+          else invalidItems.push({ index: idx, item, reasons });
+        });
+
         if (invalidItems.length > 0)
           console.error("invalid items uploaded: ", invalidItems);
+
         const itemsInStock = validItems.filter((item) => item.inStock);
         const itemsCouldStock = validItems.filter((item) => !item.inStock);
         console.log("items from file", itemsCouldStock, itemsInStock);
-        resolve({ itemsInStock, itemsCouldStock });
+        resolve({ itemsInStock, itemsCouldStock, invalidItems });
       } catch (err) {
         reject(err);
       }
@@ -254,10 +300,13 @@ const ShopBuilder = ({
   const [inputFileItemsCouldStock, setFileItemsCouldStock] = useState<
     ShopItem[]
   >([]);
+  const [fileUploadErrors, setFileUploadErrors] = useState<
+    { index: number; item: any; reasons: string[] }[]
+  >([]);
   const [CreateShop] = useMutation(CREATE_SHOP_MUTATION);
   const [UpdateShop] = useMutation(UPDATE_SHOP_MUTATION);
   const [loading, setLoading] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState<string | null>();
   const router = useRouter();
 
   const AddItemToShop = (item: ShopItem) => {
@@ -269,7 +318,6 @@ const ShopBuilder = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    setLoading(true);
     e.preventDefault();
 
     const newShop = new ItemShop(
@@ -280,34 +328,51 @@ const ShopBuilder = ({
       initialShop?.id,
     );
     console.log("submitted Shop", newShop);
-
+    let errored = false;
     let data;
     if (newShop.id) {
-      const result = await UpdateShop({
-        variables: {
-          id: newShop.id,
-          itemShopInput: ItemShopToGraphQLInput(newShop),
-        },
-      });
-      data = result.data;
-      if (extraSubmitEffect) extraSubmitEffect(newShop);
+      try {
+        setLoading(true);
+        const result = await UpdateShop({
+          variables: {
+            id: newShop.id,
+            itemShopInput: ItemShopToGraphQLInput(newShop),
+          },
+        });
+        data = result.data;
+        if (extraSubmitEffect) extraSubmitEffect(newShop);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        errored = true;
+      }
     } else {
-      const result = await CreateShop({
-        variables: {
-          itemShopInput: ItemShopToGraphQLInput(newShop),
-        },
-      });
-      data = result.data;
-      console.log("shop created", data);
-      if (!data.createShop.id) throw new Error("Error creating new Item Shop");
+      try {
+        const result = await CreateShop({
+          variables: {
+            itemShopInput: ItemShopToGraphQLInput(newShop),
+          },
+        });
 
-      // Reset form inputs
-      setShopName("");
-      setShopDescription("");
-      setItemsInStock([]);
-      setItemsCouldStock([]);
-      if (extraSubmitEffect) extraSubmitEffect(newShop);
-      if (!newShop.id) router.push(`/shop/${data.createShop.id}`);
+        data = result.data;
+        console.log("shop created", data);
+        if (!data.createShop.id)
+          throw new Error("Error creating new Item Shop");
+      } catch (error) {
+        console.error(error);
+        errored = true;
+        if (error instanceof Error)
+          setErrorMessage(`Error of type: ${error.name} occurred.`);
+      }
+      if (!errored) {
+        // Reset form inputs
+        setShopName("");
+        setShopDescription("");
+        setItemsInStock([]);
+        setItemsCouldStock([]);
+        if (extraSubmitEffect) extraSubmitEffect(newShop);
+        if (!newShop.id) router.push(`/shop/${data.createShop.id}`);
+      }
     }
     setLoading(false);
   };
@@ -355,21 +420,47 @@ const ShopBuilder = ({
                 const file = e.target.files?.[0];
                 if (!file) return;
                 try {
-                  const items = await parseShopItemsFromFile(file);
+                  const { itemsCouldStock, itemsInStock, invalidItems } =
+                    await parseShopItemsFromFile(file);
                   setFileItemsCouldStock((prev) => [
                     ...prev,
-                    ...items.itemsCouldStock,
+                    ...itemsCouldStock,
                   ]);
-                  setFileItemsInStock((prev) => [
-                    ...prev,
-                    ...items.itemsInStock,
-                  ]);
+                  setFileItemsInStock((prev) => [...prev, ...itemsInStock]);
+                  setFileUploadErrors(invalidItems);
                 } catch (err) {
-                  alert("Failed to parse JSON file: " + (err as Error).message);
+                  const message = (err as Error).message || "Unknown error";
+                  setFileUploadErrors([
+                    { index: -1, item: null, reasons: [message] },
+                  ]);
+                  alert("Failed to parse JSON file: " + message);
                 }
               }}
             />
           </div>
+
+          {fileUploadErrors.length > 0 && (
+            <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+              <div className="font-semibold mb-1">
+                Invalid items in uploaded file:
+              </div>
+              {fileUploadErrors.map((err) => (
+                <div
+                  key={err.index}
+                  className="mb-2 p-2 border rounded bg-red-50 dark:bg-red-900/20"
+                >
+                  <div className="font-medium">
+                    {err.index === -1 ? "File Error" : `Item ${err.index + 1}`}:
+                  </div>
+                  <ul className="list-disc list-inside mt-1">
+                    {err.reasons.map((r, j) => (
+                      <li key={j}>{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
 
           <a
             href={`data:application/json;charset=utf-8,${encodeURIComponent(
@@ -448,7 +539,7 @@ const ShopBuilder = ({
                 <Button
                   buttonType={ButtonType.default}
                   color="green"
-                  className="absolute top-2 right-2"
+                  className="absolute bottom-2 right-2"
                   onClick={() => {
                     setItemsInStock((prev) => [...prev, item]);
                     setFileItemsInStock((prev) =>
