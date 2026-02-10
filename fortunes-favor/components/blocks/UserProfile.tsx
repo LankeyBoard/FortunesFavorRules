@@ -10,6 +10,7 @@ import CharacterCard from "./CharacterCard";
 import FullPageLoading from "../FullPageLoading";
 import UPDATE_ME_MUTATION from "@/utils/graphQLMutations/UpdateMeMutation";
 import TextInput from "./Inputs/TextInput";
+import ShopCard from "./ShopCard";
 
 interface QueryCampaign {
   id: number;
@@ -397,18 +398,7 @@ const UserProfile = () => {
                 key={shop.id}
                 className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
               >
-                <Link href={`/shop/${shop.id}`}>
-                  <div>
-                    <header className="bg-amber-300 dark:bg-amber-700 p-2 ">
-                      <span className="font-bold text-lg max-w-3/4 truncate inline-block">
-                        {shop.name}
-                      </span>
-                    </header>
-                    <div className="mx-4 my-2">
-                      <p className="line-clamp-3">{shop.description}</p>
-                    </div>
-                  </div>
-                </Link>
+                <ShopCard shop={shop} />
               </div>
             ))}
           </ul>
