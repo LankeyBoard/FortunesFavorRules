@@ -13,7 +13,7 @@ const DamageStringMaker = (dmg: Damage, stats: Stats): string => {
   let returnString = diceStr ?? "";
   if (statStr) returnString = returnString.concat(` + ${statStr}`);
   if (dmg.flat) returnString = returnString.concat(` + ${dmg.flat}`);
-  if (dmg.type) returnString = returnString.concat(` + ${dmg.type}`);
+  if (dmg.type) returnString = returnString.concat(` ${dmg.type.join(" or ")}`);
   return returnString;
 };
 export default DamageStringMaker;

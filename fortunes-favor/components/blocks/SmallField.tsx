@@ -16,9 +16,7 @@ const SmallField = ({
         className,
       )}
     >
-      <span className="text-xs tracking-tighter opacity-80 capitalize">
-        {label}
-      </span>
+      <span className="text-xs tracking-tighter capitalize">{label}</span>
       <span className="text-lg font-light whitespace-nowrap">{children}</span>
     </div>
   );

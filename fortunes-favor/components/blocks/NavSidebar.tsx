@@ -8,30 +8,13 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import DoubleChevron from "../icons/DoubleChevron";
+import buildPartialPathFromStr, {
+  partialPath,
+} from "@/utils/buildPartialPathFromStr";
 
 const buttonUpStyle =
   "inline-flex items-center w-10 h-10 justify-center text-sm backdrop-blur-sm text-gray-500 rounded-lg md:hidden hover:bg-black/30 dark:hover:bg-black/60 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700/70 dark:focus:ring-gray-600";
 const buttonDownStyle = buttonUpStyle + " rotate-180";
-
-class partialPath {
-  pathname!: string;
-  hash?: string;
-  constructor(pathname: string, hash?: string) {
-    this.pathname = pathname[0] === "/" ? pathname : "/" + pathname;
-    this.hash = hash;
-  }
-  isEqual(other: partialPath) {
-    return this.pathname === other.pathname && this.hash === other.hash;
-  }
-  toString() {
-    return this.pathname + (this.hash ? "#" + this.hash : "");
-  }
-}
-
-const buildPartialPathFromStr = (str: string) => {
-  const [pathname, hash] = str.split("#");
-  return new partialPath(pathname, hash);
-};
 
 const mapNavToPartialPaths = (
   navMap: NavSection[],
@@ -294,6 +277,9 @@ const NavSidebar = ({
           <></>
         ) : (
           <div className="flex flex-row justify-center items-center bg-black/50 border-t-2 border-b-2 border-teal-400/50 md:bg-transparent">
+            <span className="text-sm tracking-wider text-slate-900 dark:text-slate-300 mr-2">
+              {menuVisible ? "Hide" : "Show"}
+            </span>
             <button
               type="button"
               className={buttonStyle}
@@ -304,9 +290,15 @@ const NavSidebar = ({
                 setButtonStyle(!menuVisible ? buttonDownStyle : buttonUpStyle);
               }}
             >
-              <span className="sr-only">Open main menu</span>
-              <DoubleChevron />
+              <div className="h-10 flex flex-row justify-items-center hover:opacity-70">
+                <span className="sr-only">Open navigation menu</span>
+
+                <DoubleChevron className="h-auto" />
+              </div>
             </button>
+            <span className="text-sm tracking-wider text-slate-900 dark:text-slate-300 ml-2">
+              Menu
+            </span>
           </div>
         )}
 

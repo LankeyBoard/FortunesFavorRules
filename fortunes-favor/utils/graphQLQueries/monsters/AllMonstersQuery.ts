@@ -39,7 +39,7 @@ export type Monster = {
   hit: number;
   range: Range;
   damage: Damage;
-  tags?: [string];
+  tags?: string[];
   features: [GenericFeature];
 };
 
@@ -48,7 +48,7 @@ export type MonsterGroup = {
   name: string;
   description: [RuleText];
   img?: Img;
-  monsters: [Monster];
+  monsters: Monster[];
 };
 
 export type MonsterData = {

@@ -29,10 +29,10 @@ const MonsterCard: React.FC<MonsterProps> = ({ monster }) => (
     <div className="m-2">
       <TextBlock text={monster.description} />
       <div className="flex my-2">
-        <Tag className="">
+        <Tag className="bg-fuchsia-200 dark:bg-fuchsia-800">{monster.type}</Tag>
+        <Tag className="bg-purple-200 dark:bg-purple-800">
           <span className="capitalize">{monster.size.toLowerCase()}</span>
         </Tag>
-        <Tag className="bg-amber-200 dark:bg-amber-800">{monster.type}</Tag>
         {monster.tags?.map((tag) => (
           <Tag className="bg-slate-300 dark:bg-slate-700" key={tag}>
             {tag}
@@ -41,17 +41,17 @@ const MonsterCard: React.FC<MonsterProps> = ({ monster }) => (
       </div>
 
       <div className="flex flex-col md:flex-row mb-2 bg-teal-100 dark:bg-teal-950">
-        <div className="flex mx-auto md:mr-2">
+        <div className="flex mx-auto flex-wrap md:mr-2">
           <SmallField label="Mettle">{monster.Stats.mettle}</SmallField>
           <SmallField label="Agility">{monster.Stats.agility}</SmallField>
           <SmallField label="Heart">{monster.Stats.heart}</SmallField>
           <SmallField label="Intellect">{monster.Stats.intellect}</SmallField>
         </div>
-        <div className="flex flex-row mx-auto md:mr-2 bg-teal-200 dark:bg-teal-800 ">
+        <div className="flex flex-row mx-auto flex-wrap md:mr-2 bg-teal-200 dark:bg-teal-800 ">
           <SmallField label="Health">{monster.health}</SmallField>
           <SmallField label="Armor">{monster.armor}</SmallField>
         </div>
-        <div className="flex flex-row mx-auto">
+        <div className="flex flex-row flex-wrap mx-auto">
           <SmallField label="To Hit">
             {monster.hit > 0 && "+"}
             {monster.hit}
