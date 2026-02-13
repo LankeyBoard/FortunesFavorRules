@@ -2,7 +2,7 @@ import convertToChoices from "./convertToChoices";
 import { RuleType } from "./enums";
 import { TextField } from "./FieldTypes";
 import { GenericFeature } from "./graphQLtypes";
-import featureChoice from "./types/featureChoice";
+import FeatureChoice from "./types/featureChoice";
 
 export class CharacterTrait implements GenericFeature {
   title: string;
@@ -12,7 +12,7 @@ export class CharacterTrait implements GenericFeature {
   list: string[];
   shortText?: string | undefined;
   multiSelect: boolean;
-  choices: featureChoice[];
+  choices: FeatureChoice[];
   chooseNum: number;
   isVariant: boolean;
   constructor(data: any) {

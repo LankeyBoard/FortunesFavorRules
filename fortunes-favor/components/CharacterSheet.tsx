@@ -30,7 +30,6 @@ import {
 } from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
-  ChoiceData,
   GetCharacterData,
 } from "@/utils/graphQLQueries/playerCharacterQueries/PlayerCharacterQuery";
 import UPDATE_CHARACTER_MUTATION from "@/utils/graphQLMutations/UpdateCharacterMutation";
@@ -93,6 +92,21 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
       item.effects,
     );
   });
+  character.spells = data.character.spells;
+  character.noviceFeatures = data.character.noviceFeatures.map(
+    (f) =>
+      new PlayerCharacterFeature(
+        f.title,
+        FeatureSource.NOVICE_FEATURE,
+        [],
+        f.slug,
+        f.ruleType as RuleType,
+        f.text,
+        f.multiSelect,
+        convertToChoices(f.choices),
+        f.chooseNum,
+      ),
+  );
   console.debug("extractPlayerCharacter returned", character);
   return character;
 };

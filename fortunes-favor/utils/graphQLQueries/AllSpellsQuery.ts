@@ -4,16 +4,19 @@ export enum SpellType {
   Divine,
   Nature,
 }
+
+export type Spell = {
+  name: string;
+  level: number;
+  type: [SpellType];
+  castingTime: string;
+  duration: string;
+  range?: string;
+  description: string;
+};
+
 export type SpellQueryData = {
-  allSpells: {
-    name: string;
-    level: number;
-    type: [SpellType];
-    castingTime: string;
-    duration: string;
-    range?: string;
-    description: string;
-  }[];
+  allSpells: Spell[];
 };
 const ALL_SPELLS_QUERY = gql`
   query AllSpells {

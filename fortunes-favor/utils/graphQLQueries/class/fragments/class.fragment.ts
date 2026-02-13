@@ -45,6 +45,15 @@ const CHARACTER_CLASS_FRAGMENT = gql`
     health
     healthOnLevel
     href
+    possibleSpells {
+      name
+      description
+      duration
+      castingTime
+      level
+      range
+      type
+    }
     range {
       max
       min

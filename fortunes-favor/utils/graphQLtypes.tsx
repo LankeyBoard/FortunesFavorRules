@@ -1,5 +1,5 @@
 import { ActionType, ComplexityOptions, RuleType, StatOptions } from "./enums";
-import featureChoice from "./types/featureChoice";
+import FeatureChoice from "./types/featureChoice";
 
 export type SearchResult = {
   title: string;
@@ -52,7 +52,7 @@ export type GenericFeature = {
   text: RuleText[];
   shortText?: string;
   multiSelect: boolean;
-  choices: featureChoice[];
+  choices: FeatureChoice[];
   isVariant: boolean;
 };
 
@@ -125,7 +125,7 @@ export type CharacterClassFeature = {
   text: RuleText[];
   multiSelect: boolean;
   shortText?: string;
-  choices: featureChoice[];
+  choices: FeatureChoice[];
   isVariant: boolean;
 };
 

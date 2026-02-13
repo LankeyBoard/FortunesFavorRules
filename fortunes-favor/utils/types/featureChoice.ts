@@ -1,5 +1,5 @@
 import Text from "./text";
-export type complexChoice = {
+export type ComplexChoice = {
   href: string;
   shortTitle: string;
   actionType: string;
@@ -12,8 +12,8 @@ export type complexChoice = {
   title: string;
   text: Text[];
 };
-type featureChoice = {
+type FeatureChoice = {
   isChosen: boolean;
-  choice: Text | complexChoice;
+  choice: Text | ComplexChoice;
 };
-export default featureChoice;
+export default FeatureChoice;
