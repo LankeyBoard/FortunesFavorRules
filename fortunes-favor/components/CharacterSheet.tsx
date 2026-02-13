@@ -93,7 +93,6 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
     );
   });
   character.spells = data.character.spells;
-  character.possibleSpells = data.character.possibleSpells;
   character.noviceFeatures = data.character.noviceFeatures.map(
     (f) =>
       new PlayerCharacterFeature(

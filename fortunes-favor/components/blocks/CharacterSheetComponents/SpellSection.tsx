@@ -6,25 +6,39 @@ import { useState } from "react";
 import Button, { ButtonType } from "../Inputs/Button";
 
 const SpellSection = ({ spells }: { spells: Spell[] }) => {
-  const [showSpells, setShowSpells] = useState(true);
+  const [areSpellsExpanded, setAreSpellsExpanded] = useState(false);
 
   return (
     <div>
       <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6 mb-2">
         Spells
       </h2>
-      {showSpells &&
-        spells.map((spell, i) => {
-          return <SpellCard spell={spell} key={i} />;
-        })}
-      <Button
-        buttonType={ButtonType.simple}
-        color="blue"
-        className="mx-auto"
-        onClick={() => setShowSpells(!showSpells)}
-      >
-        {showSpells ? <span>Hide Spells</span> : <span>Show Spells</span>}
-      </Button>
+      <div className="flex flex-row-reverse gap-2">
+        {spells.length > 0 && (
+          <Button
+            buttonType={ButtonType.simple}
+            color="amber"
+            onClick={() => {
+              setAreSpellsExpanded(!areSpellsExpanded);
+            }}
+          >
+            {areSpellsExpanded ? (
+              <span>Contract All</span>
+            ) : (
+              <span>Expand All</span>
+            )}
+          </Button>
+        )}
+      </div>
+      {spells.map((spell) => {
+        return (
+          <SpellCard
+            spell={spell}
+            key={spell.name}
+            isExpanded={areSpellsExpanded}
+          />
+        );
+      })}
     </div>
   );
 };

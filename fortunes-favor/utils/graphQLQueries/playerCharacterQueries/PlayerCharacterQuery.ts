@@ -95,15 +95,7 @@ const GET_CHARACTER_INFO = gql`
         range
         type
       }
-      possibleSpells {
-        name
-        description
-        duration
-        castingTime
-        level
-        range
-        type
-      }
+
       noviceFeatures {
         actionType
         choices {
@@ -326,6 +318,7 @@ type ClassData = {
       };
     };
   };
+  possibleSpells?: Spell[];
 };
 
 type TextData = {
@@ -465,7 +458,6 @@ export type GetCharacterData = {
     characterCulture: cultureData;
     characterLineage: lineageData;
     spells: Spell[];
-    possibleSpells: Spell[];
   };
   characterClasses: ClassData[];
   cultures: cultureData[];

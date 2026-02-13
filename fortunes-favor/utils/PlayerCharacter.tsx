@@ -324,7 +324,6 @@ export default class PlayerCharacter {
   private _form?: Form;
   private _isInForm: boolean = false;
   spells: Spell[];
-  possibleSpells: Spell[];
 
   private _beast?: BeastMasterBeast;
   constructor(
@@ -364,7 +363,6 @@ export default class PlayerCharacter {
       this._isInForm = startingCharacter.isInForm;
       this._beast = startingCharacter.beast;
       this.spells = startingCharacter.spells;
-      this.possibleSpells = startingCharacter.possibleSpells;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -383,7 +381,6 @@ export default class PlayerCharacter {
       this._features = [];
       this._items = [];
       this.spells = [];
-      this.possibleSpells = [];
       if (characterClass)
         ({
           actions: this._actions,
@@ -439,6 +436,7 @@ export default class PlayerCharacter {
       features: this._features,
     } = updateFeatures(FeatureSource.CLASS, characterClass, this));
     this.sortFeatures();
+    this.spells = [];
   }
   public get culture(): CharacterCulture {
     if (!this._characterCulture)
@@ -949,6 +947,10 @@ export default class PlayerCharacter {
     );
   }
 
+  public get possibleSpells() {
+    return this.characterClass.possibleSpells;
+  }
+
   // Helper Functions
 
   public updateChoices(choices: string[]): PlayerCharacter {
@@ -1155,13 +1157,13 @@ export default class PlayerCharacter {
         choiceSlug: f.slug,
       };
     });
-    console.log(
-      "Generic Features",
-      noviceFeatures,
-      veteranFeatures,
-      this.noviceFeatures,
-      this.veteranFeatures,
-    );
+
+    const spells = this.spells.map((s) => {
+      return {
+        featureSlug: "spells",
+        choiceSlug: s.name,
+      };
+    });
 
     const languages =
       this.languages?.map((l) => {
@@ -1178,6 +1180,7 @@ export default class PlayerCharacter {
       noviceFeatures,
       veteranFeatures,
       languages,
+      spells,
     );
   }
 }

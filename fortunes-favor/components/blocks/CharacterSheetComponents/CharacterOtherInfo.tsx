@@ -66,6 +66,7 @@ const CharacterOtherInfo = ({
         />
       )}
       {character?.spells &&
+        character?.possibleSpells &&
         character.possibleSpells.length > 0 &&
         (isOwner && isEditable ? (
           <EditableSpellSection
@@ -73,7 +74,9 @@ const CharacterOtherInfo = ({
             setCharacter={setCharacter}
           />
         ) : (
-          <SpellSection spells={character.spells} />
+          character.spells.length > 0 && (
+            <SpellSection spells={character.spells} />
+          )
         ))}
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
         <CharacterItems

@@ -2,6 +2,7 @@ import { ComplexityOptions, findEnumValue, StatOptions } from "./enums";
 import CharacterFeature from "./CharacterFeature";
 import { CharacterClass } from "./graphQLtypes";
 import { Form } from "@/components/blocks/FormDisplay";
+import { Spell } from "./graphQLQueries/AllSpellsQuery";
 
 export type TrainingOptions = {
   pick?: number;
@@ -88,6 +89,7 @@ export default class CharacterClassData implements CharacterClass {
   };
   features: CharacterFeature[];
   extra: Extra;
+  possibleSpells: Spell[];
   href: string;
   variants?: CharacterClassData[];
   constructor(data: any) {
@@ -183,5 +185,6 @@ export default class CharacterClassData implements CharacterClass {
     this.variants = data.variants?.map(
       (variant: any) => new CharacterClassData(variant),
     );
+    this.possibleSpells = data.possibleSpells;
   }
 }
