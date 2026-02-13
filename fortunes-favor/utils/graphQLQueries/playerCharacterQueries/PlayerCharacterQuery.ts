@@ -11,6 +11,7 @@ import {
 } from "../lineage/fragments/lineageFragments";
 import TRAIT_FRAGMENT from "../sharedFragments/traitFragment";
 import CHOICE_FRAGMENT from "../sharedFragments/choiceFragment";
+import { Spell } from "../AllSpellsQuery";
 
 const GET_CHARACTER_INFO = gql`
   ${RULE_TEXT_FRAGMENT}
@@ -85,6 +86,64 @@ const GET_CHARACTER_INFO = gql`
           ...TraitFragment
         }
       }
+      spells {
+        name
+        description
+        duration
+        castingTime
+        level
+        range
+        type
+      }
+      possibleSpells {
+        name
+        description
+        duration
+        castingTime
+        level
+        range
+        type
+      }
+      noviceFeatures {
+        actionType
+        choices {
+          ...ChoiceFragment
+        }
+        chooseNum
+        featureType
+        costsFortunesFavor
+        href
+        ruleType
+        multiSelect
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        title
+        text {
+          ...RuleTextFragment
+        }
+      }
+      veteranFeatures {
+        actionType
+        choices {
+          ...ChoiceFragment
+        }
+        chooseNum
+        featureType
+        costsFortunesFavor
+        href
+        ruleType
+        multiSelect
+        shortText
+        shortTitle
+        slug
+        staminaCost
+        title
+        text {
+          ...RuleTextFragment
+        }
+      }
     }
     characterClasses {
       ...CharacterClassFragment
@@ -155,7 +214,7 @@ const GET_CHARACTER_INFO = gql`
 
 export type ChoiceData = {
   isChosen: boolean;
-  simpleChoice?: textData;
+  simpleChoice?: TextData;
   complexChoice?: {
     href: string;
     shortTitle?: string;
@@ -167,7 +226,7 @@ export type ChoiceData = {
     slug: string;
     staminaCost: number;
     title: string;
-    text: textData[];
+    text: TextData[];
   };
 };
 
@@ -269,7 +328,7 @@ type ClassData = {
   };
 };
 
-type textData = {
+type TextData = {
   text: string;
   type: string;
 };
@@ -299,7 +358,7 @@ type lineageData = {
     slug: string;
     staminaCost: number;
     title: string;
-    text: textData[];
+    text: TextData[];
   }[];
 };
 
@@ -322,7 +381,7 @@ type cultureData = {
     shortTitle: string;
     slug: string;
     staminaCost: number;
-    text: textData[];
+    text: TextData[];
     title: string;
   }[];
   title: string;
@@ -351,11 +410,49 @@ export type GetCharacterData = {
     shieldName: string;
     rangeMin: number;
     characterClass: ClassData;
+    noviceFeatures: {
+      actionType: string;
+      choices: ChoiceData[];
+      chooseNum: number;
+      featureType: string;
+      costsFortunesFavor: boolean;
+      href: string;
+      ruleType: string;
+      multiSelect: boolean;
+      shortText: string;
+      shortTitle: string;
+      slug: string;
+      staminaCost: number;
+      title: string;
+      text: {
+        text: string;
+        type: string;
+      }[];
+    }[];
+    veteranFeatures: {
+      actionType: string;
+      choices: ChoiceData[];
+      chooseNum: number;
+      featureType: string;
+      costsFortunesFavor: boolean;
+      href: string;
+      ruleType: string;
+      multiSelect: boolean;
+      shortText: string;
+      shortTitle: string;
+      slug: string;
+      staminaCost: number;
+      title: string;
+      text: {
+        text: string;
+        type: string;
+      }[];
+    }[];
     items: {
       slots: number;
       id: string;
       title: string;
-      text: textData[];
+      text: TextData[];
       rarity: string;
       uses: {
         max: number;
@@ -367,6 +464,8 @@ export type GetCharacterData = {
     }[];
     characterCulture: cultureData;
     characterLineage: lineageData;
+    spells: Spell[];
+    possibleSpells: Spell[];
   };
   characterClasses: ClassData[];
   cultures: cultureData[];

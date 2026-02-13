@@ -17,9 +17,10 @@ import CharacterItem from "./CharacterItem";
 import applyConditionalEffects, { Effect } from "./applyConditionalEffects";
 import { Form } from "@/components/blocks/FormDisplay";
 import filterChoicesToChosen from "./FilterChoicesToChosen";
-import featureChoice from "./types/featureChoice";
+import FeatureChoice from "./types/featureChoice";
 import Text from "./types/text";
 import { CharacterTrait } from "./CharacterTrait";
+import { Spell } from "./graphQLQueries/AllSpellsQuery";
 
 export type Stats = {
   mettle: number;
@@ -121,7 +122,7 @@ export class PlayerCharacterFeature extends GenericFeature {
     ruleType: RuleType,
     text: Text[],
     multiSelect: boolean,
-    choices: featureChoice[],
+    choices: FeatureChoice[],
     chooseNum: number,
     isVariant?: boolean,
     shortText?: string,
@@ -155,7 +156,7 @@ export class PlayerCharacterFeature extends GenericFeature {
     return choice.isChosen;
   }
 
-  private findChosen(slug: string): featureChoice {
+  private findChosen(slug: string): FeatureChoice {
     const choice = this.choices.find((c) => {
       if ("slug" in c.choice) {
         return c.choice.slug === slug;
@@ -322,6 +323,8 @@ export default class PlayerCharacter {
   private _maxSlots?: number;
   private _form?: Form;
   private _isInForm: boolean = false;
+  spells: Spell[];
+  possibleSpells: Spell[];
 
   private _beast?: BeastMasterBeast;
   constructor(
@@ -360,6 +363,8 @@ export default class PlayerCharacter {
       this._form = startingCharacter.form;
       this._isInForm = startingCharacter.isInForm;
       this._beast = startingCharacter.beast;
+      this.spells = startingCharacter.spells;
+      this.possibleSpells = startingCharacter.possibleSpells;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -377,6 +382,8 @@ export default class PlayerCharacter {
       this._counters = [];
       this._features = [];
       this._items = [];
+      this.spells = [];
+      this.possibleSpells = [];
       if (characterClass)
         ({
           actions: this._actions,
@@ -875,7 +882,6 @@ export default class PlayerCharacter {
 
   public get choices() {
     let choices: Map<string, string[]> = new Map();
-    const featureChoices: string[] = [];
     this._features?.forEach((feature) => {
       if (feature.choices)
         choices.set(feature.slug, filterChoicesToChosen(feature.choices));
@@ -895,13 +901,33 @@ export default class PlayerCharacter {
 
   public get noviceFeatures(): PlayerCharacterFeature[] {
     return this.allFeatures.filter((feature) => {
-      feature.source === FeatureSource.NOVICE_FEATURE;
+      return (
+        feature.source.toString() === FeatureSource.NOVICE_FEATURE.toString()
+      );
     });
+  }
+
+  public set noviceFeatures(
+    features: PlayerCharacterFeature[] | CharacterFeatureData[],
+  ) {
+    const filteredFeatures = this.allFeatures.filter(
+      (feature) => feature.source !== FeatureSource.NOVICE_FEATURE,
+    );
+    const updatedFeatures = filteredFeatures.concat(
+      features as PlayerCharacterFeature[],
+    );
+    this._actions = updatedFeatures.filter(
+      (f) => f.actionType === ActionType.ACTION,
+    );
+    this._counters = updatedFeatures.filter(
+      (f) => f.actionType === ActionType.COUNTER,
+    );
+    this._features = updatedFeatures.filter((f) => !f.actionType);
   }
 
   public get veteranFeatures(): PlayerCharacterFeature[] {
     return this.allFeatures.filter((feature) => {
-      feature.source === FeatureSource.VETERAN_FEATURE;
+      return feature.source === FeatureSource.VETERAN_FEATURE;
     });
   }
 
@@ -1129,6 +1155,13 @@ export default class PlayerCharacter {
         choiceSlug: f.slug,
       };
     });
+    console.log(
+      "Generic Features",
+      noviceFeatures,
+      veteranFeatures,
+      this.noviceFeatures,
+      this.veteranFeatures,
+    );
 
     const languages =
       this.languages?.map((l) => {

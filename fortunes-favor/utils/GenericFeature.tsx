@@ -1,5 +1,5 @@
-import { RuleType } from "./enums";
-import featureChoice from "./types/featureChoice";
+import { ActionType, RuleType } from "./enums";
+import FeatureChoice from "./types/featureChoice";
 import Text from "./types/text";
 
 export default class GenericFeature {
@@ -9,20 +9,21 @@ export default class GenericFeature {
   text: Text[];
   shortText?: string;
   multiSelect: boolean;
-  choices: featureChoice[];
+  choices: FeatureChoice[];
   chooseNum: number;
   isVariant: boolean;
-
+  actionType?: ActionType;
   constructor(
     title: string,
     slug: string,
     ruleType: RuleType,
     text: Text[],
     multiSelect?: boolean,
-    choices?: featureChoice[],
+    choices?: FeatureChoice[],
     chooseNum?: number,
     isVariant?: boolean,
     shortText?: string,
+    actionType?: ActionType,
   ) {
     this.title = title;
     this.slug = slug;
@@ -33,5 +34,6 @@ export default class GenericFeature {
     this.choices = choices ? choices.filter((c) => c.choice != undefined) : [];
     this.chooseNum = chooseNum ?? 0;
     this.isVariant = isVariant ?? false;
+    this.actionType = actionType;
   }
 }

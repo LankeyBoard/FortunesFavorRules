@@ -4,10 +4,11 @@ import NumInput from "../Inputs/NumInput";
 import SmallField from "../SmallField";
 import LargeField from "../LargeField";
 import CharacterItems from "./CharacterItems";
-import CharacterFeatures from "./CharacterFeatures";
 import EditableShifterFormDisplay from "./EditableFormDisplay";
 import EditableBeastmasterBeastsDisplay from "./EditableBeastmasterBeastsDisplay";
 import { CharacterSheetViewMode } from "@/components/CharacterSheet";
+import SpellSection from "./SpellSection";
+import EditableSpellSection from "./EditableSpellSection";
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
@@ -64,6 +65,16 @@ const CharacterOtherInfo = ({
           isEditable={isEditable}
         />
       )}
+      {character?.spells &&
+        character.possibleSpells.length > 0 &&
+        (isOwner && isEditable ? (
+          <EditableSpellSection
+            character={character}
+            setCharacter={setCharacter}
+          />
+        ) : (
+          <SpellSection spells={character.spells} />
+        ))}
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
         <CharacterItems
           character={character}
