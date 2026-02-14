@@ -81,6 +81,7 @@ const findCurrentPathOnScroll = (
   partialPaths: PartialPath[],
   document: Document,
 ) => {
+  if (typeof window === "undefined") return undefined;
   let closestPath: PartialPath | undefined;
   let closestLocation: number | undefined;
 
@@ -336,6 +337,7 @@ const NavSidebar = ({
   highlightOnlyTopLevel?: boolean;
 }) => {
   const { height, width } = useWindowDimensions();
+  const pathname = usePathname();
   const router = useRouter();
 
   const navPaths = mapNavToPartialPaths(navMap, highlightOnlyTopLevel);
@@ -388,10 +390,11 @@ const NavSidebar = ({
 
   // when the path changes, find the current path.
   useEffect(() => {
+    if (typeof window === "undefined") return;
     let path = findCurrentPath(navPaths, window.location);
     if (!path) path = findCurrentPathOnScroll(navPaths, document);
     if (path) setCurrentPath(path);
-  }, [window.location]);
+  }, [pathname]);
 
   useEffect(() => {
     setCurrentNavMap(updateNavMap(navMap, currentPath, highlightOnlyTopLevel));
@@ -410,6 +413,7 @@ const NavSidebar = ({
     const id = setTimeout(
       (path) => {
         if (!path || path.pathname !== currentPath?.pathname) return;
+        if (typeof window === "undefined") return;
         router.replace(
           `${path.pathname}${window.location.search}${path.hash ? "#" + path.hash : ""}`,
           { scroll: false },
