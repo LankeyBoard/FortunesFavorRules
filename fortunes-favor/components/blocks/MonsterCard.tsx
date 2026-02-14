@@ -13,7 +13,7 @@ type MonsterProps = {
 
 const MonsterCard: React.FC<MonsterProps> = ({ monster }) => (
   <div
-    className="w-full xl:w-1/2 block p-2 bg-slate-500/10 dark:bg-slate-500/10 scroll-mt-44"
+    className="w-full 2xl:w-1/2 block p-2 bg-slate-500/10 dark:bg-slate-500/10 scroll-mt-44"
     id={monster.name}
   >
     <div className="w-full h-fit bg-teal-300 dark:bg-teal-700 flex justify-between items-center">

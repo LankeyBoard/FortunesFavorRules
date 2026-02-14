@@ -9,6 +9,8 @@ import MonsterCard from "@/components/blocks/MonsterCard";
 import MonsterSection from "@/components/blocks/MonsterSection";
 import NavSidebar from "@/components/blocks/NavSidebar";
 import { NavSection } from "../rules/layout";
+import AlertPopup from "@/components/AlertPopup";
+import RuleDisplay from "@/components/blocks/RuleDisplay";
 
 // type NavSection = {
 //   title: string;
@@ -52,25 +54,30 @@ async function MonstersPage() {
   return (
     <Suspense fallback={<FullPageLoading />}>
       <div className="flex flex-row flex-grow">
-        <div className="fixed md:w-64 h-screen">
-          <NavSidebar navMap={monstersNav} highlightTopLevel={true} />
+        <div className="flex-1 flex overflow-hidden mt-6 md:mt-0 pb-10 md:pb-0">
+          <div className="flex-1 overflow-auto">
+            <RuleDisplay>
+              {data.allMonsters.map((m) => {
+                return (
+                  <div
+                    key={m.name}
+                    className="even:bg-purple-50/20 even:dark:bg-purple-950/20"
+                  >
+                    {"level" in m ? (
+                      <MonsterCard monster={m} />
+                    ) : (
+                      <MonsterSection monsterGroup={m} />
+                    )}
+                  </div>
+                );
+              })}
+            </RuleDisplay>
+          </div>
         </div>
-        <div className="ml-0 md:ml-64 w-full overflow-hidden md:overflow-auto max-h-screen md:max-h-none">
-          {data.allMonsters.map((m) => {
-            return (
-              <div
-                key={m.name}
-                className="even:bg-purple-50/20 even:dark:bg-purple-950/20"
-              >
-                {"level" in m ? (
-                  <MonsterCard monster={m} />
-                ) : (
-                  <MonsterSection monsterGroup={m} />
-                )}
-              </div>
-            );
-          })}
+        <div className="fixed z-50">
+          <NavSidebar navMap={monstersNav} highlightOnlyTopLevel={true} />
         </div>
+        <AlertPopup />
       </div>
     </Suspense>
   );

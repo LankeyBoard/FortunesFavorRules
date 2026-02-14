@@ -263,6 +263,35 @@ export default async function Home() {
                 </ul>
               </td>
             </tr>
+            <tr className="border-slate-500 border mb-2">
+              <td className="border-spacing-x-3 align-baseline">2/14/2026</td>
+              <td>
+                <ul>
+                  <li>
+                    <SlugLinker
+                      text={
+                        "Added [monsters](/monsters) and [GM Rules](/rules/gm_rules)."
+                      }
+                    />
+                  </li>
+                  <li>
+                    <SlugLinker
+                      text={"Improved the navigation of the rules pages."}
+                    />
+                  </li>
+                  <li>
+                    <SlugLinker text={"All rules rebalanced and updated."} />
+                  </li>
+                  <li>
+                    <SlugLinker
+                      text={
+                        "Updated the rules for [Clashes and Counters](/rules/player_rules#BASIC-COUNTERS) and updated some classes and features to match"
+                      }
+                    />
+                  </li>
+                </ul>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
