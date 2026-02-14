@@ -15,11 +15,13 @@ export type NavSection = {
   shortTitle?: string;
   basePath: string;
   href?: string;
+  isCurrent?: boolean;
   subroutes?: {
     title: string;
     shortTitle?: string;
     slug: string;
     href: string;
+    isCurrent?: boolean;
   }[];
 };
 

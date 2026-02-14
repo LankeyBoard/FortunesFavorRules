@@ -15,7 +15,7 @@ const TopNav = () => {
           <div className="md:order-1">
             <NavHeader />
           </div>
-          <div className="md:order-3">
+          <div className="md:order-3 pr-2 md:pr-0">
             <SignupLoginButtons />
           </div>
         </div>

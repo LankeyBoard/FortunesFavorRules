@@ -9,15 +9,11 @@ export default function RuleDisplay({
   children: React.ReactNode;
 }) {
   const { height, width } = useWindowDimensions();
-  const [ruleStyle, setRuleStyle] = useState(
-    "mx-20 my-10 max-w-4xl xl:mx-auto"
-  );
+  const [ruleStyle, setRuleStyle] = useState("my-5 md:m-5 max-w-full");
   useEffect(() => {
     if (typeof window !== "undefined")
       if (!isSmallWindow(window.innerWidth)) {
-        setRuleStyle("ml-72 mr-5 my-10 max-w-4xl xxl:mx-auto");
-      } else {
-        setRuleStyle("my-5 md:m-5");
+        setRuleStyle("ml-72 mr-5 my-10 overflow-hidden");
       }
   }, [width]);
   return <div className={ruleStyle}>{children}</div>;
