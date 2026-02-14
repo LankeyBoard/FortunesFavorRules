@@ -34,6 +34,7 @@ const SignupLoginButtons = () => {
         <Button
           color="amber"
           buttonType={ButtonType.default}
+          className="text-nowrap"
           onClick={() => {
             setIsOpen(true), setLoginClicked(false);
           }}
