@@ -67,8 +67,14 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
       }
     }
   }, [field.slug]);
+
   return (
-    <div id={field.slug} className="z-0 scroll-mt-20">
+    <div
+      id={field.slug}
+      className={
+        depth === 1 ? "z-0 scroll-mt-20 clear-both" : "z-0 scroll-mt-20"
+      }
+    >
       <div className={titleStyler(depth)}>
         <label className="display-flex">
           {field.title}{" "}
