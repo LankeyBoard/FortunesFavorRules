@@ -42,7 +42,13 @@ const Culture = ({ data, isList = false }: CultureProps) => {
       </div>
 
       <div className="px-3">
-        {data.img && <ImgDisplay img={data.img} altText={c.title} />}
+        {data.img && (
+          <ImgDisplay
+            img={data.img}
+            altText={c.title}
+            className="m-4 w-1/2 float-right md:w-1/2"
+          />
+        )}
         <div className="italic">{c.desc}</div>
         <div>
           <span className="font-semibold">Language: </span>

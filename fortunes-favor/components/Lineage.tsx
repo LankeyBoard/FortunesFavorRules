@@ -86,7 +86,13 @@ const Lineage = ({
         )}
       </div>
       <div className="px-3">
-        {data.img && <ImgDisplay img={data.img} altText={lineageRules.title} />}
+        {data.img && (
+          <ImgDisplay
+            img={data.img}
+            altText={lineageRules.title}
+            className="m-4 w-1/2 float-right"
+          />
+        )}
         <div className="italic">{lineageRules.desc}</div>
         <div>
           <span className="font-semibold">Size: </span>{" "}
