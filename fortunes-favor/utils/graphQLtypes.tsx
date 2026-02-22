@@ -147,3 +147,61 @@ export type CharacterClass = {
   deflect: Deflect;
   features: CharacterClassFeature[];
 };
+
+export type User = {
+  id: string;
+  name?: string;
+  email: string;
+};
+
+export type Speed = {
+  type: string;
+  speed: number;
+};
+
+export type GenericFeatureData = {
+  title: string;
+  slug: string;
+  href?: string;
+  shortTitle?: string;
+  staminaCost?: number;
+  costsFortunesFavor: boolean;
+  actionType?: ActionType;
+  ruleType: RuleType;
+  text?: RuleText[];
+  shortText?: string;
+  multiSelect: boolean;
+  chooseNum?: number;
+  featureType?: string;
+  isVariant: boolean;
+  img?: Img;
+};
+
+export type EncounterMonsterData = {
+  name: string;
+  level: number;
+  size: string;
+  type: string;
+  description: RuleText[];
+  img?: Img;
+  maxHealth: number;
+  currentHealth: number;
+  armor: number;
+  Stats?: BaseStats;
+  speed: Speed[];
+  hit: number;
+  range: Range;
+  damage: Damage;
+  tags?: string[];
+  features: GenericFeatureData[];
+};
+
+export type EncounterData = {
+  id: string;
+  title: string;
+  description?: string;
+  createdBy: User;
+  createdAt?: string;
+  updatedAt?: string;
+  monsters?: EncounterMonsterData[];
+};

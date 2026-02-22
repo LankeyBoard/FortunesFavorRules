@@ -12,20 +12,6 @@ import { NavSection } from "../rules/layout";
 import AlertPopup from "@/components/AlertPopup";
 import RuleDisplay from "@/components/blocks/RuleDisplay";
 
-// type NavSection = {
-//   title: string;
-//   shortTitle?: string | undefined;
-//   basePath: string;
-//   href?: string | undefined;
-//   subroutes?:
-//     | {
-//         title: string;
-//         shortTitle?: string | undefined;
-//         slug: string;
-//         href: string;
-//       }[]
-//     | undefined;
-// };
 async function MonstersPage() {
   const { data, error }: { data: MonsterData; error?: ApolloError } =
     await client.query({

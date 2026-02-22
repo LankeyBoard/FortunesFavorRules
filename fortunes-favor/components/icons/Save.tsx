@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 const Save: React.FC<React.HTMLAttributes<SVGElement>> = ({ ...props }) => {
   return (
     <svg
@@ -7,7 +9,7 @@ const Save: React.FC<React.HTMLAttributes<SVGElement>> = ({ ...props }) => {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 290 290"
       xmlSpace="preserve"
-      className={"fill-black dark:fill-white " + props.className}
+      className={twMerge("fill-black dark:fill-white ", props.className)}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g

@@ -6,7 +6,6 @@ import Button, { ButtonType } from "../Inputs/Button";
 import ItemCard from "../ItemCard";
 import CreateItem, { ItemType } from "../Inputs/CreateItem";
 import { BaseItem } from "@/utils/BaseItem";
-import { ShopItem } from "@/utils/ItemShop";
 
 type ItemCardSectionProps = {
   item: BaseItem;

@@ -1,8 +1,9 @@
 import { Damage } from "./graphQLtypes";
 import { Stats } from "./PlayerCharacter";
 
-const DamageStringMaker = (dmg: Damage, stats: Stats): string => {
-  const diceStr = dmg.count ? `${dmg.count}d${dmg.dice}` : null;
+const DamageStringMaker = (dmg: Damage, stats?: Stats): string => {
+  const diceStr = dmg.count ? `${dmg.count}d${dmg.dice}` : "";
+  if (!stats) return diceStr;
   const statStr = dmg.stat
     ?.map((s) =>
       stats[s.toLowerCase() as keyof Stats] > 0
@@ -10,7 +11,7 @@ const DamageStringMaker = (dmg: Damage, stats: Stats): string => {
         : "",
     )
     .join("+");
-  let returnString = diceStr ?? "";
+  let returnString = diceStr;
   if (statStr) returnString = returnString.concat(` + ${statStr}`);
   if (dmg.flat) returnString = returnString.concat(` + ${dmg.flat}`);
   if (dmg.type) returnString = returnString.concat(` + ${dmg.type}`);

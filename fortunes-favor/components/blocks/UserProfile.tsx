@@ -11,6 +11,8 @@ import FullPageLoading from "../FullPageLoading";
 import UPDATE_ME_MUTATION from "@/utils/graphQLMutations/UpdateMeMutation";
 import TextInput from "./Inputs/TextInput";
 import ShopCard from "./ShopCard";
+import EncounterCard from "./EncounterCard";
+import { EncounterData } from "@/utils/graphQLtypes";
 
 interface QueryCampaign {
   id: number;
@@ -41,6 +43,7 @@ interface Data {
     characters: QueryCharacter[];
     createdCampaigns: QueryCampaign[];
     createdItemShops: QueryShop[];
+    createdEncounters: EncounterData[];
   };
 }
 
@@ -81,6 +84,14 @@ const PROFILE_QUERY: TypedDocumentNode<Data, Variables> = gql`
           title
         }
       }
+      createdEncounters {
+        id
+        title
+        description
+        monsters {
+          name
+        }
+      }
     }
   }
 `;
@@ -114,6 +125,7 @@ const UserProfile = () => {
   if (!data) {
     return <FullPageLoading />;
   }
+  console.log(data);
   const user = data.me;
   const characters = user.characters;
   const campaignIds = new Set(
@@ -130,7 +142,6 @@ const UserProfile = () => {
       campaignIds.add(character.campaign.id);
     }
   });
-  console.log("campaign IDs", campaignIds, campaigns, characters);
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/");
@@ -399,6 +410,31 @@ const UserProfile = () => {
                 className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
               >
                 <ShopCard shop={shop} />
+              </div>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2 className="font-thin text-xl mx-auto text-center pb-0 tracking-widest md:pt-6">
+          Encounters
+        </h2>
+        <div className="">
+          <ul className="flex flex-auto flex-wrap justify-center md:justify-start">
+            <Link
+              href={"/encounter/builder"}
+              className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 w-11/12 max-w-11/12 md:w-56 block"
+            >
+              <div className="text-4xl flex items-center justify-center h-full">
+                +
+              </div>
+            </Link>
+            {user.createdEncounters.map((encounter) => (
+              <div
+                key={encounter.id}
+                className="flex-none md:hover:scale-110 bg-slate-300 dark:bg-slate-700 m-2 flex-grow md:grow-0 max-w-11/12 md:w-56 block"
+              >
+                <EncounterCard encounter={encounter} />
               </div>
             ))}
           </ul>
