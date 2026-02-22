@@ -12,7 +12,6 @@ async function PlayerClass({
 }) {
   const { slug } = await params;
   const { variant } = await searchParams;
-  console.log("params", slug, variant);
   const { data } = await client.query({
     query: GET_CHARACTER_CLASS,
     variables: { slug: slug },

@@ -33,6 +33,7 @@ export type Monster = {
   description: [RuleText];
   img?: Img;
   health: number;
+  currentHealth?: number;
   armor: number;
   Stats: BaseStats;
   speed: [Speed];

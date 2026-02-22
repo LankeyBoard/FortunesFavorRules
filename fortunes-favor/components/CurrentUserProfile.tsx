@@ -1,8 +1,8 @@
 "use client";
 
-import SignupOrLoginModal from "./SignupLoginModal";
 import UserProfile from "./blocks/UserProfile";
 import { useEffect, useState } from "react";
+import VerifyLogin from "./VerifyLogin";
 
 const CurrentUserProfile: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
@@ -18,7 +18,11 @@ const CurrentUserProfile: React.FC = () => {
   if (!localStorage.getItem("token")) {
     return <div>Signup or login to view your profile</div>;
   }
-  return <UserProfile />;
+  return (
+    <VerifyLogin>
+      <UserProfile />
+    </VerifyLogin>
+  );
 };
 
 export default CurrentUserProfile;

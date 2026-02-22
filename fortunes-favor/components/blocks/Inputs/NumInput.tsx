@@ -8,7 +8,7 @@ const NumInput: React.FC<NumInputProps> = (props) => {
     <input
       {...props}
       type="text"
-      pattern="[0-9]*"
+      pattern="-?[0-9]*"
       inputMode={isUserOnIOS() ? "text" : "decimal"}
       autoComplete="off"
       className={
