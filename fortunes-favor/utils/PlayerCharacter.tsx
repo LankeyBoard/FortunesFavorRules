@@ -323,7 +323,7 @@ export default class PlayerCharacter {
   private _maxSlots?: number;
   private _form?: Form;
   private _isInForm: boolean = false;
-  spells: Spell[];
+  private _spells: Spell[];
 
   private _beast?: BeastMasterBeast;
   constructor(
@@ -362,7 +362,7 @@ export default class PlayerCharacter {
       this._form = startingCharacter.form;
       this._isInForm = startingCharacter.isInForm;
       this._beast = startingCharacter.beast;
-      this.spells = startingCharacter.spells;
+      this._spells = startingCharacter._spells;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -380,7 +380,7 @@ export default class PlayerCharacter {
       this._counters = [];
       this._features = [];
       this._items = [];
-      this.spells = [];
+      this._spells = [];
       if (characterClass)
         ({
           actions: this._actions,
@@ -436,7 +436,7 @@ export default class PlayerCharacter {
       features: this._features,
     } = updateFeatures(FeatureSource.CLASS, characterClass, this));
     this.sortFeatures();
-    this.spells = [];
+    this._spells = [];
   }
   public get culture(): CharacterCulture {
     if (!this._characterCulture)
@@ -951,6 +951,18 @@ export default class PlayerCharacter {
     return this.characterClass.possibleSpells;
   }
 
+  public get spells() {
+    return [...this._spells].sort((a, b) => {
+      if (a.level !== b.level) {
+        return a.level - b.level;
+      }
+      return a.name.localeCompare(b.name);
+    });
+  }
+  public set spells(spells: Spell[]) {
+    this._spells = spells;
+  }
+
   // Helper Functions
 
   public updateChoices(choices: string[]): PlayerCharacter {
@@ -1158,7 +1170,7 @@ export default class PlayerCharacter {
       };
     });
 
-    const spells = this.spells.map((s) => {
+    const spells = this._spells.map((s) => {
       return {
         featureSlug: "spells",
         choiceSlug: s.name,
