@@ -2,6 +2,10 @@ import { useState } from "react";
 import Button, { ButtonType } from "./Inputs/Button";
 import DropdownField from "./Inputs/DropdownField";
 import { gql, useMutation } from "@apollo/client";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { ShopItem } from "@/utils/ItemShop";
+import FullPageLoading from "../FullPageLoading";
+import SmallLoading from "./SmallLoading";
 
 const SELL_ITEM_MUTATION = gql`
   mutation SellItem($shopId: ID!, $itemId: ID!, $characterId: ID!) {
@@ -14,9 +18,11 @@ const SELL_ITEM_MUTATION = gql`
     }
   }
 `;
+
+type Character = { name: string; id: string; coin: number };
 type BuyItemButtonProps = {
-  charactersInCampaign: { name: string; id: string; coin: number }[];
-  item: { price: number; id?: string };
+  charactersInCampaign: Character[];
+  item: ShopItem;
   shopId: string;
 };
 
@@ -25,12 +31,12 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
   item,
   shopId,
 }) => {
-  const [selectedCharacter, setSelectedCharacter] = useState(
-    charactersInCampaign.at(0),
-  );
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<Maybe<Character>>(null);
   const [showSelectCharacter, setShowSelectCharacter] = useState(false);
   const [sellError, setSellError] = useState<string | null>(null);
   const [sellItem, { loading: selling }] = useMutation(SELL_ITEM_MUTATION);
+  const [loading, setLoading] = useState(false);
   const handleSell = async () => {
     if (!selectedCharacter) {
       console.warn("No character selected, cannot buy item.");
@@ -38,6 +44,7 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
     }
     setSellError(null);
     try {
+      setLoading(true);
       await sellItem({
         variables: {
           shopId,
@@ -48,8 +55,10 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
       setShowSelectCharacter(false);
       setSelectedCharacter(undefined);
       window.location.reload();
+      setLoading(false);
     } catch (e) {
       console.log("error handling sell", e);
+      setLoading(false);
       setSellError("Failed to buy item.");
     }
   };
@@ -57,8 +66,12 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
     console.warn("Cannot show buy button for item without id", item);
     return;
   }
+  if (item.count < 1) {
+    console.error("Trying to sell item with count of 0", item);
+  }
+  if (loading) return <SmallLoading />;
   return (
-    <div className="p-2">
+    <div className="px-2 pb-2 -mt-4">
       {showSelectCharacter ? (
         <>
           <div className="flex flex-row">
@@ -94,52 +107,61 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
             ) : (
               <p>No characters in this campaign!</p>
             )}
-            {selectedCharacter && selectedCharacter.coin >= item.price ? (
+            <div className="flex flex-row gap-1">
+              {selectedCharacter && selectedCharacter.coin >= item.price ? (
+                <Button
+                  buttonType={ButtonType.default}
+                  color={
+                    selectedCharacter && selectedCharacter.coin >= item.price
+                      ? "green"
+                      : "red"
+                  }
+                  type="button"
+                  disabled={
+                    !selectedCharacter || selectedCharacter.coin < item.price
+                  }
+                  onClick={handleSell}
+                >
+                  Add to Character
+                </Button>
+              ) : (
+                selectedCharacter &&
+                selectedCharacter?.coin < item.price && (
+                  <div className="text-red-600 my-auto">Not enough Coin</div>
+                )
+              )}
               <Button
                 buttonType={ButtonType.default}
-                color={
-                  selectedCharacter && selectedCharacter.coin >= item.price
-                    ? "green"
-                    : "red"
-                }
+                color="gray"
                 type="button"
-                disabled={
-                  !selectedCharacter || selectedCharacter.coin < item.price
-                }
-                onClick={handleSell}
+                onClick={() => {
+                  setSelectedCharacter(undefined);
+                  setShowSelectCharacter(false);
+                  setSellError(null);
+                }}
+                disabled={selling}
               >
-                Add to Character
+                Cancel
               </Button>
-            ) : (
-              selectedCharacter &&
-              selectedCharacter?.coin < item.price && (
-                <div className="text-red-600  my-auto">Not enough Coin</div>
-              )
-            )}
-            <Button
-              buttonType={ButtonType.default}
-              color="gray"
-              type="button"
-              onClick={() => {
-                setSelectedCharacter(undefined);
-                setShowSelectCharacter(false);
-                setSellError(null);
-              }}
-              disabled={selling}
-            >
-              Cancel
-            </Button>
+            </div>
           </div>
         </>
       ) : (
-        <Button
-          buttonType={ButtonType.default}
-          color="green"
-          type="button"
-          onClick={() => setShowSelectCharacter(true)}
-        >
-          Buy
-        </Button>
+        <div className="flex flex-row justify-between items-center gap-4">
+          {item.count < 10 ? (
+            <span>In Stock: {item.count}</span>
+          ) : (
+            <span>plenty</span>
+          )}
+          <Button
+            buttonType={ButtonType.default}
+            color="green"
+            type="button"
+            onClick={() => setShowSelectCharacter(true)}
+          >
+            Buy
+          </Button>
+        </div>
       )}
       {sellError && (
         <div className="text-red-600 text-sm mt-1">{sellError}</div>

@@ -7,9 +7,7 @@ import ITEM_SECTION_QUERY, {
   ItemSectionData,
 } from "@/utils/graphQLQueries/ItemSectionQuery";
 import client from "@/utils/graphQLclient";
-import Button, { ButtonType } from "./blocks/Inputs/Button";
-import { gql, useMutation } from "@apollo/client";
-import { UserProvider, useUser } from "./UserContext";
+import { UserProvider } from "./UserContext";
 import BuyItemButton from "./blocks/BuyItemButton";
 
 type ItemSectionProps = {
@@ -32,8 +30,6 @@ const ItemCardWButtons: React.FC<ItemCardWButtonsProps> = ({
   );
 
   const showButtons = charactersInCampaign != undefined;
-
-  console.log("characters in campaign", charactersInCampaign);
   return (
     <div className="bg-slate-50 dark:bg-slate-800 pb-2">
       <ItemCard isExpanded item={item} showDetails />

@@ -40,6 +40,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
               }
             : undefined,
           item.salePrice,
+          item.count,
         ),
     ),
     data.itemShop.itemsCouldStock.map(
