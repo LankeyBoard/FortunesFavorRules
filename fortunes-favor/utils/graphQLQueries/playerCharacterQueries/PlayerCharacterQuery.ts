@@ -12,6 +12,10 @@ import {
 import TRAIT_FRAGMENT from "../sharedFragments/traitFragment";
 import CHOICE_FRAGMENT from "../sharedFragments/choiceFragment";
 import { Spell } from "../AllSpellsQuery";
+import FORM_FRAGMENT from "./fragments/Form.fragment";
+import BEAST_FRAGMENT from "./fragments/Beast.fragment";
+import { Form } from "@/components/blocks/FormDisplay";
+import { BeastMasterBeast } from "@/utils/CharacterClass";
 
 const GET_CHARACTER_INFO = gql`
   ${RULE_TEXT_FRAGMENT}
@@ -23,6 +27,8 @@ const GET_CHARACTER_INFO = gql`
   ${LINEAGE_VARIANT_FRAGMENT}
   ${TRAIT_FRAGMENT}
   ${CHOICE_FRAGMENT}
+  ${FORM_FRAGMENT}
+  ${BEAST_FRAGMENT}
   query getCharacter($id: ID!) {
     character(id: $id) {
       createdBy {
@@ -135,6 +141,12 @@ const GET_CHARACTER_INFO = gql`
         text {
           ...RuleTextFragment
         }
+      }
+      form {
+        ...FormFragment
+      }
+      beast {
+        ...BeastFragment
       }
     }
     characterClasses {
@@ -458,6 +470,8 @@ export type GetCharacterData = {
     characterCulture: cultureData;
     characterLineage: lineageData;
     spells: Spell[];
+    form: Form;
+    beast: BeastMasterBeast;
   };
   characterClasses: ClassData[];
   cultures: cultureData[];

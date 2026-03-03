@@ -107,6 +107,8 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
         f.chooseNum,
       ),
   );
+  character.form = data.character.form;
+  character.beast = data.character.beast;
   console.debug("extractPlayerCharacter returned", character);
   return character;
 };
