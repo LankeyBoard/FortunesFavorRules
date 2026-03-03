@@ -32,6 +32,7 @@ export const GET_ITEM_SHOP = gql`
         tags
         salePrice
         slots
+        count
       }
       itemsCouldStock {
         id
@@ -78,7 +79,7 @@ type ShopItem = {
   defaultPrice: number;
   tags: string[];
 };
-type InStockItem = ShopItem & { salePrice?: number };
+type InStockItem = ShopItem & { salePrice?: number; count: number };
 
 export type ItemShopQueryDataType = {
   itemShop: {
@@ -86,7 +87,6 @@ export type ItemShopQueryDataType = {
     name: string;
     description: string;
     canEdit: boolean;
-
     itemsInStock: InStockItem[];
     itemsCouldStock: ShopItem[];
   };

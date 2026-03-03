@@ -60,6 +60,7 @@ export class ShopItem implements BaseItem {
   salePrice?: number;
   inStock: boolean;
   slots: number;
+  count: number;
   constructor(
     title: string,
     text: RuleText[],
@@ -82,6 +83,7 @@ export class ShopItem implements BaseItem {
       rechargeOn: RechargeOn;
     },
     salePrice?: number,
+    count?: number,
   ) {
     this.id = id;
     this.title = title;
@@ -95,9 +97,10 @@ export class ShopItem implements BaseItem {
     this.salePrice = salePrice;
     this.inStock = inStock;
     this.slots = slots;
+    this.count = count ?? 1;
   }
   public get price() {
-    return this.salePrice ? this.salePrice : this.defaultPrice;
+    return this.salePrice !== undefined ? this.salePrice : this.defaultPrice;
   }
   public get onSale(): boolean {
     return (

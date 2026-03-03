@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ItemShop, ShopItem, ShopItemInput } from "@/utils/ItemShop";
 import CreateItem, { ItemType } from "./blocks/Inputs/CreateItem";
 import ItemCard from "./blocks/ItemCard";
@@ -14,6 +14,8 @@ import UPDATE_SHOP_MUTATION, {
 } from "@/utils/graphQLMutations/UpdateShopMutation";
 import { BaseItem } from "@/utils/BaseItem";
 import FullPageLoading from "./FullPageLoading";
+import NumInput from "./blocks/Inputs/NumInput";
+import SmallField from "./blocks/SmallField";
 
 const exampleItems: ShopItemInput[] = [
   {
@@ -61,14 +63,20 @@ type ShopItemCardProps = {
   item: ShopItem;
   deleteItem: () => void;
   updateItem: (item: ShopItem | BaseItem) => void;
+  showStockCount: boolean;
 };
 
 const ShopItemCard: React.FC<ShopItemCardProps> = ({
   item,
   deleteItem,
   updateItem,
+  showStockCount,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [count, setCount] = useState(item.count);
+  useEffect(() => {
+    updateItem({ ...item, count: count });
+  }, [count]);
   if (isEditing) {
     return (
       <CreateItem
@@ -91,6 +99,20 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
         </div>
 
         <div className="flex flex-row gap-1 mt-2">
+          {showStockCount && (
+            <SmallField label="Stock" className="">
+              <NumInput
+                className="w-10"
+                value={count}
+                pattern="^[1-9][0-9]?$|^100$"
+                onChange={(e) => {
+                  const newCount = Number(e.target.value);
+                  if (newCount) setCount(newCount);
+                  else window.alert("Stock can only be a number");
+                }}
+              />
+            </SmallField>
+          )}
           <Button buttonType={ButtonType.icon} onClick={deleteItem}>
             <Trash color="red" />
           </Button>
@@ -106,8 +128,8 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
     );
 };
 
-const TrimItemForGraphQL = (item: ShopItem) => {
-  const { inStock, onSale, ...trimmedItem } = item;
+const TrimItemForGraphQL = (item: ShopItem, isInStock: boolean) => {
+  const { inStock, onSale, salePrice, count, ...trimmedItem } = item;
   trimmedItem.text = trimmedItem.text.map((text) => {
     return {
       text: text.text,
@@ -127,7 +149,13 @@ const TrimItemForGraphQL = (item: ShopItem) => {
   const rarity = findEnumKey(trimmedItem.rarity, Rarity) ?? Rarity.COMMON;
   if (!rarity)
     console.warn("Rarity not found for item, set to common", trimmedItem);
-  console.log("Trimmed item for graphQL", trimmedItem);
+  if (isInStock)
+    return {
+      ...trimmedItem,
+      count: count,
+      salePrice: salePrice,
+      rarity: rarity,
+    };
   return {
     ...trimmedItem,
     rarity: rarity,
@@ -139,16 +167,16 @@ const ItemShopToGraphQLInput = (shop: ItemShop): UpdateShopInputType => {
   console.log("unprocessed graph inputs", inputBuilder);
   inputBuilder.itemsInStock = inputBuilder.itemsInStock.map(
     (item: ShopItem) => {
-      return TrimItemForGraphQL(item);
+      return TrimItemForGraphQL(item, true);
     },
   );
   inputBuilder.itemsCouldStock = inputBuilder.itemsCouldStock.map(
     (item: ShopItem) => {
-      return TrimItemForGraphQL(item);
+      return TrimItemForGraphQL(item, false);
     },
   );
 
-  console.log(inputBuilder);
+  console.log("processed graphQL inputs", inputBuilder);
 
   // Runtime type check for UpdateShopInputType
   const isUpdateShopInputType = (input: any): input is UpdateShopInputType => {
@@ -513,6 +541,7 @@ const ShopBuilder = ({
               >
                 <ShopItemCard
                   item={item}
+                  showStockCount={false}
                   deleteItem={() => {
                     setFileItemsInStock((prev) =>
                       prev.filter((_, i) => i !== index),
@@ -565,6 +594,7 @@ const ShopBuilder = ({
               >
                 <ShopItemCard
                   item={item}
+                  showStockCount={false}
                   deleteItem={() => {
                     setFileItemsCouldStock((prev) =>
                       prev.filter((_, i) => i !== index),
@@ -612,6 +642,7 @@ const ShopBuilder = ({
               <ShopItemCard
                 key={item.title + item.id}
                 item={item}
+                showStockCount={true}
                 deleteItem={() => {
                   setItemsInStock((prev) => prev.filter((_, i) => i !== index));
                 }}
@@ -642,6 +673,7 @@ const ShopBuilder = ({
               <ShopItemCard
                 key={item.title + item.id}
                 item={item}
+                showStockCount={false}
                 deleteItem={() => {
                   setItemsCouldStock((prev) =>
                     prev.filter((_, i) => i !== index),
@@ -689,6 +721,9 @@ const ShopBuilder = ({
           </Button>
         </div>
       </form>
+      {errorMessage && (
+        <div className="text-red-600 my-auto">{errorMessage}</div>
+      )}
     </div>
   );
 };
