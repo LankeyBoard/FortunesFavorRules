@@ -324,7 +324,6 @@ export default class PlayerCharacter {
   private _form?: Form;
   private _isInForm: boolean = false;
   private _spells: Spell[];
-
   private _beast?: BeastMasterBeast;
   constructor(
     culture?: CharacterCulture,
@@ -522,6 +521,10 @@ export default class PlayerCharacter {
   }
   public get form(): Form | undefined {
     return this._form;
+  }
+
+  public set form(form: Form) {
+    this._form = form;
   }
 
   public setFormSlug(formSlug: string) {
@@ -1013,7 +1016,7 @@ export default class PlayerCharacter {
       }
     });
 
-    // Check if the form slug is in the choices and set the form to that if it exists.
+    // Check if the form slug is in the choices and set the beast to that if it exists.
     choices.forEach((choice) => {
       if (
         this.characterClass?.extra?.beastMasterPet?.beasts?.some(
@@ -1184,6 +1187,12 @@ export default class PlayerCharacter {
           choiceSlug: l,
         };
       }) ?? [];
+    const formChosen = this.form
+      ? [{ featureSlug: "form", choiceSlug: this.form?.slug }]
+      : [];
+    const beastChosen = this.beast
+      ? [{ featureSlug: "beast", choiceSlug: this.beast?.slug }]
+      : [];
     return classChosen.concat(
       cultureChosen,
       lineageChosen,
@@ -1193,6 +1202,8 @@ export default class PlayerCharacter {
       veteranFeatures,
       languages,
       spells,
+      formChosen,
+      beastChosen,
     );
   }
 }
