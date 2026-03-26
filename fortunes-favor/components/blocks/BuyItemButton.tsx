@@ -157,7 +157,12 @@ const BuyItemButton: React.FC<BuyItemButtonProps> = ({
             buttonType={ButtonType.default}
             color="green"
             type="button"
-            onClick={() => setShowSelectCharacter(true)}
+            onClick={() => {
+              setShowSelectCharacter(true);
+              if (charactersInCampaign.length === 1) {
+                setSelectedCharacter(charactersInCampaign[0]);
+              }
+            }}
           >
             Buy
           </Button>
