@@ -16,6 +16,7 @@ import {
 import findClass from "@/utils/findClassWithSlug";
 import findCulture from "@/utils/findCultureWithSlug";
 import findLineage from "@/utils/findLineageWithSlug";
+import FillableBar, { FillableBarColor } from "../FillableBar";
 
 const CombatStatDisplay = ({
   stat,
@@ -43,7 +44,7 @@ const ResourceDisplay = ({
   label: string;
 }) => {
   return (
-    <div className="grid grid-cols-1 justify-items-center p-4">
+    <div className="grid grid-cols-1 justify-items-center py-2 px-4">
       <p className="text-xs tracking-tighter opacity-80">{label}</p>
       <div>
         <span className="w-min text-xl align-text-bottom">
@@ -280,9 +281,7 @@ const CharacterCoreInfo = ({
       <div className="flex flex-wrap gap-x-2 justify-center">
         <SmallField label="Level">{character.level}</SmallField>
         <SmallField label="Class">{character.characterClass.title}</SmallField>
-
         <SmallField label="Culture">{character.culture.title}</SmallField>
-
         <SmallField label="Lineage">{character.lineage.title}</SmallField>
       </div>
     );
@@ -340,19 +339,36 @@ const CharacterCoreInfo = ({
       </div>
       <div className="">
         {isOwner ? (
-          <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
-            <ResourceDisplay
-              current={character.currentHealth}
-              max={character.maxHealth}
-              update={updateCurrentHealth}
-              label="Health"
-            />
-            <ResourceDisplay
-              current={character.currentStamina}
-              max={character.maxStamina}
-              update={updateCurrentStamina}
-              label="Stamina"
-            />
+          <div className="flex flex-col gap-4 justify-center mx-auto w-auto md:w-max">
+            <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto">
+              <ResourceDisplay
+                current={character.currentHealth}
+                max={character.maxHealth}
+                update={updateCurrentHealth}
+                label="Health"
+              />
+              <ResourceDisplay
+                current={character.currentStamina}
+                max={character.maxStamina}
+                update={updateCurrentStamina}
+                label="Stamina"
+              />
+              <FillableBar
+                currentValue={character.currentHealth}
+                maxValue={character.maxHealth}
+                label="Health"
+                overLimitText="Dead"
+                className="my-0 pb-2"
+              />
+              <FillableBar
+                currentValue={character.currentStamina}
+                maxValue={character.maxStamina}
+                label="Stamina"
+                overLimitText="Exhausted"
+                barColor={FillableBarColor.CYAN}
+                className="my-0 pb-2"
+              />
+            </div>
           </div>
         ) : (
           <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4 justify-center mx-auto w-auto md:w-max">
@@ -382,6 +398,21 @@ const CharacterCoreInfo = ({
                 </span>
               </div>
             </div>
+            <FillableBar
+              currentValue={character.currentHealth}
+              maxValue={character.maxHealth}
+              label="Health"
+              overLimitText="Dead"
+              className="my-0 pb-2"
+            />
+            <FillableBar
+              currentValue={character.currentStamina}
+              maxValue={character.maxStamina}
+              label="Stamina"
+              overLimitText="Exhausted"
+              barColor={FillableBarColor.CYAN}
+              className="my-0 pb-2"
+            />
           </div>
         )}
       </div>

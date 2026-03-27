@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import Button, { ButtonType } from "./Inputs/Button";
 import Sword from "../icons/Sword";
 import Plus from "../icons/Plus";
+import FillableBar from "./FillableBar";
 
 type MonsterEncounterProps = {
   monster: EncounterMonsterData;
@@ -80,9 +81,11 @@ const MonsterEncounterCard: React.FC<MonsterEncounterProps> = ({
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <h1 className="text-lg p-2 font-semibold">{monster.name}</h1>
-        <HealthBar
-          currentHealth={currentHealth}
-          maxHealth={monster.maxHealth}
+        <FillableBar
+          currentValue={currentHealth}
+          maxValue={monster.maxHealth}
+          label="Health"
+          overLimitText="Dead"
         />
         <div className="text-slate-700 dark:text-slate-200 text-base ordinal pr-2">
           {monster.level}
