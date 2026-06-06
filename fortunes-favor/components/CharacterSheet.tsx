@@ -181,6 +181,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     baseDamage: character.baseDamage?.count || 0,
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
+    notes: character.notes,
     chosen: character.getChosenGraphQLInput(),
     items: character.items.map((item) => {
       return {

@@ -9,6 +9,7 @@ import EditableBeastmasterBeastsDisplay from "./EditableBeastmasterBeastsDisplay
 import { CharacterSheetViewMode } from "@/components/CharacterSheet";
 import SpellSection from "./SpellSection";
 import EditableSpellSection from "./EditableSpellSection";
+import NotesSecton from "./NotesSection";
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
@@ -99,10 +100,9 @@ const CharacterOtherInfo = ({
           </SmallField>
         </div>
       </div>
-      <div>
-        Notes
-        {character.notes}
-      </div>
+      {isOwner && (
+        <NotesSecton character={character} updateCharacter={setCharacter} />
+      )}
     </div>
   );
 };
