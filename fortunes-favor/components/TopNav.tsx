@@ -1,8 +1,12 @@
+import { cookies } from "next/headers";
 import NavHeader from "./blocks/NavHeader";
 import SearchBar from "./blocks/SearchBar";
 import SignupLoginButtons from "./SignupLoginButtons";
 
-const TopNav = () => {
+const TopNav = async () => {
+  // Read the auth cookie on the server so the buttons render in the correct
+  // state on first paint (no logged-out flash before hydration).
+  const isAuthenticated = (await cookies()).has("token");
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-slate-900 border-b-2 border-b-teal-400 h-20">
@@ -16,7 +20,7 @@ const TopNav = () => {
             <NavHeader />
           </div>
           <div className="md:order-3 pr-2 md:pr-0">
-            <SignupLoginButtons />
+            <SignupLoginButtons initialIsAuthenticated={isAuthenticated} />
           </div>
         </div>
       </nav>

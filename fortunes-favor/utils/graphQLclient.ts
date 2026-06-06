@@ -5,6 +5,7 @@ import {
   ApolloClient,
   InMemoryCache,
 } from "@apollo/experimental-nextjs-app-support";
+import { getToken } from "./tokenCookie";
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
@@ -12,9 +13,8 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  // Retrieve token from localStorage or any other storage mechanism
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  // Retrieve token from the auth cookie
+  const token = getToken();
 
   return {
     headers: {

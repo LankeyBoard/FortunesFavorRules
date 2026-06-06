@@ -99,6 +99,10 @@ const CharacterOtherInfo = ({
           </SmallField>
         </div>
       </div>
+      <div>
+        Notes
+        {character.notes}
+      </div>
     </div>
   );
 };

@@ -101,6 +101,7 @@ const GET_CHARACTER_INFO = gql`
         range
         type
       }
+      notes
 
       noviceFeatures {
         actionType
@@ -472,6 +473,7 @@ export type GetCharacterData = {
     spells: Spell[];
     form: Form;
     beast: BeastMasterBeast;
+    notes: string;
   };
   characterClasses: ClassData[];
   cultures: cultureData[];

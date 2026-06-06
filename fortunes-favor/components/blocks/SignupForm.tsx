@@ -3,6 +3,7 @@
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useUser } from "../UserContext";
+import { setToken } from "@/utils/tokenCookie";
 import TextInput from "./Inputs/TextInput";
 import Button, { ButtonType } from "./Inputs/Button";
 
@@ -42,7 +43,7 @@ const SignupForm = ({
 
       if (data?.createUser?.token) {
         userContext.updateJwt(data.createUser.token); // Update token in context
-        localStorage.setItem("token", data.createUser.token); // Save token to local storage
+        setToken(data.createUser.token); // Save token to auth cookie
         updateJwt(data.createUser.token);
         setIsOpen(false);
         setIsAuthenticated(true);
