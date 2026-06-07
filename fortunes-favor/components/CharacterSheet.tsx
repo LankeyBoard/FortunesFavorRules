@@ -93,6 +93,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
     );
   });
   character.spells = data.character.spells;
+  character.notes = data.character.notes;
   character.noviceFeatures = data.character.noviceFeatures.map(
     (f) =>
       new PlayerCharacterFeature(
@@ -180,6 +181,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     baseDamage: character.baseDamage?.count || 0,
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
+    notes: character.notes,
     chosen: character.getChosenGraphQLInput(),
     items: character.items.map((item) => {
       return {
@@ -399,6 +401,8 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm();
 
+    console.log("Form Fields", form.getFields());
+
     // Populate fields with character data
     form.getTextField("CharacterName").setText(character.name);
     form.getTextField("Level").setText(character.level.toString());
@@ -418,9 +422,11 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     form.getTextField("Coin").setText(character.coin?.toString() || "0");
     form
       .getTextField("CurrentSlots")
-      .setText(character.items.length.toString());
+      .setText(character.slotsUsed.toString());
     form.getTextField("MaxSlots").setText(character.maxSlots.toString());
     form.getTextField("Languages").setText(character.languages?.join(", "));
+    form.getTextField("Size").setText(character.size || "");
+    form.getTextField("Speed").setText(character.speeds.map((s) => s.speed).join(", ") || "");
 
     // Populate combat info
     form.getTextField("Attack").setText(character.attack.toString() || "");

@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from "react";
+import { getToken, setToken } from "@/utils/tokenCookie";
 
 interface UserContextType {
   jwt: string | null;
@@ -11,26 +18,19 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }): JSX.Element => {
-  const [jwt, setJwt] = useState<string | null>(() => {
-    // Read from localStorage on first render
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("jwt");
-    }
-    return null;
-  });
+  // Start null so server and first client render match, then hydrate from the
+  // cookie in an effect to avoid a hydration mismatch.
+  const [jwt, setJwt] = useState<string | null>(null);
 
-  const isLoggedIn = (): boolean => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("jwt") !== null;
-    }
-    return !!jwt;
-  };
+  useEffect(() => {
+    setJwt(getToken());
+  }, []);
+
+  const isLoggedIn = (): boolean => jwt !== null;
 
   const updateJwt = (token: string) => {
     setJwt(token);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("jwt", token);
-    }
+    setToken(token);
   };
 
   return (

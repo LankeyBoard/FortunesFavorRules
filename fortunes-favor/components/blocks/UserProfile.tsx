@@ -1,6 +1,7 @@
 "use client";
 
 import client from "@/utils/graphQLclient";
+import { removeToken } from "@/utils/tokenCookie";
 import { gql, TypedDocumentNode } from "@apollo/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -143,7 +144,7 @@ const UserProfile = () => {
     }
   });
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    removeToken();
     router.push("/");
     location.reload();
   };

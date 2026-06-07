@@ -99,7 +99,7 @@ const featureToText = (
         )
         .map((text) => text.text)
         .join(" ")}`;
-  const strChoices = feature.choices
+  const strChoices = feature.choices.filter((choice) => choice.isChosen)
     .map((choice) => {
       if ("slug" in choice.choice) {
         return `\t${choice.choice.title}: ${choice.choice.text.map((text) => text?.text).join(" ")}`;
@@ -325,6 +325,7 @@ export default class PlayerCharacter {
   private _isInForm: boolean = false;
   private _spells: Spell[];
   private _beast?: BeastMasterBeast;
+  notes: string;
   constructor(
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
@@ -362,6 +363,7 @@ export default class PlayerCharacter {
       this._isInForm = startingCharacter.isInForm;
       this._beast = startingCharacter.beast;
       this._spells = startingCharacter._spells;
+      this.notes = startingCharacter.notes;
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -380,6 +382,7 @@ export default class PlayerCharacter {
       this._features = [];
       this._items = [];
       this._spells = [];
+      this.notes = "";
       if (characterClass)
         ({
           actions: this._actions,

@@ -3,20 +3,19 @@ import React, { useEffect, useState } from "react";
 import SignupOrLoginModal from "./SignupLoginModal";
 import Link from "next/link";
 import Button, { ButtonType } from "./blocks/Inputs/Button";
+import { getToken } from "@/utils/tokenCookie";
 
-const SignupLoginButtons = () => {
+const SignupLoginButtons = ({
+  initialIsAuthenticated = false,
+}: {
+  initialIsAuthenticated?: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    typeof localStorage !== "undefined"
-      ? localStorage.getItem("token") === null
-      : false,
-  );
+  // Seed from the server-read cookie so the first client render matches the
+  // server HTML, then re-sync from the client cookie in case it changed.
+  const [isAuthenticated, setIsAuthenticated] = useState(initialIsAuthenticated);
   useEffect(() => {
-    setIsAuthenticated(
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token") !== null
-        : false,
-    );
+    setIsAuthenticated(getToken() !== null);
   }, []);
   const [loginClicked, setLoginClicked] = useState(false);
   if (!isAuthenticated)

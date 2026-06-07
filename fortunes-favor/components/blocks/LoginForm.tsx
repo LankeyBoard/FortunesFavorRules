@@ -3,6 +3,7 @@
 import { gql, useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { useUser } from "../UserContext";
+import { setToken } from "@/utils/tokenCookie";
 import TextInput from "./Inputs/TextInput";
 import Button, { ButtonType } from "./Inputs/Button";
 import { handleLogin } from "@/utils/handleLogin";
@@ -53,7 +54,7 @@ const LoginForm = ({
 
       if (data?.login?.token) {
         userContext.updateJwt(data.login.token); // Update token in context
-        localStorage.setItem("token", data.login.token); // Save token to local storage
+        setToken(data.login.token); // Save token to auth cookie
         setIsOpen(false);
         setIsAuthenticated(true);
       }
