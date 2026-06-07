@@ -12,6 +12,7 @@ const SimpleButtonColor = {
   green: "border-emerald-300 dark:border-emerald-700 hover:border-emerald-500",
   red: "border-red-300 dark:border-red-700 hover:border-red-500",
   blue: "border-blue-300 dark:border-blue-700 hover:border-blue-500",
+  teal: "border-teal-300 dark:border-teal-700 hover:border-teal-500",
 };
 const DefaultButtonColor = {
   amber:
@@ -21,6 +22,7 @@ const DefaultButtonColor = {
     "bg-emerald-400 dark:bg-emerald-700 hover:bg-emerald-500 hover:dark:bg-emerald-600 border-emerald-300 dark:border-emerald-700 hover:border-emerald-500",
   red: "bg-red-400 dark:bg-red-700 hover:bg-red-500 hover:dark:bg-red-600 border-red-300 dark:border-red-700 hover:border-red-500",
   blue: "bg-blue-400 dark:bg-blue-700 hover:bg-blue-500 hover:dark:bg-blue-600 border-blue-300 dark:border-blue-700 hover:border-blue-500",
+  teal: "bg-teal-400 dark:bg-teal-700 hover:bg-teal-500 hover:dark:bg-teal-600 border-teal-300 dark:border-teal-700 hover:border-teal-500",
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

@@ -58,3 +58,18 @@ body {
 .markdown blockquote {
   @apply border-l-4 border-slate-300 pl-4 italic text-slate-600 dark:border-slate-700 dark:text-slate-300;
 }
+
+.markdown code {
+  @apply rounded-sm px-1 py-[0.1rem] font-mono text-sm bg-slate-100 text-slate-900;
+}
+
+.markdown pre {
+  @apply overflow-x-auto rounded-xl bg-slate-950 text-slate-100 p-4 my-4;
+}
+
+.markdown pre code {
+  @apply bg-transparent p-0 text-inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
