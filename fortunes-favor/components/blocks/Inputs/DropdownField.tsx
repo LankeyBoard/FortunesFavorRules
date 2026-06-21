@@ -14,6 +14,9 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
     if (typeof o === "string") return { title: o, slug: o };
     else return o;
   });
+  const unselectedOption = props.unselectedOption ?? false;
+  if(props.unselectedOption)
+    delete props.unselectedOption;
   return (
     <div className={twMerge("w-max", props.className)}>
       <label
@@ -28,7 +31,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
         value={props.value}
         className="w-fit bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
       >
-        {props.unselectedOption && (
+        {unselectedOption && (
           <option key={"unknown"} value={undefined}>
             &#8212;
           </option>

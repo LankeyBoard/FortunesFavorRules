@@ -3,7 +3,7 @@
 import client from "@/utils/graphQLclient";
 import { useMutation } from "@apollo/client";
 import { useState, useEffect, useRef } from "react";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, StandardFonts } from "pdf-lib";
 import * as Sentry from "@sentry/react";
 
 import CharacterOtherInfo from "./blocks/CharacterSheetComponents/CharacterOtherInfo";
@@ -400,8 +400,39 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
 
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm();
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    console.log("Form Fields", form.getFields());
+    const featureText = character.printFeaturesRules();
+    const featureLines = featureText.split("\n");
+    const hasMoreFeatureLines = featureLines.length > 25;
+    const featurePage1Text = hasMoreFeatureLines
+      ? featureLines.slice(0, 25).join("\n")
+      : featureText;
+
+    const hasSpells = character.spells && character.spells.length > 0;
+    const hasNotes = !!character.notes?.trim();
+    const hasShifterForm = !!character.form;
+    const hasBeast = !!character.beast;
+    const remainingFeaturesText = hasMoreFeatureLines
+      ? featureLines.slice(25).join("\n")
+      : "";
+    const buildExtraText = () => {
+      const sections: string[] = [];
+      if (hasMoreFeatureLines) {
+        sections.push(`Remaining Features:\n${remainingFeaturesText}`);
+      }
+      if (hasNotes) {
+        sections.push(`Notes:\n${character.notes}`);
+      }
+      return sections.join("\n\n");
+    };
+
+    const featureExtraText = buildExtraText();
+    const useBeastPage = hasBeast;
+    const useShifterPage = hasShifterForm;
+    const useGeneratedExtrasPage =
+      hasSpells || (!useBeastPage && !useShifterPage && featureExtraText.length > 0);
 
     // Populate fields with character data
     form.getTextField("CharacterName").setText(character.name);
@@ -425,7 +456,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       .setText(character.slotsUsed.toString());
     form.getTextField("MaxSlots").setText(character.maxSlots.toString());
     form.getTextField("Languages").setText(character.languages?.join(", "));
-    form.getTextField("Size").setText(character.size || "");
+    form.getTextField("Size").setText(character.size.toLowerCase() || "");
     form.getTextField("Speed").setText(character.speeds.map((s) => s.speed).join(", ") || "");
 
     // Populate combat info
@@ -443,18 +474,225 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     // Populate features and items
     form.getTextField("Actions").setText(character.actions.toString());
     form.getTextField("Counters").setText(character.counters.toString());
-    form.getTextField("Features").setText(character.printFeaturesRules());
+    form.getTextField("Features").setText(featurePage1Text);
     form
       .getTextField("Items")
       .setText(
         character.items
-          .map((item) => `${item.title} (${item.slots} slots)`)
+          .map((item) => `${item.title} (${item.slots} slots)\n${item.text.map((t) => t.text).join("\n")}`)
           .join("\n"),
       );
 
+    const originalPageCount = pdfDoc.getPageCount();
+    const pageTwo = originalPageCount > 1 ? pdfDoc.getPage(1) : undefined;
+    const pageThree = originalPageCount > 2 ? pdfDoc.getPage(2) : undefined;
+
+    if (useBeastPage && pageTwo && character.beast) {
+      const beast = character.beast;
+      form.getTextField("BeastType").setText(beast.title);
+
+      const beastMaxHealth = beast.health
+        ? beast.health.base + beast.health.perLevel * character.level
+        : 0;
+      form.getTextField("BeastMaxHealth").setText(beastMaxHealth.toString());
+
+      form.getTextField("BeastAttack").setText(
+        beast.damage?.stat?.map((stat) => stat.toLowerCase()).join(", ") || "",
+      );
+      form.getTextField("BeastDamage").setText(
+        beast.damage ? `${beast.damage.count}d${beast.damage.dice} ${beast.damage?.type?.join(", ") || ""}` : "",
+      );
+      form.getTextField("BeastRange").setText(
+        "melee",
+      );
+      form.getTextField("BeastArmor").setText(
+        beast.armor !== undefined ? beast.armor.toString() : "",
+      );
+      form.getTextField("BeastCounter").setText((beast.armor-5).toString());
+      form.getTextField("BeastSpeed").setText(
+        beast.speed?.map((speed) => `${speed.speed} ${speed.type}`).join(", ") || "",
+      );
+      form.getTextField("BeastMettle").setText(
+        beast.stats?.mettle?.toString() || "",
+      );
+      form.getTextField("BeastAgility").setText(
+        beast.stats?.agility?.toString() || "",
+      );
+      form.getTextField("BeastIntellect").setText(
+        beast.stats?.intellect?.toString() || "",
+      );
+      form.getTextField("BeastHeart").setText(
+        beast.stats?.heart?.toString() || "",
+      );
+
+      const beastSections: string[] = [];
+      if (beast.health) {
+        beastSections.push(
+          `Health: ${beast.health.base} + ${beast.health.perLevel} per level`,
+        );
+      }
+      if (beast.armor !== undefined) {
+        beastSections.push(`Armor: ${beast.armor}`);
+      }
+      if (beast.speed?.length) {
+        beastSections.push(
+          `Speed: ${beast.speed
+            .map((speed) => `${speed.speed} ${speed.type}`)
+            .join(", ")}`,
+        );
+      }
+      if (beast.stats) {
+        beastSections.push(
+          `Stats: Agility: ${beast.stats.agility}, Heart: ${beast.stats.heart}, Intellect: ${beast.stats.intellect}, Mettle: ${beast.stats.mettle}`,
+        );
+      }
+      if (beast.damage) {
+        beastSections.push(
+          `Damage: ${beast.damage.count}d${beast.damage.dice} ${beast.damage.stat
+            .map((stat) => stat.toLowerCase())
+            .join(", ")} ${beast.damage.type.join(", ")}`,
+        );
+      }
+      if (beast.abilities?.length) {
+        beastSections.push(
+          "Abilities:\n" +
+            beast.abilities
+              .map((ability) => `${ability.title}: ${ability.text}`)
+              .join("\n"),
+        );
+      }
+      if (featureExtraText.length) {
+        beastSections.push(featureExtraText);
+      }
+      form.getTextField("BeastFeatures").setText(beastSections.join("\n\n"));
+    }
+
+    if (useShifterPage && pageThree && character.form) {
+      form.getTextField("FormAttack").setText(
+        character.form.attackStat.toLowerCase(),
+      );
+      const formDamageText = character.form.damage
+        .map((damage) => {
+          const statText = damage.stat?.length
+            ? ` + ${damage.stat.map((stat) => stat.toLowerCase()).join(", ")}`
+            : "";
+          return `${damage.count}d${damage.dice}${statText}`;
+        })
+        .join(" + ");
+      form.getTextField("FormDamage").setText(formDamageText);
+      form.getTextField("FormRange").setText("");
+      form.getTextField("FormArmor").setText(
+        character.form.armor.stat
+          ? `${character.form.armor.baseArmor} + ${character.form.armor.stat.toLowerCase()}`
+          : `${character.form.armor.baseArmor}`,
+      );
+      form.getTextField("FormCounter").setText("");
+      form.getTextField("FormSpeed").setText(
+        character.form.size.toLocaleLowerCase(),
+      );
+      form.getTextField("FormFeatures").setText(
+        character.form.features
+          .map((feature) =>
+            feature.title
+              ? `${feature.title}: ${feature.text}`
+              : feature.text,
+          )
+          .join("\n"),
+      );
+      form.getTextField("ExtraFeatures").setText(
+        featureExtraText,
+      );
+    }
+
+    
+    const shouldGeneratePage = useGeneratedExtrasPage;
+    if (shouldGeneratePage) {
+      const pageSize = pdfDoc.getPage(0).getSize();
+      const page = pdfDoc.addPage([pageSize.width, pageSize.height]);
+      const margin = 48;
+      const contentWidth = pageSize.width - margin * 2;
+      const fontSize = 10;
+      const headingSize = 14;
+      const lineHeight = fontSize * 1.4;
+      let cursorY = pageSize.height - margin;
+
+      const drawWrappedText = (
+        text: string,
+        font: any,
+        size: number,
+        x: number,
+        y: number,
+      ) => {
+        let currentY = y;
+        const lines = text.split("\n");
+        lines.forEach((line) => {
+          let remainingLine = line;
+          while (remainingLine.length > 0) {
+            let fit = remainingLine;
+            while (fit.length > 0 && font.widthOfTextAtSize(fit, size) > contentWidth) {
+              fit = fit.slice(0, -1);
+            }
+            if (fit.length === 0) {
+              break;
+            }
+            let drawLine = fit;
+            if (fit.length < remainingLine.length) {
+              const lastSpace = fit.lastIndexOf(" ");
+              if (lastSpace > 0) {
+                drawLine = fit.slice(0, lastSpace);
+              }
+            }
+            page.drawText(drawLine, {
+              x,
+              y: currentY,
+              size,
+              font,
+            });
+            currentY -= lineHeight;
+            remainingLine = remainingLine.slice(drawLine.length).trimStart();
+          }
+          currentY -= lineHeight * 0.25;
+        });
+        return currentY;
+      };
+
+      const drawSection = (title: string, text: string) => {
+        page.drawText(title, {
+          x: margin,
+          y: cursorY,
+          size: headingSize,
+          font: helveticaBoldFont,
+        });
+        cursorY -= headingSize + 6;
+        cursorY = drawWrappedText(text, helveticaFont, fontSize, margin, cursorY);
+        cursorY -= lineHeight;
+      };
+
+      if (hasSpells) {
+        const spellsText = character.spells
+          .map((spell) => `${spell.name} (Lvl ${spell.level})${spell.description ? `: ${spell.description}` : ""}`)
+          .join("\n");
+        drawSection("Spells:", spellsText);
+      }
+
+      if (!useBeastPage && !useShifterPage && featureExtraText.length) {
+        drawSection("Remaining Features:", remainingFeaturesText);
+        if (hasNotes) {
+          drawSection("Notes:", character.notes || "");
+        }
+      }
+    }
+
+    if (!useShifterPage && originalPageCount > 2) {
+      pdfDoc.removePage(2);
+    }
+    if (!useBeastPage && originalPageCount > 1) {
+      pdfDoc.removePage(1);
+    }
+
     // Save the PDF
     const pdfBytes = await pdfDoc.save();
-
+    
     // Trigger download
     const blob = new Blob([new Uint8Array(pdfBytes)], {
       type: "application/pdf",
