@@ -10,7 +10,8 @@
     "build": "npm install && next build",
     "build:local": "cross-env NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4000/graphql npm run build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:pdf": "npx ts-node scripts/addFormFieldsToPDF.ts"
   },
   "dependencies": {
     "@apollo/client": "3.14",
