@@ -27,6 +27,7 @@ import {
   Rarity,
   RechargeOn,
   RuleType,
+  SizeOptions,
 } from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
@@ -110,6 +111,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   );
   character.form = data.character.form;
   character.beast = data.character.beast;
+  character.size = findEnumValue(data.character.size, SizeOptions);
   console.debug("extractPlayerCharacter returned", character);
   return character;
 };
@@ -313,7 +315,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
-        console.debug("Character Sheet GraphQL Data", data);
+        console.debug("GraphQL Data to build Character", data);
         Sentry.captureMessage("Character data loaded successfully", {
           level: "info",
           extra: { characterId },
@@ -456,7 +458,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       .setText(character.slotsUsed.toString());
     form.getTextField("MaxSlots").setText(character.maxSlots.toString());
     form.getTextField("Languages").setText(character.languages?.join(", "));
-    form.getTextField("Size").setText(character.size.toLowerCase() || "");
+    form.getTextField("Size").setText(character.size?.toLowerCase() || "");
     form.getTextField("Speed").setText(character.speeds.map((s) => s.speed).join(", ") || "");
 
     // Populate combat info
