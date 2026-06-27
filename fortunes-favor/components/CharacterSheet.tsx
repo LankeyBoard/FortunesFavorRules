@@ -27,6 +27,7 @@ import {
   Rarity,
   RechargeOn,
   RuleType,
+  SizeOptions,
 } from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
@@ -94,6 +95,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   });
   character.spells = data.character.spells;
   character.notes = data.character.notes;
+  character.damageType = data.character.damageType;
   character.noviceFeatures = data.character.noviceFeatures.map(
     (f) =>
       new PlayerCharacterFeature(
@@ -110,6 +112,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   );
   character.form = data.character.form;
   character.beast = data.character.beast;
+  character.size = findEnumValue(data.character.size, SizeOptions);
   console.debug("extractPlayerCharacter returned", character);
   return character;
 };
@@ -182,6 +185,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
     notes: character.notes,
+    damageType: character.damageType,
     chosen: character.getChosenGraphQLInput(),
     items: character.items.map((item) => {
       return {
@@ -313,7 +317,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
           query: characterId ? GET_CHARACTER_INFO : GET_CHARACTER_OPTIONS,
           variables: { id: Number(characterId) },
         });
-        console.debug("Character Sheet GraphQL Data", data);
+        console.debug("GraphQL Data to build Character", data);
         Sentry.captureMessage("Character data loaded successfully", {
           level: "info",
           extra: { characterId },
@@ -456,7 +460,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       .setText(character.slotsUsed.toString());
     form.getTextField("MaxSlots").setText(character.maxSlots.toString());
     form.getTextField("Languages").setText(character.languages?.join(", "));
-    form.getTextField("Size").setText(character.size.toLowerCase() || "");
+    form.getTextField("Size").setText(character.size?.toLowerCase() || "");
     form.getTextField("Speed").setText(character.speeds.map((s) => s.speed).join(", ") || "");
 
     // Populate combat info

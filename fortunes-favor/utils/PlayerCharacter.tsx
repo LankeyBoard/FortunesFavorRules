@@ -6,6 +6,8 @@ import {
   SizeOptions,
   RechargeOn,
   Choice,
+  findEnumValue,
+  findEnumKey,
 } from "./enums";
 import CharacterClassData, { BeastMasterBeast } from "./CharacterClass";
 import CharacterCulture from "./CharacterCulture";
@@ -325,7 +327,9 @@ export default class PlayerCharacter {
   private _isInForm: boolean = false;
   private _spells: Spell[];
   private _beast?: BeastMasterBeast;
+  private _size?: SizeOptions;
   notes: string;
+  damageType?: string;
   constructor(
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
@@ -364,6 +368,8 @@ export default class PlayerCharacter {
       this._beast = startingCharacter.beast;
       this._spells = startingCharacter._spells;
       this.notes = startingCharacter.notes;
+      this._size = startingCharacter.size;
+      this.damageType = startingCharacter.damageType
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -465,7 +471,6 @@ export default class PlayerCharacter {
   }
   public set lineage(characterLineage: CharacterLineage) {
     this._characterLineage = characterLineage;
-
     const updatedFeatures = updateFeatures(
       FeatureSource.LINEAGE,
       characterLineage,
@@ -837,9 +842,26 @@ export default class PlayerCharacter {
   public get features() {
     if (!this._features) return [];
     this.sortFeatures();
-    return Object.assign([...this._features], {
+
+    const uniqueFeatures: typeof this._features = [];
+    const seenSlugs = new Set<string>();
+
+    this._features.forEach((feature) => {
+      if (seenSlugs.has(feature.slug)) {
+        const existingFeature = uniqueFeatures.find((f) => f.slug === feature.slug);
+        if (existingFeature) {
+          console.warn("Duplicate feature slug detected", existingFeature, feature);
+        }
+        return;
+      }
+
+      seenSlugs.add(feature.slug);
+      uniqueFeatures.push(feature);
+    });
+
+    return Object.assign([...uniqueFeatures], {
       toString: () =>
-        this._features?.map((feature) => featureToText(feature)).join("\n"),
+        uniqueFeatures.map((feature) => featureToText(feature)).join("\n"),
     });
   }
   public printFeaturesRules(): string {
@@ -850,15 +872,17 @@ export default class PlayerCharacter {
   public get languages() {
     return this._languages;
   }
-  public get size(): SizeOptions {
-    let size = SizeOptions.MEDIUM;
-    if (typeof this.lineage.size === "string") size = this.lineage.size;
-    else size = this.lineage.size[0];
-    if (this.isInForm && this.form?.size) {
-      size = this.form.size;
-    }
+  public get size(): SizeOptions | undefined {
 
-    return size;
+    if(typeof this._characterLineage?.size === "string") return this._characterLineage.size
+    else if(this._characterLineage?.size.length === 1) return this._characterLineage.size[0]
+    else if(this._size && this._characterLineage?.size.includes(this._size)) return this._size
+    // the current _size isn't an option for this lineage
+    this._size = undefined
+    return this._size;
+  }
+  public set size(s: SizeOptions){
+    this._size = s;
   }
   public get attack() {
     let attack = Number.MIN_SAFE_INTEGER;
@@ -1008,8 +1032,9 @@ export default class PlayerCharacter {
     if (this._actions) updateChosenFeatures(this._actions);
     if (this._counters) updateChosenFeatures(this._counters);
 
-    // Check if the form slug is in the choices and set the form to that if it exists.
     choices.forEach((choice) => {
+      // Check if the form slug is in the choices and set the form to that if it exists.
+
       if (
         this.characterClass?.extra?.forms?.some(
           (form: Form) => form.slug === choice,
@@ -1017,10 +1042,8 @@ export default class PlayerCharacter {
       ) {
         this.setFormSlug(choice);
       }
-    });
-
-    // Check if the form slug is in the choices and set the beast to that if it exists.
-    choices.forEach((choice) => {
+          
+      // Check if the form slug is in the choices and set the beast to that if it exists.
       if (
         this.characterClass?.extra?.beastMasterPet?.beasts?.some(
           (beast: BeastMasterBeast) => beast.slug === choice,
@@ -1028,7 +1051,11 @@ export default class PlayerCharacter {
       ) {
         this.setBeastSlug(choice);
       }
+      if(this. _characterLineage && typeof this._characterLineage.size !== "string" && this._characterLineage.size.length > 1){
+        if(Object.values<string>(SizeOptions).includes(choice)) this._size = findEnumValue(choice, SizeOptions)
+      }
     });
+
 
     return this;
   }
@@ -1196,6 +1223,7 @@ export default class PlayerCharacter {
     const beastChosen = this.beast
       ? [{ featureSlug: "beast", choiceSlug: this.beast?.slug }]
       : [];
+    const sizeChosen = this._size ? [{featureSlug: "size", choiceSlug: this._size}] : [];
     return classChosen.concat(
       cultureChosen,
       lineageChosen,
@@ -1207,6 +1235,7 @@ export default class PlayerCharacter {
       spells,
       formChosen,
       beastChosen,
+      sizeChosen
     );
   }
 }

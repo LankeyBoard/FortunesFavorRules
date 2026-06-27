@@ -16,11 +16,11 @@ const TopNav = async () => {
               <SearchBar />
             </div>
           </div>
+          <div className="md:order-3 pr-2 md:pr-0 ml-6">
+            <SignupLoginButtons initialIsAuthenticated={isAuthenticated} />
+          </div>
           <div className="md:order-1">
             <NavHeader />
-          </div>
-          <div className="md:order-3 pr-2 md:pr-0">
-            <SignupLoginButtons initialIsAuthenticated={isAuthenticated} />
           </div>
         </div>
       </nav>

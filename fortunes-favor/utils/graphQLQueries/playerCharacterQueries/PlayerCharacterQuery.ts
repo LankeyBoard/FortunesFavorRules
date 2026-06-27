@@ -58,6 +58,8 @@ const GET_CHARACTER_INFO = gql`
       rangeMax
       shieldName
       rangeMin
+      size
+      damageType
       characterClass {
         ...CharacterClassFragment
       }
@@ -415,6 +417,8 @@ export type GetCharacterData = {
     rangeMax: number;
     shieldName: string;
     rangeMin: number;
+    size: string;
+    damageType?: string;
     characterClass: ClassData;
     noviceFeatures: {
       actionType: string;

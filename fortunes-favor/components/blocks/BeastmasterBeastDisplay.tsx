@@ -10,7 +10,7 @@ export const BeastDisplay = ({ beast }: { beast: BeastMasterBeast }) => {
   return (
     <div
       key={beast.slug}
-      className="bg-slate-200 dark:bg-slate-800 my-5 md:mx-10"
+      className="bg-slate-200 dark:bg-slate-800 my-5"
       id={beast.slug}
     >
       <h1 className="bg-teal-200 dark:bg-teal-800 text-lg p-2 font-semibold">

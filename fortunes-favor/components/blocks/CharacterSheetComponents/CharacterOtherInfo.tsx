@@ -10,6 +10,8 @@ import { CharacterSheetViewMode } from "@/components/CharacterSheet";
 import SpellSection from "./SpellSection";
 import EditableSpellSection from "./EditableSpellSection";
 import NotesSecton from "./NotesSection";
+import DropdownField from "../Inputs/DropdownField";
+import { findEnumValue, SizeOptions } from "@/utils/enums";
 
 interface CharacterBasicInfoProps {
   character: PlayerCharacter;
@@ -48,9 +50,17 @@ const CharacterOtherInfo = ({
             );
           })}
         </LargeField>
-        <LargeField label="Size">
-          <span className="capitalize">{character.size.toLowerCase()}</span>
-        </LargeField>
+        {isEditable && typeof character.lineage.size !== "string" && character.lineage.size?.length > 1 
+          ? <DropdownField name="Size" options={character.lineage.size.map(s => s.toString().toLowerCase())} 
+              onChange={(e => {
+                const newCharacter = new PlayerCharacter(undefined, undefined, undefined, character); 
+                newCharacter.size = findEnumValue(e.target.value, SizeOptions);
+                setCharacter(newCharacter)
+            })}/>
+          :<LargeField label="Size">
+            <span className="capitalize">{character.size?.toLowerCase()}</span>
+          </LargeField>
+        }
       </div>
       {character?.characterClass?.extra?.forms && (
         <EditableShifterFormDisplay

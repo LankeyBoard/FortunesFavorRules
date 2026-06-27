@@ -12,7 +12,7 @@ const SmallField = ({
   return (
     <div
       className={twMerge(
-        "grid grid-cols-1 text-center m-2 w-max flex-nowrap",
+        "grid grid-cols-1 text-center m-2 w-max max-w-full min-w-0 flex-nowrap",
         className,
       )}
     >

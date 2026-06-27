@@ -26,7 +26,7 @@ export default function RootLayout({
                 <TopNav />
               </div>
             </Suspense>
-            <div className="container w-full mx-auto flex-grow bg-gray-100 dark:bg-gray-900">
+            <div className="bg-gray-100 dark:bg-gray-900">
               <div className="mt-20">{children}</div>
             </div>
           </AlertProvider>
