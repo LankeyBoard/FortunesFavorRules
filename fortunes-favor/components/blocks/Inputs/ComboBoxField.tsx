@@ -27,14 +27,16 @@ export const ComboBoxField: React.FC<ComboBoxFieldProps> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
 
+
+  const { unselectedOption, ...cleanProps } = props; 
   // Convert options to standardized format
   const normalizedOptions: option[] = useMemo(
     () =>
-      (props.options || []).map((o) => {
+      (cleanProps.options || []).map((o) => {
         if (typeof o === "string") return { title: o, slug: o };
         else return o;
       }),
-    [props.options],
+    [cleanProps.options],
   );
 
   // Filter options based on input
@@ -65,8 +67,8 @@ export const ComboBoxField: React.FC<ComboBoxFieldProps> = (props) => {
     const value = e.target.value;
     setInputValue(value);
     setIsOpen(true);
-    if (props.onChange) {
-      props.onChange(e);
+    if (cleanProps.onChange) {
+      cleanProps.onChange(e);
     }
   };
 
@@ -74,11 +76,11 @@ export const ComboBoxField: React.FC<ComboBoxFieldProps> = (props) => {
   const handleSelectOption = (option: option) => {
     setInputValue(option.title);
     setIsOpen(false);
-    if (props.onChange) {
+    if (cleanProps.onChange) {
       const event = {
         target: { value: option.slug },
       } as React.ChangeEvent<HTMLInputElement>;
-      props.onChange(event);
+      cleanProps.onChange(event);
     }
   };
 
@@ -153,30 +155,30 @@ export const ComboBoxField: React.FC<ComboBoxFieldProps> = (props) => {
   return (
     <div
       ref={containerRef}
-      className={twMerge("w-max relative", props.className)}
+      className={twMerge("w-max relative", cleanProps.className)}
     >
       <label
-        htmlFor={props.name}
+        htmlFor={cleanProps.name}
         className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"
       >
-        {props.name}
+        {cleanProps.name}
       </label>
       <div className="relative">
         <input
-          {...props}
+          {...cleanProps}
           ref={inputRef}
           type="text"
-          id={props.name}
+          id={cleanProps.name}
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
-          placeholder={props.placeholder || "Type or select..."}
+          placeholder={cleanProps.placeholder || "Type or select..."}
           className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
         />
         {isOpen && filteredOptions.length > 0 && (
           <ul className="absolute top-full left-0 right-0 mt-1 bg-gray-50 border border-gray-300 rounded-lg shadow-md z-10 max-h-60 overflow-y-auto dark:bg-gray-700 dark:border-gray-600">
-            {props.unselectedOption && (
+            {unselectedOption && (
               <li
                 ref={(el) => {
                   optionRefs.current[-1] = el;
@@ -184,11 +186,11 @@ export const ComboBoxField: React.FC<ComboBoxFieldProps> = (props) => {
                 onClick={() => {
                   setInputValue("");
                   setIsOpen(false);
-                  if (props.onChange) {
+                  if (cleanProps.onChange) {
                     const event = {
                       target: { value: "" },
                     } as React.ChangeEvent<HTMLInputElement>;
-                    props.onChange(event);
+                    cleanProps.onChange(event);
                   }
                 }}
                 onKeyDown={(e) => handleOptionKeyDown(e, -1)}

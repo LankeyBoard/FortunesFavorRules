@@ -50,7 +50,7 @@ const NavHeader = () => {
             <li>
               <Link
                 href="/"
-                className="block py-2 px-3 text-amber-700 dark:text-white rounded md:bg-transparent md:text-amber-700 md:p-0 md:dark:text-amber-400 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-700 md:hover:bg-transparent"
+                className="block py-2 px-3 text-amber-700 dark:text-white rounded md:bg-transparent md:p-0 hover:text-amber-500"
                 aria-current="page"
                 onClick={() => {
                   closeMenuIfOpen();

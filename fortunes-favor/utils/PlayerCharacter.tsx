@@ -23,7 +23,6 @@ import FeatureChoice from "./types/featureChoice";
 import Text from "./types/text";
 import { CharacterTrait } from "./CharacterTrait";
 import { Spell } from "./graphQLQueries/AllSpellsQuery";
-import { isEnumType } from "graphql";
 
 export type Stats = {
   mettle: number;
@@ -330,6 +329,7 @@ export default class PlayerCharacter {
   private _beast?: BeastMasterBeast;
   private _size?: SizeOptions;
   notes: string;
+  damageType?: string;
   constructor(
     culture?: CharacterCulture,
     lineage?: CharacterLineage,
@@ -369,6 +369,7 @@ export default class PlayerCharacter {
       this._spells = startingCharacter._spells;
       this.notes = startingCharacter.notes;
       this._size = startingCharacter.size;
+      this.damageType = startingCharacter.damageType
     } else {
       this._level = 1;
       this._stats = { mettle: 0, agility: 0, heart: 0, intellect: 0 };
@@ -841,9 +842,26 @@ export default class PlayerCharacter {
   public get features() {
     if (!this._features) return [];
     this.sortFeatures();
-    return Object.assign([...this._features], {
+
+    const uniqueFeatures: typeof this._features = [];
+    const seenSlugs = new Set<string>();
+
+    this._features.forEach((feature) => {
+      if (seenSlugs.has(feature.slug)) {
+        const existingFeature = uniqueFeatures.find((f) => f.slug === feature.slug);
+        if (existingFeature) {
+          console.warn("Duplicate feature slug detected", existingFeature, feature);
+        }
+        return;
+      }
+
+      seenSlugs.add(feature.slug);
+      uniqueFeatures.push(feature);
+    });
+
+    return Object.assign([...uniqueFeatures], {
       toString: () =>
-        this._features?.map((feature) => featureToText(feature)).join("\n"),
+        uniqueFeatures.map((feature) => featureToText(feature)).join("\n"),
     });
   }
   public printFeaturesRules(): string {
@@ -855,10 +873,12 @@ export default class PlayerCharacter {
     return this._languages;
   }
   public get size(): SizeOptions | undefined {
-    if(!this._size){
-      if(typeof this._characterLineage?.size === "string") this._size = this._characterLineage.size
-      else if(this._characterLineage?.size.length === 1) this._size = this._characterLineage.size[0]
-    }
+
+    if(typeof this._characterLineage?.size === "string") return this._characterLineage.size
+    else if(this._characterLineage?.size.length === 1) return this._characterLineage.size[0]
+    else if(this._size && this._characterLineage?.size.includes(this._size)) return this._size
+    // the current _size isn't an option for this lineage
+    this._size = undefined
     return this._size;
   }
   public set size(s: SizeOptions){

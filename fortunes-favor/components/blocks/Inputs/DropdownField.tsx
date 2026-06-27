@@ -14,22 +14,21 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
     if (typeof o === "string") return { title: o, slug: o };
     else return o;
   });
-  const unselectedOption = props.unselectedOption ?? false;
-  if(props.unselectedOption)
-    delete props.unselectedOption;
+  const { unselectedOption, ...cleanProps } = props; 
+
   return (
-    <div className={twMerge("w-max", props.className)}>
+    <div className={twMerge("w-max max-w-full min-w-0", props.className)}>
       <label
-        htmlFor={props.name}
+        htmlFor={cleanProps.name}
         className="block mb-2 text-xs tracking-tighter opacity-80 capitalize text-center"
       >
-        {props.name}
+        {cleanProps.name}
       </label>
       <select
-        {...props}
-        id={props.name}
-        value={props.value}
-        className="w-fit bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
+        {...cleanProps}
+        id={cleanProps.name}
+        value={cleanProps.value}
+        className="w-full min-w-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
       >
         {unselectedOption && (
           <option key={"unknown"} value={undefined}>
@@ -37,14 +36,14 @@ export const DropdownField: React.FC<DropdownFieldProps> = (props) => {
           </option>
         )}
         {options?.map((o) => {
-          if (!o.slug) o.slug = props.name.concat(o.title);
+          if (!o.slug) o.slug = cleanProps.name.concat(o.title);
           return (
             <option key={o.slug} value={o.slug} className="">
               {o.title}
             </option>
           );
         })}
-        {props.children}
+        {cleanProps.children}
       </select>
     </div>
   );

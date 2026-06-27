@@ -95,6 +95,7 @@ const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   });
   character.spells = data.character.spells;
   character.notes = data.character.notes;
+  character.damageType = data.character.damageType;
   character.noviceFeatures = data.character.noviceFeatures.map(
     (f) =>
       new PlayerCharacterFeature(
@@ -184,6 +185,7 @@ const convertPlayerCharacterToGraphInput = (character: PlayerCharacter) => {
     rangeMin: character.range?.min || 0,
     rangeMax: character.range?.max || 0,
     notes: character.notes,
+    damageType: character.damageType,
     chosen: character.getChosenGraphQLInput(),
     items: character.items.map((item) => {
       return {

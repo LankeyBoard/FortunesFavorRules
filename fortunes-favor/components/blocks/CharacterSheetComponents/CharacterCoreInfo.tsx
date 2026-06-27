@@ -387,20 +387,32 @@ const CharacterCoreInfo = ({
       </div>
       <div className="bg-teal-100 dark:bg-teal-950 border-y-2 border-teal-200 dark:border-teal-800">
         <VerticalLabeledBox label="Combat">
-          <div className="flex flex-wrap md:grid grid-cols-4 gap-0 justify-center mx-auto w-auto md:w-max justify-items-center">
+          <div className="flex flex-wrap md:grid grid-cols-4 gap-0 justify-center mx-auto w-full max-w-full min-w-0 justify-items-center">
             <CombatStatDisplay stat={character.attack} label="Attack" />
-            <CombatStatDisplay
-              stat={
-                character.baseDamage.count +
-                "d" +
-                character.baseDamage.dice +
-                (character.baseDamage.stat > 0
-                  ? "+" + character.baseDamage.stat
-                  : "")
-              }
-              label="Damage"
-            />
-            <div className="col-span-2">
+              {isEditable 
+              ? <DropdownField name="Damage Type"
+                options={["Bludgeoning", "Cold", "Fire", "Lightning", "Piercing", "Psychic", "Radiant", "Rot", "Slashing"]}
+                onChange={e => {
+                  const newCharacter = new PlayerCharacter(undefined, undefined, undefined, character);
+                  newCharacter.damageType = e.target.value;
+                  setCharacter(newCharacter);
+                }}
+                />
+              
+              :<CombatStatDisplay
+                stat={
+                  character.baseDamage.count +
+                  "d" +
+                  character.baseDamage.dice +
+                  (character.baseDamage.stat > 0
+                    ? "+" + character.baseDamage.stat
+                    : "")+
+                  (character.damageType ? ` ${character.damageType}` : "")
+                }
+                label="Damage"
+              />
+            }
+            <div className="col-span-2 min-w-0">
               <CombatStatDisplay
                 stat={
                   character.range?.min === character.range?.max
@@ -417,7 +429,7 @@ const CharacterCoreInfo = ({
             <CombatStatDisplay stat={character.armor} label="Armor" />
             <CombatStatDisplay stat={character.counter} label="Counter" />
 
-            <div className="">
+            <div className="min-w-0">
               <CombatStatDisplay
                 stat={
                   character.deflect.count +
@@ -551,7 +563,7 @@ const CharacterCoreInfo = ({
                 setCharacter(newCharacter);
               }}
             >
-              Rest and Recuperate
+              Rest & Recuperate
             </Button>
           </div>
         </div>
