@@ -34,13 +34,20 @@ const SearchBar = () => {
   useEffect(() => {
     const url = getUrl();
     if (!url) return;
-    if (term) {
-      url.searchParams.set("query", term);
+
+    const currentQuery = url.searchParams.get("query") ?? "";
+    const nextQuery = term ?? "";
+
+    if (currentQuery === nextQuery) return;
+
+    if (nextQuery) {
+      url.searchParams.set("query", nextQuery);
     } else {
       url.searchParams.delete("query");
     }
-    router.replace(url.toString(), { scroll: false });
-  }, [term]);
+
+    router.replace(`${url.pathname}${url.search}${url.hash}`, { scroll: false });
+  }, [term, router]);
 
   return (
     <>
