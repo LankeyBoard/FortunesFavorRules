@@ -34,13 +34,18 @@ const Button: React.FC<ButtonProps> = ({
   children,
   buttonType,
   color,
+  disabled,
   ...props
 }) => {
-  let buttonStyle = twMerge("cursor-pointer p-2 ", props.className);
-  if (color) {
-    const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white block cursor-pointer bg-transparent`;
+  const baseStyle = "p-2";
+  const disabledStyle = disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer";
+  let buttonStyle = baseStyle;
 
-    const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded  cursor-pointer align-text-top`;
+  if (color) {
+    const hoverSuffix = disabled ? "" : " hover:text-black hover:dark:text-white";
+    const SIMPLE_BUTTON_STYLE = `${SimpleButtonColor[color]} px-2 py-0 mb-2 border-b-2 text-gray-700 dark:text-gray-300${hoverSuffix} block bg-transparent`;
+
+    const DEFAULT_BUTTON_STYLE = `${DefaultButtonColor[color]} font-extralight tracking-tight mx-2 py-2 px-3 rounded align-text-top${disabled ? "" : " hover:brightness-95"}`;
 
     switch (buttonType) {
       case ButtonType.simple:
@@ -51,12 +56,15 @@ const Button: React.FC<ButtonProps> = ({
         break;
     }
   }
+
   if (buttonType === ButtonType.icon) {
-    buttonStyle += " w-10";
+    buttonStyle = `${buttonStyle} w-10`;
   }
-  buttonStyle = props.className + " " + buttonStyle;
+
+  const mergedClasses = twMerge(buttonStyle, props.className, disabledStyle);
+
   return (
-    <button type="button" {...props} className={buttonStyle}>
+    <button type="button" {...props} disabled={disabled} className={mergedClasses}>
       {children}
     </button>
   );

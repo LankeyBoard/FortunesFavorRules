@@ -39,8 +39,8 @@ export const BeastDisplay = ({ beast }: { beast: BeastMasterBeast }) => {
         <div>
           <span className="font-bold">Stats: </span>
           <span>
-            Agility: {beast.stats.agility}, Heart: {beast.stats.heart},
-            Intellect: {beast.stats.intellect}, Mettle: {beast.stats.mettle}
+            Mettle: {beast.stats.mettle} Agility: {beast.stats.agility}, Heart: {beast.stats.heart},
+            Intellect: {beast.stats.intellect}, 
           </span>
         </div>
         <div>

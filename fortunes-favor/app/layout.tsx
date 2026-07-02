@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import TopNav from "../components/TopNav";
+import AlertPopup from "../components/AlertPopup";
 import { Suspense } from "react";
 import { AlertProvider } from "../contexts/AlertContext";
 import { Provider } from "@/components/Provider";
@@ -29,6 +30,7 @@ export default function RootLayout({
             <div className="bg-gray-100 dark:bg-gray-900">
               <div className="mt-20">{children}</div>
             </div>
+            <AlertPopup />
           </AlertProvider>
         </Provider>
       </body>

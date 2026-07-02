@@ -139,54 +139,56 @@ const addFormFieldsToPDF = async () => {
   const attackField = form.createTextField("Attack");
   attackField.setText("");
   addFieldToPage(attackField, pageOne, {
-    x: 33,
+    x: 23,
     y: 565,
-    width: 50,
+    width: 67,
     height: 18,
   });
 
   const damageField = form.createTextField("Damage");
   damageField.setText("");
+  damageField.enableMultiline();
   addFieldToPage(damageField, pageOne, {
-    x: 110,
+    x: 100,
     y: 565,
-    width: 50,
-    height: 18,
+    width: 67,
+    height: 32,
   });
+  damageField.setFontSize(11);
 
   const rangeField = form.createTextField("Range");
   rangeField.setText("");
   addFieldToPage(rangeField, pageOne, {
-    x: 187,
+    x: 177,
     y: 565,
-    width: 50,
+    width: 67,
     height: 18,
   });
 
   const armorField = form.createTextField("Armor");
   armorField.setText("");
   addFieldToPage(armorField, pageOne, {
-    x: 33,
+    x: 23,
     y: 520,
-    width: 50,
+    width: 67,
     height: 18,
   });
 
   const counterField = form.createTextField("Counter");
   counterField.setText("");
   addFieldToPage(counterField, pageOne, {
-    x: 110,
+    x: 100,
     y: 520,
-    width: 50,
+    width: 67,
     height: 18,
   });
 
   const deflectField = form.createTextField("Deflect");
   deflectField.setText("");
   addFieldToPage(deflectField, pageOne, {
-    x: 187,
+    x: 177,
     y: 520,
-    width: 50,
+    width: 67,
     height: 18,
   });
 

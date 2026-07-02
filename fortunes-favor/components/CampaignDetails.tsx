@@ -10,6 +10,7 @@ import DropdownField from "./blocks/Inputs/DropdownField";
 import Link from "next/link";
 import useAlert from "@/hooks/useAlert";
 import CharacterCard, { CARD_SIZE } from "./blocks/CharacterCard";
+import { AlertType } from "@/contexts/AlertContext";
 
 const GET_CAMPAIGN = gql`
   query GetCampaign($id: ID!) {
@@ -329,7 +330,7 @@ const CampaignDetails = ({ campaignID }: { campaignID: string }) => {
                 navigator.clipboard.writeText(
                   `${window.location.origin}/campaign/${campaignID}/invite`,
                 );
-                setAlert("Link copied", "none");
+                setAlert("Link copied", AlertType.INFO);
               }}
             >
               Copy Campaign Invite Link
