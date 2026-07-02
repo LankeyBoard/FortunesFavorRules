@@ -28,6 +28,7 @@ import {
   RechargeOn,
   RuleType,
   SizeOptions,
+  StatOptions,
 } from "@/utils/enums";
 import { GenericCharacterFeatures } from "./blocks/GenericFeaturePicker";
 import GET_CHARACTER_INFO, {
@@ -46,6 +47,11 @@ import Save from "./icons/Save";
 import Edit from "./icons/Edit";
 import Print from "./icons/Print";
 import convertToChoices from "@/utils/convertToChoices";
+import generateRandomName from "@/utils/generateRandomCharacterName";
+import useAlert from "@/hooks/useAlert";
+import CheckMark from "./icons/CheckMark";
+import Random from "./icons/Random";
+import { AlertType } from "@/contexts/AlertContext";
 
 const extractPlayerCharacter = (data: GetCharacterData): PlayerCharacter => {
   console.debug("extractPlayerCharacter input data", data);
@@ -258,12 +264,61 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       : CharacterSheetViewMode.Owner,
   );
   const [loadingError, setLoadingError] = useState<any>(null);
+  const [suggestedName, setSuggestedName] = useState<string | undefined>(undefined);
+  const [isSaving, setIsSaving] = useState(false);
   const [updateCharacter] = useMutation(UPDATE_CHARACTER_MUTATION);
   const [createCharacter] = useMutation(CREATE_CHARACTER_MUTATION);
 
   const router = useRouter();
+  const { setAlert } = useAlert();
 
-  const saveCharacter = async (character: PlayerCharacter) => {
+  const refreshSuggestedName = () => {
+    if (!character) {
+      setSuggestedName(undefined);
+      return;
+    }
+
+    const cultureName = character.culture?.title ?? "";
+    const lineageName = character.lineage?.title ?? "";
+    if (!cultureName && !lineageName) {
+      setSuggestedName(undefined);
+      return;
+    }
+
+    setSuggestedName(generateRandomName(cultureName, lineageName));
+  };
+
+  const handleAcceptSuggestedName = () => {
+    if (!suggestedName || !character) return;
+    const newCharacter = new PlayerCharacter(
+      undefined,
+      undefined,
+      undefined,
+      character,
+    );
+    newCharacter.name = suggestedName;
+    setCharacter(newCharacter);
+  };
+
+  const handleGenerateNewSuggestedName = () => {
+    if (!character) return;
+    const cultureName = character.culture?.title ?? "";
+    const lineageName = character.lineage?.title ?? "";
+    if (!cultureName && !lineageName) return;
+    setSuggestedName(generateRandomName(cultureName, lineageName));
+  };
+
+  const saveCharacter = async (character: PlayerCharacter, fromButton: boolean) => {
+    if (!character.name || character.name?.trim() === "") {
+      if(fromButton) {
+        setAlert("A character must have a name before they can be saved.", AlertType.ERROR);
+      }
+      setEditable(true);
+      setIsSaving(false);
+      return false;
+    }
+
+    setIsSaving(true);
     try {
       console.log("saveCharacter character id", character.id);
       if (character.id) {
@@ -304,8 +359,11 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         return data;
       }
     } catch (error) {
+      setAlert("An error occurred while saving the character. Please try again.", AlertType.ERROR);
       Sentry.captureException(error);
       throw error;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -389,7 +447,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       if (hasCharacterChanged) {
         const debouncedSave = debounce(() => {
           console.info("Saving character to DB", character);
-          saveCharacter(character);
+          saveCharacter(character, false);
         }, 2000);
         debouncedSave();
       }
@@ -499,9 +557,24 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
         ? beast.health.base + beast.health.perLevel * character.level
         : 0;
       form.getTextField("BeastMaxHealth").setText(beastMaxHealth.toString());
-
-      form.getTextField("BeastAttack").setText(
-        beast.damage?.stat?.map((stat) => stat.toLowerCase()).join(", ") || "",
+      const beastDamageVal = beast.damage.stat.reduce(
+        (acc: number, stat: string) => {
+          switch (stat.toUpperCase()) {
+            case StatOptions.METTLE.toUpperCase():
+              return acc + beast.stats.mettle;
+            case StatOptions.AGILITY.toUpperCase():
+              return acc + beast.stats.agility;
+            case StatOptions.HEART.toUpperCase():
+              return acc + beast.stats.heart;
+            case StatOptions.INT.toUpperCase():
+              return acc + beast.stats.intellect;
+            default:
+              return acc;
+          }
+        },
+        0,
+      );
+      form.getTextField("BeastAttack").setText(beastDamageVal.toString()
       );
       form.getTextField("BeastDamage").setText(
         beast.damage ? `${beast.damage.count}d${beast.damage.dice} ${beast.damage?.type?.join(", ") || ""}` : "",
@@ -530,33 +603,7 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
       );
 
       const beastSections: string[] = [];
-      if (beast.health) {
-        beastSections.push(
-          `Health: ${beast.health.base} + ${beast.health.perLevel} per level`,
-        );
-      }
-      if (beast.armor !== undefined) {
-        beastSections.push(`Armor: ${beast.armor}`);
-      }
-      if (beast.speed?.length) {
-        beastSections.push(
-          `Speed: ${beast.speed
-            .map((speed) => `${speed.speed} ${speed.type}`)
-            .join(", ")}`,
-        );
-      }
-      if (beast.stats) {
-        beastSections.push(
-          `Stats: Agility: ${beast.stats.agility}, Heart: ${beast.stats.heart}, Intellect: ${beast.stats.intellect}, Mettle: ${beast.stats.mettle}`,
-        );
-      }
-      if (beast.damage) {
-        beastSections.push(
-          `Damage: ${beast.damage.count}d${beast.damage.dice} ${beast.damage.stat
-            .map((stat) => stat.toLowerCase())
-            .join(", ")} ${beast.damage.type.join(", ")}`,
-        );
-      }
+      
       if (beast.abilities?.length) {
         beastSections.push(
           "Abilities:\n" +
@@ -707,6 +754,10 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
     link.click();
   };
 
+  useEffect(() => {
+    refreshSuggestedName();
+  }, [character?.name, character?.culture?.title, character?.lineage?.title]);
+
   if (loadingError) {
     console.error(loadingError);
     return <div>Error loading character data.</div>;
@@ -730,17 +781,36 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
   return (
     <div className="pb-20">
       {isEditable ? (
-        <h2 className="font-thin text-xl mx-auto text-center p-4 dark:bg-teal-900 bg-teal-100">
+        <div className="font-thin text-xl mx-auto text-center p-4 dark:bg-teal-900 bg-teal-100">
           <TextInput
-            placeholder="Character Name"
-            defaultValue={character.name}
+            placeholder={suggestedName}
+            value={character.name ?? ""}
+            aria-invalid={!character.name}
             required
-            pattern="\S+"
+            className={!character.name ? "focus-visible:border-red-500 border-red-300 dark:border-red-700" : "border-teal-700"}
             onChange={(e) => {
               updateName(e.target.value);
             }}
           />
-        </h2>
+          {!character.name && suggestedName && (
+            <>
+              <Button
+                buttonType={ButtonType.icon}
+                onClick={handleAcceptSuggestedName}
+                className="px-3 py-2"
+              >
+                <CheckMark/>
+              </Button>
+              <Button
+                buttonType={ButtonType.icon}
+                onClick={handleGenerateNewSuggestedName}
+                className="px-3 py-2"
+              >
+                <Random/>
+              </Button>
+            </>
+          )}
+        </div>
       ) : (
         <h2 className="font-thin text-xl mx-auto text-center p-4 dark:bg-teal-900 bg-teal-100">
           {character.name}
@@ -818,15 +888,18 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             {isEditable ? (
               <Button
                 buttonType={ButtonType.default}
-                color="amber"
-                onClick={() => {
-                  saveCharacter(character);
-                  setEditable(false);
+                color={isSaving ? "gray" : "amber"}
+                onClick={async () => {
+                  const didSave = await saveCharacter(character, true);
+                  if (didSave !== false) {
+                    setEditable(false);
+                  }
                 }}
+                disabled={isSaving}
                 className="flex flex-row"
               >
-                <span className="pr-2">Save</span>
-                <Save className="w-6" />
+                <span className="pr-2">{isSaving ? "Saving" : "Save"}</span>
+                <Save className={isSaving ? "w-6 animate-bounce" : "w-6"} />
               </Button>
             ) : (
               <Button

@@ -790,7 +790,8 @@ export default class PlayerCharacter {
         updatedDamage.count +
         "d" +
         updatedDamage.dice +
-        (updatedDamage.stat > 0 ? "+" + updatedDamage.stat : ""),
+        (updatedDamage.stat > 0 ? "+" + updatedDamage.stat : "") + 
+        (this.damageType ? ` ${this.damageType}` : ""),
     });
   }
   public get range() {

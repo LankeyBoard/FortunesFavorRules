@@ -401,13 +401,7 @@ const CharacterCoreInfo = ({
               
               :<CombatStatDisplay
                 stat={
-                  character.baseDamage.count +
-                  "d" +
-                  character.baseDamage.dice +
-                  (character.baseDamage.stat > 0
-                    ? "+" + character.baseDamage.stat
-                    : "")+
-                  (character.damageType ? ` ${character.damageType}` : "")
+                  character.baseDamage.toString()
                 }
                 label="Damage"
               />

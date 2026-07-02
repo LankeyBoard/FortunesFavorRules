@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useAlert from "../hooks/useAlert";
+import { AlertType } from "@/contexts/AlertContext";
 
 const handleLinkClick = (path: string, setAlert: Function) => {
   navigator.clipboard.writeText(path);
-  setAlert("Link copied", "none");
+  setAlert("Link copied", AlertType.INFO);
 };
 
 const CopyLink = ({ target }: { target: string }) => {
