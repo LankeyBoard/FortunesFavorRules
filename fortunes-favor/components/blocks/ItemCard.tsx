@@ -231,6 +231,24 @@ const ItemCard = ({
               </>
             )}
         </div>
+        {item.effects && item.effects.length > 0 && (
+          <div className="px-4">
+            <h3 className="font-semibold">Effects:</h3>
+            <ul className="list-inside">
+              {item.effects.map((effect, index) => (
+                <li
+                  key={index}
+                  className="flex gap-2 bg-slate-300 dark:bg-slate-700 rounded p-2"
+                >
+                  <span>{effect.operation}</span>
+                  <span>{effect.value}</span>
+                  <span>{effect.target}</span>
+                  <span>{effect.condition}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </>
   );
