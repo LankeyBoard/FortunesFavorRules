@@ -9,7 +9,7 @@ const MultilineTextInput = forwardRef<HTMLTextAreaElement, MultilineTextInputPro
     return (
       <textarea
         ref={ref}
-        className="w-full text-black bg-inherit dark:text-white text-start border-b-2 border-teal-700 focus-visible:border-teal-500 focus-visible:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="w-full text-black bg-inherit dark:text-white text-start border-b-2 border-teal-700 focus-visible:border-teal-500 focus-visible:outline-none required:border-amber-700 valid:border-emerald-700 valid:focus-visible:border-emerald-500 required:focus-visible:border-amber-500  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         {...props}
       />
     );
