@@ -12,6 +12,8 @@ import { findEnumValue, Rarity, RechargeOn } from "@/utils/enums";
 import { BaseItem } from "@/utils/BaseItem";
 import { ShopItem } from "@/utils/ItemShop";
 import SmallField from "../SmallField";
+import useAlert from "@/hooks/useAlert";
+import { AlertType } from "@/contexts/AlertContext";
 
 type EffectBuilder = {
   target?: string;
@@ -36,6 +38,7 @@ const CreateItem = ({
   itemType?: ItemType;
   initialItem?: BaseItem;
 }) => {
+  const {setAlert} = useAlert();
   const [newItemTitle, setNewItemTitle] = useState(initialItem?.title ?? "");
 
   const [newItemText, setNewItemText] = useState(
@@ -57,11 +60,12 @@ const CreateItem = ({
   const [itemEffects, setItemEffects] = useState<Effect[]>(
     initialItem?.effects ?? [],
   );
-  const [newItemEffect, setNewItemEffect] = useState<EffectBuilder>({
+  const defaultEffect: EffectBuilder = {
     value: "",
-    target: "",
-    operation: "",
-  });
+    target: "armor",
+    operation: "add",
+  };
+  const [newItemEffect, setNewItemEffect] = useState<EffectBuilder>(defaultEffect);
   const [showEffectsInput, setShowEffectsInput] = useState(false);
   const [inStock, setInStock] = useState(
     itemType === ItemType.SHOP_ITEM && initialItem && "inStock" in initialItem
@@ -92,11 +96,7 @@ const CreateItem = ({
     setItemUses(undefined);
     setHasUses(false);
     setItemEffects([]);
-    setNewItemEffect({
-      value: "",
-      target: "",
-      operation: "",
-    });
+    setNewItemEffect(defaultEffect);
     setInStock(false);
     setSlots(0);
   };
@@ -220,10 +220,21 @@ const CreateItem = ({
                         key={index}
                         className="flex gap-2 bg-slate-200 dark:bg-slate-800 rounded p-2"
                       >
-                        <span>{effect.target}</span>
                         <span>{effect.operation}</span>
                         <span>{effect.value}</span>
+                        <span>{effect.target}</span>
                         <span>{effect.condition}</span>
+                        <Button
+                          buttonType={ButtonType.default}
+                          color="red"
+                          onClick={() => {
+                            const newEffects = [...itemEffects];
+                            newEffects.splice(index, 1);
+                            setItemEffects(newEffects);
+                          }}
+                        >
+                          -
+                        </Button>
                       </div>
                     );
                   })}
@@ -266,6 +277,7 @@ const CreateItem = ({
                   <NumInput
                     placeholder="Effect Value"
                     value={newItemEffect.value}
+                    required
                     pattern="[0-9]*"
                     onChange={(e) => {
                       const newEffect = { ...newItemEffect };
@@ -283,6 +295,7 @@ const CreateItem = ({
                       newItemEffect.operation &&
                       newItemEffect.value
                     ) {
+                      console.log("adding effect", newItemEffect);
                       setItemEffects([
                         ...itemEffects,
                         {
@@ -292,11 +305,11 @@ const CreateItem = ({
                           condition: newItemEffect.condition,
                         },
                       ]);
-                      setNewItemEffect({
-                        value: "",
-                        target: "",
-                        operation: "",
-                      });
+                      setNewItemEffect(defaultEffect);
+                    }
+                    else {
+                      console.log("effect not complete", newItemEffect);
+                      setAlert("Please fill out all effect fields before adding an effect.", AlertType.WARNING);
                     }
                   }}
                 >
