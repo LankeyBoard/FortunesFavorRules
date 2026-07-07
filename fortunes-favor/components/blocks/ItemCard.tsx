@@ -33,7 +33,6 @@ type ItemCardProps = {
   item: BaseItem;
   isExpanded: boolean;
   updateItem?: (item: BaseItem) => void;
-  deleteItem?: () => void;
   showDetails?: boolean;
   viewOnly?: boolean;
 };
@@ -109,7 +108,6 @@ const ItemCard = ({
   item,
   isExpanded,
   updateItem,
-  deleteItem,
   showDetails,
   viewOnly = true,
 }: ItemCardProps) => {
@@ -141,74 +139,32 @@ const ItemCard = ({
         <div className="clear-both mx-2">
           {cardItem.uses && (
             <div>
-              {cardItem.uses.rechargeOn.toString() !== RechargeOn.NONE ? (
-                <div>
-                  <p>
-                    <span>Charges: </span>
-                    {cardItem.uses.max - cardItem.uses.used} /{" "}
-                    {cardItem.uses.max}
-                  </p>
-                  <p>
-                    <span>Recharge: </span>
-                    {cardItem.uses.rechargeOn}
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <p>
-                    <span>Uses: </span>
-                    {cardItem.uses.max - cardItem.uses.used} /{" "}
-                    {cardItem.uses.max}
-                  </p>
-                  <p>
-                    <span>Consumable </span>
-                  </p>
-                </div>
-              )}
+              <div>
+                <span>
+                  <span>Charges: </span>
+                  {cardItem.uses.max - cardItem.uses.used} /{" "}
+                  {cardItem.uses.max}
+                </span>
+                <span className="mr-2 float-right">
+                  {cardItem.uses.rechargeOn.toString() !== RechargeOn.NONE ?
+                  <span>Recharge: {cardItem.uses.rechargeOn}</span>
+                  : <span>Consumable</span>}
+                </span>
+              </div>
             </div>
           )}
 
           <TextBlock text={cardItem.text} style="px-4" />
-          <div id="slots">
-            <p>
-              <span>Slots: </span> {cardItem.slots}
-            </p>
-          </div>
-          <div>
-            {cardItem.effects && cardItem.effects.length > 0 && (
-              <div className="px-4">
-                <h3 className="font-semibold">Effects:</h3>
-                <ul className="list-inside">
-                  {cardItem.effects.map((effect, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-2 bg-slate-300 dark:bg-slate-700 rounded p-2"
-                    >
-                      <span>{effect.target}</span>
-                      <span>{effect.operation}</span>
-                      <span>{effect.value}</span>
-                      <span>{effect.condition}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="flex justify-end gap-2 mx-2 -pb-2">
-          {deleteItem && (
-            <Button buttonType={ButtonType.icon} onClick={deleteItem}>
-              <Trash color="red" />
-            </Button>
-          )}
+          
           {!viewOnly &&
             cardItem.uses &&
             cardItem.uses.used < cardItem.uses.max && (
               <>
-                <div>
+                <div className="mr-2 ml-auto align-items-right">
                   <Button
                     buttonType={ButtonType.simple}
                     color="green"
+                    className="mr-2 ml-auto"
                     onClick={() => {
                       const newItem = new CharacterItem(
                         cardItem.title,
@@ -249,6 +205,12 @@ const ItemCard = ({
             </ul>
           </div>
         )}
+
+        <div id="slots" className="m-2 font-light text-sm text-gray-600 dark:text-gray-400">
+          <p>
+            <span>Slots: </span> {cardItem.slots}
+          </p>
+        </div>
       </div>
     </>
   );
