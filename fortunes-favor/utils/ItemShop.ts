@@ -14,7 +14,7 @@ export function isShopItem(item: BaseItem): item is ShopItem {
     "effects" in item &&
     "tags" in item &&
     "defaultPrice" in item &&
-    "inStock" in item
+    "count" in item
   );
 }
 
@@ -58,9 +58,8 @@ export class ShopItem implements BaseItem {
   tags: string[];
   defaultPrice: number;
   salePrice?: number;
-  inStock: boolean;
-  slots: number;
   count: number;
+  slots: number;
   constructor(
     title: string,
     text: RuleText[],
@@ -74,7 +73,7 @@ export class ShopItem implements BaseItem {
     }[],
     tags: string[],
     defaultPrice: number,
-    inStock: boolean,
+    count: number,
     slots: number,
     id?: string,
     uses?: {
@@ -83,7 +82,6 @@ export class ShopItem implements BaseItem {
       rechargeOn: RechargeOn;
     },
     salePrice?: number,
-    count?: number,
   ) {
     this.id = id;
     this.title = title;
@@ -95,9 +93,8 @@ export class ShopItem implements BaseItem {
     this.tags = tags;
     this.defaultPrice = defaultPrice;
     this.salePrice = salePrice;
-    this.inStock = inStock;
+    this.count = count;
     this.slots = slots;
-    this.count = count ?? 1;
   }
   public get price() {
     return this.salePrice !== undefined ? this.salePrice : this.defaultPrice;

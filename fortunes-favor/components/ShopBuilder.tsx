@@ -16,6 +16,7 @@ import { BaseItem } from "@/utils/BaseItem";
 import FullPageLoading from "./FullPageLoading";
 import NumInput from "./blocks/Inputs/NumInput";
 import SmallField from "./blocks/SmallField";
+import Edit from "./icons/Edit";
 
 const exampleItems: ShopItemInput[] = [
   {
@@ -98,9 +99,9 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
           <ItemCard item={item} isExpanded={true} showDetails />
         </div>
 
-        <div className="flex flex-row gap-1 mt-2">
+        <div className="flex flex-row gap-1">
           {showStockCount && (
-            <SmallField label="Stock" className="">
+            <SmallField label="Stock" className="-my-2">
               <NumInput
                 className="w-10"
                 value={count}
@@ -113,23 +114,38 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
               />
             </SmallField>
           )}
-          <Button buttonType={ButtonType.icon} onClick={deleteItem}>
-            <Trash color="red" />
-          </Button>
+          <div className="flex justify-end gap-2 mx-2 -pb-2 h-12">
           <Button
             buttonType={ButtonType.default}
-            color="blue"
+            color="amber"
             onClick={() => setIsEditing(true)}
+            className="inline-flex items-center gap-1"
           >
-            Edit Item
+            <span className="inline-flex items-center gap-1">
+              <span>Edit</span>
+              <Edit className="h-4 w-4 shrink-0" />
+            </span>
           </Button>
+
+          <Button
+            buttonType={ButtonType.default}
+            color="red"
+            onClick={deleteItem}
+            className="inline-flex items-center gap-1"
+          >
+            <span className="inline-flex items-center gap-1">
+              <span>Delete</span>
+              <Trash className="h-4 w-4 shrink-0" />
+            </span>
+          </Button>
+        </div>
         </div>
       </div>
     );
 };
 
 const TrimItemForGraphQL = (item: ShopItem, isInStock: boolean) => {
-  const { inStock, onSale, salePrice, count, ...trimmedItem } = item;
+  const { count: inStock, onSale, salePrice, count, ...trimmedItem } = item;
   trimmedItem.text = trimmedItem.text.map((text) => {
     return {
       text: text.text,
@@ -290,8 +306,8 @@ const parseShopItemsFromFile = async (
         if (invalidItems.length > 0)
           console.error("invalid items uploaded: ", invalidItems);
 
-        const itemsInStock = validItems.filter((item) => item.inStock);
-        const itemsCouldStock = validItems.filter((item) => !item.inStock);
+        const itemsInStock = validItems.filter((item) => item.count);
+        const itemsCouldStock = validItems.filter((item) => !item.count);
         console.log("items from file", itemsCouldStock, itemsInStock);
         resolve({ itemsInStock, itemsCouldStock, invalidItems });
       } catch (err) {
@@ -338,7 +354,7 @@ const ShopBuilder = ({
   const router = useRouter();
 
   const AddItemToShop = (item: ShopItem) => {
-    if (item.inStock) {
+    if (item.count) {
       setItemsInStock([...itemsInStock, item]);
     } else {
       setItemsCouldStock([...itemsCouldStock, item]);
@@ -548,7 +564,7 @@ const ShopBuilder = ({
                     );
                   }}
                   updateItem={(newItem) => {
-                    if ("inStock" in newItem && !newItem.inStock) {
+                    if ("count" in newItem && !newItem.count) {
                       setFileItemsInStock((prev) =>
                         prev.filter((_, i) => i !== index),
                       );
@@ -601,7 +617,7 @@ const ShopBuilder = ({
                     );
                   }}
                   updateItem={(newItem) => {
-                    if ("inStock" in newItem && newItem.inStock) {
+                    if ("count" in newItem && newItem.count) {
                       setFileItemsCouldStock((prev) =>
                         prev.filter((_, i) => i !== index),
                       );
@@ -647,7 +663,7 @@ const ShopBuilder = ({
                   setItemsInStock((prev) => prev.filter((_, i) => i !== index));
                 }}
                 updateItem={(newItem) => {
-                  if ((newItem as ShopItem).inStock) {
+                  if ((newItem as ShopItem).count) {
                     setItemsInStock((prev) =>
                       prev.map((it, i) =>
                         i === index ? (newItem as ShopItem) : it,
@@ -680,7 +696,7 @@ const ShopBuilder = ({
                   );
                 }}
                 updateItem={(newItem) => {
-                  if (!(newItem as ShopItem).inStock) {
+                  if (!(newItem as ShopItem).count) {
                     setItemsCouldStock((prev) =>
                       prev.map((it, i) =>
                         i === index ? (newItem as ShopItem) : it,
@@ -698,7 +714,7 @@ const ShopBuilder = ({
             {itemsCouldStock.length === 0 && <div>No Items</div>}
           </ul>
         </div>
-        <div>
+        <div className="flex justify-end">
           <Button
             buttonType={ButtonType.default}
             onClick={() => {

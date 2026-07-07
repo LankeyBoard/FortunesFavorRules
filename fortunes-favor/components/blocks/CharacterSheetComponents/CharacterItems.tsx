@@ -6,6 +6,8 @@ import Button, { ButtonType } from "../Inputs/Button";
 import ItemCard from "../ItemCard";
 import CreateItem, { ItemType } from "../Inputs/CreateItem";
 import { BaseItem } from "@/utils/BaseItem";
+import Trash from "@/components/icons/Trash";
+import Edit from "@/components/icons/Edit";
 
 type ItemCardSectionProps = {
   item: BaseItem;
@@ -40,18 +42,33 @@ const ItemCardSection: React.FC<ItemCardSectionProps> = ({
           item={item}
           isExpanded={false}
           updateItem={updateItemBuilder(i)}
-          deleteItem={isEditable ? deleteItemBuilder(i) : undefined}
           viewOnly={viewItemsOnly}
         />
       )}
       {isEditable && (
-        <div>
+        <div className="flex justify-end gap-2 mx-2 -pb-2">
           <Button
             buttonType={ButtonType.default}
             color="amber"
             onClick={() => setEditItem(true)}
+            className="inline-flex items-center gap-1"
           >
-            Edit Item
+            <span className="inline-flex items-center gap-1">
+              <span>Edit</span>
+              <Edit className="h-4 w-4 shrink-0" />
+            </span>
+          </Button>
+
+          <Button
+            buttonType={ButtonType.default}
+            color="red"
+            onClick={deleteItemBuilder(i)}
+            className="inline-flex items-center gap-1"
+          >
+            <span className="inline-flex items-center gap-1">
+              <span>Delete</span>
+              <Trash className="h-4 w-4 shrink-0" />
+            </span>
           </Button>
         </div>
       )}
@@ -173,7 +190,7 @@ const CharacterItems = ({
       ) : (
         <div>No items</div>
       )}
-      <SlotBar slotsUsed={character.slotsUsed} maxSlots={character.maxSlots} />
+      
       {isEditable && (
         <div>
           {showItemForm ? (
@@ -184,18 +201,22 @@ const CharacterItems = ({
               setShowItemForm={setShowItemForm}
             />
           ) : (
-            <Button
-              buttonType={ButtonType.default}
-              color="green"
-              onClick={() => setShowItemForm(!showItemForm)}
-            >
-              <div className="w-3 dark:fill-white fill-black">
-                <Plus />
-              </div>
-            </Button>
+            <div className="mx-auto w-fit mt-2">
+              <Button
+                buttonType={ButtonType.default}
+                color="green"
+                onClick={() => setShowItemForm(!showItemForm)}
+              >
+                <span className="inline-flex items-center gap-1">
+                  <span>New Item</span>
+                  <Plus className="h-4 w-4 shrink-0" />
+                </span>
+              </Button>
+            </div>
           )}
         </div>
       )}
+      <SlotBar slotsUsed={character.slotsUsed} maxSlots={character.maxSlots} />
     </div>
   );
 };

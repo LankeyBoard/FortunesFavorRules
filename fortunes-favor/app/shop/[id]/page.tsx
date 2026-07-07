@@ -27,7 +27,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.effects,
           item.tags,
           item.defaultPrice,
-          true,
+          item.count,
           item.slots,
           item.id,
           item.uses
@@ -40,7 +40,6 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
               }
             : undefined,
           item.salePrice,
-          item.count,
         ),
     ),
     data.itemShop.itemsCouldStock.map(
@@ -53,7 +52,7 @@ const convertDataToItemShop = (data: ItemShopQueryDataType): ItemShop => {
           item.effects,
           item.tags,
           item.defaultPrice,
-          false,
+          0,
           item.slots,
           item.id,
           item.uses

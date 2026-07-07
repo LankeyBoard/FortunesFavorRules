@@ -888,14 +888,13 @@ const CharacterSheet = ({ characterId }: { characterId?: number }) => {
             {isEditable ? (
               <Button
                 buttonType={ButtonType.default}
-                color={isSaving ? "gray" : "amber"}
+                color={"amber"}
                 onClick={async () => {
                   const didSave = await saveCharacter(character, true);
                   if (didSave !== false) {
                     setEditable(false);
                   }
                 }}
-                disabled={isSaving}
                 className="flex flex-row"
               >
                 <span className="pr-2">{isSaving ? "Saving" : "Save"}</span>

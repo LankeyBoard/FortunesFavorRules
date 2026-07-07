@@ -68,11 +68,11 @@ const CreateItem = ({
     operation: "add",
   };
   const [newItemEffect, setNewItemEffect] = useState<EffectBuilder>(defaultEffect);
-  const [showEffectsInput, setShowEffectsInput] = useState(false);
-  const [inStock, setInStock] = useState(
-    itemType === ItemType.SHOP_ITEM && initialItem && "inStock" in initialItem
-      ? (initialItem as ShopItem).inStock
-      : false,
+  const [showEffectsInput, setShowEffectsInput] = useState(!!itemEffects.length);
+  const [stockCount, setStockCount] = useState(
+    itemType === ItemType.SHOP_ITEM && initialItem && "count" in initialItem
+      ? (initialItem as ShopItem).count
+      : 0,
   );
   const [tags, setTags] = useState<string[]>(initialItem?.tags ?? []);
   const [defaultPrice, setDefaultPrice] = useState(
@@ -99,7 +99,7 @@ const CreateItem = ({
     setHasUses(false);
     setItemEffects([]);
     setNewItemEffect(defaultEffect);
-    setInStock(false);
+    setStockCount(0);
     setSlots(0);
   };
 
@@ -202,17 +202,15 @@ const CreateItem = ({
           <div>
             <input
               type="checkbox"
-              checked={showEffectsInput}
+              checked={showEffectsInput || itemEffects.length > 0}
               onChange={(e) => {
-                setShowEffectsInput(e.target.checked);
+                setShowEffectsInput(e.target.checked || itemEffects.length > 0);
               }}
             />
             <label>Has effect(s)</label>
           </div>
           <div className="w-auto">
-            {showEffectsInput && (
-              <div>
-                {itemEffects.length > 0 && (<>
+            {itemEffects.length > 0 && (<>
                 <h3 className="font-semibold">Effects</h3>
                 <div className="flex gap-2 flex-1 flex-wrap">
                   {itemEffects.map((effect, index) => {
@@ -241,6 +239,8 @@ const CreateItem = ({
                   })}
                 </div>
                 </>)}
+            {showEffectsInput && (
+              <div>
                 <h3>Effect</h3>
                 <div className="flex flex-wrap items-center gap-2 w-full bg-slate-200 dark:bg-slate-800 rounded p-2">
                   <DropdownField
@@ -327,17 +327,6 @@ const CreateItem = ({
               </div>
             )}
           </div>
-          {itemType === ItemType.SHOP_ITEM && (
-            <>
-            <input
-                type="checkbox"
-                checked={inStock}
-                onChange={(e) => {
-                  setInStock(e.target.checked);
-                }}
-              />
-              <label>Currently In Stock</label>
-              </>)}
         </div>
         <div className="flex flex-row gap-2 flex-wrap">
           <SmallField label="Slots">
@@ -382,6 +371,20 @@ const CreateItem = ({
                     onChange={(e) => setSalePrice(Number(e.target.value))}
                   />
                 </SmallField>
+                <SmallField label="Stock">
+                  <NumInput
+                    name="Stock Count"
+                    min={0}
+                    className="max-w-10"
+                    required={true}
+                    defaultValue={
+                      initialItem
+                        ? (initialItem as ShopItem).count
+                        : undefined
+                    }
+                    onChange={(e) => setStockCount(Number(e.target.value))}
+                  />
+                </SmallField>
               </div>
             </div>
           )}
@@ -411,7 +414,7 @@ const CreateItem = ({
                     itemEffects,
                     tags,
                     defaultPrice,
-                    inStock,
+                    stockCount,
                     slots,
                     initialItem?.id,
                     itemUses,
