@@ -100,25 +100,23 @@ export default async function Home() {
       <div className="flex flex-col min-h-[80vh] w-full lg:max-w-6xl items-center justify-center">
         <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mb-6 md:mb-8 backdrop-blur-sm md:rounded">
           <h1 className="font-black-chancery md:text-8xl text-center m-6  text-6xl">
-            Fortune's Favor
+            Fortune&apos;s Favor
           </h1>
         </div>
         <div className="bg-white/70 dark:bg-black/70 px-6 py-8 backdrop-blur-sm md:rounded">
-          {/* <h1 className="font-black-chancery text-9xl text-center mt-6 mb-12  sm:text-6xl">
-            Fortune's Favor
-          </h1> */}
           <p className="mt-6 text-lg leading-8 text-center">
-            Welcome to Fortune's Favor, a tabletop roleplaying game for fast &
-            fun fantasy adventures whether it's your first or five hundredth
-            roleplaying game.
+            Welcome to Fortune&apos;s Favor, a tabletop roleplaying game for
+            fast & fun fantasy adventures whether it&apos;s your first or five
+            hundredth roleplaying game.
           </p>
           <p className="mt-6 text-lg leading-8 text-left">
-            &nbsp;&nbsp; Fortune's Favor is a d20 based system, where failure is
-            fun, characters are unique, and the GM has the tools to improvise
-            and create a story with the players. The rules are designed to be
-            easy to learn, but deep enough to allow for a wide variety of play
-            styles and character concepts. The game is designed to be played
-            completely offline, offline but with laptops, or online.
+            &nbsp;&nbsp; Fortune&apos;s Favor is a d20 based system, where
+            failure is fun, characters are unique, and the GM has the tools to
+            improvise and create a story with the players. The rules are
+            designed to be easy to learn, but deep enough to allow for a wide
+            variety of play styles and character concepts. The game is designed
+            to be played completely offline, offline but with laptops, or
+            online.
           </p>
           <div className="grid grid-cols-2 max-w-max mx-auto gap-4">
             <Button
