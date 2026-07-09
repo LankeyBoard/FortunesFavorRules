@@ -17,18 +17,18 @@ const SignupOrLoginModal = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-99">
       <div
-        className="bg-slate-300 dark:bg-slate-700 rounded shadow-lg w-min"
+        className="bg-slate-200 dark:bg-slate-700 rounded shadow-lg w-min"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between">
           <button
-            className={`w-1/2 px-4 py-2 ${!isLogin ? "bg-purple-800 text-white" : "bg-gray-300 text-black"}`}
+            className={`w-1/2 px-4 py-2 ${!isLogin ? "bg-purple-800 text-white" : "bg-gray-300 text-black cursor-pointer "}`}
             onClick={() => setIsLogin(false)}
           >
             Sign Up
           </button>
           <button
-            className={`w-1/2 px-4 py-2 ${isLogin ? "bg-purple-800 text-white" : "bg-gray-300 text-black"}`}
+            className={`w-1/2 px-4 py-2 ${isLogin ? "bg-purple-800 text-white" : "bg-gray-300 hover:bg-gray-400 text-black cursor-pointer "}`}
             onClick={() => setIsLogin(true)}
           >
             Login

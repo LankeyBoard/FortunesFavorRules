@@ -54,7 +54,7 @@ const SignupForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mt-2">
       <div className="form-group mb-4">
         <label
           htmlFor="signup-email"
@@ -62,28 +62,16 @@ const SignupForm = ({
         >
           Email
         </label>
-        <TextInput
-          type="email"
-          id="signup-email"
-          name="email"
-          required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
-        />
+        <TextInput type="email" id="signup-email" name="email" required />
       </div>
       <div className="form-group mb-4">
         <label
           htmlFor="signup-name"
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
-          Name
+          Username
         </label>
-        <TextInput
-          type="text"
-          id="signup-name"
-          name="name"
-          required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
-        />
+        <TextInput type="text" id="signup-name" name="name" required />
       </div>
       <div className="form-group mb-4">
         <label
@@ -97,25 +85,21 @@ const SignupForm = ({
           id="signup-password"
           name="password"
           required
+          placeholder="Must be at least 6 characters"
+          pattern=".{6,}"
         />
       </div>
       <div className="text-red">{error?.message}</div>
       <div className="form-actions flex justify-end space-x-4">
         <Button
-          type="submit"
-          color="amber"
-          buttonType={ButtonType.default}
-          className="bg-amber-700 text-white px-4 py-2 rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-no-wrap"
-        >
-          Sign Up
-        </Button>
-        <Button
           color="gray"
           buttonType={ButtonType.default}
-          className="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           onClick={() => setIsOpen(false)}
         >
           Cancel
+        </Button>
+        <Button type="submit" color="amber" buttonType={ButtonType.default}>
+          Sign Up
         </Button>
       </div>
     </form>
