@@ -97,13 +97,13 @@ export default async function Home() {
             'url("https://uploads6.wikiart.org/images/harry-clarke/tales-of-mystery-and-imagination-by-edgar-allan-poe-1923-23.jpg")',
         }}
       />
-      <div className="flex flex-col min-h-[80vh] w-full lg:max-w-6xl items-center justify-center">
-        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mb-6 md:mb-8 backdrop-blur-sm md:rounded">
+      <div className="flex flex-col md:min-h-[80vh] w-full lg:max-w-6xl items-center justify-center">
+        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mb-6 md:mb-8 backdrop-blur-sm mt-[20vh] md:mt-0 md:rounded">
           <h1 className="font-black-chancery md:text-8xl text-center m-6  text-6xl">
             Fortune&apos;s Favor
           </h1>
         </div>
-        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 backdrop-blur-sm md:rounded">
+        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mt-[20vh] md:mt-0 backdrop-blur-sm md:rounded">
           <p className="mt-6 text-lg leading-8 text-center">
             Welcome to Fortune&apos;s Favor, a tabletop roleplaying game for
             fast & fun fantasy adventures whether it&apos;s your first or five
