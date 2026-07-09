@@ -7,6 +7,7 @@ import SlugLinker from "./blocks/SlugLinker";
 import TextBlock from "./blocks/TextBlock";
 import CopyLink from "./CopyLink";
 import ImgDisplay from "./blocks/ImgDisplay";
+import { twMerge } from "tailwind-merge";
 const titleStyler = (depth: number) => {
   switch (depth) {
     case 1:
@@ -45,8 +46,15 @@ const CompactList = ({ rule }: { rule: GenericRule }) => {
 type fieldProps = {
   field: GenericRule;
   depth?: number;
+  className?: string;
+  showCopyLink?: boolean;
 };
-const RuleField = ({ field, depth = 3 }: fieldProps) => {
+const RuleField = ({
+  field,
+  depth = 3,
+  className,
+  showCopyLink: showLinks,
+}: fieldProps) => {
   useEffect(() => {
     if (window.top !== null) {
       const path = window.location.hash;
@@ -71,14 +79,17 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
   return (
     <div
       id={field.slug}
-      className={
-        depth === 1 ? "z-0 scroll-mt-20 clear-both" : "z-0 scroll-mt-20"
-      }
+      className={twMerge(
+        className,
+        depth === 1 ? "z-0 scroll-mt-20 clear-both" : "z-0 scroll-mt-20",
+      )}
     >
       <div className={titleStyler(depth)}>
         <label className="display-flex">
           {field.title}{" "}
-          {field.slug && depth < 3 && <CopyLink target={field.slug} />}
+          {field.slug && depth < 3 && showLinks !== false && (
+            <CopyLink target={field.slug} />
+          )}
         </label>
       </div>
       {field.img && (
@@ -143,7 +154,11 @@ const RuleField = ({ field, depth = 3 }: fieldProps) => {
             <ul className="">
               {field.subRules.map((f) => (
                 <li className={f.title ? "" : "space-y-2"} key={f.slug}>
-                  <RuleField field={f} depth={depth + 1}></RuleField>
+                  <RuleField
+                    field={f}
+                    depth={depth + 1}
+                    showCopyLink={showLinks}
+                  ></RuleField>
                 </li>
               ))}
             </ul>

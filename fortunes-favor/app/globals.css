@@ -1,3 +1,4 @@
+@import url("https://fonts.cdnfonts.com/css/black-chancery");
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
@@ -20,6 +21,11 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-end-rgb));
+}
+
+.font-black-chancery {
+  font-family: "BlackChancery", "Times New Roman", serif;
+  font-weight: 400;
 }
 
 .markdown h1 {

@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useState } from "react";
 
-const ALERT_TIME = 20000;
+const ALERT_TIME = 2000;
 
 export enum AlertType {
   INFO = "info",
@@ -16,7 +16,7 @@ const initialState = {
 
 const AlertContext = createContext({
   ...initialState,
-  setAlert: (text: string, type: AlertType) => {},
+  setAlert: (text: string, type: AlertType, time?: number) => {},
 });
 
 import { ReactNode } from "react";
@@ -25,14 +25,18 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const [text, setText] = useState("");
   const [type, setType] = useState(undefined as AlertType | undefined);
 
-  const setAlert = (text: string, type: AlertType) => {
+  const setAlert = (
+    text: string,
+    type: AlertType,
+    time: number = ALERT_TIME,
+  ) => {
     setText(text);
     setType(type);
 
     setTimeout(() => {
       setText("");
       setType(undefined);
-    }, ALERT_TIME);
+    }, time);
   };
 
   return (

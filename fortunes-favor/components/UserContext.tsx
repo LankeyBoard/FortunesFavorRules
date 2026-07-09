@@ -22,11 +22,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   // cookie in an effect to avoid a hydration mismatch.
   const [jwt, setJwt] = useState<string | null>(null);
 
-  useEffect(() => {
+  const syncJwtFromCookie = () => {
     setJwt(getToken());
+  };
+
+  useEffect(() => {
+    syncJwtFromCookie();
   }, []);
 
-  const isLoggedIn = (): boolean => jwt !== null;
+  const isLoggedIn = (): boolean => Boolean(jwt);
 
   const updateJwt = (token: string) => {
     setJwt(token);

@@ -6,8 +6,6 @@ import { useUser } from "../UserContext";
 import { setToken } from "@/utils/tokenCookie";
 import TextInput from "./Inputs/TextInput";
 import Button, { ButtonType } from "./Inputs/Button";
-import { handleLogin } from "@/utils/handleLogin";
-import { usePathname } from "next/navigation";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -82,9 +80,48 @@ const LoginForm = ({
     }
   };
 
+  if (showForgot) {
+    return (
+      <form
+        onSubmit={handleForgotPassword}
+        className="space-y-2 mt-2 flex flex-col"
+      >
+        <TextInput
+          type="email"
+          name="forgotEmail"
+          placeholder="Enter your email"
+          value={forgotEmail}
+          onChange={(e) => setForgotEmail(e.target.value)}
+          required
+          className="block w-full px-3 py-2 border rounded-md"
+        />
+        <div>
+          <Button
+            color="gray"
+            buttonType={ButtonType.default}
+            onClick={() => {
+              setShowForgot(false);
+              setForgotStatus(null);
+              setForgotEmail("");
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" color="amber" buttonType={ButtonType.default}>
+            Send Reset Email
+          </Button>
+        </div>
+
+        {forgotStatus && (
+          <div className="text-sm mt-2 text-blue-600">{forgotStatus}</div>
+        )}
+      </form>
+    );
+  }
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center mt-2">
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="form-group mb-4">
           <label
             htmlFor="email"
@@ -98,7 +135,6 @@ const LoginForm = ({
             name="email"
             required
             pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black dark:text-white"
           />
         </div>
         <div className="form-group mb-4">
@@ -114,13 +150,9 @@ const LoginForm = ({
             name="password"
             required
             pattern=".+"
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black dark:text-white"
           />
         </div>
         <div className="form-actions flex justify-end space-x-4">
-          <Button type="submit" color="amber" buttonType={ButtonType.default}>
-            Login
-          </Button>
           <Button
             color="gray"
             buttonType={ButtonType.default}
@@ -131,6 +163,9 @@ const LoginForm = ({
           >
             Cancel
           </Button>
+          <Button type="submit" color="amber" buttonType={ButtonType.default}>
+            Login
+          </Button>
         </div>
       </form>
       <span className="test-wrap text-red-500 text-center">
@@ -139,7 +174,7 @@ const LoginForm = ({
           : ""}
       </span>
       <div className="mt-4 text-center">
-        {!showForgot ? (
+        {!showForgot && (
           <Button
             color="blue"
             buttonType={ButtonType.simple}
@@ -147,38 +182,9 @@ const LoginForm = ({
           >
             Forgot my password
           </Button>
-        ) : (
-          <form onSubmit={handleForgotPassword} className="space-y-2">
-            <TextInput
-              type="email"
-              name="forgotEmail"
-              placeholder="Enter your email"
-              value={forgotEmail}
-              onChange={(e) => setForgotEmail(e.target.value)}
-              required
-              className="block w-full px-3 py-2 border rounded-md"
-            />
-            <Button type="submit" color="amber" buttonType={ButtonType.default}>
-              Send Reset Email
-            </Button>
-            <Button
-              color="gray"
-              buttonType={ButtonType.default}
-              onClick={() => {
-                setShowForgot(false);
-                setForgotStatus(null);
-                setForgotEmail("");
-              }}
-            >
-              Cancel
-            </Button>
-            {forgotStatus && (
-              <div className="text-sm mt-2 text-blue-600">{forgotStatus}</div>
-            )}
-          </form>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

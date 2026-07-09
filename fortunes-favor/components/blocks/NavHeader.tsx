@@ -2,10 +2,15 @@
 import { isSmallWindow } from "@/utils/isSmallWindow";
 import useWindowDimensions from "@/utils/useWindowDimensions";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const navLinkBaseClasses =
+  "block font-extralight py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
 
 const NavHeader = () => {
   const { height, width } = useWindowDimensions();
+  const pathname = usePathname();
   const [menuVisible, setMenuVisible] = useState(true);
   useEffect(() => {
     if (!isSmallWindow(width)) {
@@ -18,6 +23,14 @@ const NavHeader = () => {
     if (isSmallWindow(width)) {
       setMenuVisible(false);
     }
+  };
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
   return (
     <div
@@ -46,12 +59,12 @@ const NavHeader = () => {
       </button>
       {menuVisible && (
         <div className="absolute right-0 z-50 md:order-1 md:relative">
-          <ul className="flex flex-col p-4 md:p-0 mt-4 mr-8 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
+          <ul className="flex flex-col p-4 md:p-0 mt-4 mr-4 lg:mr-8 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 lg:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-slate-800 md:dark:bg-slate-900 dark:border-slate-700">
             <li>
               <Link
                 href="/"
-                className="block py-2 px-3 text-amber-700 dark:text-white rounded md:bg-transparent md:p-0 hover:text-amber-500"
-                aria-current="page"
+                className={`font-black-chancery text-xl block py-2 px-3 rounded md:bg-transparent md:p-0 hover:text-amber-500 ${isActiveLink("/") ? "border-b-1 border-amber-500 rounded-none" : ""}`}
+                aria-current={isActiveLink("/") ? "page" : undefined}
                 onClick={() => {
                   closeMenuIfOpen();
                 }}
@@ -65,7 +78,8 @@ const NavHeader = () => {
                 onClick={() => {
                   closeMenuIfOpen();
                 }}
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`${navLinkBaseClasses} ${isActiveLink("/rules") ? "border-b-1 border-amber-500  rounded-none" : ""}`}
+                aria-current={isActiveLink("/rules") ? "page" : undefined}
               >
                 Rules
               </Link>
@@ -76,7 +90,8 @@ const NavHeader = () => {
                 onClick={() => {
                   closeMenuIfOpen();
                 }}
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`${navLinkBaseClasses} ${isActiveLink("/monsters") ? "border-b-1 border-amber-500  rounded-none" : ""}`}
+                aria-current={isActiveLink("/monsters") ? "page" : undefined}
               >
                 Monsters
               </Link>
@@ -87,7 +102,8 @@ const NavHeader = () => {
                 onClick={() => {
                   closeMenuIfOpen();
                 }}
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-700 md:p-0 md:dark:hover:text-amber-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`${navLinkBaseClasses} ${isActiveLink("/downloads") ? "border-b-1 border-amber-500  rounded-none" : ""}`}
+                aria-current={isActiveLink("/downloads") ? "page" : undefined}
               >
                 Downloads
               </Link>
