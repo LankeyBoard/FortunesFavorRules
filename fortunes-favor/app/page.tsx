@@ -98,8 +98,8 @@ export default async function Home() {
         }}
       />
       <div className="flex flex-col md:min-h-[80vh] w-full lg:max-w-6xl items-center justify-center">
-        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mb-6 md:mb-8 backdrop-blur-sm mt-[20vh] md:mt-0 md:rounded">
-          <h1 className="font-black-chancery md:text-8xl text-center m-6  text-6xl">
+        <div className="bg-white/70 dark:bg-black/70 px-6 py-8 mb-6 md:mb-8 backdrop-blur-sm mt-[20vh] md:mt-0 md:rounded border-b-4 border-teal-500">
+          <h1 className="font-carattere-regular md:text-8xl text-center m-6  text-6xl">
             Fortune&apos;s Favor
           </h1>
         </div>
