@@ -63,7 +63,7 @@ const NavHeader = () => {
             <li>
               <Link
                 href="/"
-                className={`font-black-chancery text-xl block py-2 px-3 rounded md:bg-transparent md:p-0 hover:text-amber-500 ${isActiveLink("/") ? "border-b-1 border-amber-500 rounded-none" : ""}`}
+                className={`font-carattere-regular text-xl block py-2 px-3 rounded md:bg-transparent md:p-0 hover:text-amber-500 ${isActiveLink("/") ? "border-b-1 border-amber-500 rounded-none" : ""}`}
                 aria-current={isActiveLink("/") ? "page" : undefined}
                 onClick={() => {
                   closeMenuIfOpen();

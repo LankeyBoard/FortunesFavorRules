@@ -34,6 +34,48 @@ const DownloadsPage = () => {
           </a>
         </div>
       </div>
+      <div className="mx-4">
+        <h2 className="font-thin text-lg pb-0 tracking-widest pt-6">
+          Example Characters
+        </h2>
+        <div className="mx-4">
+          <a
+            href="/example_characters/Nella%20Moonflower_character_sheet.pdf"
+            download
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 block"
+          >
+            Elementalist - Nella Moonflower
+          </a>
+          <a
+            href="/example_characters/Nira%20Trailfang_character_sheet.pdf"
+            download
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 block"
+          >
+            Fulminare - Nira Trailfang
+          </a>
+          <a
+            href="/example_characters/Adrian%20Merrow_character_sheet.pdf"
+            download
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 block"
+          >
+            Knight - Adrian Merrow
+          </a>
+          <a
+            href="/example_characters/Torin%20Shipwright_character_sheet.pdf"
+            download
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 block"
+          >
+            Maverick - Torin Shipwright
+          </a>
+          <a
+            href="/example_characters/Thalendir%20Grovewhisper_character_sheet.pdf"
+            download
+            className="text-teal-800 underline hover:text-teal-500 dark:text-teal-200 block"
+          >
+            Ranger - Thalendir Grovewhisper
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
